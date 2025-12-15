@@ -4579,6 +4579,24 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return evaluateRule(child, context, depth + 1, localScope);
     }
 
+    // HelperCall: Rule Builder rule that wraps a helper function
+    // The body_data contains the CC format rule to evaluate
+    case 'HelperCall': {
+      const bodyData = args.body_data;
+      if (bodyData) {
+        // Evaluate the body_data which is in CC format
+        return evaluateRule(bodyData, context, depth + 1, localScope);
+      }
+      // No body_data - try evaluating as a CC helper with the helper name
+      const helperName = args.helper_name;
+      if (helperName) {
+        const helperArgs = args.args || [];
+        return evaluateRule({ type: 'helper', name: helperName, args: helperArgs }, context, depth + 1, localScope);
+      }
+      log('warn', '[evaluateRuleBuilderRule] HelperCall missing both body_data and helper_name');
+      return undefined;
+    }
+
     // Unknown rule type - try to find as a custom helper
     default: {
       log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);

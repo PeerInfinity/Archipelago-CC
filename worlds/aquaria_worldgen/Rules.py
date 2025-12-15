@@ -102,12 +102,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Home Waters to Open Waters top left area", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, Nautilus nest to Home Waters, behind rock", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
@@ -172,27 +172,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple third area to Energy Temple fallen God room", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple fallen God room to Energy Temple Idol room", player),
-        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
+        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple fallen God room to Energy Temple after boss path", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple bottom entrance to Home Waters, behind rock", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area to Open Waters top right area, turtle room", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
     )
 
     world.set_rule(
@@ -202,7 +202,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area to The Veil bottom right area", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
     )
 
     world.set_rule(
@@ -247,12 +247,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Open Waters bottom left area to Abyss left area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters bottom right area to Abyss right area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
@@ -277,7 +277,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave to Arnassi Ruins, Crabbius Maximus lair", player),
-        (HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})) & ((HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) | (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'})))
+        (HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})) & ((HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) | (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'})))
     )
 
     world.set_rule(
@@ -372,7 +372,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas City to Mithalas City top path", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
     )
 
     world.set_rule(
@@ -382,7 +382,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas City top path to Mithalas castle, plant tube entrance", player),
-        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'}))
+        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'}))
     )
 
     world.set_rule(
@@ -442,17 +442,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas Cathedral start to Mithalas Cathedral end", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mithalas Cathedral end to Mithalas Cathedral start", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mithalas Cathedral end to Mithalas Cathedral underground", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
@@ -477,12 +477,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas Cathedral, before Mithalan God to Mithalas Cathedral, after Mithalan God", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest top left area to Kelp Forest top left area fish pass", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'})) & (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'})) & (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'}))
     )
 
     world.set_rule(
@@ -502,7 +502,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Kelp Forest bottom left area, spirit crystals", player),
-        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) | (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
+        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) | (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
     )
 
     world.set_rule(
@@ -557,7 +557,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest Drunian God room entrance to Kelp Forest Drunian God room", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
@@ -572,12 +572,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mermog cave to Mermog cave boss", player),
-        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mermog cave boss to Mermog cave", player),
-        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
 
     world.set_rule(
@@ -682,7 +682,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, fish pass left of temple to Octopus Cave top entrance", player),
-        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
+        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
     )
 
     world.set_rule(
@@ -717,32 +717,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple left area entrance to Sun Temple right area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple left area entrance to Sun Temple left area", player),
-        (HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})) | (HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Has Sun Crystal'}, {'type': 'helper', 'name': '_has_bind_song', 'args': []}]}))
+        (HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})) | (HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Has Sun Crystal'}, {'type': 'item_check', 'item': 'Bind Song'}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple right area to Sun Temple left area entrance", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) | (HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) | (HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple before boss area to Sun Temple left area", player),
-        (HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})) | (HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Has Sun Crystal'}, {'type': 'helper', 'name': '_has_bind_song', 'args': []}]}))
+        (HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})) | (HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Has Sun Crystal'}, {'type': 'item_check', 'item': 'Bind Song'}]}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple before boss area to Sun Temple boss area", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple boss area to Sun Temple before boss area", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
@@ -752,7 +752,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Abyss left area to Abyss left area, King jellyfish cave", player),
-        ((HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_data={'type': 'item_check', 'item': 'Energy Form'}))) | (HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_li', 'args': []}, {'type': 'item_check', 'item': 'Dual Form'}]}))
+        ((HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_data={'type': 'item_check', 'item': 'Energy Form'}))) | (HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}))
     )
 
     world.set_rule(
@@ -777,7 +777,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area to First Secret area", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_data={'type': 'item_check', 'item': 'Spirit Form'})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_data={'type': 'item_check', 'item': 'Spirit Form'})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
     )
 
     world.set_rule(
@@ -792,7 +792,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Abyss right area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
@@ -852,12 +852,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sunken City left area to Sunken City left area", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Sunken City left area to Sunken City boss area", player),
-        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
+        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
     )
 
     world.set_rule(
@@ -867,12 +867,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sunken City right area to Sunken City right area crates", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Sunken City boss area to Sunken City left area", player),
-        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
+        (HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_data={'type': 'item_check', 'item': 'Beast Form'})) & (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
     )
 
     world.set_rule(
@@ -882,7 +882,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Body center area to Abyss left bottom area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
@@ -897,22 +897,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Body center area to The Body bottom area", player),
-        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_li', 'args': []}, {'type': 'item_check', 'item': 'Dual Form'}]})
+        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body bottom area to The Body center area", player),
-        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_li', 'args': []}, {'type': 'item_check', 'item': 'Dual Form'}]})
+        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body bottom area to The Body, before final boss", player),
-        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_li', 'args': []}, {'type': 'item_check', 'item': 'Dual Form'}]})
+        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, before final boss to The Body bottom area", player),
-        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_li', 'args': []}, {'type': 'item_check', 'item': 'Dual Form'}]})
+        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]})
     )
 
     world.set_rule(
@@ -922,7 +922,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Body, before final boss to The Body, final boss", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_li', 'args': []}, {'type': 'item_check', 'item': 'Dual Form'}]})) & (HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_data={'type': 'item_check', 'item': 'Energy Form'})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]})) & (HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_data={'type': 'item_check', 'item': 'Energy Form'})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
     )
 
     world.set_rule(
@@ -972,7 +972,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("First Secret area to Abyss right area", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_data={'type': 'item_check', 'item': 'Spirit Form'})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_data={'type': 'item_check', 'item': 'Spirit Form'})) & (HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_data={'type': 'item_check', 'item': 'Sun Form'}))
     )
 
     world.set_rule(
@@ -982,17 +982,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple Idol room to Energy Temple fallen God room", player),
-        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
+        (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
     )
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple after boss path to Energy Temple fallen God room", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Energy Temple after boss path to Energy Temple blaster room", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})) & (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})) & (HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_data={'type': 'item_check', 'item': 'Nature Form'}))
     )
 
     world.set_rule(
@@ -1007,12 +1007,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, behind rock to Home Waters, Nautilus nest", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, behind rock to Energy Temple bottom entrance", player),
-        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]}))
+        (HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_data={'type': 'item_check', 'item': 'Bind Song'})) & (HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]}))
     )
     # Location rules
     world.set_rule(
@@ -1032,7 +1032,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Naija's Home, bulb after the energy door", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_energy_form', 'args': []}, {'type': 'helper', 'name': '_has_dual_form', 'args': []}]})
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Energy Form'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Li and Li Song'}, {'type': 'item_check', 'item': 'Dual Form'}]}]})
     )
 
     world.set_rule(
@@ -1092,12 +1092,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arnassi Ruins, Song Plant Spore", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
     )
 
     world.set_rule(
         multiworld.get_location("Arnassi Ruins, Arnassi Armor", player),
-        (HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'helper', 'name': '_has_hot_soup', 'args': []}]})) | (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
+        (HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Hot Soup'}, {'type': 'constant', 'value': 'Hot Soup x 2'}]}]}]})) | (HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_data={'type': 'item_check', 'item': 'Fish Form'}))
     )
 
     world.set_rule(
@@ -1127,7 +1127,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Kelp Forest top right area, Black Pearl", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
@@ -1137,7 +1137,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Kelp Forest bottom right area, Odd Container", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'helper', 'name': '_has_sun_form', 'args': []}]})
+        HelperCall(helper_func=_has_light, helper_name="_has_light", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Baby Dumbo'}, {'type': 'item_check', 'item': 'Sun Form'}]})
     )
 
     world.set_rule(
@@ -1152,12 +1152,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Veil top right area, bulb at the top of the waterfall", player),
-        HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'helper', 'name': '_has_hot_soup', 'args': []}]})
+        HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Hot Soup'}, {'type': 'constant', 'value': 'Hot Soup x 2'}]}]}]})
     )
 
     world.set_rule(
         multiworld.get_location("The Veil top right area, bulb in the middle of the wall jump cliff", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'item_check', 'item': 'Arnassi Armor'}]})
     )
 
     world.set_rule(
@@ -1172,12 +1172,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sun Temple boss path, first cliff bulb", player),
-        ((HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'helper', 'name': '_has_hot_soup', 'args': []}]})) | (Has("Lumerean God beated"))) | (Has("Sun God beated"))
+        ((HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Hot Soup'}, {'type': 'constant', 'value': 'Hot Soup x 2'}]}]}]})) | (Has("Lumerean God beated"))) | (Has("Sun God beated"))
     )
 
     world.set_rule(
         multiworld.get_location("Sun Temple boss path, second cliff bulb", player),
-        ((HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': '_has_beast_form', 'args': []}, {'type': 'helper', 'name': '_has_hot_soup', 'args': []}]})) | (Has("Lumerean God beated"))) | (Has("Sun God beated"))
+        ((HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beast Form'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Hot Soup'}, {'type': 'constant', 'value': 'Hot Soup x 2'}]}]}]})) | (Has("Lumerean God beated"))) | (Has("Sun God beated"))
     )
 
     world.set_rule(
