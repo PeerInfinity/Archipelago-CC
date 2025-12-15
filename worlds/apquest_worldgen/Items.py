@@ -23,7 +23,7 @@ class ItemData:
 
 item_table: Dict[str, ItemData] = {
     "Key": ItemData(1, ItemClassification.progression),
-    "Sword": ItemData(2, ItemClassification.filler),
+    "Sword": ItemData(2, ItemClassification.progression | ItemClassification.useful),
     "Shield": ItemData(3, ItemClassification.progression),
     "Hammer": ItemData(4, ItemClassification.filler),
     "Health Upgrade": ItemData(5, ItemClassification.useful),
