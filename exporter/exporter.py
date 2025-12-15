@@ -1529,6 +1529,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 'entrances': [],
                 'exits': [],
                 'locations': [],
+                'placeholder': True,  # Mark as placeholder - these regions don't exist at runtime
             }
 
         # Sort all rules for consistency
