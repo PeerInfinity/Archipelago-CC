@@ -602,6 +602,114 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
     return helpers
 
 
+def _extract_items_from_rule(rule: Any) -> set:
+    """
+    Recursively extract all item names referenced in a rule.
+
+    Handles the CC format rules like:
+    - {"rule": "Has", "args": {"item_name": "...", "count": 1}}
+    - {"rule": "HasAll", "args": {"items": ["...", "..."]}}
+    - {"rule": "HasAny", "args": {"items": ["...", "..."]}}
+    - {"rule": "HasGroup", "args": {"item_name_group": "...", "count": 1}}
+    - Also legacy item_check format: {"type": "item_check", "item": {"type": "constant", "value": "..."}}
+
+    Args:
+        rule: A rule dict, list, or primitive value
+
+    Returns:
+        Set of item names found in the rule
+    """
+    items = set()
+
+    if rule is None:
+        return items
+
+    if isinstance(rule, dict):
+        rule_type = rule.get('type', '')
+        rule_name = rule.get('rule', '')
+
+        # Check for CC format rules
+        if rule_name == 'Has':
+            args = rule.get('args', {})
+            item_name = args.get('item_name', '')
+            if item_name:
+                items.add(item_name)
+
+        elif rule_name == 'HasAll' or rule_name == 'HasAny':
+            args = rule.get('args', {})
+            item_names = args.get('items', [])
+            items.update(item_names)
+
+        elif rule_name == 'HasAllCounts' or rule_name == 'HasAnyCount':
+            args = rule.get('args', {})
+            item_counts = args.get('item_counts', {})
+            items.update(item_counts.keys())
+
+        elif rule_name == 'HasFromList' or rule_name == 'HasFromListUnique':
+            args = rule.get('args', {})
+            item_names = args.get('items', [])
+            items.update(item_names)
+
+        # HasGroup/HasGroupUnique reference groups, not individual items
+        # We skip these as group membership is checked differently
+
+        # Check for legacy item_check rules
+        elif rule_type == 'item_check':
+            item = rule.get('item', {})
+            if isinstance(item, dict) and item.get('type') == 'constant':
+                item_name = item.get('value', '')
+                if item_name:
+                    items.add(item_name)
+            elif isinstance(item, str):
+                items.add(item)
+
+        # Recurse into all values
+        for value in rule.values():
+            items.update(_extract_items_from_rule(value))
+
+    elif isinstance(rule, list):
+        for item in rule:
+            items.update(_extract_items_from_rule(item))
+
+    return items
+
+
+def _extract_all_rule_items(
+    locations: Dict[str, 'LocationData'],
+    exits: Dict[str, 'ExitData'],
+    helpers: Dict[str, 'HelperData']
+) -> set:
+    """
+    Extract all item names referenced in any access rules.
+
+    Args:
+        locations: Dict of location data with access rules
+        exits: Dict of exit data with access rules
+        helpers: Dict of helper functions with rule bodies
+
+    Returns:
+        Set of all item names referenced in rules
+    """
+    all_items = set()
+
+    # Extract from location rules
+    for loc in locations.values():
+        if loc.access_rule:
+            all_items.update(_extract_items_from_rule(loc.access_rule))
+
+    # Extract from exit rules
+    for exit_data in exits.values():
+        if exit_data.access_rule:
+            all_items.update(_extract_items_from_rule(exit_data.access_rule))
+
+    # Extract from helper bodies
+    for helper in helpers.values():
+        if helper.body:
+            all_items.update(_extract_items_from_rule(helper.body))
+
+    return all_items
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -625,6 +733,44 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
 
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data)
+
+    # Find items referenced in rules that are not obtainable from the pool/locked items
+    # These need to be added to the item pool so rules can be satisfied
+    rule_items = _extract_all_rule_items(locations, exits, helpers)
+
+    # Build set of obtainable items: items in pool + items in locked placements
+    obtainable_items = set(itempool_counts.keys())
+    obtainable_items.update(locked_placements.values())
+    # Also include items already in starting_items
+    obtainable_items.update(starting_items.keys())
+
+    # Find items referenced in rules that are not obtainable
+    # Exclude event items (id=None) since those are handled differently
+    missing_items = set()
+    for item_name in rule_items:
+        if item_name not in obtainable_items:
+            # Check if this item exists in the items dict
+            item_data = items.get(item_name)
+            if item_data:
+                # Skip event items - they're handled via locked placements
+                if not item_data.is_event:
+                    missing_items.add(item_name)
+            # If item isn't in items dict at all, it might be a resolved name
+            # that needs to be in the pool to satisfy rules
+            else:
+                missing_items.add(item_name)
+
+    # Add missing items to starting_items so they're precollected
+    # This ensures rules that check for items not in the pool can still be satisfied
+    # Also update their classification to "progression" so they get collected into prog_items
+    # (The CollectionState only collects items with advancement=True, which requires progression)
+    for item_name in missing_items:
+        if item_name not in starting_items:
+            starting_items[item_name] = 1
+        # Update classification to progression so the item gets collected into prog_items
+        # when it's precollected (CollectionState.collect only adds advancement items)
+        if item_name in items and items[item_name].classification == 'filler':
+            items[item_name].classification = 'progression'
 
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)

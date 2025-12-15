@@ -34,35 +34,41 @@
             "name": "AP-1-235",
             "id": 131306,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-rocketry",
+              "name": "progressive-research-speed",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-5-349",
             "id": 135416,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-armor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-798",
+            "id": 131869,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-inserter",
@@ -70,60 +76,47 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "AP-1-798",
-            "id": 131869,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-5-126",
             "id": 135193,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-laser-shooting-speed",
+              "name": "progressive-inserter",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-2-328",
             "id": 132398,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-worker-robots-storage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-431",
+            "id": 134499,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-vehicle",
@@ -131,1354 +124,159 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "AP-4-431",
-            "id": 134499,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-3-926",
             "id": 133995,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-science-pack",
+              "name": "progressive-logistics",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-1-757",
             "id": 131828,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-energy-shield",
+              "name": "progressive-flamethrower",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-3-413",
             "id": 133482,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-physical-projectile-damage",
+              "name": "progressive-train-network",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-4-529",
             "id": 134597,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-worker-robots-storage",
+              "name": "progressive-laser-shooting-speed",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-2-416",
             "id": 132486,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-research-speed",
+              "name": "progressive-processing",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-4-304",
             "id": 134372,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-processing",
+              "name": "progressive-armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-4-024",
             "id": 134092,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-flamethrower",
+              "name": "progressive-speed-module",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-6-946",
             "id": 137012,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "rocket-silo",
+              "name": "progressive-fluid-handling",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-4-169",
             "id": 134237,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-physical-projectile-damage",
+              "name": "progressive-laser-shooting-speed",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "AP-4-954",
             "id": 135022,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-041",
-            "id": 133110,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-logistics",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-822",
-            "id": 134890,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-179",
-            "id": 132249,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-mining-productivity",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-097",
-            "id": 131168,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "toolbelt",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-634",
-            "id": 132704,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-military",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-974",
-            "id": 134043,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-flamethrower",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-688",
-            "id": 132758,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "radar",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-499",
-            "id": 134567,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-738",
-            "id": 134806,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-follower",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-141",
-            "id": 131212,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "logistic-robotics",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-683",
-            "id": 132753,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "advanced-circuit",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-650",
-            "id": 132720,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "rocket-fuel",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-459",
-            "id": 131530,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-laser-weapons-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-055",
-            "id": 131126,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-logistics",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-117",
-            "id": 135184,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated production-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "uranium-mining",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-269",
-            "id": 132339,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-flamethrower",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-220",
-            "id": 135287,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-338",
-            "id": 135405,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-stronger-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-022",
-            "id": 134090,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-physical-projectile-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-413",
-            "id": 132483,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-weapon-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-502",
-            "id": 132572,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "circuit-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-722",
-            "id": 133791,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-mining-productivity",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-806",
-            "id": 133875,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-physical-projectile-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-524",
-            "id": 132594,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "advanced-combinators",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-769",
-            "id": 131840,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-laser-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-011",
-            "id": 136077,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-worker-robots-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-013",
-            "id": 134081,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "battery",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-849",
-            "id": 134917,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-productivity-module",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-600",
-            "id": 134668,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-physical-projectile-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-374",
-            "id": 134442,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-stronger-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-002",
-            "id": 136068,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-worker-robots-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-654",
-            "id": 132724,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "fission-reactor-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-274",
-            "id": 134342,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-272",
-            "id": 132342,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-research-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-129",
-            "id": 133198,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated military-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "land-mine",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-072",
-            "id": 132142,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-mining-productivity",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-898",
-            "id": 132968,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-worker-robots-storage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-696",
-            "id": 134764,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "effect-transmission",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-633",
-            "id": 131704,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-science-pack",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-972",
-            "id": 135040,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-science-pack",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-076",
-            "id": 131147,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-follower-robot-count",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-719",
-            "id": 133788,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-880",
-            "id": 131951,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-personal-battery",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-703",
-            "id": 135770,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-speed-module",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-211",
-            "id": 131282,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "robotics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-676",
-            "id": 136742,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-automation",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-735",
-            "id": 135802,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-research-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-270",
-            "id": 132340,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-speed-module",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-755",
-            "id": 135822,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-754",
-            "id": 131825,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "exoskeleton-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-861",
-            "id": 132931,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-weapon-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-077",
-            "id": 136143,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-logistics",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-469",
-            "id": 132539,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "concrete",
@@ -1486,991 +284,15 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-5-464",
-            "id": 135531,
+            "name": "AP-3-041",
+            "id": 133110,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-954",
-            "id": 134023,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-weapon-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-886",
-            "id": 133955,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-weapon-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-999",
-            "id": 135067,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "solar-energy",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-609",
-            "id": 135676,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-201",
-            "id": 136267,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-316",
-            "id": 135383,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-efficiency-module",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-829",
-            "id": 134897,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-702",
-            "id": 133771,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-983",
-            "id": 132054,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-engine",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-953",
-            "id": 134022,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-stronger-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-996",
-            "id": 133066,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-follower",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-080",
-            "id": 131151,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "nuclear-power",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-901",
-            "id": 132971,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "lamp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-844",
-            "id": 135911,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "lubricant",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-734",
-            "id": 135801,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-flamethrower",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-475",
-            "id": 131546,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "processing-unit",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-193",
-            "id": 136259,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-126",
-            "id": 131197,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-follower-robot-count",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-406",
-            "id": 134474,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-follower-robot-count",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-954",
-            "id": 132025,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-science-pack",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-148",
-            "id": 136214,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-827",
-            "id": 134895,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "repair-pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-409",
-            "id": 134477,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-productivity-module",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-240",
-            "id": 133309,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-025",
-            "id": 133094,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-weapons-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-133",
-            "id": 135200,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-turret",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-507",
-            "id": 132577,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-laser-weapons-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-585",
-            "id": 132655,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-flamethrower",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-350",
-            "id": 134418,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-military",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-466",
-            "id": 133535,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "landfill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-401",
-            "id": 135468,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-research-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-951",
-            "id": 132022,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-worker-robots-storage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-210",
-            "id": 133279,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-079",
-            "id": 131150,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "belt-immunity-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-603",
-            "id": 134671,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-weapon-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-618",
-            "id": 136684,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "artillery",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-496",
-            "id": 136562,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-research-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-180",
-            "id": 135247,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-711",
-            "id": 131782,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-military",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-801",
-            "id": 133870,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-stronger-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-693",
-            "id": 135760,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-personal-battery",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-934",
-            "id": 136001,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-military",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-644",
-            "id": 132714,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "personal-laser-defense-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-261",
-            "id": 135328,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-efficiency-module",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-784",
-            "id": 132854,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "progressive-wall",
@@ -2478,259 +300,15 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-6-269",
-            "id": 136335,
+            "name": "AP-4-822",
+            "id": 134890,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-electric-energy-distribution",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-746",
-            "id": 136812,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-vehicle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-514",
-            "id": 132584,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "cliff-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-554",
-            "id": 133623,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "discharge-defense-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-889",
-            "id": 132959,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-vehicle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-092",
-            "id": 136158,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-flamethrower",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-473",
-            "id": 132543,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "low-density-structure",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-336",
-            "id": 134404,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "solar-panel-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-195",
-            "id": 131266,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-advanced-material-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-126",
-            "id": 134194,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-personal-roboport-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-034",
-            "id": 135101,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-energy-shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-494",
-            "id": 131565,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "progressive-train-network",
@@ -2738,45 +316,31 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-6-117",
-            "id": 136183,
+            "name": "AP-2-179",
+            "id": 132249,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-train-network",
+              "name": "progressive-processing",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-6-577",
-            "id": 136643,
+            "name": "AP-1-097",
+            "id": 131168,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "progressive-turret",
@@ -2784,109 +348,15 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-5-472",
-            "id": 135539,
+            "name": "AP-2-634",
+            "id": 132704,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-research-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-652",
-            "id": 132722,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-flamethrower",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-063",
-            "id": 133132,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-737",
-            "id": 136803,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-weapons-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-881",
-            "id": 134949,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "progressive-worker-robots-speed",
@@ -2894,440 +364,15 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-4-276",
-            "id": 134344,
+            "name": "AP-3-974",
+            "id": 134043,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-laser-weapons-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-561",
-            "id": 135628,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-576",
-            "id": 136642,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-weapon-shooting-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-678",
-            "id": 134746,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-wall",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-371",
-            "id": 136437,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-823",
-            "id": 134891,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-fluid-handling",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-733",
-            "id": 133802,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-318",
-            "id": 133387,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-079",
-            "id": 133148,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-537",
-            "id": 133606,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-automation",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-674",
-            "id": 133743,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-stronger-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-330",
-            "id": 131401,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-train-network",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-599",
-            "id": 135666,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-speed-module",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-406",
-            "id": 136472,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-298",
-            "id": 135365,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-follower-robot-count",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-527",
-            "id": 134595,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-rocketry",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-800",
-            "id": 136866,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-productivity-module",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-927",
-            "id": 134995,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-158",
-            "id": 131229,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-321",
-            "id": 136387,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "progressive-laser-shooting-speed",
@@ -3335,403 +380,15 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-5-356",
-            "id": 135423,
+            "name": "AP-2-688",
+            "id": 132758,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-engine",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-934",
-            "id": 132005,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-worker-robots-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-4-649",
-            "id": 134717,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "logistic-system",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-108",
-            "id": 131179,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-953",
-            "id": 136020,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-science-pack",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-255",
-            "id": 132325,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-advanced-material-processing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-106",
-            "id": 133175,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-fluid-handling",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-794",
-            "id": 132864,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-worker-robots-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-070",
-            "id": 136136,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-stronger-explosives",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-998",
-            "id": 136065,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-personal-roboport-equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-5-075",
-            "id": 135142,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-inserter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-031",
-            "id": 131102,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-automation",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-043",
-            "id": 133112,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-follower",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-653",
-            "id": 131724,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "plastics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-997",
-            "id": 132068,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-physical-projectile-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-6-096",
-            "id": 136162,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated logistic-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
-            },
-            "item": {
-              "name": "progressive-rocketry",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-1-194",
-            "id": 131265,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "night-vision-equipment",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-491",
-            "id": 132561,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-laser-weapons-damage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-3-794",
-            "id": 133863,
-            "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "oil-gathering",
@@ -3739,107 +396,79 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-6-684",
-            "id": 136750,
+            "name": "AP-4-499",
+            "id": 134567,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "progressive-efficiency-module",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "AP-2-338",
-            "id": 132408,
-            "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
-            },
-            "item": {
-              "name": "progressive-electric-energy-distribution",
+              "name": "progressive-flamethrower",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-6-685",
-            "id": 136751,
+            "name": "AP-4-738",
+            "id": 134806,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated chemical-science-pack",
-                  "Automated logistic-science-pack",
-                  "Automated military-science-pack",
-                  "Automated production-science-pack",
-                  "Automated utility-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "construction-robotics",
+              "name": "progressive-worker-robots-storage",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-2-763",
-            "id": 132833,
+            "name": "AP-1-141",
+            "id": 131212,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Automated automation-science-pack",
-                  "Automated logistic-science-pack"
-                ]
-              }
+              "args": {}
             },
             "item": {
-              "name": "steel-axe",
+              "name": "progressive-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-683",
+            "id": 132753,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-weapons-damage",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-1-499",
-            "id": 131570,
+            "name": "AP-2-650",
+            "id": 132720,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "electric-energy-accumulators",
@@ -3847,18 +476,415 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
-            "name": "AP-2-569",
-            "id": 132639,
+            "name": "AP-1-459",
+            "id": 131530,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
-              }
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-055",
+            "id": 131126,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-worker-robots-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-117",
+            "id": 135184,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-rocketry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-269",
+            "id": 132339,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "advanced-circuit",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-220",
+            "id": 135287,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-armor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-338",
+            "id": 135405,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "logistic-robotics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-022",
+            "id": 134090,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "solar-panel-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-413",
+            "id": 132483,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "low-density-structure",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-502",
+            "id": 132572,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-efficiency-module",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-722",
+            "id": 133791,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-engine",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-806",
+            "id": 133875,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-wall",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-524",
+            "id": 132594,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "effect-transmission",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-769",
+            "id": 131840,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower-robot-count",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-011",
+            "id": 136077,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "steel-axe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-013",
+            "id": 134081,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-849",
+            "id": 134917,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-personal-battery",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-600",
+            "id": 134668,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower-robot-count",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-374",
+            "id": 134442,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-military",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-002",
+            "id": 136068,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-654",
+            "id": 132724,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-personal-roboport-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-274",
+            "id": 134342,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-military",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-272",
+            "id": 132342,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "lubricant",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-129",
+            "id": 133198,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-electric-energy-distribution",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-072",
+            "id": 132142,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-898",
+            "id": 132968,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-696",
+            "id": 134764,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "uranium-ammo",
@@ -3866,22 +892,2015 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "AP-1-633",
+            "id": 131704,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-972",
+            "id": 135040,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-rocketry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-076",
+            "id": 131147,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-stronger-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-719",
+            "id": 133788,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "robotics",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-880",
+            "id": 131951,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-703",
+            "id": 135770,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-211",
+            "id": 131282,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-advanced-material-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-676",
+            "id": 136742,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-735",
+            "id": 135802,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-flamethrower",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-270",
+            "id": 132340,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "construction-robotics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-755",
+            "id": 135822,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-mining-productivity",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-754",
+            "id": 131825,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-861",
+            "id": 132931,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-vehicle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-077",
+            "id": 136143,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-weapon-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-469",
+            "id": 132539,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-464",
+            "id": 135531,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-954",
+            "id": 134023,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-science-pack",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-886",
+            "id": 133955,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-personal-battery",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-999",
+            "id": 135067,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-609",
+            "id": 135676,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-201",
+            "id": 136267,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-316",
+            "id": 135383,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-efficiency-module",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-829",
+            "id": 134897,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-weapons-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-702",
+            "id": 133771,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "solar-energy",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-983",
+            "id": 132054,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower-robot-count",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-953",
+            "id": 134022,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-science-pack",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-996",
+            "id": 133066,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-mining-productivity",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-080",
+            "id": 131151,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-physical-projectile-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-901",
+            "id": 132971,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-844",
+            "id": 135911,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "night-vision-equipment",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-734",
+            "id": 135801,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-automation",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-475",
+            "id": 131546,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-weapon-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-193",
+            "id": 136259,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "plastics",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-126",
+            "id": 131197,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-vehicle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-406",
+            "id": 134474,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-physical-projectile-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-954",
+            "id": 132025,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-turret",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-148",
+            "id": 136214,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-productivity-module",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-827",
+            "id": 134895,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "artillery",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-409",
+            "id": 134477,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-research-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-240",
+            "id": 133309,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-efficiency-module",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-025",
+            "id": 133094,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-worker-robots-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-133",
+            "id": 135200,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-507",
+            "id": 132577,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-585",
+            "id": 132655,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-research-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-350",
+            "id": 134418,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-stronger-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-466",
+            "id": 133535,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-flamethrower",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-401",
+            "id": 135468,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-stronger-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-951",
+            "id": 132022,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-automation",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-210",
+            "id": 133279,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-science-pack",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-079",
+            "id": 131150,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "uranium-mining",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-603",
+            "id": 134671,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-618",
+            "id": 136684,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "fission-reactor-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-496",
+            "id": 136562,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "landfill",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-180",
+            "id": 135247,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-weapons-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-711",
+            "id": 131782,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "lamp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-801",
+            "id": 133870,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "personal-laser-defense-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-693",
+            "id": 135760,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-weapons-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-934",
+            "id": 136001,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-physical-projectile-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-644",
+            "id": 132714,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-military",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-261",
+            "id": 135328,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-worker-robots-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-784",
+            "id": 132854,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-personal-roboport-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-269",
+            "id": 136335,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-weapon-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-746",
+            "id": 136812,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-energy-shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-514",
+            "id": 132584,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-rocketry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-554",
+            "id": 133623,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-productivity-module",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-889",
+            "id": 132959,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "rocket-fuel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-092",
+            "id": 136158,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-speed-module",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-473",
+            "id": 132543,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-military",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-336",
+            "id": 134404,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-195",
+            "id": 131266,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-126",
+            "id": 134194,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-speed-module",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-034",
+            "id": 135101,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-stronger-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-494",
+            "id": 131565,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "processing-unit",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-117",
+            "id": 136183,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-physical-projectile-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-577",
+            "id": 136643,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-logistics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-472",
+            "id": 135539,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-weapon-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-652",
+            "id": 132722,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-063",
+            "id": 133132,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-worker-robots-storage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-737",
+            "id": 136803,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-research-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-881",
+            "id": 134949,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-stronger-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-276",
+            "id": 134344,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "land-mine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-561",
+            "id": 135628,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "cliff-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-576",
+            "id": 136642,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-flamethrower",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-678",
+            "id": 134746,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-flamethrower",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-371",
+            "id": 136437,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-weapons-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-823",
+            "id": 134891,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-armor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-733",
+            "id": 133802,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-physical-projectile-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-318",
+            "id": 133387,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-physical-projectile-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-079",
+            "id": 133148,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-weapon-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-537",
+            "id": 133606,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "exoskeleton-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-674",
+            "id": 133743,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-science-pack",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-330",
+            "id": 131401,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-train-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-599",
+            "id": 135666,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-406",
+            "id": 136472,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower-robot-count",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-298",
+            "id": 135365,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-stronger-explosives",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-527",
+            "id": 134595,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "radar",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-800",
+            "id": 136866,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-energy-shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-927",
+            "id": 134995,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-advanced-material-processing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-158",
+            "id": 131229,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-science-pack",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-321",
+            "id": 136387,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-356",
+            "id": 135423,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-934",
+            "id": 132005,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-4-649",
+            "id": 134717,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-mining-productivity",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-108",
+            "id": 131179,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "nuclear-power",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-953",
+            "id": 136020,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-automation",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-255",
+            "id": 132325,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "belt-immunity-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-106",
+            "id": 133175,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-flamethrower",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-794",
+            "id": 132864,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "logistic-system",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-070",
+            "id": 136136,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "repair-pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-998",
+            "id": 136065,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-fluid-handling",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-5-075",
+            "id": 135142,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-productivity-module",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-031",
+            "id": 131102,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-logistics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-043",
+            "id": 133112,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "advanced-combinators",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-653",
+            "id": 131724,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-follower",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-997",
+            "id": 132068,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-worker-robots-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-096",
+            "id": 136162,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-engine",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-194",
+            "id": 131265,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "circuit-network",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-491",
+            "id": 132561,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "discharge-defense-equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-3-794",
+            "id": 133863,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "toolbelt",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-684",
+            "id": 136750,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-research-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-338",
+            "id": 132408,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-laser-weapons-damage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-6-685",
+            "id": 136751,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "rocket-silo",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-763",
+            "id": 132833,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-research-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-1-499",
+            "id": 131570,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-electric-energy-distribution",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "AP-2-569",
+            "id": 132639,
+            "access_rule": {
+              "rule": "True_",
+              "options": [],
+              "args": {}
+            },
+            "item": {
+              "name": "progressive-weapon-shooting-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           },
           {
             "name": "Rocket Launch",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "advanced-circuit",
-                  "night-vision-equipment",
-                  "plastics",
-                  "rocket-silo"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -6840,194 +5859,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "AP-1-235": "progressive-rocketry",
-      "AP-5-349": "progressive-inserter",
-      "AP-1-798": "progressive-processing",
-      "AP-5-126": "progressive-laser-shooting-speed",
-      "AP-2-328": "progressive-vehicle",
-      "AP-4-431": "progressive-processing",
-      "AP-3-926": "progressive-science-pack",
-      "AP-1-757": "progressive-energy-shield",
-      "AP-3-413": "progressive-physical-projectile-damage",
-      "AP-4-529": "progressive-worker-robots-storage",
-      "AP-2-416": "progressive-research-speed",
-      "AP-4-304": "progressive-processing",
-      "AP-4-024": "progressive-flamethrower",
-      "AP-6-946": "rocket-silo",
-      "AP-4-169": "progressive-physical-projectile-damage",
-      "AP-4-954": "progressive-laser-shooting-speed",
-      "AP-3-041": "progressive-logistics",
-      "AP-4-822": "progressive-laser-shooting-speed",
-      "AP-2-179": "progressive-mining-productivity",
-      "AP-1-097": "toolbelt",
-      "AP-2-634": "progressive-military",
-      "AP-3-974": "progressive-flamethrower",
-      "AP-2-688": "radar",
-      "AP-4-499": "progressive-processing",
-      "AP-4-738": "progressive-follower",
-      "AP-1-141": "logistic-robotics",
-      "AP-2-683": "advanced-circuit",
-      "AP-2-650": "rocket-fuel",
-      "AP-1-459": "progressive-laser-weapons-damage",
-      "AP-1-055": "progressive-logistics",
-      "AP-5-117": "uranium-mining",
-      "AP-2-269": "progressive-flamethrower",
-      "AP-5-220": "explosives",
-      "AP-5-338": "progressive-stronger-explosives",
-      "AP-4-022": "progressive-physical-projectile-damage",
-      "AP-2-413": "progressive-weapon-shooting-speed",
-      "AP-2-502": "circuit-network",
-      "AP-3-722": "progressive-mining-productivity",
-      "AP-3-806": "progressive-physical-projectile-damage",
-      "AP-2-524": "advanced-combinators",
-      "AP-1-769": "progressive-laser-shooting-speed",
-      "AP-6-011": "progressive-worker-robots-speed",
-      "AP-4-013": "battery",
-      "AP-4-849": "progressive-productivity-module",
-      "AP-4-600": "progressive-physical-projectile-damage",
-      "AP-4-374": "progressive-stronger-explosives",
-      "AP-6-002": "progressive-worker-robots-speed",
-      "AP-2-654": "fission-reactor-equipment",
-      "AP-4-274": "progressive-laser-shooting-speed",
-      "AP-2-272": "progressive-research-speed",
-      "AP-3-129": "land-mine",
-      "AP-2-072": "progressive-mining-productivity",
-      "AP-2-898": "progressive-worker-robots-storage",
-      "AP-4-696": "effect-transmission",
-      "AP-1-633": "progressive-science-pack",
-      "AP-4-972": "progressive-science-pack",
-      "AP-1-076": "progressive-follower-robot-count",
-      "AP-3-719": "progressive-train-network",
-      "AP-1-880": "progressive-personal-battery",
-      "AP-5-703": "progressive-speed-module",
-      "AP-1-211": "robotics",
-      "AP-6-676": "progressive-automation",
-      "AP-5-735": "progressive-research-speed",
-      "AP-2-270": "progressive-speed-module",
-      "AP-5-755": "progressive-train-network",
-      "AP-1-754": "exoskeleton-equipment",
-      "AP-2-861": "progressive-weapon-shooting-speed",
-      "AP-6-077": "progressive-logistics",
-      "AP-2-469": "concrete",
-      "AP-5-464": "progressive-laser-shooting-speed",
-      "AP-3-954": "progressive-weapon-shooting-speed",
-      "AP-3-886": "progressive-weapon-shooting-speed",
-      "AP-4-999": "solar-energy",
-      "AP-5-609": "progressive-inserter",
-      "AP-6-201": "progressive-train-network",
-      "AP-5-316": "progressive-efficiency-module",
-      "AP-4-829": "progressive-inserter",
-      "AP-3-702": "progressive-inserter",
-      "AP-1-983": "progressive-engine",
-      "AP-3-953": "progressive-stronger-explosives",
-      "AP-2-996": "progressive-follower",
-      "AP-1-080": "nuclear-power",
-      "AP-2-901": "lamp",
-      "AP-5-844": "lubricant",
-      "AP-5-734": "progressive-flamethrower",
-      "AP-1-475": "processing-unit",
-      "AP-6-193": "progressive-inserter",
-      "AP-1-126": "progressive-follower-robot-count",
-      "AP-4-406": "progressive-follower-robot-count",
-      "AP-1-954": "progressive-science-pack",
-      "AP-6-148": "progressive-armor",
-      "AP-4-827": "repair-pack",
-      "AP-4-409": "progressive-productivity-module",
-      "AP-3-240": "progressive-processing",
-      "AP-3-025": "progressive-laser-weapons-damage",
-      "AP-5-133": "progressive-turret",
-      "AP-2-507": "progressive-laser-weapons-damage",
-      "AP-2-585": "progressive-flamethrower",
-      "AP-4-350": "progressive-military",
-      "AP-3-466": "landfill",
-      "AP-5-401": "progressive-research-speed",
-      "AP-1-951": "progressive-worker-robots-storage",
-      "AP-3-210": "progressive-train-network",
-      "AP-1-079": "belt-immunity-equipment",
-      "AP-4-603": "progressive-weapon-shooting-speed",
-      "AP-6-618": "artillery",
-      "AP-6-496": "progressive-research-speed",
-      "AP-5-180": "progressive-train-network",
-      "AP-1-711": "progressive-military",
-      "AP-3-801": "progressive-stronger-explosives",
-      "AP-5-693": "progressive-personal-battery",
-      "AP-5-934": "progressive-military",
-      "AP-2-644": "personal-laser-defense-equipment",
-      "AP-5-261": "progressive-efficiency-module",
-      "AP-2-784": "progressive-wall",
-      "AP-6-269": "progressive-electric-energy-distribution",
-      "AP-6-746": "progressive-vehicle",
-      "AP-2-514": "cliff-explosives",
-      "AP-3-554": "discharge-defense-equipment",
-      "AP-2-889": "progressive-vehicle",
-      "AP-6-092": "progressive-flamethrower",
-      "AP-2-473": "low-density-structure",
-      "AP-4-336": "solar-panel-equipment",
-      "AP-1-195": "progressive-advanced-material-processing",
-      "AP-4-126": "progressive-personal-roboport-equipment",
-      "AP-5-034": "progressive-energy-shield",
-      "AP-1-494": "progressive-train-network",
-      "AP-6-117": "progressive-train-network",
-      "AP-6-577": "progressive-turret",
-      "AP-5-472": "progressive-research-speed",
-      "AP-2-652": "progressive-flamethrower",
-      "AP-3-063": "progressive-train-network",
-      "AP-6-737": "progressive-laser-weapons-damage",
-      "AP-4-881": "progressive-worker-robots-speed",
-      "AP-4-276": "progressive-laser-weapons-damage",
-      "AP-5-561": "progressive-inserter",
-      "AP-6-576": "progressive-weapon-shooting-speed",
-      "AP-4-678": "progressive-wall",
-      "AP-6-371": "progressive-armor",
-      "AP-4-823": "progressive-fluid-handling",
-      "AP-3-733": "progressive-processing",
-      "AP-3-318": "progressive-processing",
-      "AP-3-079": "progressive-inserter",
-      "AP-3-537": "progressive-automation",
-      "AP-3-674": "progressive-stronger-explosives",
-      "AP-1-330": "progressive-train-network",
-      "AP-5-599": "progressive-speed-module",
-      "AP-6-406": "progressive-processing",
-      "AP-5-298": "progressive-follower-robot-count",
-      "AP-4-527": "progressive-rocketry",
-      "AP-6-800": "progressive-productivity-module",
-      "AP-4-927": "progressive-armor",
-      "AP-1-158": "progressive-armor",
-      "AP-6-321": "progressive-laser-shooting-speed",
-      "AP-5-356": "progressive-engine",
-      "AP-1-934": "progressive-worker-robots-speed",
-      "AP-4-649": "logistic-system",
-      "AP-1-108": "progressive-inserter",
-      "AP-5-953": "progressive-science-pack",
-      "AP-2-255": "progressive-advanced-material-processing",
-      "AP-3-106": "progressive-fluid-handling",
-      "AP-2-794": "progressive-worker-robots-speed",
-      "AP-6-070": "progressive-stronger-explosives",
-      "AP-5-998": "progressive-personal-roboport-equipment",
-      "AP-5-075": "progressive-inserter",
-      "AP-1-031": "progressive-automation",
-      "AP-3-043": "progressive-follower",
-      "AP-1-653": "plastics",
-      "AP-1-997": "progressive-physical-projectile-damage",
-      "AP-6-096": "progressive-rocketry",
-      "AP-1-194": "night-vision-equipment",
-      "AP-2-491": "progressive-laser-weapons-damage",
-      "AP-3-794": "oil-gathering",
-      "AP-6-684": "progressive-efficiency-module",
-      "AP-2-338": "progressive-electric-energy-distribution",
-      "AP-6-685": "construction-robotics",
-      "AP-2-763": "steel-axe",
-      "AP-1-499": "electric-energy-accumulators",
-      "AP-2-569": "uranium-ammo",
-      "Rocket Launch": "Victory",
-      "Automate automation-science-pack": "Automated automation-science-pack",
-      "Automate chemical-science-pack": "Automated chemical-science-pack",
-      "Automate logistic-science-pack": "Automated logistic-science-pack",
-      "Automate military-science-pack": "Automated military-science-pack",
-      "Automate production-science-pack": "Automated production-science-pack",
-      "Automate utility-science-pack": "Automated utility-science-pack"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -7049,7 +5881,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": 1,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
