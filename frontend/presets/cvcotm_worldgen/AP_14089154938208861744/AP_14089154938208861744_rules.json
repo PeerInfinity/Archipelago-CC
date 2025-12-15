@@ -23,12 +23,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_1",
+                  "name": "has_jump_level_1",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
@@ -48,12 +48,12 @@
               }
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "Griffin Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Push crate treasure room",
@@ -67,12 +67,12 @@
               }
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Fleamen brain room - Lower",
@@ -88,12 +88,12 @@
               }
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Fleamen brain room - Upper",
@@ -106,19 +106,19 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_1",
+                      "name": "has_jump_level_1",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                  "name": "has_jump_level_4",
                   "args": []
                 }
               ]
@@ -129,7 +129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon dash room",
@@ -144,7 +144,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Tackle block treasure room",
@@ -158,12 +158,12 @@
               }
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon bone pit - Lower",
@@ -173,12 +173,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon bone pit - Upper",
@@ -188,23 +188,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                  "name": "has_jump_level_3",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Below right column save room",
@@ -214,12 +214,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "Golem Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Right column fake wall",
@@ -229,12 +229,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Right column Spirit room",
@@ -244,12 +244,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "Black Dog Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Muddy Mudman platforms room - Lower",
@@ -259,12 +259,12 @@
               "value": true
             },
             "item": {
-              "name": "Unicorn Card",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Muddy Mudman platforms room - Upper",
@@ -274,12 +274,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_1",
+                  "name": "has_jump_level_1",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
@@ -290,7 +290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Slide space zone",
@@ -315,12 +315,12 @@
               "value": true
             },
             "item": {
-              "name": "Last Key",
+              "name": "MP Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Pre-Cerberus Hopper treasure room",
@@ -330,12 +330,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Heavy Ring",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Behind Cerberus",
@@ -350,7 +350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Mummies' fake wall",
@@ -366,12 +366,12 @@
               }
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -402,12 +402,12 @@
               "value": true
             },
             "item": {
-              "name": "Cleansing",
+              "name": "HP Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss Staircase: Loopback drop",
@@ -417,12 +417,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -449,12 +449,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
@@ -471,24 +471,24 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                      "name": "has_jump_level_2",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                  "name": "has_jump_level_3",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
@@ -502,12 +502,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_broke_iron_maidens",
+                  "name": "broke_iron_maidens",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_push",
+                  "name": "has_push",
                   "args": []
                 }
               ]
@@ -575,12 +575,12 @@
               }
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss Staircase: Upper fake wall",
@@ -590,12 +590,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Skeleton foyer fake wall",
@@ -605,12 +605,12 @@
               "value": true
             },
             "item": {
-              "name": "Tackle",
+              "name": "Heart Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Main gallery fake wall",
@@ -625,7 +625,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Below coyote jump",
@@ -640,7 +640,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Push crate gallery",
@@ -654,12 +654,12 @@
               }
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Past coyote jump",
@@ -669,12 +669,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Tackle block gallery",
@@ -693,7 +693,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Wicked roc chamber - Lower",
@@ -703,12 +703,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Tackle",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Wicked roc chamber - Upper",
@@ -722,12 +722,12 @@
               }
             },
             "item": {
-              "name": "Black Dog Card",
+              "name": "Thunderbird Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Upper Devil Tower hallway",
@@ -737,12 +737,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Diana Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior - Lower",
@@ -757,7 +757,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior - Upper",
@@ -767,68 +767,27 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Pluto Card",
+              "name": "Apollo Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior fake wall",
             "id": 3579576398,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Audience Room: 100 meter skelly dash hallway",
-            "id": 3579576426,
-            "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
-                  "args": []
-                }
-              ]
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Audience Room: Lower Devil Tower hallway fake wall",
-            "id": 3579576405,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -839,7 +798,48 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Audience Room: 100 meter skelly dash hallway",
+            "id": 3579576426,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_jump_level_2",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_kick",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Cleansing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Audience Room: Lower Devil Tower hallway fake wall",
+            "id": 3579576405,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Manticore Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Behind Necromancer",
@@ -849,12 +849,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Below Machine Tower roc ledge",
@@ -864,23 +864,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_5",
+                  "name": "has_jump_level_5",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_tackle",
+                  "name": "has_tackle",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Griffin Card",
+              "name": "Neptune Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Below Machine Tower push crate room",
@@ -890,23 +890,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_push",
+                  "name": "has_push",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_tackle",
+                  "name": "has_tackle",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Roc horse jaguar armory - Left",
@@ -919,30 +919,30 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                      "name": "has_jump_level_3",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                  "name": "has_jump_level_4",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Pluto Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Roc horse jaguar armory - Right",
@@ -955,30 +955,30 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                      "name": "has_jump_level_3",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                  "name": "has_jump_level_4",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Mercury Card",
+              "name": "Mars Card",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Outer Wall: Left roc ledge",
@@ -997,7 +997,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Outer Wall: Right-brained ledge",
@@ -1007,23 +1007,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                  "name": "has_ice_or_stone",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_5",
+                  "name": "has_jump_level_5",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Heavy Ring",
+              "name": "Salamander Card",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Outer Wall: Fake Nightmare floor",
@@ -1033,12 +1033,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Triumph Hallway: Skeleton slopes fake wall",
@@ -1053,7 +1053,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Triumph Hallway: Entrance Flame Armor climb",
@@ -1066,19 +1066,19 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                      "name": "has_kick",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 }
               ]
@@ -1089,7 +1089,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1114,12 +1114,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Last Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Knight fox meeting room",
@@ -1134,7 +1134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Boneheaded argument wall kicks room",
@@ -1144,68 +1144,27 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Thunderbird Card",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Foxy fake wall",
             "id": 3579576410,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Mars Card",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Machine Tower: Skelly-rang wall kicks room",
-            "id": 3579576415,
-            "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
-                  "args": []
-                }
-              ]
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Machine Tower: Fake Lilim wall",
-            "id": 3579576414,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -1216,7 +1175,48 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Skelly-rang wall kicks room",
+            "id": 3579576415,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_jump_level_2",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_kick",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Fake Lilim wall",
+            "id": 3579576414,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Thunderous zone fake wall",
@@ -1231,7 +1231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Thunderous zone lone Stone Armor room",
@@ -1241,12 +1241,12 @@
               "value": true
             },
             "item": {
-              "name": "Roc Wing",
+              "name": "MP Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1262,12 +1262,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Stone fox hallway",
@@ -1286,7 +1286,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Pre-Iron Golem fake wall",
@@ -1296,12 +1296,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Behind Iron Golem",
@@ -1316,7 +1316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1343,12 +1343,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
@@ -1364,12 +1364,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1404,12 +1404,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                  "name": "has_jump_level_3",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
@@ -1425,12 +1425,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Corridor: Skelly-rang fake wall",
@@ -1445,7 +1445,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Flame Armor climb room",
@@ -1455,23 +1455,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                  "name": "has_ice_or_stone",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Lower chapel push crate room",
@@ -1485,12 +1485,12 @@
               }
             },
             "item": {
-              "name": "Uranus Card",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Lower chapel fake wall",
@@ -1505,26 +1505,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Beastly wall kicks room - Brain side",
             "id": 3579576427,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Chapel Tower: Beastly wall kicks room - Brawn side",
-            "id": 3579576428,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -1535,7 +1520,22 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Chapel Tower: Beastly wall kicks room - Brawn side",
+            "id": 3579576428,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Serpent Card",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Middle chapel fake wall",
@@ -1545,12 +1545,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Middle chapel push crate room",
@@ -1564,12 +1564,12 @@
               }
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "Unicorn Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Sharp mind climb room",
@@ -1579,23 +1579,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                  "name": "has_ice_or_stone",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Upper chapel fake wall",
@@ -1605,12 +1605,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1625,12 +1625,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_push",
+                  "name": "has_push",
                   "args": []
                 }
               ]
@@ -1646,12 +1646,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Uranus Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Upper belfry fake wall",
@@ -1661,12 +1661,12 @@
               "value": true
             },
             "item": {
-              "name": "Mandragora Card",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Iron maiden switch",
@@ -1695,12 +1695,12 @@
               }
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1719,30 +1719,30 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                      "name": "has_jump_level_3",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                  "name": "has_jump_level_4",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Jupiter Card",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Outside Battle Arena - Lower",
@@ -1755,30 +1755,30 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                      "name": "has_jump_level_3",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                  "name": "has_jump_level_4",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1815,12 +1815,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Conveyor upper push crate room",
@@ -1839,7 +1839,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Conveyor lower push crate room",
@@ -1853,12 +1853,12 @@
               }
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Harpy climb room - Lower",
@@ -1868,38 +1868,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                  "name": "has_ice_or_stone",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
-                  "args": []
-                }
-              ]
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Underground Gallery: Harpy climb room - Upper",
-            "id": 3579576452,
-            "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                  "name": "has_jump_level_2",
                   "args": []
                 }
               ]
@@ -1910,7 +1884,33 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Underground Gallery: Harpy climb room - Upper",
+            "id": 3579576452,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_ice_or_stone",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_jump_level_4",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           }
         ]
       },
@@ -1948,7 +1948,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Handy bee hallway",
@@ -1963,7 +1963,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Myconid fake wall",
@@ -1973,12 +1973,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Heart Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Crumble bridge fake wall",
@@ -1993,7 +1993,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Behind Dragon Zombies",
@@ -2003,12 +2003,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Venus Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2037,12 +2037,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2058,12 +2058,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Roc Wing",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Crate-nudge fox room",
@@ -2073,12 +2073,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Crate-nudge fake wall",
@@ -2088,12 +2088,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Succubus shaft roc ledge",
@@ -2106,30 +2106,30 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_4",
+                      "name": "has_jump_level_4",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_5",
+                  "name": "has_jump_level_5",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Maiden Detonator",
+              "name": "HP Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Fake Lilith wall",
@@ -2139,12 +2139,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Optional puzzle ceiling fake wall",
@@ -2154,12 +2154,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                  "name": "has_ice_or_stone",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 }
               ]
@@ -2170,7 +2170,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Holy fox hideout - Left",
@@ -2180,12 +2180,12 @@
               "value": true
             },
             "item": {
-              "name": "Salamander Card",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Holy fox hideout - Right roc ledge",
@@ -2198,30 +2198,30 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                      "name": "has_ice_or_stone",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                      "name": "has_jump_level_2",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                  "name": "has_jump_level_3",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Cockatrice Card",
+              "name": "HP Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Forest Armor's domain fake wall",
@@ -2231,12 +2231,12 @@
               "value": true
             },
             "item": {
-              "name": "Serpent Card",
+              "name": "Heart Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Behind Death",
@@ -2246,12 +2246,12 @@
               "value": true
             },
             "item": {
-              "name": "Golem Card",
+              "name": "Kick Boots",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Behind Death fake wall",
@@ -2261,12 +2261,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Mercury Card",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Dryad expulsion chamber",
@@ -2276,12 +2276,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2315,7 +2315,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2345,7 +2345,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Beyond illusory wall",
@@ -2355,12 +2355,12 @@
               "value": true
             },
             "item": {
-              "name": "Manticore Card",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Ice Armor's domain fake wall",
@@ -2370,12 +2370,12 @@
               "value": true
             },
             "item": {
-              "name": "Kick Boots",
+              "name": "MP Max Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Brain freeze room",
@@ -2385,12 +2385,12 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_ice_or_stone",
+                  "name": "has_ice_or_stone",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_3",
+                  "name": "has_jump_level_3",
                   "args": []
                 }
               ]
@@ -2401,7 +2401,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Middle lone Ice Armor room",
@@ -2411,12 +2411,12 @@
               "value": true
             },
             "item": {
-              "name": "Saturn Card",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc fake ceiling",
@@ -2430,12 +2430,12 @@
               }
             },
             "item": {
-              "name": "Neptune Card",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Wicked Fishhead moat - Bottom",
@@ -2450,7 +2450,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Wicked Fishhead moat - Top",
@@ -2465,7 +2465,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Lizard-man turf - Bottom",
@@ -2475,12 +2475,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2500,12 +2500,12 @@
               }
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc exit shaft",
@@ -2519,12 +2519,12 @@
               }
             },
             "item": {
-              "name": "Apollo Card",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Behind Camilla",
@@ -2538,12 +2538,12 @@
               }
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc exit shaft fake wall",
@@ -2557,12 +2557,12 @@
               }
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "Jupiter Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2578,12 +2578,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Saturn Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Legion plaza fake wall",
@@ -2593,12 +2593,12 @@
               "value": true
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Legion plaza Minotaur hallway",
@@ -2608,12 +2608,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "MP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Siren balcony fake wall",
@@ -2623,12 +2623,12 @@
               "value": true
             },
             "item": {
-              "name": "Diana Card",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Evil Pillar pit fake wall",
@@ -2638,16 +2638,31 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Mandragora Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Alraune garden",
             "id": 3579576482,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Dark Armor's domain fake wall",
+            "id": 3579576486,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -2658,22 +2673,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "Observation Tower: Dark Armor's domain fake wall",
-            "id": 3579576486,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Catoblepeas hallway",
@@ -2683,12 +2683,12 @@
               "value": true
             },
             "item": {
-              "name": "HP Max Up",
+              "name": "Cockatrice Card",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Near warp room fake wall",
@@ -2703,7 +2703,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Behind Hugh",
@@ -2713,12 +2713,12 @@
               "value": true
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2734,23 +2734,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_jump_level_2",
+                  "name": "has_jump_level_2",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "_castlevaniacircleofthemoonworldgen_has_kick",
+                  "name": "has_kick",
                   "args": []
                 }
               ]
             },
             "item": {
-              "name": "Venus Card",
+              "name": "Maiden Detonator",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dracula",
@@ -3293,133 +3293,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "Sealed Room: Main shaft left fake wall": "Heart Max Up",
-      "Catacomb: Push crate treasure room": "MP Max Up",
-      "Catacomb: Fleamen brain room - Lower": "HP Max Up",
-      "Catacomb: Fleamen brain room - Upper": "HP Max Up",
-      "Catacomb: Earth Demon dash room": "HP Max Up",
-      "Catacomb: Tackle block treasure room": "HP Max Up",
-      "Catacomb: Earth Demon bone pit - Lower": "MP Max Up",
-      "Catacomb: Earth Demon bone pit - Upper": "MP Max Up",
-      "Catacomb: Below right column save room": "Heart Max Up",
-      "Catacomb: Right column fake wall": "Heart Max Up",
-      "Catacomb: Right column Spirit room": "Heart Max Up",
-      "Catacomb: Muddy Mudman platforms room - Lower": "Unicorn Card",
-      "Catacomb: Muddy Mudman platforms room - Upper": "Heart Max Up",
-      "Catacomb: Slide space zone": "Double",
-      "Catacomb: Pre-Cerberus lone Skeleton room": "Last Key",
-      "Catacomb: Pre-Cerberus Hopper treasure room": "HP Max Up",
-      "Catacomb: Behind Cerberus": "HP Max Up",
-      "Catacomb: Mummies' fake wall": "HP Max Up",
-      "Abyss Staircase: Lower fake wall": "Cleansing",
-      "Abyss Staircase: Loopback drop": "MP Max Up",
-      "Abyss Staircase: Roc ledge": "HP Max Up",
-      "Abyss Staircase: Upper fake wall": "HP Max Up",
-      "Audience Room: Skeleton foyer fake wall": "Tackle",
-      "Audience Room: Main gallery fake wall": "HP Max Up",
-      "Audience Room: Below coyote jump": "MP Max Up",
-      "Audience Room: Push crate gallery": "Heart Max Up",
-      "Audience Room: Past coyote jump": "MP Max Up",
-      "Audience Room: Tackle block gallery": "Heart Max Up",
-      "Audience Room: Wicked roc chamber - Lower": "HP Max Up",
-      "Audience Room: Wicked roc chamber - Upper": "Black Dog Card",
-      "Audience Room: Upper Devil Tower hallway": "MP Max Up",
-      "Audience Room: Right exterior - Lower": "MP Max Up",
-      "Audience Room: Right exterior - Upper": "Pluto Card",
-      "Audience Room: Right exterior fake wall": "MP Max Up",
-      "Audience Room: 100 meter skelly dash hallway": "MP Max Up",
-      "Audience Room: Lower Devil Tower hallway fake wall": "Heart Max Up",
-      "Audience Room: Behind Necromancer": "MP Max Up",
-      "Audience Room: Below Machine Tower roc ledge": "Griffin Card",
-      "Audience Room: Below Machine Tower push crate room": "MP Max Up",
-      "Audience Room: Roc horse jaguar armory - Left": "HP Max Up",
-      "Audience Room: Roc horse jaguar armory - Right": "Mercury Card",
-      "Outer Wall: Left roc ledge": "Heart Max Up",
-      "Outer Wall: Right-brained ledge": "Heavy Ring",
-      "Outer Wall: Fake Nightmare floor": "MP Max Up",
-      "Triumph Hallway: Skeleton slopes fake wall": "Heart Max Up",
-      "Triumph Hallway: Entrance Flame Armor climb": "Heart Max Up",
-      "Machine Tower: Foxy platforms ledge": "HP Max Up",
-      "Machine Tower: Knight fox meeting room": "HP Max Up",
-      "Machine Tower: Boneheaded argument wall kicks room": "Thunderbird Card",
-      "Machine Tower: Foxy fake wall": "Mars Card",
-      "Machine Tower: Skelly-rang wall kicks room": "HP Max Up",
-      "Machine Tower: Fake Lilim wall": "Heart Max Up",
-      "Machine Tower: Thunderous zone fake wall": "Heart Max Up",
-      "Machine Tower: Thunderous zone lone Stone Armor room": "Roc Wing",
-      "Machine Tower: Top lone Stone Armor room": "MP Max Up",
-      "Machine Tower: Stone fox hallway": "Heart Max Up",
-      "Machine Tower: Pre-Iron Golem fake wall": "MP Max Up",
-      "Machine Tower: Behind Iron Golem": "HP Max Up",
-      "Eternal Corridor: Midway fake wall": "Heart Max Up",
-      "Eternal Corridor: Skelly-rang wall kicks room": "Heart Max Up",
-      "Eternal Corridor: Skelly-rang fake wall": "Heart Max Up",
-      "Chapel Tower: Flame Armor climb room": "HP Max Up",
-      "Chapel Tower: Lower chapel push crate room": "Uranus Card",
-      "Chapel Tower: Lower chapel fake wall": "HP Max Up",
-      "Chapel Tower: Beastly wall kicks room - Brain side": "HP Max Up",
-      "Chapel Tower: Beastly wall kicks room - Brawn side": "Heart Max Up",
-      "Chapel Tower: Middle chapel fake wall": "HP Max Up",
-      "Chapel Tower: Middle chapel push crate room": "Heart Max Up",
-      "Chapel Tower: Sharp mind climb room": "HP Max Up",
-      "Chapel Tower: Upper chapel fake wall": "MP Max Up",
-      "Chapel Tower: Upper chapel Marionette wall kicks": "HP Max Up",
-      "Chapel Tower: Upper belfry fake wall": "Mandragora Card",
-      "Chapel Tower: Iron maiden switch": "Maiden Detonator",
-      "Chapel Tower: Behind Adramelech iron maiden": "Heart Max Up",
-      "Chapel Tower: Outside Battle Arena - Upper": "Jupiter Card",
-      "Chapel Tower: Outside Battle Arena - Lower": "Heart Max Up",
-      "Underground Gallery: Conveyor platform ride": "MP Max Up",
-      "Underground Gallery: Conveyor upper push crate room": "HP Max Up",
-      "Underground Gallery: Conveyor lower push crate room": "MP Max Up",
-      "Underground Gallery: Harpy climb room - Lower": "HP Max Up",
-      "Underground Gallery: Harpy climb room - Upper": "Heart Max Up",
-      "Underground Gallery: Harpy mantis tackle hallway": "HP Max Up",
-      "Underground Gallery: Handy bee hallway": "HP Max Up",
-      "Underground Gallery: Myconid fake wall": "MP Max Up",
-      "Underground Gallery: Crumble bridge fake wall": "Heart Max Up",
-      "Underground Gallery: Behind Dragon Zombies": "HP Max Up",
-      "Underground Warehouse: Entrance push crate room": "Heart Max Up",
-      "Underground Warehouse: Forever pushing room": "MP Max Up",
-      "Underground Warehouse: Crate-nudge fox room": "HP Max Up",
-      "Underground Warehouse: Crate-nudge fake wall": "Heart Max Up",
-      "Underground Warehouse: Succubus shaft roc ledge": "Maiden Detonator",
-      "Underground Warehouse: Fake Lilith wall": "Heart Max Up",
-      "Underground Warehouse: Optional puzzle ceiling fake wall": "Heart Max Up",
-      "Underground Warehouse: Holy fox hideout - Left": "Salamander Card",
-      "Underground Warehouse: Holy fox hideout - Right roc ledge": "Cockatrice Card",
-      "Underground Warehouse: Forest Armor's domain fake wall": "Serpent Card",
-      "Underground Warehouse: Behind Death": "Golem Card",
-      "Underground Warehouse: Behind Death fake wall": "HP Max Up",
-      "Underground Warehouse: Dryad expulsion chamber": "HP Max Up",
-      "Underground Waterway: Entrance fake wall": "Heart Max Up",
-      "Underground Waterway: Before illusory wall": "MP Max Up",
-      "Underground Waterway: Beyond illusory wall": "Manticore Card",
-      "Underground Waterway: Ice Armor's domain fake wall": "Kick Boots",
-      "Underground Waterway: Brain freeze room": "HP Max Up",
-      "Underground Waterway: Middle lone Ice Armor room": "Saturn Card",
-      "Underground Waterway: Roc fake ceiling": "Neptune Card",
-      "Underground Waterway: Wicked Fishhead moat - Bottom": "Heart Max Up",
-      "Underground Waterway: Wicked Fishhead moat - Top": "Heart Max Up",
-      "Underground Waterway: Lizard-man turf - Bottom": "Heart Max Up",
-      "Underground Waterway: Lizard-man turf - Top": "Heart Max Up",
-      "Underground Waterway: Roc exit shaft": "Apollo Card",
-      "Underground Waterway: Behind Camilla": "MP Max Up",
-      "Underground Waterway: Roc exit shaft fake wall": "Heart Max Up",
-      "Observation Tower: Wind Armor rampart": "MP Max Up",
-      "Observation Tower: Legion plaza fake wall": "MP Max Up",
-      "Observation Tower: Legion plaza Minotaur hallway": "Heart Max Up",
-      "Observation Tower: Siren balcony fake wall": "Diana Card",
-      "Observation Tower: Evil Pillar pit fake wall": "HP Max Up",
-      "Observation Tower: Alraune garden": "Heart Max Up",
-      "Observation Tower: Dark Armor's domain fake wall": "HP Max Up",
-      "Observation Tower: Catoblepeas hallway": "HP Max Up",
-      "Observation Tower: Near warp room fake wall": "Heart Max Up",
-      "Observation Tower: Behind Hugh": "Heart Max Up",
-      "Ceremonial Room: Fake floor": "Venus Card",
-      "Dracula": "The Count Downed"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -3441,7 +3315,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": 1,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -3482,42 +3356,7 @@
   },
   "helpers": {
     "1": {
-      "_castlevaniacircleofthemoonworldgen_broke_iron_maidens": {
-        "type": "item_check",
-        "item": "Maiden Detonator"
-      },
-      "_castlevaniacircleofthemoonworldgen_has_ice_or_stone": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Cockatrice Card",
-                  "Serpent Card"
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Mars Card",
-                  "Mercury Card"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "_castlevaniacircleofthemoonworldgen_has_jump_level_1": {
+      "has_jump_level_1": {
         "type": "state_method",
         "method": "has_any",
         "args": [
@@ -3530,33 +3369,92 @@
           }
         ]
       },
-      "_castlevaniacircleofthemoonworldgen_has_jump_level_2": {
+      "has_kick": {
         "type": "item_check",
-        "item": "Roc Wing"
+        "item": {
+          "type": "constant",
+          "value": "Kick Boots"
+        }
       },
-      "_castlevaniacircleofthemoonworldgen_has_jump_level_3": {
-        "type": "item_check",
-        "item": "Roc Wing"
+      "has_ice_or_stone": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Serpent Card",
+                  "Cockatrice Card"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Mercury Card",
+                  "Mars Card"
+                ]
+              }
+            ]
+          }
+        ]
       },
-      "_castlevaniacircleofthemoonworldgen_has_jump_level_4": {
+      "has_jump_level_4": {
         "type": "item_check",
-        "item": "Roc Wing"
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
       },
-      "_castlevaniacircleofthemoonworldgen_has_jump_level_5": {
+      "has_jump_level_3": {
         "type": "item_check",
-        "item": "Roc Wing"
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
       },
-      "_castlevaniacircleofthemoonworldgen_has_kick": {
+      "has_jump_level_2": {
         "type": "item_check",
-        "item": "Kick Boots"
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
       },
-      "_castlevaniacircleofthemoonworldgen_has_push": {
+      "broke_iron_maidens": {
         "type": "item_check",
-        "item": "Heavy Ring"
+        "item": {
+          "type": "constant",
+          "value": "Maiden Detonator"
+        }
       },
-      "_castlevaniacircleofthemoonworldgen_has_tackle": {
+      "has_push": {
         "type": "item_check",
-        "item": "Tackle"
+        "item": {
+          "type": "constant",
+          "value": "Heavy Ring"
+        }
+      },
+      "has_jump_level_5": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
+      },
+      "has_tackle": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Tackle"
+        }
       }
     }
   }

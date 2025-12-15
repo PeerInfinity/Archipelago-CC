@@ -17,6 +17,7 @@ from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
+from rule_builder.rules import collect_helper_bodies_from_rule
 
 logger = logging.getLogger(__name__)
 
@@ -55,9 +56,14 @@ def classification_to_string(classification: ItemClassification) -> str:
 # Module-level cache for rule analysis results
 _rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
 
+# Module-level dict to collect helper bodies from HelperCall rules during export
+# Maps player -> helper_name -> helper_body
+_collected_helpers: Dict[int, Dict[str, Any]] = {}
+
 def clear_rule_cache():
     """Clear the rule analysis cache. Call between generations."""
     _rule_analysis_cache.clear()
+    _collected_helpers.clear()
 
 
 def _insert_hint_text(item_data: dict, hint_text: str) -> None:
@@ -757,7 +763,15 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         # Also extract dungeons to separate structure
         regions_data, dungeons_data = process_regions(multiworld, player, game_handler, location_id_mappings.get(player, {}))
         export_data['regions'][player_str] = regions_data
-        
+
+        # Merge collected helper bodies from HelperCall rules into helpers section
+        # This is needed for worldgen worlds that use HelperCall with body_data
+        if player in _collected_helpers and _collected_helpers[player]:
+            if player_str not in export_data['helpers']:
+                export_data['helpers'][player_str] = {}
+            export_data['helpers'][player_str].update(_collected_helpers[player])
+            logger.debug(f"Added {len(_collected_helpers[player])} helper bodies from HelperCall rules for player {player}")
+
         # Only add dungeons if there's data
         if dungeons_data:
             if 'dungeons' not in export_data:
@@ -1026,9 +1040,20 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
                 try:
                     rb_dict = rule_func.to_dict()
+
+                    # Collect helper bodies from HelperCall rules for the helpers section
+                    # This is needed because HelperCall.to_dict() returns just the reference,
+                    # but we need to export the helper bodies separately
+                    if player is not None:
+                        helper_bodies = collect_helper_bodies_from_rule(rule_func)
+                        if helper_bodies:
+                            if player not in _collected_helpers:
+                                _collected_helpers[player] = {}
+                            _collected_helpers[player].update(helper_bodies)
+
                     # Cache and return Rule Builder format directly (frontend supports it natively)
                     _rule_analysis_cache[cache_key] = rb_dict
-                    logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
+                    logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('type', 'unknown')}")
                     return rb_dict
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")

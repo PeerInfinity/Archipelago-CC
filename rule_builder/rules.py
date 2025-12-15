@@ -855,11 +855,18 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
 
         @override
         def to_dict(self) -> dict[str, Any]:
-            """Override to serialize children instead of args."""
+            """Override to serialize in CC format for frontend compatibility.
+
+            Outputs the CC format that the frontend expects:
+            {"type": "and", "conditions": [...]} or {"type": "or", "conditions": [...]}
+            """
+            # Map Rule Builder class names to CC format type names
+            type_map = {"And": "and", "Or": "or"}
+            rule_name = self._rule_class_name.split('.')[-1]  # Get just the class name
+            cc_type = type_map.get(rule_name, rule_name.lower())
             return {
-                "rule": self._rule_class_name,
-                "options": [],
-                "children": [c.to_dict() for c in self.children],
+                "type": cc_type,
+                "conditions": [c.to_dict() for c in self.children],
             }
 
 
@@ -2683,6 +2690,61 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
                 "args": self.args,
                 "body_data": self.body_data,
             }
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Returns CC format dict for helper calls.
+
+            This outputs the CC format that the frontend expects:
+            {"type": "helper", "name": "...", "args": [...]}
+
+            The helper body should be collected separately and included
+            in the helpers section of the export.
+            """
+            return {
+                "type": "helper",
+                "name": self.helper_name,
+                "args": list(self.args) if self.args else [],
+            }
+
+        def get_helper_body(self) -> dict[str, Any] | None:
+            """Returns the helper body in CC format, if available.
+
+            This can be used by the exporter to collect helper definitions
+            for the helpers section of the export.
+            """
+            return self.body_data
+
+
+def collect_helper_bodies_from_rule(rule: "Rule.Resolved") -> dict[str, dict[str, Any]]:
+    """Recursively collect helper bodies from a rule tree.
+
+    Traverses the rule tree and collects body_data from all HelperCall.Resolved
+    nodes, returning a dict mapping helper names to their CC format bodies.
+
+    Args:
+        rule: The root rule to traverse
+
+    Returns:
+        Dict mapping helper names to their CC format body definitions
+    """
+    helpers: dict[str, dict[str, Any]] = {}
+
+    def collect_from(r: "Rule.Resolved") -> None:
+        # Check if this is a HelperCall with body_data
+        if isinstance(r, HelperCall.Resolved):
+            if r.body_data and r.helper_name:
+                helpers[r.helper_name] = r.body_data
+
+        # Recurse into children for nested rules (And, Or, Not, etc.)
+        if hasattr(r, 'children'):
+            for child in r.children:
+                collect_from(child)
+        if hasattr(r, 'child'):
+            collect_from(r.child)
+
+    collect_from(rule)
+    return helpers
 
 
 DEFAULT_RULES = {
