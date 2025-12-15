@@ -22,7 +22,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "25 Pons": 39,
     "50 Pons": 17,
     "Badge Pin": 2,
-    "Compass Badge": 1,
     "Fast Hatter Badge": 1,
     "Health Pon": 15,
     "Hookshot Badge": 1,

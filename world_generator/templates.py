@@ -697,7 +697,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     # Build itempool_counts dictionary
     # When canonical_placements is available, we use the full itempool_counts
     # (items are either in the pool for randomization, or placed canonically for seed=1).
-    # Only subtract truly locked items (events) from the pool.
+    # Subtract event items and starting items from the pool.
     itempool_entries = []
     if data.canonical_placements:
         # Count only event items that are locked (these are subtracted from pool)
@@ -709,8 +709,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                     event_item_counts[item_name] = event_item_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
-            # Subtract event items from the count
+            # Subtract event items and starting items from the count
             adjusted_count = count - event_item_counts.get(item_name, 0)
+            adjusted_count -= data.starting_items.get(item_name, 0)
             if adjusted_count > 0:
                 # Skip event items entirely (they shouldn't be in the pool)
                 item_data = data.items.get(item_name)
@@ -719,15 +720,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements - subtract all locked items as before
+        # No canonical_placements - subtract all locked items and starting items
         locked_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
                 locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
-            # Subtract locked items from the count
+            # Subtract locked items and starting items from the count
             adjusted_count = count - locked_item_counts.get(item_name, 0)
+            adjusted_count -= data.starting_items.get(item_name, 0)
             if adjusted_count > 0:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
