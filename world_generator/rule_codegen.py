@@ -452,11 +452,19 @@ class RuleCodeGenerator:
         Extract the item name from a prog_items subscript expression.
 
         Pattern: state.prog_items[player][item_name]
+        Also handles CC export format: {"type": "prog_item_count", "key": " coins"}
         Returns the item_name string if the pattern matches, None otherwise.
         """
-        # Expected structure:
+        if not isinstance(expr, dict):
+            return None
+
+        # Handle CC export format: {"type": "prog_item_count", "key": " coins"}
+        if expr.get('type') == 'prog_item_count':
+            return expr.get('key')
+
+        # Expected structure for subscript pattern:
         # {"type": "subscript", "value": {...}, "index": {"type": "constant", "value": "item_name"}}
-        if not isinstance(expr, dict) or expr.get('type') != 'subscript':
+        if expr.get('type') != 'subscript':
             return None
 
         # Get the item name from the outer subscript index
@@ -907,6 +915,7 @@ class HelperCodeGenerator:
             'count_item': self._expr_count_item,
             'group_count': self._expr_group_count,
             'setting_value': self._expr_setting_value,
+            'prog_item_count': self._expr_prog_item_count,
         }
 
         handler = handlers.get(expr_type)
@@ -1330,6 +1339,16 @@ class HelperCodeGenerator:
         group_raw = expr.get('group', '')
         group = self._extract_constant(group_raw, '')
         return f'state.count_group({repr(group)}, player)'
+
+    def _expr_prog_item_count(self, expr: Dict[str, Any]) -> str:
+        """Generate state.prog_items access for counter items like coins.
+
+        CC export format: {"type": "prog_item_count", "key": " coins"}
+        This accesses state.prog_items[player][key] which counts accumulated items.
+        """
+        key = expr.get('key', '')
+        key_escaped = key.replace('\\', '\\\\').replace("'", "\\'")
+        return f"state.prog_items[player].get('{key_escaped}', 0)"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
         """Extract constant value from a potential constant wrapper."""
