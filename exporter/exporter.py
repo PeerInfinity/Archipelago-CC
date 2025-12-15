@@ -803,6 +803,15 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         # Get Settings using handler
         try:
             settings_data = game_handler.get_settings_data(world, multiworld, player) # Call the handler method
+            # Add world_directory for handler lookup during cleanup (in case handler didn't add it)
+            if 'world_directory' not in settings_data:
+                try:
+                    module_path = type(world).__module__
+                    parts = module_path.split('.')
+                    if len(parts) >= 2 and parts[0] == 'worlds':
+                        settings_data['world_directory'] = parts[1]
+                except Exception:
+                    pass
             export_data['settings'][player_str] = settings_data
         except Exception as e:
             error_msg = f"Error exporting settings for player {player}: {str(e)}"
@@ -1870,8 +1879,9 @@ def cleanup_export_data(data):
         for player, settings in data['settings'].items():
             if not isinstance(settings, dict) or 'error' in settings: # Skip if not dict or already an error
                 continue
-            game = player_games.get(player, "unknown") # Get game name retrieved earlier
-            game_handler = get_game_export_handler(game)  # World not available during cleanup
+            # Get world_directory from settings (added during export) for handler lookup
+            world_dir = settings.get('world_directory')
+            game_handler = get_game_export_handler(world_directory=world_dir)  # World not available during cleanup
             try:
                 # Delegate cleanup to the specific handler
                 # Pass a copy to avoid modifying the original dict used elsewhere if cleanup fails partially

@@ -1,11 +1,9 @@
 """Game-specific rule helper functions."""
 
 import os
-import sys
 import importlib
 import inspect
 import logging
-from pathlib import Path
 from typing import Dict, Type, Optional, Tuple
 from .base import BaseGameExportHandler
 from .generic import GenericGameExportHandler
@@ -15,67 +13,36 @@ logger = logging.getLogger(__name__)
 # Module-level cache for handler instances
 _handler_cache: Dict[Tuple[str, Optional[int]], BaseGameExportHandler] = {}
 
-# Cache for world mapping (lazy loaded)
-_world_mapping_cache: Optional[Dict[str, Dict]] = None
-
-# Automatically discover and register all game handlers
+# Handlers registered by module name (matches world directory)
+# e.g., 'alttp' -> ALttPGameExportHandler
 GAME_HANDLERS: Dict[str, Type[BaseGameExportHandler]] = {}
 
 
-def _get_world_mapping() -> Dict[str, Dict]:
+def _get_world_directory(world) -> Optional[str]:
     """
-    Get the world mapping, building it lazily on first access.
+    Extract the world directory name from a world object.
 
-    Returns a dict mapping game names to world info including:
-    - world_directory: the directory name in worlds/
-    - exporter_path: path to custom exporter if it exists
+    The world's module path is like 'worlds.alttp' or 'worlds.alttp.SubModule',
+    so we extract the second component which is the world directory.
+
+    Args:
+        world: A world instance
+
+    Returns:
+        The world directory name (e.g., 'alttp'), or None if it can't be determined
     """
-    global _world_mapping_cache
-
-    if _world_mapping_cache is not None:
-        return _world_mapping_cache
-
-    # Find project root (go up from exporter/games to project root)
-    current_dir = Path(__file__).parent
-    project_root = current_dir.parent.parent
+    if world is None:
+        return None
 
     try:
-        # Import the module using importlib.util (handles hyphenated filenames)
-        import importlib.util
-        script_path = project_root / 'scripts' / 'build' / 'build-world-mapping.py'
-
-        if script_path.exists():
-            spec = importlib.util.spec_from_file_location("build_world_mapping", script_path)
-            build_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(build_module)
-
-            worlds_dir = project_root / 'worlds'
-            _world_mapping_cache = build_module.build_world_mapping(str(worlds_dir))
-        else:
-            logger.warning(f"build-world-mapping.py not found at {script_path}")
-            _world_mapping_cache = {}
+        module_path = type(world).__module__
+        parts = module_path.split('.')
+        if len(parts) >= 2 and parts[0] == 'worlds':
+            return parts[1]
     except Exception as e:
-        logger.warning(f"Error building world mapping: {e}")
-        _world_mapping_cache = {}
+        logger.debug(f"Could not extract world directory: {e}")
 
-    return _world_mapping_cache
-
-
-def _build_exporter_to_game_mapping() -> Dict[str, str]:
-    """
-    Build a reverse mapping from exporter module name to game name.
-
-    Returns dict like: {'ahit': 'A Hat in Time', 'messenger': 'The Messenger', ...}
-    """
-    world_mapping = _get_world_mapping()
-
-    exporter_to_game = {}
-    for game_name, info in world_mapping.items():
-        if info.get('has_custom_exporter') and info.get('world_directory'):
-            # Map world_directory (which is the module name) to game name
-            exporter_to_game[info['world_directory']] = game_name
-
-    return exporter_to_game
+    return None
 
 
 def _discover_handlers():
@@ -83,19 +50,19 @@ def _discover_handlers():
     Automatically discover all game export handlers in this directory.
 
     Scans all Python files in the exporter/games directory and looks for classes
-    that inherit from BaseGameExportHandler. Game names are determined by:
-    1. The GAME_NAME class attribute (if present)
-    2. Looking up the module name in the world mapping (fallback)
+    that inherit from BaseGameExportHandler. Handlers are registered by their
+    module name (filename without .py), which matches the world directory name.
+
+    For example:
+    - exporter/games/alttp.py -> registered as 'alttp'
+    - exporter/games/oot.py -> registered as 'oot'
 
     Returns:
-        Dict mapping game names to handler classes
+        Dict mapping module names to handler classes
     """
-    handlers = {'Generic': GenericGameExportHandler}
+    handlers = {}
 
     current_dir = os.path.dirname(__file__)
-
-    # Build reverse mapping from module name to game name
-    exporter_to_game = _build_exporter_to_game_mapping()
 
     # Iterate through all .py files in this directory
     for filename in os.listdir(current_dir):
@@ -116,21 +83,10 @@ def _discover_handlers():
                     obj is not BaseGameExportHandler and
                     obj is not GenericGameExportHandler):
 
-                    # Determine game name: prefer GAME_NAME attribute, fall back to mapping
-                    if hasattr(obj, 'GAME_NAME') and obj.GAME_NAME:
-                        game_name = obj.GAME_NAME
-                    elif module_name in exporter_to_game:
-                        game_name = exporter_to_game[module_name]
-                        logger.debug(f"Inferred game name '{game_name}' for {name} from world mapping")
-                    else:
-                        logger.warning(
-                            f"Handler class {name} in {filename} has no GAME_NAME and "
-                            f"module '{module_name}' not found in world mapping"
-                        )
-                        continue
-
-                    handlers[game_name] = obj
-                    logger.debug(f"Registered handler for '{game_name}': {name}")
+                    # Register by module name (which matches world directory)
+                    handlers[module_name] = obj
+                    logger.debug(f"Registered handler '{module_name}': {name}")
+                    break  # Only one handler per module
 
         except Exception as e:
             # Log but don't fail - allows for graceful degradation
@@ -143,36 +99,46 @@ def _discover_handlers():
 # Populate handlers on module import
 GAME_HANDLERS = _discover_handlers()
 
-def get_game_export_handler(game_name: str, world=None) -> BaseGameExportHandler:
+def get_game_export_handler(game_name: str = None, world=None, world_directory: str = None) -> BaseGameExportHandler:
     """
-    Get the appropriate helper expander for the game.
+    Get the appropriate export handler for the game.
 
-    Handlers are cached per (game_name, world_id) to avoid repeated instantiation.
+    Handlers are looked up by world directory. The world directory can be:
+    1. Extracted from the world object (preferred)
+    2. Passed explicitly via world_directory parameter (for cleanup when world is unavailable)
+
+    The game_name parameter is kept for backward compatibility but is not used for lookup.
+
+    Handlers are cached per (world_directory, world_id) to avoid repeated instantiation.
 
     Args:
-        game_name: Name of the game
-        world: Optional world instance (some handlers require this)
+        game_name: Name of the game (kept for backward compatibility, not used for lookup)
+        world: World instance (preferred for handler lookup)
+        world_directory: Explicit world directory (used when world is unavailable)
 
     Returns:
         Handler instance for the specified game
     """
-    # Use world ID as cache key (objects aren't hashable, but their IDs are)
-    cache_key = (game_name, id(world) if world else None)
+    # Get world directory: prefer from world object, fall back to explicit parameter
+    world_dir = _get_world_directory(world) or world_directory
+
+    # Use world directory and world ID as cache key
+    cache_key = (world_dir, id(world) if world else None)
 
     if cache_key not in _handler_cache:
-        handler_class = GAME_HANDLERS.get(game_name)
+        handler_class = None
 
-        # If no exact match, try matching test worlds to their base game handlers
-        # e.g., "DLCQuest Test" -> "DLCQuest" handler
-        if handler_class is None and game_name.endswith(' Test'):
-            base_game_name = game_name[:-5]  # Remove " Test" suffix
-            handler_class = GAME_HANDLERS.get(base_game_name)
+        # Look up handler by world directory
+        if world_dir:
+            handler_class = GAME_HANDLERS.get(world_dir)
             if handler_class:
-                logger.debug(f"Using '{base_game_name}' handler for test world '{game_name}'")
+                logger.debug(f"Found handler for world directory '{world_dir}'")
 
         # Fall back to generic handler
         if handler_class is None:
             handler_class = GenericGameExportHandler
+            if world_dir:
+                logger.debug(f"No custom handler for '{world_dir}', using generic")
 
         # Try to instantiate with world parameter first, fall back to no params
         try:
@@ -186,17 +152,13 @@ def get_game_export_handler(game_name: str, world=None) -> BaseGameExportHandler
             try:
                 handler.build_rule_string_map(world)
             except Exception as e:
-                logger.warning(f"Failed to build rule string map for {game_name}: {e}")
+                logger.warning(f"Failed to build rule string map for {world_dir}: {e}")
 
         _handler_cache[cache_key] = handler
 
     return _handler_cache[cache_key]
 
+
 def clear_handler_cache():
     """Clear the handler cache. Call this between generations if needed."""
     _handler_cache.clear()
-
-def clear_world_mapping_cache():
-    """Clear the world mapping cache. Call this if worlds have changed."""
-    global _world_mapping_cache
-    _world_mapping_cache = None
