@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-15 19:17:17 UTC
+**Generated:** 2025-12-15 21:45:42 UTC
 **Seed:** 1
 **Mode:** Both (Canonical and Random)
 
@@ -44,9 +44,9 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Failed Original Generations | 0 |
 | Successful Test World Generations | 73 |
 | Failed Test World Generations | 0 |
-| Successful Test Seed Generations | 44 |
-| Failed Test Seed Generations | 29 |
-| Cross-Validation Passed | 23 |
+| Successful Test Seed Generations | 46 |
+| Failed Test Seed Generations | 27 |
+| Cross-Validation Passed | 25 |
 | Cross-Validation Failed | 21 |
 
 ## Canonical Detailed Results
@@ -58,11 +58,11 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | APQuest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Aquaria | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ❌ | - | - |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
-| Castlevania 64 | ✅ | ✅ | ✅ | ❌ | - | - |
+| Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Castlevania 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -75,10 +75,10 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Factorio | ✅ | ✅ | ✅ | ❌ | - | - |
-| Faxanadu | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Faxanadu | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Kingdom Hearts | ✅ | ✅ | ✅ | ❌ | - | - |
 | Kingdom Hearts 2 | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -98,7 +98,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Old School Runescape | ✅ | ✅ | ✅ | ❌ | - | - |
 | Overcooked! 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Paint | ✅ | ✅ | ✅ | ❌ | - | - |
-| Raft | ✅ | ✅ | ✅ | ❌ | - | - |
+| Raft | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
 | Secret of Evermore | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
@@ -142,10 +142,10 @@ Tests run with standard randomized item placement.
 | Failed Original Generations | 0 |
 | Successful Test World Generations | 73 |
 | Failed Test World Generations | 0 |
-| Successful Test Seed Generations | 44 |
-| Failed Test Seed Generations | 29 |
-| Cross-Validation Passed | 9 |
-| Cross-Validation Failed | 35 |
+| Successful Test Seed Generations | 46 |
+| Failed Test Seed Generations | 27 |
+| Cross-Validation Passed | 10 |
+| Cross-Validation Failed | 36 |
 
 ## Random Detailed Results
 
@@ -156,11 +156,11 @@ Tests run with standard randomized item placement.
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | APQuest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Aquaria | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ❌ | - | - |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
-| Castlevania 64 | ✅ | ✅ | ✅ | ❌ | - | - |
+| Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Castlevania 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -173,10 +173,10 @@ Tests run with standard randomized item placement.
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Factorio | ✅ | ✅ | ✅ | ❌ | - | - |
-| Faxanadu | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Faxanadu | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Hylics 2 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Kingdom Hearts | ✅ | ✅ | ✅ | ❌ | - | - |
 | Kingdom Hearts 2 | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -196,7 +196,7 @@ Tests run with standard randomized item placement.
 | Old School Runescape | ✅ | ✅ | ✅ | ❌ | - | - |
 | Overcooked! 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Paint | ✅ | ✅ | ✅ | ❌ | - | - |
-| Raft | ✅ | ✅ | ✅ | ❌ | - | - |
+| Raft | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
 | Secret of Evermore | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
