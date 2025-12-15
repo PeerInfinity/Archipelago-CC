@@ -47,9 +47,12 @@
             "name": "Movement Pack",
             "id": 120000,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 4
+              }
             },
             "item": {
               "name": "Movement Pack",
@@ -63,9 +66,12 @@
             "name": "Animation Pack",
             "id": 120001,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Psychological Warfare Pack",
@@ -79,9 +85,12 @@
             "name": "Audio Pack",
             "id": 120002,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Name Change Pack",
@@ -95,9 +104,12 @@
             "name": "Pause Menu Pack",
             "id": 120003,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Time is Money Pack",
@@ -157,9 +169,12 @@
             "name": "Time is Money Pack",
             "id": 120004,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 20
+              }
             },
             "item": {
               "name": "Zombie Sheep",
@@ -173,9 +188,12 @@
             "name": "Psychological Warfare Pack",
             "id": 120013,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 50
+              }
             },
             "item": {
               "name": "Animation Pack",
@@ -189,9 +207,12 @@
             "name": "Armor for your Horse Pack",
             "id": 120014,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 250
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -270,9 +291,12 @@
             "name": "Double Jump Pack",
             "id": 120005,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 100
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -286,9 +310,12 @@
             "name": "Map Pack",
             "id": 120009,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 140
+              }
             },
             "item": {
               "name": "Armor for your Horse Pack",
@@ -431,9 +458,12 @@
             "name": "Pet Pack",
             "id": 120006,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Map Pack",
@@ -447,9 +477,12 @@
             "name": "Top Hat Pack",
             "id": 120008,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -588,9 +621,12 @@
             "name": "Sexy Outfits Pack",
             "id": 120007,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Name Change Pack",
@@ -731,9 +767,12 @@
             "name": "Gun Pack",
             "id": 120010,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 75
+              }
             },
             "item": {
               "name": "Temporary Spike",
@@ -747,9 +786,12 @@
             "name": "Night Map Pack",
             "id": 120012,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 75
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -797,9 +839,12 @@
             "name": "The Zombie Pack",
             "id": 120011,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Top Hat Pack",
@@ -885,9 +930,12 @@
             "name": "Finish the Fight Pack",
             "id": 120015,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": " coins",
+                "count": 5
+              }
             },
             "item": {
               "name": "Finish the Fight Pack",
@@ -1776,7 +1824,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "dlcquest_worldgen"
     }
   },
   "game_info": {
