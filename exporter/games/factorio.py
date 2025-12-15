@@ -1,48 +1,40 @@
 """Factorio game-specific export handler."""
 
 from typing import Dict, Any
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
-class FactorioGameExportHandler(BaseGameExportHandler):
-    """Export handler for Factorio."""
-    
-    def __init__(self, world=None):
-        """Initialize with world reference to access location data."""
-        super().__init__(world=world)
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Get Factorio-specific settings."""
-        # Get base settings
-        settings = super().get_settings_data(world, multiworld, player)
+class FactorioGameExportHandler(GenericGameExportHandler):
+    """Export handler for Factorio.
 
-        # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")
-        # which come from progressive items (e.g., "progressive-processing", "progressive-military").
-        # The test must use resolved_items to match these technology names in inventory checks.
-        settings['use_resolved_items'] = True
+    Inherits item data extraction from GenericGameExportHandler.
+    Provides Factorio-specific rule simplification for technology names.
+    """
 
-        return settings
+    # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")
+    # which come from progressive items (e.g., "progressive-processing", "progressive-military").
+    USE_RESOLVED_ITEMS = True
 
     def get_game_info(self, world) -> Dict[str, Any]:
         """Get Factorio game information including required variables."""
         from worlds.factorio.Technologies import required_technologies
+
+        # Get base game info first
+        game_info = super().get_game_info(world)
 
         # Convert required_technologies to a serializable format
         required_tech_dict = {}
         for ingredient, techs in required_technologies.items():
             required_tech_dict[ingredient] = [tech.name for tech in techs]
 
-        return {
-            "name": world.game,
-            "rule_format": {
-                "version": "1.0"
-            },
-            "variables": {
-                "required_technologies": required_tech_dict
-            }
+        game_info["variables"] = {
+            "required_technologies": required_tech_dict
         }
+
+        return game_info
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Factorio-specific logic."""
@@ -161,86 +153,3 @@ class FactorioGameExportHandler(BaseGameExportHandler):
                     })
 
         return mapping_data
-
-    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
-        """Return Factorio-specific item data."""
-        from BaseClasses import ItemClassification
-        
-        item_data = {}
-        
-        # Get items from world.item_name_to_id
-        if hasattr(world, 'item_name_to_id'):
-            for item_name, item_id in world.item_name_to_id.items():
-                # Try to get classification
-                is_advancement = False
-                is_useful = False
-                is_trap = False
-                
-                try:
-                    # Check item pool for classification
-                    if hasattr(world, 'multiworld'):
-                        for item in world.multiworld.itempool:
-                            if item.player == world.player and item.name == item_name:
-                                is_advancement = item.classification == ItemClassification.progression
-                                is_useful = item.classification == ItemClassification.useful
-                                is_trap = item.classification == ItemClassification.trap
-                                break
-                        
-                        # Check placed items in locations
-                        if not (is_advancement or is_useful or is_trap):
-                            for location in world.multiworld.get_locations(world.player):
-                                if (location.item and location.item.player == world.player and 
-                                    location.item.name == item_name and location.item.code is not None):
-                                    is_advancement = location.item.classification == ItemClassification.progression
-                                    is_useful = location.item.classification == ItemClassification.useful
-                                    is_trap = location.item.classification == ItemClassification.trap
-                                    break
-                except Exception as e:
-                    logger.debug(f"Could not determine classification for {item_name}: {e}")
-                
-                # Get groups if available
-                groups = []
-                if hasattr(world, 'item_name_groups'):
-                    groups = [
-                        group_name for group_name, items in world.item_name_groups.items()
-                        if item_name in items
-                    ]
-                
-                item_data[item_name] = {
-                    'name': item_name,
-                    'id': item_id,
-                    'groups': sorted(groups),
-                    'advancement': is_advancement,
-                    'useful': is_useful,
-                    'trap': is_trap,
-                    'event': False,
-                    'type': None,
-                    'max_count': 1
-                }
-        
-        # Handle event items
-        if hasattr(world, 'multiworld'):
-            for location in world.multiworld.get_locations(world.player):
-                if location.item and location.item.player == world.player:
-                    item_name = location.item.name
-                    # Check if this is an event item (no code/ID) that we haven't seen
-                    if (location.item.code is None and
-                        item_name not in item_data and
-                        hasattr(location.item, 'classification')):
-
-                        # All items with no code (event items) should be marked as event=True
-                        # This includes "Automated" items in Factorio which are event items
-                        # placed with place_locked_item() and used in access rules
-                        item_data[item_name] = {
-                            'name': item_name,
-                            'id': None,
-                            'groups': ['Event'],
-                            'advancement': location.item.classification == ItemClassification.progression,
-                            'useful': location.item.classification == ItemClassification.useful,
-                            'trap': location.item.classification == ItemClassification.trap,
-                            'event': True,
-                            'type': 'Event',
-                            'max_count': 1
-                        }
-
-        return item_data

@@ -14,8 +14,6 @@ logger = logging.getLogger(__name__)
 class Celeste64GameExportHandler(GenericGameExportHandler):
     """Celeste 64 expander that inlines rules from logic mappings."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
         super().__init__(world=world)

@@ -7,7 +7,6 @@ from .generic import GenericGameExportHandler
 class YachtDiceGameExportHandler(GenericGameExportHandler):
     """Yacht Dice specific rule expander."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     # dice_simulation_state_change is too complex to export because:
     # 1. It uses state.prog_items which is not available in JavaScript
     # 2. It has complex loops, probability distributions, and caching

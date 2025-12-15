@@ -26,7 +26,6 @@ class AHitGameExportHandler(GenericGameExportHandler):
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Preserve these helpers as helper calls (don't inline their bodies)

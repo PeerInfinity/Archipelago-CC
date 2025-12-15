@@ -7,7 +7,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 class MessengerGameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
+    """Export handler for The Messenger."""
+
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
