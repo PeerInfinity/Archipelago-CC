@@ -36,12 +36,40 @@ class KDL3GameExportHandler(GenericGameExportHandler):
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
-    # which requires runtime resolution of nested dict lookups - handled via JS fallback
+    # which requires runtime resolution of nested dict lookups - expanded during post_process_data
     HELPERS_TO_EXPORT_BLACKLIST = {'can_assemble_rob', 'can_fix_angel_wings'}
 
-    # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
-    # These helpers have loops/iterators that can't be evaluated by the frontend rule engine
+    # Preserve these helpers as helper calls (don't inline their AST)
+    # They will be expanded into AND/OR rules in post_process_data via expand_rule
     HELPERS_TO_PRESERVE = {'can_assemble_rob', 'can_fix_angel_wings'}
+
+    # The restrictive enemy/ability pairs for Sand Canyon 6 (R.O.B. assembly)
+    # Each entry is [allowedAbilities, bukisetEnemies]
+    ENEMY_RESTRICTIVE_ROB = [
+        (["Parasol Ability", "Cutter Ability"], ["Bukiset (Parasol)", "Bukiset (Cutter)"]),
+        (["Spark Ability", "Clean Ability"], ["Bukiset (Spark)", "Bukiset (Clean)"]),
+        (["Ice Ability", "Needle Ability"], ["Bukiset (Ice)", "Bukiset (Needle)"]),
+        (["Stone Ability", "Burning Ability"], ["Bukiset (Stone)", "Bukiset (Burning)"]),
+    ]
+
+    # Enemies required for fixing angel wings (Iceberg 6 - Angel location)
+    ANGEL_WINGS_ENEMIES = [
+        "Sparky", "Blocky", "Jumper Shoot", "Yuki",
+        "Sir Kibble", "Haboki", "Boboo", "Captain Stitch"
+    ]
+
+    # Map from ability names to the items required to reach them
+    ABILITY_ITEMS = {
+        "No Ability": None,  # Always reachable
+        "Burning Ability": ("Burning", "Burning Ability"),
+        "Stone Ability": ("Stone", "Stone Ability"),
+        "Ice Ability": ("Ice", "Ice Ability"),
+        "Needle Ability": ("Needle", "Needle Ability"),
+        "Clean Ability": ("Clean", "Clean Ability"),
+        "Parasol Ability": ("Parasol", "Parasol Ability"),
+        "Spark Ability": ("Spark", "Spark Ability"),
+        "Cutter Ability": ("Cutter", "Cutter Ability"),
+    }
 
     # Map parameter names used in inlined functions to actual setting names
     # When can_reach_boss is inlined, it uses parameter name 'ow_boss_req' but the
@@ -109,6 +137,14 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         """Recursively expand and convert KDL3 rules, including f-strings."""
         if not rule:
             return rule
+
+        # Expand complex helpers (can_assemble_rob, can_fix_angel_wings)
+        if rule.get('type') == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name == 'can_assemble_rob':
+                return self._expand_can_assemble_rob(rule)
+            elif helper_name == 'can_fix_angel_wings':
+                return self._expand_can_fix_angel_wings(rule)
 
         # Handle name remapping and conversion to setting_value type
         if rule.get('type') == 'name':
@@ -258,3 +294,109 @@ class KDL3GameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'] = self.expand_rule(exit_data['access_rule'])
 
         return regions
+
+    def _make_ability_check(self, ability_name: str) -> Dict[str, Any]:
+        """Create a rule to check if an ability is reachable.
+
+        Returns an AND rule checking both the base item and ability item,
+        or a True constant for "No Ability" (always reachable).
+        """
+        items = self.ABILITY_ITEMS.get(ability_name)
+        if items is None:
+            # "No Ability" or unknown - always True
+            return {'type': 'constant', 'value': True}
+
+        base_item, ability_item = items
+        return {
+            'type': 'and',
+            'conditions': [
+                {'type': 'item_check', 'item': base_item},
+                {'type': 'item_check', 'item': ability_item}
+            ]
+        }
+
+    def _make_helper_call(self, helper_name: str) -> Dict[str, Any]:
+        """Create a helper call rule."""
+        return {'type': 'helper', 'name': helper_name, 'args': []}
+
+    def _expand_can_assemble_rob(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Expand can_assemble_rob helper into concrete AND/OR rules.
+
+        Requirements:
+        1. Must have Coo and Kine animal friends
+        2. For each of 4 Bukiset pairs, at least one Bukiset must:
+           - Have an ability in the allowed abilities list (via copy_abilities mapping)
+           - And that ability must be reachable
+        3. Must have Parasol and Stone abilities
+        """
+        args = rule.get('args', [])
+        if not args or not isinstance(args[0], dict):
+            logger.warning("can_assemble_rob missing copy_abilities argument")
+            return {'type': 'constant', 'value': True}
+
+        # Get copy_abilities from the constant argument
+        copy_abilities = args[0].get('value', {})
+        if not isinstance(copy_abilities, dict):
+            logger.warning("can_assemble_rob copy_abilities is not a dict")
+            return {'type': 'constant', 'value': True}
+
+        conditions = []
+
+        # 1. Need Coo and Kine
+        conditions.append(self._make_helper_call('can_reach_coo'))
+        conditions.append(self._make_helper_call('can_reach_kine'))
+
+        # 2. For each restrictive pair, need at least one bukiset with an allowed ability
+        for allowed_abilities, bukisets in self.ENEMY_RESTRICTIVE_ROB:
+            # Find which bukisets have abilities in the allowed list and can be reached
+            pair_options = []
+            for bukiset in bukisets:
+                enemy_ability = copy_abilities.get(bukiset, "No Ability")
+                if enemy_ability in allowed_abilities:
+                    # This bukiset has an allowed ability - add check for that ability
+                    pair_options.append(self._make_ability_check(enemy_ability))
+
+            if not pair_options:
+                # No bukiset in this pair has an allowed ability - requirement can never be met
+                # This should be rare in valid seeds
+                logger.warning(f"No bukiset has allowed ability for pair {allowed_abilities}")
+                return {'type': 'constant', 'value': False}
+
+            if len(pair_options) == 1:
+                conditions.append(pair_options[0])
+            else:
+                conditions.append({'type': 'or', 'conditions': pair_options})
+
+        # 3. Need Parasol and Stone abilities
+        conditions.append(self._make_helper_call('can_reach_parasol'))
+        conditions.append(self._make_helper_call('can_reach_stone'))
+
+        return {'type': 'and', 'conditions': conditions}
+
+    def _expand_can_fix_angel_wings(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Expand can_fix_angel_wings helper into concrete AND rules.
+
+        Requires the ability to reach ALL abilities from specific enemies:
+        Sparky, Blocky, Jumper Shoot, Yuki, Sir Kibble, Haboki, Boboo, Captain Stitch
+        """
+        args = rule.get('args', [])
+        if not args or not isinstance(args[0], dict):
+            logger.warning("can_fix_angel_wings missing copy_abilities argument")
+            return {'type': 'constant', 'value': True}
+
+        # Get copy_abilities from the constant argument
+        copy_abilities = args[0].get('value', {})
+        if not isinstance(copy_abilities, dict):
+            logger.warning("can_fix_angel_wings copy_abilities is not a dict")
+            return {'type': 'constant', 'value': True}
+
+        conditions = []
+
+        # Must be able to reach ALL abilities from the required enemies
+        for enemy in self.ANGEL_WINGS_ENEMIES:
+            enemy_ability = copy_abilities.get(enemy, "No Ability")
+            conditions.append(self._make_ability_check(enemy_ability))
+
+        return {'type': 'and', 'conditions': conditions}
