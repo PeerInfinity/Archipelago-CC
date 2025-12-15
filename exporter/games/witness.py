@@ -7,8 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WitnessGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'The Witness'
-
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 

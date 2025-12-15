@@ -1,23 +1,17 @@
 """Factorio game-specific export handler."""
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from .base import BaseGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
 class FactorioGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Factorio'
     """Export handler for Factorio."""
     
     def __init__(self, world=None):
         """Initialize with world reference to access location data."""
-        super().__init__()
-        self.world = world
-        
-    def expand_helper(self, helper_name: str):
-        """Expand Factorio-specific helper functions."""
-        return None  # Will implement specific helpers as we discover them
+        super().__init__(world=world)
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Get Factorio-specific settings."""

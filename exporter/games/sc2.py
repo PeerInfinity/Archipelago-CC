@@ -33,7 +33,6 @@ except ImportError:
 
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
-    GAME_NAME = 'Starcraft 2'
 
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True

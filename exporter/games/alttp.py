@@ -10,8 +10,7 @@ import logging
 logger = logging.getLogger(__name__) # Add logger if needed later
 
 
-class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
-    GAME_NAME = 'A Link to the Past'
+class ALttPGameExportHandler(BaseGameExportHandler):
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported
@@ -380,10 +379,12 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # Add Progressive Bow (Alt) with same progression as Progressive Bow
         # This handles the runtime conversion that happens in ItemPool.py line 330-335
         # where one Progressive Bow is converted to Progressive Bow (Alt) for hint text
+        # IMPORTANT: base_item must be 'Progressive Bow' so both variants count toward
+        # the same progression level (needed for Silver Bow which requires 2 bows)
         if 'Progressive Bow' in mapping_data:
             mapping_data['Progressive Bow (Alt)'] = {
                 'items': [item.copy() for item in mapping_data['Progressive Bow']['items']],
-                'base_item': 'Progressive Bow (Alt)'
+                'base_item': 'Progressive Bow'
             }
 
         return mapping_data

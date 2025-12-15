@@ -6,7 +6,6 @@ from .generic import GenericGameExportHandler
 
 class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
     """Export handler for Bomb Rush Cyberfunk."""
-    GAME_NAME = 'Bomb Rush Cyberfunk'
 
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True

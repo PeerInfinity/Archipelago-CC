@@ -8,12 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class PokemonRBGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Pokemon Red and Blue'
     """Pokemon Red/Blue specific export handler."""
 
     def __init__(self, world=None):
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
 
         # Define Pokemon RB-specific helpers that should NOT be expanded
         self.known_helpers = {

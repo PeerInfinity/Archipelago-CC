@@ -12,8 +12,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class TerrariaGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Terraria'
-
     # Export settings at top level so they can be resolved by 'name' type rules
     COMPUTED_SETTINGS = {
         'calamity': lambda w, m, p: bool(w.options.calamity.value) if hasattr(w.options, 'calamity') else False,

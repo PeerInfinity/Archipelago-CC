@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 class TLoZGameExportHandler(GenericGameExportHandler):
     """Export handler for The Legend of Zelda."""
 
-    GAME_NAME = 'The Legend of Zelda'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False

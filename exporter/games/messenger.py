@@ -7,14 +7,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class MessengerGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'The Messenger'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
-
-    def __init__(self, world=None):
-        super().__init__()
-        self.world = world
 
     def _extract_items_from_arg(self, items_arg: Dict[str, Any]) -> list:
         """
@@ -200,10 +195,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                         ]
                     }
 
-        # Recursively expand conditions in and/or rules
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
+        # Recursive expansion of children is handled by super().expand_rule()
         return rule
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:

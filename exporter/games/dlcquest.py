@@ -4,17 +4,14 @@ from typing import Dict, Any
 from .base import BaseGameExportHandler
 from BaseClasses import ItemClassification
 import logging
-import ast
 
 logger = logging.getLogger(__name__)
 
 class DLCQuestGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'DLCQuest'
     """Handle DLCQuest-specific rule expansions and coin item export."""
 
     def __init__(self, world=None):
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.coin_items = {}  # Track coin items we find
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
@@ -67,10 +64,6 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
             logger.info("Original world: prog_items_init set to 0 (coins accumulate during play)")
 
         return game_info
-
-    def expand_helper(self, helper_name: str):
-        """Expand DLCQuest-specific helpers."""
-        return None  # No special helpers for now
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
@@ -207,16 +200,5 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
                 for item_name, item_data in coin_items.items():
                     data['items'][player_id][item_name] = item_data
                     logger.info(f"Set coin item '{item_name}' in items dictionary for player {player_id} (event=False)")
-        
+
         return data
-                    
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand DLCQuest-specific rules."""
-        if not rule:
-            return rule
-
-        # Recursively process nested rules
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
-        return rule

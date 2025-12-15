@@ -77,15 +77,29 @@ export const helperFunctions = {
 
     if (progressionMapping) {
       // Search through all progressive items to find if itemName is a resolved form
-      for (const [baseItem, mapping] of Object.entries(progressionMapping)) {
+      for (const [progressiveItemName, mapping] of Object.entries(progressionMapping)) {
         const items = mapping.items || [];
         const itemIndex = items.findIndex(item => item.name === itemName);
         if (itemIndex !== -1) {
           // itemName is a resolved form of this progressive item
           // Check if player has enough of the base item to reach this level
           const requiredLevel = items[itemIndex].level || (itemIndex + 1);
-          const baseItemCount = snapshot?.inventory?.[baseItem] || 0;
-          if (baseItemCount >= requiredLevel) {
+
+          // Use base_item if specified, otherwise use the progressiveItemName directly
+          // The base_item allows multiple progressive items to contribute to the same count
+          // (e.g., "Progressive Bow" and "Progressive Bow (Alt)" both count toward Silver Bow)
+          const baseItem = mapping.base_item || progressiveItemName;
+
+          // Count ALL progressive items that share the same base_item
+          let totalCount = 0;
+          for (const [otherItemName, otherMapping] of Object.entries(progressionMapping)) {
+            const otherBaseItem = otherMapping.base_item || otherItemName;
+            if (otherBaseItem === baseItem) {
+              totalCount += snapshot?.inventory?.[otherItemName] || 0;
+            }
+          }
+
+          if (totalCount >= requiredLevel) {
             return true;
           }
         }
@@ -134,15 +148,29 @@ export const helperFunctions = {
 
     if (progressionMapping) {
       // Search through all progressive items to find if itemName is a resolved form
-      for (const [baseItem, mapping] of Object.entries(progressionMapping)) {
+      for (const [progressiveItemName, mapping] of Object.entries(progressionMapping)) {
         const items = mapping.items || [];
         const itemIndex = items.findIndex(item => item.name === itemName);
         if (itemIndex !== -1) {
           // itemName is a resolved form of this progressive item
           // Check if player has enough of the base item to reach this level
           const requiredLevel = items[itemIndex].level || (itemIndex + 1);
-          const baseItemCount = snapshot?.inventory?.[baseItem] || 0;
-          if (baseItemCount >= requiredLevel) {
+
+          // Use base_item if specified, otherwise use the progressiveItemName directly
+          // The base_item allows multiple progressive items to contribute to the same count
+          // (e.g., "Progressive Bow" and "Progressive Bow (Alt)" both count toward Silver Bow)
+          const baseItem = mapping.base_item || progressiveItemName;
+
+          // Count ALL progressive items that share the same base_item
+          let totalCount = 0;
+          for (const [otherItemName, otherMapping] of Object.entries(progressionMapping)) {
+            const otherBaseItem = otherMapping.base_item || otherItemName;
+            if (otherBaseItem === baseItem) {
+              totalCount += snapshot?.inventory?.[otherItemName] || 0;
+            }
+          }
+
+          if (totalCount >= requiredLevel) {
             // Player has at least this level - count how many times they've "passed" this level
             // For most games, having the item once is enough (return 1)
             return 1;

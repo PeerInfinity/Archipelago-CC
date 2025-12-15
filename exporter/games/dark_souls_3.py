@@ -16,8 +16,6 @@ class DarkSouls3GameExportHandler(GenericGameExportHandler):
     that the frontend rule engine understands.
     """
 
-    GAME_NAME = 'Dark Souls III'
-
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False

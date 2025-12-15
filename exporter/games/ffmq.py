@@ -14,14 +14,13 @@ class FFMQGameExportHandler(GenericGameExportHandler):
     Rules reference these via patterns like `item_groups["Claw" + "s"]` which
     need to be resolved to actual item lists.
     """
-    GAME_NAME = 'Final Fantasy Mystic Quest'
 
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    def __init__(self, world):
-        self.world = world
+    def __init__(self, world=None):
+        super().__init__(world=world)
 
         # FFMQ has item groups that are commonly referenced
         self.item_groups = {}

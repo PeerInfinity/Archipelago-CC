@@ -14,15 +14,12 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
     they cannot be automatically exported. Instead, we expand the inferred pseudo-items
     (like Camera_And_Meat, All_Epitaph_Pieces) to their actual item checks.
     """
-    GAME_NAME = 'Inscryption'
-
     # Disable automatic helper export (class methods can't be auto-exported)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
 
     def __init__(self, world=None):
         """Initialize with world object to access game-specific data."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self._required_epitaph_count = 9  # Default value
 
     def preprocess_world_data(self, world, export_data, player):

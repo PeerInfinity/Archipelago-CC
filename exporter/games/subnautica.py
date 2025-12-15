@@ -8,8 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class SubnauticaGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Subnautica'
-
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 

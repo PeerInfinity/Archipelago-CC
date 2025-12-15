@@ -14,7 +14,6 @@ class SoEGameExportHandler(BaseGameExportHandler):
     C++ library provides requirements/provides data that we need to convert
     to helper calls.
     """
-    GAME_NAME = 'Secret of Evermore'
 
     def __init__(self):
         super().__init__()

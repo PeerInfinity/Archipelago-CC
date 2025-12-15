@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class JakAndDaxterGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Jak and Daxter: The Precursor Legacy'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
@@ -17,8 +16,7 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
 
 
     def __init__(self, world=None):
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.item_id_to_name = {}
         # Build a mapping of item IDs to names
         # The item_table is a dict mapping item_id -> item_name

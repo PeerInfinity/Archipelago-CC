@@ -8,7 +8,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class KH1GameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Kingdom Hearts'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
@@ -47,8 +46,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with optional world reference."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.options_cache = {}
     
     def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
