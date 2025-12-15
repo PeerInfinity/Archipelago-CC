@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 class DLCQuestGameExportHandler(GenericGameExportHandler):
     """Handle DLCQuest-specific rule expansions and coin item export."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-
     # DLCQuest uses coin-based access rules that check state.prog_items accumulators.
     # The standard location checking flow doesn't properly update inventory during
     # spoiler tests, so we use add_sphere_items_upfront mode which adds items

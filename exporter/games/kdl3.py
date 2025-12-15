@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class KDL3GameExportHandler(GenericGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Module path for helper functions

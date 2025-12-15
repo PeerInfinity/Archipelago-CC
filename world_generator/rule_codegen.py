@@ -491,7 +491,11 @@ class RuleCodeGenerator:
 
         test = rule.get('test', {})
         if_true = rule.get('if_true', {})
-        if_false = rule.get('if_false', {'type': 'constant', 'value': True})
+        if_false = rule.get('if_false')
+
+        # Handle None or missing if_false - default to True (always pass)
+        if if_false is None:
+            if_false = {'type': 'constant', 'value': True}
 
         # Check if if_false is just True (option-filtered rules)
         if_false_is_true = (
@@ -550,14 +554,16 @@ class HelperCodeGenerator:
     this generates raw Python code with lambda-compatible expressions.
     """
 
-    def __init__(self, game_name: str) -> None:
+    def __init__(self, game_name: str, settings: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize the helper code generator.
 
         Args:
             game_name: The game name (used for generating function names)
+            settings: Optional dict of resolved setting values for evaluating setting_value nodes
         """
         self.game_name = game_name
+        self.settings = settings or {}
         # Sanitize game name for use in Python identifiers
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
@@ -850,6 +856,7 @@ class HelperCodeGenerator:
             'location_check': self._expr_location_check,
             'count_item': self._expr_count_item,
             'group_count': self._expr_group_count,
+            'setting_value': self._expr_setting_value,
         }
 
         handler = handlers.get(expr_type)
@@ -858,6 +865,23 @@ class HelperCodeGenerator:
 
         # Unknown type - return True as placeholder
         return 'True'
+
+    def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
+        """Resolve a setting value to its actual value from the seed's settings."""
+        setting = expr.get('setting', '')
+        # Look up the setting value in the resolved settings from rules.json
+        # If the setting was captured during export, use its value
+        if setting in self.settings:
+            value = self.settings[setting]
+            if isinstance(value, bool):
+                return 'True' if value else 'False'
+            elif isinstance(value, str):
+                return repr(value)
+            else:
+                return str(value)
+        # If not found in settings, default to False for safety
+        # This prevents inaccessible regions from being created with always-True rules
+        return 'False'
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
@@ -1259,5 +1283,9 @@ class HelperCodeGenerator:
                 return value.get('value', default)
             if value.get('type') == 'value':
                 return value.get('value', default)
+            if value.get('type') == 'set':
+                # Extract all elements from the set
+                elements = value.get('elements', [])
+                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
             return default
         return value if value is not None else default

@@ -93,6 +93,9 @@ class RuleWorldMixin(World):
 
     def get_cached_rule(self, resolved_rule: "Rule.Resolved") -> "Rule.Resolved":
         """Returns a cached instance of a resolved rule based on the hash"""
+        # Skip caching for rules that have caching disabled (e.g., HelperCall with unhashable body_data)
+        if not resolved_rule.caching_enabled:
+            return resolved_rule
         rule_hash = hash(resolved_rule)
         if rule_hash in self.rules_by_hash:
             return self.rules_by_hash[rule_hash]
@@ -459,13 +462,25 @@ class OptionFilter(Generic[T]):
         return f"{self.option.__name__} {op} {self.value}"
 
 
+def _make_hashable(value: Any) -> Any:
+    """Convert a value to a hashable form, recursively handling dicts and lists."""
+    if isinstance(value, dict):
+        # Convert dict to a sorted tuple of (key, value) pairs
+        return tuple(sorted((_make_hashable(k), _make_hashable(v)) for k, v in value.items()))
+    elif isinstance(value, list):
+        return tuple(_make_hashable(item) for item in value)
+    elif isinstance(value, set):
+        return frozenset(_make_hashable(item) for item in value)
+    return value
+
+
 def _create_hash_fn(resolved_rule_cls: "CustomRuleRegister") -> Callable[..., int]:
     def hash_impl(self: "Rule.Resolved") -> int:
         return hash(
             (
                 self.__class__.__module__,
                 self.rule_name,
-                *[getattr(self, f.name) for f in dataclasses.fields(self)],
+                *[_make_hashable(getattr(self, f.name)) for f in dataclasses.fields(self)],
             )
         )
 

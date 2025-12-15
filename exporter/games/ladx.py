@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 class LADXGameExportHandler(GenericGameExportHandler):
     """Export handler for Links Awakening DX."""
 
+    USE_RESOLVED_ITEMS = True
 
     def handle_complex_exit_rule(self, exit_name: str, access_rule_method):
         """
@@ -387,12 +388,6 @@ class LADXGameExportHandler(GenericGameExportHandler):
                 rule['if_false'] = self._postprocess_rule_recursive(rule['if_false'])
 
         return rule
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts LADX-specific game settings for export."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
-        settings_dict['use_resolved_items'] = True
-        return settings_dict
 
     def get_game_info(self, world):
         """Export LADX game info including RUPEES accumulator rules."""

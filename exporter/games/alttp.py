@@ -391,17 +391,22 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
     # --- Add overrides for itempool/settings/info/cleanup ---
     def get_itempool_counts(self, world, multiworld, player) -> Dict[str, int]:
-        """Calculate ALTTP item counts including dungeon items."""
-        # Start with generic counts
+        """Calculate ALTTP item counts including dungeon items.
+
+        Note: After the fill process, items are placed in locations, not in itempool.
+        We count from precollected items and filled locations to avoid double-counting.
+        """
+        # Start with generic counts from precollected and filled locations
         itempool_counts = collections.defaultdict(int)
-        for item in multiworld.itempool:
-            if item.player == player:
-                itempool_counts[item.name] += 1
+
+        # Count precollected items (items player starts with)
         if hasattr(multiworld, 'precollected_items'):
             for item in multiworld.precollected_items.get(player, []):
                 itempool_counts[item.name] += 1
-        for location in multiworld.get_locations(player):
-             if location.item and location.item.player == player:
+
+        # Count items placed in locations (after fill, items are at locations not in pool)
+        for location in multiworld.get_filled_locations():
+            if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
 
         # Add ALTTP dungeon-specific items
