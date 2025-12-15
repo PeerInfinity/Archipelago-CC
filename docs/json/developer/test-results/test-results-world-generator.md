@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-14 20:29:36 UTC
+**Generated:** 2025-12-14 23:37:27 UTC
 **Seed:** 1
 **Mode:** Both (Canonical and Random)
 
@@ -46,8 +46,8 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Failed Test World Generations | 0 |
 | Successful Test Seed Generations | 27 |
 | Failed Test Seed Generations | 46 |
-| Cross-Validation Passed | 16 |
-| Cross-Validation Failed | 11 |
+| Cross-Validation Passed | 18 |
+| Cross-Validation Failed | 9 |
 
 ## Canonical Detailed Results
 
@@ -65,7 +65,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Castlevania 64 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Celeste 64 | ✅ | ✅ | ✅ | ❌ | - | - |
-| ChecksFinder | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
@@ -91,7 +91,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Mega Man 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
-| Meritous | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Metamath | ✅ | ✅ | ✅ | ❌ | - | - |
 | Muse Dash | ✅ | ✅ | ✅ | ❌ | - | - |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -144,8 +144,8 @@ Tests run with standard randomized item placement.
 | Failed Test World Generations | 0 |
 | Successful Test Seed Generations | 33 |
 | Failed Test Seed Generations | 40 |
-| Cross-Validation Passed | 7 |
-| Cross-Validation Failed | 26 |
+| Cross-Validation Passed | 8 |
+| Cross-Validation Failed | 25 |
 
 ## Random Detailed Results
 
@@ -163,7 +163,7 @@ Tests run with standard randomized item placement.
 | Castlevania 64 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Celeste 64 | ✅ | ✅ | ✅ | ❌ | - | - |
-| ChecksFinder | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
@@ -188,8 +188,8 @@ Tests run with standard randomized item placement.
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ❌ | - | - |
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Mega Man 2 | ✅ | ✅ | ✅ | ❌ | - | - |
-| MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Meritous | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Metamath | ✅ | ✅ | ✅ | ❌ | - | - |
 | Muse Dash | ✅ | ✅ | ✅ | ❌ | - | - |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
