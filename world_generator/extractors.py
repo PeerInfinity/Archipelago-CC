@@ -43,6 +43,7 @@ class GameMetadata:
     world_description: Optional[str] = None
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
+    resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
 
 
 @dataclass
@@ -166,6 +167,11 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     settings = json_data.get('settings', {}).get('1', {})
     game_options = settings.get('options', {})
 
+    # Extract resolved settings for evaluating setting_value nodes in helpers
+    # These are the actual values used in the seed, stored at the top level of settings
+    resolved_settings = {k: v for k, v in settings.items()
+                        if k not in ('game', 'options', 'world_directory', 'assume_bidirectional_exits', 'use_resolved_items')}
+
     return GameMetadata(
         game_name=game_name,
         game_directory=json_data.get('game_directory', game_name.lower().replace(' ', '_')),
@@ -178,6 +184,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         world_description=world_description,
         slot_data_fields=slot_data_fields,
         game_options=game_options,
+        resolved_settings=resolved_settings,
     )
 
 
