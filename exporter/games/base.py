@@ -1124,7 +1124,7 @@ class BaseGameExportHandler:
                 except Exception as e:
                     logger.error(f"Error analyzing helper '{helper_name}': {e}")
         else:
-            logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
+            logger.warning(f"Helper discovery reached max iterations ({MAX_HELPER_DISCOVERY_ITERATIONS}), may have circular dependencies")
 
         # Sort alphabetically for consistent output
         return dict(sorted(helper_definitions.items()))

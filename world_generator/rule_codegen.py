@@ -29,6 +29,53 @@ class RuleCodeGenerator:
         self.known_helpers = helper_names
         self.helper_bodies = helper_bodies or {}
 
+    def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None) -> Dict[str, Any]:
+        """
+        Recursively expand helper references in a rule body.
+
+        This ensures body_data is self-contained and doesn't reference other helpers,
+        which allows the frontend to evaluate rules without needing helper lookups.
+
+        Args:
+            rule: Rule dict in CC format
+            visited: Set of helper names already visited (for cycle detection)
+
+        Returns:
+            Rule dict with helper references expanded to their bodies
+        """
+        if visited is None:
+            visited = set()
+
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type', '')
+
+        # If this is a helper reference, expand it
+        if rule_type == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name in visited:
+                # Circular reference - return as-is to avoid infinite loop
+                return rule
+            if helper_name in self.helper_bodies:
+                # Expand the helper body, marking this helper as visited
+                new_visited = visited | {helper_name}
+                return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
+            # Unknown helper - return as-is
+            return rule
+
+        # For other rule types, recursively expand any nested rules
+        result = dict(rule)
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                result[key] = self._expand_helper_refs(value, visited)
+            elif isinstance(value, list):
+                result[key] = [
+                    self._expand_helper_refs(item, visited) if isinstance(item, dict) else item
+                    for item in value
+                ]
+        return result
+
     def get_function_name(self, helper_name: str) -> str:
         """Get the Python function name for a helper."""
         prefix = f"_{self.game_name_lower}_"
@@ -473,10 +520,13 @@ class RuleCodeGenerator:
                 parts.append(f'args=({", ".join(arg_strs)},)')
 
             # Include body_data if available for explain support
+            # Expand nested helper references so body_data is self-contained
             if helper_name in self.helper_bodies:
                 body = self.helper_bodies[helper_name]
+                # Expand any nested helper references to their bodies
+                expanded_body = self._expand_helper_refs(body)
                 # Escape the body repr for Python code
-                body_repr = repr(body)
+                body_repr = repr(expanded_body)
                 parts.append(f'body_data={body_repr}')
 
             return f'HelperCall({", ".join(parts)})'
@@ -1097,10 +1147,10 @@ class HelperCodeGenerator:
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - may be a built-in or external, use proper function name
-        func_name = self.get_function_name(name)
-        arg_exprs = ['state', 'player'] + [self._generate_expression(a) for a in args]
-        return f"{func_name}({', '.join(arg_exprs)})"
+        # Unknown helper - return True as safe fallback
+        # This handles helpers that were blacklisted during export (too complex to export)
+        # Returning True makes the location always accessible, which is safer than crashing
+        return 'True'
 
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""
@@ -1179,6 +1229,11 @@ class HelperCodeGenerator:
 
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
+
+        # Special handling for state.multiworld.get_location - needs player argument
+        # The exported helper body may be missing the player argument
+        if func_code == 'state.multiworld.get_location' and len(arg_exprs) == 1:
+            arg_exprs.append('player')
 
         return f"{func_code}({', '.join(arg_exprs)})"
 
