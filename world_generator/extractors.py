@@ -210,8 +210,11 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
 
     # Extract resolved settings for evaluating setting_value nodes in helpers
     # These are the actual values used in the seed, stored at the top level of settings
+    # Also include game_options since many setting_value nodes reference world.options.X.value
     resolved_settings = {k: v for k, v in settings.items()
                         if k not in ('game', 'options', 'world_directory', 'assume_bidirectional_exits', 'use_resolved_items')}
+    # Merge in game options for settings like goal, castle_skip, etc.
+    resolved_settings.update(game_options)
 
     return GameMetadata(
         game_name=game_name,

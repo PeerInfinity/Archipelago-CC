@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -134,1097 +134,1872 @@ def set_rules(world: "World") -> None:
     multiworld = world.multiworld
 
     # Entrance rules
-    multiworld.get_entrance("BaseUltraRocks", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_ultra(state, player)
+    world.set_rule(
+        multiworld.get_entrance("BaseUltraRocks", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}})
+    )
 
-    multiworld.get_entrance("Chucklehuck Woods", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_brooch(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Chucklehuck Woods", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})
+    )
 
-    multiworld.get_entrance("BooStatue", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canCrash(state, player)
+    world.set_rule(
+        multiworld.get_entrance("BooStatue", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})
+    )
 
-    multiworld.get_entrance("Hooniversity", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))
+    world.set_rule(
+        multiworld.get_entrance("Hooniversity", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
 
-    multiworld.get_entrance("TeeheeValley", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDash(state, player)) or (_marioluigisuperstarsagaworldgen_super(state, player))
+    world.set_rule(
+        multiworld.get_entrance("TeeheeValley", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}))
+    )
 
-    multiworld.get_entrance("Sewers", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_rose(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Sewers", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})
+    )
 
-    multiworld.get_entrance("Airport", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_thunder(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Airport", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})
+    )
 
-    multiworld.get_entrance("Theater", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDash(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Theater", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})
+    )
 
-    multiworld.get_entrance("Surfable", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_surfable(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Surfable", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_surfable, helper_name="surfable", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]})
+    )
 
-    multiworld.get_entrance("Winkle", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDash(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Winkle", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})
+    )
 
-    multiworld.get_entrance("Beanbean Castle Town", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))
+    world.set_rule(
+        multiworld.get_entrance("Beanbean Castle Town", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))
+    )
 
-    multiworld.get_entrance("Shop Chuckolator Flag", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or ((_marioluigisuperstarsagaworldgen_birdo_shop(state, player)) or (_marioluigisuperstarsagaworldgen_fungitown_shop(state, player)) or (_marioluigisuperstarsagaworldgen_piranha_shop(state, player)) or (_marioluigisuperstarsagaworldgen_star_shop(state, player)))
+    world.set_rule(
+        multiworld.get_entrance("Shop Chuckolator Flag", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Birdo Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown_shop, helper_name="fungitown_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Enter Fungitown Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_piranha_shop, helper_name="piranha_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Mom Piranha Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_star_shop, helper_name="star_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Beanstar Complete Flag'}, {'type': 'constant', 'value': 'Region'}]})))
+    )
 
-    multiworld.get_entrance("Shop Mom Piranha Flag", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_thunder(state, player)) or ((_marioluigisuperstarsagaworldgen_birdo_shop(state, player)) or (_marioluigisuperstarsagaworldgen_fungitown_shop(state, player)) or (_marioluigisuperstarsagaworldgen_star_shop(state, player)))
+    world.set_rule(
+        multiworld.get_entrance("Shop Mom Piranha Flag", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})) | ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Birdo Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown_shop, helper_name="fungitown_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Enter Fungitown Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_star_shop, helper_name="star_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Beanstar Complete Flag'}, {'type': 'constant', 'value': 'Region'}]})))
+    )
 
-    multiworld.get_entrance("Shop Enter Fungitown Flag", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fungitown(state, player)) or ((_marioluigisuperstarsagaworldgen_birdo_shop(state, player)) or (_marioluigisuperstarsagaworldgen_star_shop(state, player)))
+    world.set_rule(
+        multiworld.get_entrance("Shop Enter Fungitown Flag", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown, helper_name="fungitown", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}]}, {'type': 'item_check', 'item': 'Thunderhand'}, {'type': 'item_check', 'item': "Peasley's Rose"}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]})) | ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Birdo Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_star_shop, helper_name="star_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Beanstar Complete Flag'}, {'type': 'constant', 'value': 'Region'}]})))
+    )
 
-    multiworld.get_entrance("Shop Beanstar Complete Flag", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_castleTown(state, player)) and (_marioluigisuperstarsagaworldgen_pieces(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player))) or (_marioluigisuperstarsagaworldgen_birdo_shop(state, player))
+    world.set_rule(
+        multiworld.get_entrance("Shop Beanstar Complete Flag", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_castleTown, helper_name="castleTown", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Shop Birdo Flag'}, {'type': 'constant', 'value': 'Region'}]}))
+    )
 
-    multiworld.get_entrance("Shop Birdo Flag", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) and (_marioluigisuperstarsagaworldgen_postJokes(state, player, True.value))
+    world.set_rule(
+        multiworld.get_entrance("Shop Birdo Flag", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=(0,), body_data={'params': ['goal'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'goal'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': "Peach's Extra Dress"}, {'type': 'item_check', 'item': 'Fake Beanstar'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}, {'type': 'item_check', 'item': "Peasley's Rose"}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}}}))
+    )
 
-    multiworld.get_entrance("JokesEntrance", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fire(state, player)
+    world.set_rule(
+        multiworld.get_entrance("JokesEntrance", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})
+    )
 
-    multiworld.get_entrance("GwarharMain", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) and (_marioluigisuperstarsagaworldgen_canDash(state, player))
+    world.set_rule(
+        multiworld.get_entrance("GwarharMain", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}))
+    )
 
-    multiworld.get_entrance("GwarharEntrance", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fire(state, player)) and (_marioluigisuperstarsagaworldgen_membership(state, player))
+    world.set_rule(
+        multiworld.get_entrance("GwarharEntrance", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_membership, helper_name="membership", body_data={'type': 'item_check', 'item': 'Membership Card'}))
+    )
 
-    multiworld.get_entrance("Oasis  ", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fire(state, player)) and (_marioluigisuperstarsagaworldgen_membership(state, player))
+    world.set_rule(
+        multiworld.get_entrance("Oasis  ", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_membership, helper_name="membership", body_data={'type': 'item_check', 'item': 'Membership Card'}))
+    )
 
-    multiworld.get_entrance("Fungitown", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_castleTown(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
+    world.set_rule(
+        multiworld.get_entrance("Fungitown", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_castleTown, helper_name="castleTown", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
 
-    multiworld.get_entrance("JokesMain", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
+    world.set_rule(
+        multiworld.get_entrance("JokesMain", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
 
-    multiworld.get_entrance("PostJokes", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_postJokes(state, player, True.value)
+    world.set_rule(
+        multiworld.get_entrance("PostJokes", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=(0,), body_data={'params': ['goal'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'goal'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': "Peach's Extra Dress"}, {'type': 'item_check', 'item': 'Fake Beanstar'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}, {'type': 'item_check', 'item': "Peasley's Rose"}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}}})
+    )
 
-    multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fungitown_birdo_shop(state, player)) or (_marioluigisuperstarsagaworldgen_pieces(state, player))
+    world.set_rule(
+        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown_birdo_shop, helper_name="fungitown_birdo_shop", body_data={'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': 'Fungitown Shop Birdo Flag'}, {'type': 'constant', 'value': 'Region'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]}))
+    )
 
-    multiworld.get_entrance("Fungitown Shop Birdo Flag", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) and (_marioluigisuperstarsagaworldgen_postJokes(state, player, True.value))
+    world.set_rule(
+        multiworld.get_entrance("Fungitown Shop Birdo Flag", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=(0,), body_data={'params': ['goal'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'goal'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': "Peach's Extra Dress"}, {'type': 'item_check', 'item': 'Fake Beanstar'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}, {'type': 'item_check', 'item': "Peasley's Rose"}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Membership Card'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}}}))
+    )
 
-    multiworld.get_entrance("Bowser's Castle Mini", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canMini(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
+    world.set_rule(
+        multiworld.get_entrance("Bowser's Castle Mini", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Mom Piranha Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Beanstar Complete Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Enter Fungitown Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Beanstar Complete Flag"),
+        multiworld.get_entrance("Shop Mom Piranha Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Mom Piranha Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Enter Fungitown Flag"),
+        multiworld.get_entrance("Shop Mom Piranha Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Beanstar Complete Flag"),
+        multiworld.get_entrance("Shop Enter Fungitown Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Enter Fungitown Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Beanstar Complete Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Fungitown Shop Birdo Flag"),
+        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player)
+    )
     # Location rules
-    multiworld.get_location("Hoohoo Village Hammer House Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Bridge Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Boostatue Room Block 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) or (_marioluigisuperstarsagaworldgen_super(state, player))
-
-    multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and ((_marioluigisuperstarsagaworldgen_canCrash(state, player)) or (_marioluigisuperstarsagaworldgen_super(state, player)))
-
-    multiworld.get_location("Hoohoo Mountain Summit Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Below Summit Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Past Hoohooros Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Hoohooros Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Hoohooros Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Before Hoohooros Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Room 2 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Room 2 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Village Eastside Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Village Super Hammer Cave Digspot", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and ((_marioluigisuperstarsagaworldgen_canCrash(state, player)) or (_marioluigisuperstarsagaworldgen_super(state, player)))
-
-    multiworld.get_location("Hoohoo Village Super Hammer Cave Block", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) or (_marioluigisuperstarsagaworldgen_super(state, player))
-
-    multiworld.get_location("Hoohoo Village North Cave Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Minecart Cave Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Farm Room Digspot 1", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Farm Room Digspot 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Farm Room Digspot 3", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts NW Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_super(state, player)
-
-    multiworld.get_location("Beanbean Outskirts NW Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts W Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts W Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts W Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts SW Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts SW Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts SW Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts N Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts N Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts S Room 1 Block", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_thunder(state, player)) and (_marioluigisuperstarsagaworldgen_ultra(state, player))
-
-    multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_thunder(state, player)) and (_marioluigisuperstarsagaworldgen_ultra(state, player))) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Beanbean Outskirts S Room 2 Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts NE Digspot 1", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts NE Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts E Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts E Digspot 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts E Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts SE Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts SE Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts SE Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts North Beach Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts North Beach Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts North Beach Digspot 3", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and ((_marioluigisuperstarsagaworldgen_canDash(state, player)) or (_marioluigisuperstarsagaworldgen_super(state, player)))
-
-    multiworld.get_location("Beanbean Outskirts South Beach Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room 3 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity West of Star Room 5 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Fountain Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Secret Scroll 1", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_super(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Secret Scroll 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_thunder(state, player)) and (_marioluigisuperstarsagaworldgen_ultra(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 4", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_super(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 5", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_super(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 6", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Bean Fruit 7", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_teehee(state, player))
-
-    multiworld.get_location("Hoohoo Village Mole Behind Turtle", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDash(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Thunderhand Mole", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_thunder(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Super Hammer Upgrade", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_thunder(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Ultra Hammer Upgrade", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_castleTown(state, player)) and (_marioluigisuperstarsagaworldgen_pieces(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Solo Luigi Cave Mole", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Farm Room Mole Reward 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_thunder(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Farm Room Mole Reward 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_thunder(state, player)
-
-    multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Pipe 2 Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Pipe 4 Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Mini Mario Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Mini Mario Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Mini Mario Block 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Mini Mario Block 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Mini Mario Block 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Chateau Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chateau Popple Fight Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chateau Barrel Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chateau Goblet Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 2 Block", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 1", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Chucklehuck Woods Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Pipe Room Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Pipe Room Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 4 Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 4 Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 4 Block 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 7 Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 7 Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 7 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 7 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 8 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods East of Chuckleroot Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 2", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))
-
-    multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 3", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))
-
-    multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fruits(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fruits(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fruits(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fruits(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fruits(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 6", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_fruits(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Koopa Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chucklehuck Woods Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Chateau Green Goblet", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Chateau Red Goblet", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))
-
-    multiworld.get_location("Chucklehuck Woods Red Chuckola Fruit", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Chucklehuck Woods White Chuckola Fruit", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))
-
-    multiworld.get_location("Beanbean Castle Peach's Extra Dress", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_pieces(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Beanbean Castle Fake Beanstar", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_pieces(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 6", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 7", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 8", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 9", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone 10", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Castle Town Beanstone Reward", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Badge Shop Starting Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Starting Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Starting Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Starting Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Starting Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Chuckolator Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Chuckolator Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Chuckolator Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Chuckolator Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Chuckolator Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Chuckolator Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Mom Piranha Flag 1", player).access_rule = \
-        lambda state: (((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))) and ((_marioluigisuperstarsagaworldgen_brooch(state, player)) or (_marioluigisuperstarsagaworldgen_rose(state, player)))
-
-    multiworld.get_location("Pants Shop Mom Piranha Flag 2", player).access_rule = \
-        lambda state: (((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))) and ((_marioluigisuperstarsagaworldgen_brooch(state, player)) or (_marioluigisuperstarsagaworldgen_rose(state, player)))
-
-    multiworld.get_location("Pants Shop Mom Piranha Flag 3", player).access_rule = \
-        lambda state: (((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))) and ((_marioluigisuperstarsagaworldgen_brooch(state, player)) or (_marioluigisuperstarsagaworldgen_rose(state, player)))
-
-    multiworld.get_location("Badge Shop Mom Piranha Flag 1", player).access_rule = \
-        lambda state: (((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))) and ((_marioluigisuperstarsagaworldgen_brooch(state, player)) or (_marioluigisuperstarsagaworldgen_rose(state, player)))
-
-    multiworld.get_location("Badge Shop Mom Piranha Flag 2", player).access_rule = \
-        lambda state: (((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))) and ((_marioluigisuperstarsagaworldgen_brooch(state, player)) or (_marioluigisuperstarsagaworldgen_rose(state, player)))
-
-    multiworld.get_location("Badge Shop Mom Piranha Flag 3", player).access_rule = \
-        lambda state: (((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))) and ((_marioluigisuperstarsagaworldgen_brooch(state, player)) or (_marioluigisuperstarsagaworldgen_rose(state, player)))
-
-    multiworld.get_location("Badge Shop Trunkle Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Trunkle Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Trunkle Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Trunkle Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Trunkle Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Trunkle Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Beanstar Complete Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Beanstar Complete Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Beanstar Complete Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Beanstar Complete Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Beanstar Complete Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Beanstar Complete Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Birdo Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Birdo Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Badge Shop Birdo Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Birdo Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Birdo Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Pants Shop Birdo Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Oho Ocean North Whirlpool Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean North Whirlpool Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean Fire Puzzle Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Digspot 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Digspot 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Digspot 6", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean South Whirlpool Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Pipe Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Staircase Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Basement Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Basement Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Pipe Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Massage Parlor Entrance Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 1 Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDash(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDash(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDash(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Red Pearl Bean", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fire(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Gwarhar Lagoon Green Pearl Bean", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_fire(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player))
-
-    multiworld.get_location("Oho Ocean South Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Past Hermie Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon North of Spangle Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon West of Spangle Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 4 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Entrance to West Underwater Area Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Spangle Room Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_ultra(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Spangle Reward", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_spangle(state, player)
-
-    multiworld.get_location("Gwarhar Lagoon Spangle", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_ultra(state, player)
-
-    multiworld.get_location("Teehee Valley Room 1 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Room 1 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Room 1 Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Room 2 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Room 2 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Room 2 Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_ultra(state, player)
-
-    multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_ultra(state, player)
-
-    multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 1", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_ultra(state, player))
-
-    multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 3", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_ultra(state, player))
-
-    multiworld.get_location("Teehee Valley Before Trunkle Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Winkle Area Beanstar Room Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_winkle(state, player)
-
-    multiworld.get_location("Winkle Area Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Winkle Area Colloseum Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanstar Piece Winkle Area", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_winkle(state, player)
-
-    multiworld.get_location("Sewers Room 5 Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Sewers Room 5 Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_hammers(state, player)
-
-    multiworld.get_location("Airport Entrance Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Lobby Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Westside Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Westside Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Westside Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Westside Digspot 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Westside Digspot 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Center Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Center Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Center Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Center Digspot 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Center Digspot 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Eastside Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Eastside Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Eastside Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Eastside Digspot 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Airport Eastside Digspot 5", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End First Boiler Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End First Boiler Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Furnace Room 1 Block 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canCrash(state, player)
-
-    multiworld.get_location("Joke's End Furnace Room 1 Block 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canCrash(state, player)
-
-    multiworld.get_location("Joke's End Furnace Room 1 Block 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canCrash(state, player)
-
-    multiworld.get_location("Joke's End Northeast of Boiler Room 1 Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canCrash(state, player)
-
-    multiworld.get_location("Joke's End Northeast of Boiler Room 2 Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canCrash(state, player)
-
-    multiworld.get_location("Joke's End Northeast of Boiler Room 2 Digspot", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Joke's End Northeast of Boiler Room 3 Digspot", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canCrash(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Joke's End Second Floor East Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Final Split up Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Solo Luigi Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Solo Luigi Room 2 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Solo Mario Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Second Boiler Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Second Boiler Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Before Jojora Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Joke's End Jojora Room Digspot", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDash(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player))
-
-    multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Before Birdo Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Before Birdo Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Before Birdo Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Before Birdo Digspot 4", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Yoshi Theater Blue Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Yoshi Theater Red Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Yoshi Theater Green Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Yoshi Theater Yellow Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Yoshi Theater Purple Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Yoshi Theater Orange Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Yoshi Theater Azure Yoshi", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_beanFruit(state, player)
-
-    multiworld.get_location("Beanstar Piece Yoshi Theater", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_neon(state, player)
-
-    multiworld.get_location("Teehee Valley Trunkle Room Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Fungitown Badge Shop Starting Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Badge Shop Starting Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Badge Shop Starting Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Starting Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Starting Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Starting Flag 3", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Birdo Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Pants Shop Birdo Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Badge Shop Birdo Flag 1", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Fungitown Badge Shop Birdo Flag 2", player).access_rule = \
-        lambda state: ((_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and ((_marioluigisuperstarsagaworldgen_fire(state, player)) or (_marioluigisuperstarsagaworldgen_hammers(state, player)) or (_marioluigisuperstarsagaworldgen_thunder(state, player)))) or (_marioluigisuperstarsagaworldgen_rose(state, player))
-
-    multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts Boostatue Mole", player).access_rule = \
-        lambda state: (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))
-
-    multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 3", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Oasis West Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean Spike Room Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Ocean Spike Room Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Oho Oasis Firebrand", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canMini(state, player)
-
-    multiworld.get_location("Oho Oasis Thunderhand", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Entrance To Hoohoo Mountain Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 1", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 2", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Guffawha Ruins Block", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_thunder(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Guffawha Ruins Entrance Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Hoohoo Mountain Base Teehee Valley Entrance Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Bowser's Castle Entrance Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Bowser's Castle Morton Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Bowser's Castle Lemmy Room 1 Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
-
-    multiworld.get_location("Bowser's Castle Wendy & Larry Hallway Digspot", player).access_rule = \
-        lambda state: _marioluigisuperstarsagaworldgen_canDig(state, player)
+    world.set_rule(
+        multiworld.get_location("Hoohoo Village Hammer House Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Bridge Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Block 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Summit Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Below Summit Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Past Hoohooros Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Hoohooros Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Hoohooros Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Before Hoohooros Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Room 2 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Room 2 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Village Eastside Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Village Super Hammer Cave Digspot", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Village Super Hammer Cave Block", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Village North Cave Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Minecart Cave Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Farm Room Digspot 1", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Farm Room Digspot 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Farm Room Digspot 3", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts NW Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts NW Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts W Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts W Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts W Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts SW Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts SW Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts SW Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts N Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts N Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 1 Block", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}))) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts NE Digspot 1", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts NE Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts E Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts E Digspot 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts E Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts SE Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts SE Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts SE Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts North Beach Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts North Beach Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts North Beach Digspot 3", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts South Beach Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room 3 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity West of Star Room 5 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Fountain Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Secret Scroll 1", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Secret Scroll 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 4", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 5", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 6", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Bean Fruit 7", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_teehee, helper_name="teehee", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 2}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Village Mole Behind Turtle", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Thunderhand Mole", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Super Hammer Upgrade", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Ultra Hammer Upgrade", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_castleTown, helper_name="castleTown", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]}, {'type': 'item_check', 'item': 'Beanbean Brooch'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Solo Luigi Cave Mole", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Farm Room Mole Reward 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Farm Room Mole Reward 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Pipe 2 Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Pipe 4 Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Mini Mario Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Mini Mario Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Mini Mario Block 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Mini Mario Block 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Mini Mario Block 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Popple Fight Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Barrel Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Goblet Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 2 Block", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 1", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 4 Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 4 Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 4 Block 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 8 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods East of Chuckleroot Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 2", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 3", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 6", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Koopa Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Green Goblet", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Red Goblet", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Red Chuckola Fruit", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Chuckola Fruit", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Peach's Extra Dress", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Fake Beanstar", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Beanstar Piece 1'}, {'type': 'item_check', 'item': 'Beanstar Piece 2'}, {'type': 'item_check', 'item': 'Beanstar Piece 3'}, {'type': 'item_check', 'item': 'Beanstar Piece 4'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 6", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 7", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 8", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 9", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 10", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone Reward", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Starting Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Starting Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Starting Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Starting Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Starting Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Chuckolator Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Chuckolator Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Chuckolator Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Chuckolator Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Chuckolator Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Chuckolator Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Mom Piranha Flag 1", player),
+        (((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Mom Piranha Flag 2", player),
+        (((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Mom Piranha Flag 3", player),
+        (((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Mom Piranha Flag 1", player),
+        (((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Mom Piranha Flag 2", player),
+        (((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Mom Piranha Flag 3", player),
+        (((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"})))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Trunkle Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Trunkle Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Trunkle Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Trunkle Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Trunkle Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Trunkle Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Beanstar Complete Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Beanstar Complete Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Beanstar Complete Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Beanstar Complete Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Beanstar Complete Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Beanstar Complete Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Birdo Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Birdo Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Birdo Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Birdo Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Birdo Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Birdo Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean North Whirlpool Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean North Whirlpool Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean Fire Puzzle Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Digspot 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Digspot 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Digspot 6", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Whirlpool Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Pipe Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Staircase Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Basement Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Basement Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Pipe Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Massage Parlor Entrance Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 1 Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Red Pearl Bean", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Green Pearl Bean", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Past Hermie Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon North of Spangle Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon West of Spangle Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 4 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Entrance to West Underwater Area Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Spangle Room Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Spangle Reward", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_spangle, helper_name="spangle", body_data={'type': 'item_check', 'item': 'Spangle'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Spangle", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Room 1 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Room 1 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Room 1 Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Room 2 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Room 2 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Room 2 Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 1", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 3", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra", body_data={'type': 'item_check', 'item': 'Hammers', 'count': {'type': 'constant', 'value': 3}}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Trunkle Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Winkle Area Beanstar Room Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_winkle, helper_name="winkle", body_data={'type': 'item_check', 'item': 'Winkle Card'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Winkle Area Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Winkle Area Colloseum Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanstar Piece Winkle Area", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_winkle, helper_name="winkle", body_data={'type': 'item_check', 'item': 'Winkle Card'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sewers Room 5 Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sewers Room 5 Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Entrance Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Lobby Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 5", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End First Boiler Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End First Boiler Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Furnace Room 1 Block 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Furnace Room 1 Block 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Furnace Room 1 Block 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 1 Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 2 Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 2 Digspot", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 3 Digspot", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Pearl Bean'}, {'type': 'item_check', 'item': 'Thunderhand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Second Floor East Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Final Split up Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Solo Luigi Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Solo Luigi Room 2 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Solo Mario Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Second Boiler Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Second Boiler Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Before Jojora Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Jojora Room Digspot", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Pearl Bean'}, {'type': 'item_check', 'item': 'Firebrand'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 4", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Blue Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Red Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Green Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Yellow Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Purple Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Orange Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoshi Theater Azure Yoshi", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bean Fruit 1'}, {'type': 'item_check', 'item': 'Bean Fruit 2'}, {'type': 'item_check', 'item': 'Bean Fruit 3'}, {'type': 'item_check', 'item': 'Bean Fruit 4'}, {'type': 'item_check', 'item': 'Bean Fruit 5'}, {'type': 'item_check', 'item': 'Bean Fruit 6'}, {'type': 'item_check', 'item': 'Bean Fruit 7'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanstar Piece Yoshi Theater", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_neon, helper_name="neon", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Blue Neon Egg'}, {'type': 'item_check', 'item': 'Red Neon Egg'}, {'type': 'item_check', 'item': 'Green Neon Egg'}, {'type': 'item_check', 'item': 'Yellow Neon Egg'}, {'type': 'item_check', 'item': 'Purple Neon Egg'}, {'type': 'item_check', 'item': 'Orange Neon Egg'}, {'type': 'item_check', 'item': 'Azure Neon Egg'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Trunkle Room Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Starting Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Starting Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Starting Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Starting Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Starting Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Starting Flag 3", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Birdo Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Birdo Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Birdo Flag 1", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Birdo Flag 2", player),
+        ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch", body_data={'type': 'item_check', 'item': 'Beanbean Brooch'})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Chuckola Fruit'}, {'type': 'item_check', 'item': 'Purple Chuckola Fruit'}, {'type': 'item_check', 'item': 'White Chuckola Fruit'}]})) & ((HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire", body_data={'type': 'item_check', 'item': 'Firebrand'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers", body_data={'type': 'item_check', 'item': 'Hammers'})) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})))) | (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose", body_data={'type': 'item_check', 'item': "Peasley's Rose"}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Boostatue Mole", player),
+        (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})) & (HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]}))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 3", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Oasis West Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean Spike Room Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean Spike Room Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Oasis Firebrand", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Red Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Oasis Thunderhand", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Entrance To Hoohoo Mountain Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 1", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 2", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Guffawha Ruins Block", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder", body_data={'type': 'item_check', 'item': 'Thunderhand'})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Guffawha Ruins Entrance Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Teehee Valley Entrance Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Entrance Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Morton Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Lemmy Room 1 Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Wendy & Larry Hallway Digspot", player),
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Green Goblet'}, {'type': 'item_check', 'item': 'Hammers'}]})
+    )

@@ -519,6 +519,37 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // No static data available for helper lookup
         }
 
+        // Check for inline body in the rule itself (used by worldgen worlds)
+        // The body field contains the helper's rule definition inline
+        if (rule.body) {
+          const params = rule.params || []; // Parameter names from helper definition
+          const args = rule.args || [];
+          let helperLocalScope = localScope ? { ...localScope } : {};
+
+          // Map arguments to parameter names if available, otherwise use positional naming
+          for (let i = 0; i < args.length; i++) {
+            const argValue = evaluateRule(args[i], context, depth + 1, localScope);
+            if (params[i]) {
+              // Use the actual parameter name from the helper definition
+              helperLocalScope[params[i]] = argValue;
+            } else {
+              // Fallback to positional naming
+              helperLocalScope[`arg${i}`] = argValue;
+            }
+          }
+
+          result = evaluateRule(rule.body, context, depth + 1, helperLocalScope);
+
+          // Unwrap return marker if present
+          if (result && typeof result === 'object' && result.__isReturn) {
+            result = result.value;
+          }
+          if (result !== undefined) {
+            break;
+          }
+          log('debug', `[evaluateRule] Inline body for '${rule.name}' returned undefined, trying fallbacks`);
+        }
+
         // Handle Python built-in functions
         if (rule.name === 'any') {
           // Python's any() returns True if any element is truthy

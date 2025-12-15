@@ -85,6 +85,9 @@ class RuleBuilderToCC:
             # Wrapper/utility rules
             'Filtered': self._convert_filtered,
             'WrapperRule': self._convert_wrapper,
+
+            # Helper calls
+            'HelperCall': self._convert_helper_call,
         }
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
@@ -587,6 +590,52 @@ class RuleBuilderToCC:
         inner_rule = args.get('rule', args.get('inner', {}))
 
         return self._convert_rule(inner_rule)
+
+    # -------------------------------------------------------------------------
+    # Helper Call Handler
+    # -------------------------------------------------------------------------
+
+    def _convert_helper_call(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert HelperCall rule to CC format helper call.
+
+        Rule Builder: {"rule": "HelperCall", "args": {"helper_name": "can_swim", "args": (), "body_data": {...}}}
+        CC Format: {"type": "helper", "name": "can_swim", "args": [...]}
+        """
+        args = rule.get('args', {})
+        helper_name = args.get('helper_name', 'unknown_helper')
+        helper_args = args.get('args', ())
+        body_data = args.get('body_data')
+
+        # Convert helper arguments to CC format
+        converted_args = []
+        for arg in helper_args:
+            if isinstance(arg, dict) and 'rule' in arg:
+                converted_args.append(self._convert_rule(arg))
+            elif isinstance(arg, dict) and 'type' in arg:
+                # Already CC format
+                converted_args.append(arg)
+            else:
+                converted_args.append({'type': 'constant', 'value': arg})
+
+        result = {
+            'type': 'helper',
+            'name': helper_name,
+            'args': converted_args
+        }
+
+        # Include body_data if present - this allows the frontend to evaluate
+        # helpers that are inlined in the rule rather than in the helpers dictionary
+        if body_data:
+            # body_data may be wrapped with params: {'params': [...], 'body': {...}}
+            # or just the body directly for backward compatibility
+            if isinstance(body_data, dict) and 'params' in body_data and 'body' in body_data:
+                result['params'] = body_data['params']
+                result['body'] = body_data['body']
+            else:
+                result['body'] = body_data
+
+        return result
 
     # -------------------------------------------------------------------------
     # Unknown/Custom Rule Handler
