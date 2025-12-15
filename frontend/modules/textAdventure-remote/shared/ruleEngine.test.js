@@ -12,15 +12,10 @@
 import { describe, it, expect } from 'vitest';
 import { evaluateRule } from './ruleEngine.js';
 import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
 
-// Get __dirname equivalent in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Path to shared fixtures
-const FIXTURES_PATH = join(__dirname, '../../../tests/fixtures/rule_type_tests.json');
+// Path to shared fixtures (relative to project root where tests are run)
+const FIXTURES_PATH = join(process.cwd(), 'tests/fixtures/rule_type_tests.json');
 
 // Load fixtures synchronously
 const fixtureContent = readFileSync(FIXTURES_PATH, 'utf-8');

@@ -4460,30 +4460,30 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return hasUndefined ? undefined : false;
     }
 
-    // HasFromList: N items from a list
+    // HasFromList: N items from a list (sums total item counts)
+    // Python: found += player_prog_items[item_name] for each item
     case 'HasFromList': {
-      // Support both Rule Builder format (items) and legacy format (item_names)
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
       const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
-      let hasUndefined = false;
+      // Sum the count of each item (not just presence)
       for (const item of items) {
-        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
-        if (result === true) {
-          found++;
-          if (found >= count) return true;
-        } else if (result === undefined) {
-          hasUndefined = true;
+        if (typeof context.countItem === 'function') {
+          found += context.countItem(item) || 0;
+        } else {
+          // Fallback: check presence only
+          const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+          if (result === true) found++;
         }
+        if (found >= count) return true;
       }
-      // If we have undefined results, we can't be sure
-      if (hasUndefined && found < count) return undefined;
       return found >= count;
     }
 
     // HasFromListUnique: N unique items from a list
     case 'HasFromListUnique': {
-      // Support both Rule Builder format (items) and legacy format (item_names)
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
       const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
@@ -4503,14 +4503,16 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasGroup: items from an item group
     case 'HasGroup': {
-      const groupName = args.item_name_group;
+      // Support both "group" (from Resolved._get_args_dict) and "item_name_group" (from Rule.to_dict)
+      const groupName = args.group || args.item_name_group;
       const count = args.count ?? 1;
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
     }
 
     // HasGroupUnique: unique items from an item group
     case 'HasGroupUnique': {
-      const groupName = args.item_name_group;
+      // Support both "group" (from Resolved._get_args_dict) and "item_name_group" (from Rule.to_dict)
+      const groupName = args.group || args.item_name_group;
       const count = args.count ?? 1;
       // For unique, we use the same group_check - the semantics are handled by the group logic
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
