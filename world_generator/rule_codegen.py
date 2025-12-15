@@ -11,12 +11,32 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from CC format rules."""
 
-    def __init__(self) -> None:
+    def __init__(self, game_name: str = "") -> None:
         self.required_imports: Set[str] = set()
+        self.game_name = game_name
+        # Sanitize game name for use in Python identifiers
+        import re
+        self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
+        self.known_helpers: Set[str] = set()
+        self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> CC format body
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
+
+    def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None) -> None:
+        """Set known helpers and optionally their bodies for explain support."""
+        self.known_helpers = helper_names
+        self.helper_bodies = helper_bodies or {}
+
+    def get_function_name(self, helper_name: str) -> str:
+        """Get the Python function name for a helper."""
+        prefix = f"_{self.game_name_lower}_"
+        if helper_name.startswith(prefix):
+            return helper_name
+        if helper_name.startswith('_'):
+            return helper_name
+        return f"{prefix}{helper_name}"
 
     def get_imports(self) -> List[str]:
         """Get the list of required Rule Builder imports."""
@@ -65,12 +85,15 @@ class RuleCodeGenerator:
             'and': self._convert_and,
             'or': self._convert_or,
             'can_reach': self._convert_can_reach_region,
+            'region_check': self._convert_can_reach_region,
             'location_check': self._convert_location_check,
             'can_reach_entrance': self._convert_can_reach_entrance,
             'state_method': self._convert_state_method,
             'not': self._convert_not,
             'helper': self._convert_helper,
             'compare': self._convert_compare,
+            'comparison': self._convert_compare,
+            'conditional': self._convert_conditional,
         }
 
         converter = converters.get(rule_type)
@@ -292,7 +315,8 @@ class RuleCodeGenerator:
 
     def _convert_compare(self, rule: Dict[str, Any]) -> str:
         """
-        Convert compare rule to Has() if it matches the prog_items pattern.
+        Convert compare rule to Has() if it matches the prog_items pattern,
+        otherwise to Compare().
 
         Pattern: state.prog_items[player][item_name] OP count
         Converts to: Has(item_name, count)
@@ -306,8 +330,37 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
-        # Unknown compare pattern - return True_() as placeholder
-        return 'True_()'
+        # Use Compare class for other patterns
+        self.required_imports.add('Compare')
+        left_code = self._convert_compare_operand(left)
+        right_code = self._convert_compare_operand(right)
+
+        return f'Compare({left_code}, "{op}", {right_code})'
+
+    def _convert_compare_operand(self, operand: Any) -> str:
+        """Convert a compare operand to Python code."""
+        if not isinstance(operand, dict):
+            return repr(operand)
+
+        op_type = operand.get('type', '')
+
+        if op_type == 'constant':
+            return repr(operand.get('value'))
+
+        if op_type == 'state_method':
+            method = operand.get('method', '')
+            args = operand.get('args', [])
+
+            # Handle count method specially
+            if method == 'count':
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    item_name = args[0].get('value', '')
+                    self.required_imports.add('CountItem')
+                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CountItem("{item_escaped}")'
+
+        # For other types, try to convert as a rule
+        return self._convert_rule(operand)
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
@@ -385,21 +438,77 @@ class RuleCodeGenerator:
         return item_name
 
     def _convert_not(self, rule: Dict[str, Any]) -> str:
-        """Convert not rule - Rule Builder doesn't have Not, use lambda fallback."""
-        inner = rule.get('condition', rule.get('value', {}))
+        """Convert not rule to Not()."""
+        self.required_imports.add('Not')
+
+        # Handle both 'condition' and 'operand' keys
+        inner = rule.get('condition', rule.get('operand', rule.get('value', {})))
         inner_code = self._convert_rule(inner)
 
-        # Note: Rule Builder doesn't have a Not class
-        # Return True_() as a placeholder - NOT logic needs manual review
-        # Don't use inline comments as they break when combined with & or |
-        return 'True_()'
+        return f'Not({inner_code})'
 
     def _convert_helper(self, rule: Dict[str, Any]) -> str:
-        """Convert helper rule - these are custom functions."""
-        # Helper functions are game-specific and can't be auto-generated
-        # Return True_() as a placeholder - don't use inline comments
-        # as they break when combined with & or | in expressions
+        """Convert helper rule to HelperCall()."""
+        helper_name = rule.get('name', '')
+        args = rule.get('args', [])
+
+        # If we know about this helper, generate a proper HelperCall
+        if helper_name in self.known_helpers:
+            self.required_imports.add('HelperCall')
+            func_name = self.get_function_name(helper_name)
+
+            # Convert arguments to Python code
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    arg_strs.append(repr(arg.get('value')))
+                else:
+                    # For complex args, try to convert
+                    arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
+
+            # Build HelperCall with helper_func reference and body_data for explain
+            parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
+
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            # Include body_data if available for explain support
+            if helper_name in self.helper_bodies:
+                body = self.helper_bodies[helper_name]
+                # Escape the body repr for Python code
+                body_repr = repr(body)
+                parts.append(f'body_data={body_repr}')
+
+            return f'HelperCall({", ".join(parts)})'
+
+        # Unknown helper - return True_() as placeholder
+        self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_conditional(self, rule: Dict[str, Any]) -> str:
+        """Convert conditional rule to Conditional()."""
+        self.required_imports.add('Conditional')
+
+        test = rule.get('test', {})
+        if_true = rule.get('if_true', {})
+        if_false = rule.get('if_false', {'type': 'constant', 'value': True})
+
+        # Check if if_false is just True (option-filtered rules)
+        if_false_is_true = (
+            isinstance(if_false, dict) and
+            if_false.get('type') == 'constant' and
+            if_false.get('value') is True
+        )
+
+        if if_false_is_true:
+            # Option-filtered rule - just return the if_true branch
+            return self._convert_rule(if_true)
+
+        test_code = self._convert_rule(test)
+        if_true_code = self._convert_rule(if_true)
+        if_false_code = self._convert_rule(if_false)
+
+        return f'Conditional(test={test_code}, if_true={if_true_code}, if_false={if_false_code})'
 
 
 def cc_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:

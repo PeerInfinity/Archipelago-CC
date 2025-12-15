@@ -59,6 +59,13 @@ from .rules import (
     CanReachLocation,
     CanReachRegion,
     CanReachEntrance,
+    # CC format support
+    CCRule,
+    Not,
+    CountItem,
+    Compare,
+    Conditional,
+    HelperCall,
 )
 
 from .cc_format import (
@@ -97,7 +104,14 @@ __all__ = [
     'CanReachLocation',
     'CanReachRegion',
     'CanReachEntrance',
-    # CC format support
+    # CC format support classes
+    'CCRule',
+    'Not',
+    'CountItem',
+    'Compare',
+    'Conditional',
+    'HelperCall',
+    # CC format support functions
     'is_cc_format',
     'parse_cc_rule',
 ]
