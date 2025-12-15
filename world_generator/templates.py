@@ -964,7 +964,11 @@ class {world_class}(RuleWorldMixin, World):
 
 
 def _classification_to_enum(classification: str) -> str:
-    """Convert classification string to ItemClassification enum."""
+    """Convert classification string to ItemClassification enum.
+
+    Handles combined classifications like 'progression|useful' by splitting
+    and joining the corresponding enum values.
+    """
     mapping = {
         'progression': 'ItemClassification.progression',
         'progression_skip_balancing': 'ItemClassification.progression_skip_balancing',
@@ -974,4 +978,18 @@ def _classification_to_enum(classification: str) -> str:
         'trap': 'ItemClassification.trap',
         'filler': 'ItemClassification.filler',
     }
+
+    # Handle combined classifications (e.g., 'progression|useful')
+    if '|' in classification:
+        parts = classification.split('|')
+        enum_parts = []
+        for part in parts:
+            part = part.strip()
+            if part in mapping:
+                enum_parts.append(mapping[part])
+        if enum_parts:
+            return ' | '.join(enum_parts)
+        # Fallback if no valid parts found
+        return 'ItemClassification.filler'
+
     return mapping.get(classification, 'ItemClassification.filler')
