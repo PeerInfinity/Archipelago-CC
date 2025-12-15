@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 40107,
+    "exporter_size": 39943,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -111,7 +111,7 @@
     "exporter_path": "exporter/games/generic.py",
     "exporter_size": 14023,
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
-    "game_logic_size": 8898,
+    "game_logic_size": 7502,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "generic"
