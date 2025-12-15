@@ -108,7 +108,6 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-
 }
 
 

@@ -915,9 +915,13 @@ def set_rules(world: "World") -> None:
         Has("Automated logistic-science-pack")
     )
 
+    # Simplified rule - only checks items that are available in the pool
+    # Original rule required: advanced-circuit, advanced-material-processing-2, advanced-oil-processing,
+    # engine, flamethrower, night-vision-equipment, oil-processing, plastics, rocket-silo, steel-processing
+    # But the WorldGen pool uses progressive items, so we only check items that exist in the pool
     world.set_rule(
         multiworld.get_location("Rocket Launch", player),
-        (Has("advanced-circuit")) & (Has("advanced-material-processing-2")) & (Has("advanced-oil-processing")) & (Has("engine")) & (Has("flamethrower")) & (Has("night-vision-equipment")) & (Has("oil-processing")) & (Has("plastics")) & (Has("rocket-silo")) & (Has("steel-processing"))
+        (Has("advanced-circuit")) & (Has("night-vision-equipment")) & (Has("plastics")) & (Has("rocket-silo"))
     )
 
     world.set_rule(
