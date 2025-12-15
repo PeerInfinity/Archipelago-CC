@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-15 17:50:35
+**Generated:** 2025-12-15 20:25:53
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,17 +10,17 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 373.5s | 917.0s | 1987.3s | 1554.8s |
-| Average | 5.1s | 12.6s | 27.2s | 21.3s |
+| Total | 379.7s | 917.0s | 1987.3s | 1554.8s |
+| Average | 5.1s | 12.4s | 27.2s | 21.3s |
 | Max | 28.6s | 79.8s | 300.1s | 124.5s |
-| Min | 3.0s | 5.5s | 5.5s | 12.4s |
+| Min | 3.0s | 0.0s | 5.5s | 12.4s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
 | Slowest | Subnautica (28.6s) | Stardew Valley (79.8s) | Dark Souls III (300.1s) | Dark Souls III (124.5s) |
-| Fastest | Meritous (3.0s) | Meritous (5.5s) | Metamath (5.5s) | Mega Man 2 (12.4s) |
+| Fastest | Meritous (3.0s) | Castlevania - Circle of the Moon WorldGen (0.0s) | Metamath (5.5s) | Mega Man 2 (12.4s) |
 
 ## Individual Game Processing Times
 
@@ -35,6 +35,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Bomb Rush Cyberfunk | 11.8s | 23.1s | 28.4s | 23.3s |
 | Bumper Stickers | 3.6s | 9.8s | 11.2s | 18.6s |
 | Castlevania - Circle of the Moon | 3.2s | 6.0s | 14.7s | 17.9s |
+| Castlevania - Circle of the Moon WorldGen | 6.2s | 0.0s | - | - |
 | Castlevania 64 | 3.8s | 7.5s | 25.5s | 19.6s |
 | Celeste (Open World) | 4.5s | 14.7s | 26.9s | 28.2s |
 | Celeste 64 | 3.6s | 6.7s | 7.9s | 12.7s |
