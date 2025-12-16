@@ -26,7 +26,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Macro Zone Secret 2": 1,
     "Mario Zone Progression": 3,
     "Mushroom": 1,
-    "Pipe Traversal": 1,
     "Pumpkin Zone Progression": 3,
     "Pumpkin Zone Secret 1": 1,
     "Pumpkin Zone Secret 2": 1,

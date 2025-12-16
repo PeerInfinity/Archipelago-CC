@@ -14786,7 +14786,8 @@
         "start_inventory_from_pool": {},
         "start_location_hints": [],
         "start_with_map_scrolls": 0
-      }
+      },
+      "world_directory": "heretic"
     }
   },
   "game_info": {

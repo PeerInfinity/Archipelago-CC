@@ -30729,7 +30729,8 @@
         "starting_companion": 0,
         "starting_weapon": 3,
         "tweak_frustrating_dungeons": 0
-      }
+      },
+      "world_directory": "ffmq"
     }
   },
   "game_info": {

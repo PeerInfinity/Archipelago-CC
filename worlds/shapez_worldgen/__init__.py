@@ -18,7 +18,6 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Belt": 1,
     "Belt Reader": 1,
     "Big Belt Upgrade": 9,
     "Big Miner Upgrade": 12,
@@ -34,7 +33,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Cutter": 1,
     "Display": 1,
     "Double Painter": 1,
-    "Extractor": 1,
     "Item Filter": 1,
     "Level Shapes Bundle": 8,
     "Logic Gates": 1,

@@ -8725,7 +8725,8 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "ramp_tricks": false
+      "ramp_tricks": false,
+      "world_directory": "overcooked2"
     }
   },
   "game_info": {

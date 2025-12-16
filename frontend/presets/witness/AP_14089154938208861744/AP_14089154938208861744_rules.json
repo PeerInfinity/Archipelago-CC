@@ -10515,6 +10515,7 @@
       "game": "The Witness",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "add_sphere_items_upfront": true,
       "options": {
         "EP_difficulty": 0,
         "accessibility": 0,
@@ -10571,7 +10572,7 @@
         "vague_hints": 0,
         "victory_condition": 0
       },
-      "add_sphere_items_upfront": true
+      "world_directory": "witness"
     }
   },
   "game_info": {

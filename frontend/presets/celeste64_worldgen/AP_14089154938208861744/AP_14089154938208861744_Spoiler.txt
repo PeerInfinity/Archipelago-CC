@@ -78,42 +78,52 @@ Playthrough:
   Skid Jump
 }
 1: {
-  Badeline Island Cassette Strawberry: Strawberry
-  Badeline Island Checkpoint: Badeline Island Checkpoint
-  Badeline Tower Bottom Strawberry: Strawberry
-  Badeline Tower Breakable Bottom Strawberry: Strawberry
-  Badeline Tower Cassette Strawberry: Strawberry
-  Badeline Tower Checkpoint: Badeline Tower Checkpoint
-  Breakable Blocks Strawberry: Strawberry
-  Cassette Hidden in the House Strawberry: Strawberry
   Climb Sign Checkpoint: Climb Sign Checkpoint
-  Distant Feather Cassette Strawberry: Strawberry
-  Double Dash House Checkpoint: Double Dash House Checkpoint
-  Double Dash Puzzle Strawberry: Strawberry
-  Double Dash Spring Strawberry: Strawberry
   Fall Through Spike Floor Strawberry: Strawberry
-  Falling Blocks Strawberry: Strawberry
-  Feather Arches Cassette Strawberry: Strawberry
-  Feather Chain Strawberry: Strawberry
-  Feather Hidden Strawberry: Coins
-  Feather Maze Checkpoint: Feather Maze Checkpoint
-  Feather Maze Strawberry: Strawberry
   First Strawberry: Strawberry
   Floating Blocks Strawberry: Breakable Blocks
-  Freeway Checkpoint: Freeway Checkpoint
-  Freeway Feather Checkpoint: Freeway Feather Checkpoint
-  Girders Strawberry: Strawberry
   Granny Checkpoint: Granny Checkpoint
   Intro Checkpoint: Intro Checkpoint
-  North End of Bridge Cassette Strawberry: Feathers
-  South End of Bridge Cassette Strawberry: Springs
   South-East Tower Checkpoint: South-East Tower Checkpoint
   South-East Tower Side Strawberry: Double Dash Refills
   South-East Tower Top Strawberry: Dash Refills
+}
+2: {
+  Badeline Tower Bottom Strawberry: Strawberry
+  Breakable Blocks Strawberry: Strawberry
+  Double Dash House Checkpoint: Double Dash House Checkpoint
+  Falling Blocks Strawberry: Strawberry
+  Feather Maze Checkpoint: Feather Maze Checkpoint
+  Freeway Checkpoint: Freeway Checkpoint
+  Freeway Feather Checkpoint: Freeway Feather Checkpoint
+  Girders Strawberry: Strawberry
   South-West Dash Refills Strawberry: Cassettes
-  Theo Tower Lower Cassette Strawberry: Strawberry
-  Theo Tower Upper Cassette Strawberry: Traffic Blocks
-  Traffic Block Strawberry: Strawberry
   Troll Strawberry: Strawberry
+}
+3: {
+  Cassette Hidden in the House Strawberry: Strawberry
+  North End of Bridge Cassette Strawberry: Feathers
+  Theo Tower Upper Cassette Strawberry: Traffic Blocks
+}
+4: {
+  Badeline Island Checkpoint: Badeline Island Checkpoint
+  Badeline Tower Breakable Bottom Strawberry: Strawberry
+  Badeline Tower Checkpoint: Badeline Tower Checkpoint
+  Double Dash Puzzle Strawberry: Strawberry
+  Feather Chain Strawberry: Strawberry
+  Feather Hidden Strawberry: Coins
+  Feather Maze Strawberry: Strawberry
+  Theo Tower Lower Cassette Strawberry: Strawberry
+  Traffic Block Strawberry: Strawberry
   You Are Ready Cassette Strawberry: Strawberry
+}
+5: {
+  Badeline Tower Cassette Strawberry: Strawberry
+  Distant Feather Cassette Strawberry: Strawberry
+  Feather Arches Cassette Strawberry: Strawberry
+  South End of Bridge Cassette Strawberry: Springs
+}
+6: {
+  Badeline Island Cassette Strawberry: Strawberry
+  Double Dash Spring Strawberry: Strawberry
 }

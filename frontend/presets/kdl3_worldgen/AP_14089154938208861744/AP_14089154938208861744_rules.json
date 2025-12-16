@@ -2140,12 +2140,42 @@
             "name": "Grass Land - Boss (Whispy Woods) Purified",
             "id": 7799296,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 3
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Grass Land - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 3
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -2179,12 +2209,42 @@
             "name": "Level 1 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 3
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Grass Land - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 3
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 1 Boss Purified",
@@ -5031,12 +5091,42 @@
             "name": "Ripple Field - Boss (Acro) Purified",
             "id": 7799297,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 6
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Ripple Field - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 6
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -5070,12 +5160,42 @@
             "name": "Level 2 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 6
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Ripple Field - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 6
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 2 Boss Purified",
@@ -9366,12 +9486,42 @@
             "name": "Sand Canyon - Boss (Pon & Con) Purified",
             "id": 7799298,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 9
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Sand Canyon - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 9
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -9405,12 +9555,42 @@
             "name": "Level 3 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 9
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Sand Canyon - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 9
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 3 Boss Purified",
@@ -12363,12 +12543,42 @@
             "name": "Cloudy Park - Boss (Ado) Purified",
             "id": 7799299,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 12
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Cloudy Park - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 12
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -12402,12 +12612,42 @@
             "name": "Level 4 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 12
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Cloudy Park - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 12
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 4 Boss Purified",
@@ -16526,12 +16766,42 @@
             "name": "Iceberg - Boss (Dedede) Purified",
             "id": 7799300,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 15
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Iceberg - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 15
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Ice",
@@ -16565,12 +16835,42 @@
             "name": "Level 5 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Heart Star",
-                "count": 15
-              }
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Iceberg - Stage Completion",
+                        "count": 1
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 15
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 5 Boss Purified",
@@ -17660,6 +17960,7 @@
     "1": [
       "Animal Friend",
       "Copy Ability",
+      "Event",
       "Everything"
     ]
   },
@@ -18314,7 +18615,19 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "ability_map": {
+        "No Ability": "<lambda>",
+        "Burning Ability": "can_reach_burning",
+        "Stone Ability": "can_reach_stone",
+        "Ice Ability": "can_reach_ice",
+        "Needle Ability": "can_reach_needle",
+        "Clean Ability": "can_reach_clean",
+        "Parasol Ability": "can_reach_parasol",
+        "Spark Ability": "can_reach_spark",
+        "Cutter Ability": "can_reach_cutter"
+      },
+      "world_directory": "kdl3_worldgen"
     }
   },
   "game_info": {

@@ -16452,7 +16452,8 @@
           ]
         ],
         "LowerNorfair": null
-      }
+      },
+      "world_directory": "sm"
     }
   },
   "game_info": {

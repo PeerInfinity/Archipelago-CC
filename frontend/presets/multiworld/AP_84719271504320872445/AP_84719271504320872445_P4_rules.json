@@ -1111,7 +1111,8 @@
         "start_location_hints": [],
         "yorgle_min_speed": 1,
         "yorgle_speed": 2
-      }
+      },
+      "world_directory": "adventure"
     }
   },
   "game_info": {

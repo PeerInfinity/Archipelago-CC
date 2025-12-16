@@ -1823,7 +1823,8 @@
         "start_location_hints": [],
         "starting_statements": 0,
         "theorem": "2p2e4"
-      }
+      },
+      "world_directory": "metamath"
     }
   },
   "game_info": {

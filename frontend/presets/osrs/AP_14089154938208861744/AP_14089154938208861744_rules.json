@@ -11782,7 +11782,8 @@
         "2 QP (The Corsair Curse)": 2,
         "1 QP (X Marks The Spot)": 1,
         "1 QP (Below Ice Mountain)": 1
-      }
+      },
+      "world_directory": "osrs"
     }
   },
   "game_info": {

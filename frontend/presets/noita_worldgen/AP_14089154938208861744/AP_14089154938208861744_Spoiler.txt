@@ -152,5 +152,12 @@ Playthrough:
   Portal to Holy Mountain 5: Portal to Holy Mountain 5
   Portal to Holy Mountain 6: Portal to Holy Mountain 6
   Portal to Holy Mountain 7: Portal to Holy Mountain 7
+  Underground Jungle Holy Mountain Shop Item 2: All-Seeing Eye Perk
+  Underground Jungle Holy Mountain Shop Item 3: Tinker with Wands Everywhere Perk
+  Underground Jungle Holy Mountain Shop Item 4: Electricity Immunity Perk
+  Underground Jungle Holy Mountain Shop Item 5: Melee Immunity Perk
+  Vault Holy Mountain Shop Item 1: Explosion Immunity Perk
+  Vault Holy Mountain Shop Item 2: Toxic Immunity Perk
+  Vault Holy Mountain Shop Item 3: Fire Immunity Perk
   Victory: Victory
 }

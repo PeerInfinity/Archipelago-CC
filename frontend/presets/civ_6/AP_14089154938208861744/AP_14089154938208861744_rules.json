@@ -4853,7 +4853,8 @@
           "Progressive Aerodrome": 2,
           "Progressive Space Port": 4
         }
-      }
+      },
+      "world_directory": "civ_6"
     }
   },
   "game_info": {

@@ -1026,7 +1026,8 @@
         "start_inventory_from_pool": {},
         "start_location_hints": [],
         "trap_chance": 50
-      }
+      },
+      "world_directory": "saving_princess"
     }
   },
   "game_info": {

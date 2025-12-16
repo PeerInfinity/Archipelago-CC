@@ -35,7 +35,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Area: Ice Mountain": 1,
     "Area: Karamja": 1,
     "Area: Lumberyard": 1,
-    "Area: Lumbridge": 1,
     "Area: Lumbridge Farms": 1,
     "Area: Lumbridge Swamp": 1,
     "Area: Monastery": 1,

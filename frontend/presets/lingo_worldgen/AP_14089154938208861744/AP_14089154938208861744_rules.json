@@ -150,9 +150,18 @@
             "name": "Starting Room - HI",
             "id": 444400,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -166,9 +175,18 @@
             "name": "Starting Room - HIDDEN",
             "id": 444401,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -242,9 +260,18 @@
             "name": "Hidden Room - DEAD END",
             "id": 444406,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -258,9 +285,18 @@
             "name": "Hidden Room - OPEN",
             "id": 444407,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -299,9 +335,18 @@
             "name": "The Seeker - Achievement",
             "id": 444409,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -340,9 +385,18 @@
             "name": "Second Room - LEVEL 2",
             "id": 444431,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -356,9 +410,18 @@
             "name": "Second Room - Good Luck",
             "id": 445203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -484,9 +547,18 @@
             "name": "Hub Room - ORDER",
             "id": 444432,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -500,9 +572,18 @@
             "name": "Hub Room - SLAUGHTER",
             "id": 444433,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -516,9 +597,18 @@
             "name": "Hub Room - TRACE",
             "id": 444436,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -532,9 +622,18 @@
             "name": "Hub Room - RAT",
             "id": 444437,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -548,9 +647,18 @@
             "name": "Hub Room - OPEN",
             "id": 444438,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -564,9 +672,18 @@
             "name": "Hub Room - LOST",
             "id": 444440,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -633,9 +750,18 @@
             "name": "Pilgrim Antechamber - PILGRIM",
             "id": 444447,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -649,9 +775,18 @@
             "name": "Pilgrim Room - HOT CRUST",
             "id": 445205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -681,9 +816,18 @@
             "name": "Pilgrim Room - THIS",
             "id": 444449,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -818,9 +962,18 @@
             "name": "Crossroads - DECAY",
             "id": 444462,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -834,9 +987,18 @@
             "name": "Crossroads - NOPE",
             "id": 444463,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -850,9 +1012,18 @@
             "name": "Crossroads - WE ROT",
             "id": 444465,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -866,9 +1037,18 @@
             "name": "Crossroads - BEND HI",
             "id": 444469,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -882,9 +1062,18 @@
             "name": "Crossroads - THE EYES",
             "id": 444470,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -898,9 +1087,18 @@
             "name": "Crossroads - TURN/RUNT",
             "id": 445206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -914,9 +1112,18 @@
             "name": "Crossroads - WORDS, SWORD",
             "id": 445207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -946,9 +1153,18 @@
             "name": "Crossroads - LOST Pair",
             "id": 445208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -987,9 +1203,18 @@
             "name": "Amen Name Area - AMEN, NAME",
             "id": 445209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -1070,9 +1295,18 @@
             "name": "The Tenacious - Achievement",
             "id": 444491,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -1086,9 +1320,18 @@
             "name": "The Tenacious - Palindromes",
             "id": 445210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1102,9 +1345,18 @@
             "name": "The Tenacious - White Palindromes",
             "id": 445211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -1142,9 +1394,18 @@
             "name": "Symmetry Room - NEAR, FAR",
             "id": 445204,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -1183,9 +1444,18 @@
             "name": "Symmetry Room - WARTS, STRAW",
             "id": 445212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1224,9 +1494,18 @@
             "name": "Symmetry Room - LEAF, FEEL",
             "id": 445213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1324,9 +1603,18 @@
             "name": "Outside The Agreeable - MASSACRED",
             "id": 444496,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -1340,9 +1628,18 @@
             "name": "Outside The Agreeable - BLACK",
             "id": 444497,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -1356,9 +1653,18 @@
             "name": "Outside The Agreeable - CLOSE",
             "id": 444498,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1372,9 +1678,18 @@
             "name": "Outside The Agreeable - RIGHT",
             "id": 444501,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1420,9 +1735,18 @@
             "name": "Outside The Agreeable - Lookout Panels",
             "id": 445271,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1461,9 +1785,18 @@
             "name": "Dread Hallway - DREAD",
             "id": 444516,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1502,14 +1835,23 @@
             "name": "The Agreeable - Achievement",
             "id": 444517,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Red",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -1518,9 +1860,18 @@
             "name": "The Agreeable - BYE",
             "id": 444518,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -1611,9 +1962,18 @@
             "name": "Hedge Maze - DOWN",
             "id": 444530,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1627,9 +1987,18 @@
             "name": "Hedge Maze - Hide and Seek",
             "id": 445215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1666,9 +2035,18 @@
             "name": "The Perceptive - Achievement",
             "id": 444546,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -1682,9 +2060,18 @@
             "name": "The Perceptive - GAZE",
             "id": 444547,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -1723,9 +2110,18 @@
             "name": "The Fearless - First Floor Puzzles",
             "id": 445216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -1745,9 +2141,18 @@
             "name": "The Fearless - Second Floor Puzzles",
             "id": 445217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -1767,9 +2172,18 @@
             "name": "The Fearless - Achievement",
             "id": 444560,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1824,9 +2238,18 @@
             "name": "The Observant - Achievement",
             "id": 444565,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -1840,9 +2263,18 @@
             "name": "The Observant - SIX",
             "id": 444569,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1856,9 +2288,18 @@
             "name": "The Observant - FOUR (1), FOUR (2)",
             "id": 445218,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -1905,9 +2346,18 @@
             "name": "The Incomparable - Achievement",
             "id": 444585,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1921,9 +2371,18 @@
             "name": "Giant Sevens",
             "id": 445219,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -2039,9 +2498,18 @@
             "name": "Orange Tower First Floor - SECRET",
             "id": 444602,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -2055,9 +2523,18 @@
             "name": "Orange Tower First Floor - DADS + ALE",
             "id": 444603,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -2071,9 +2548,18 @@
             "name": "Orange Tower First Floor - Salt Pepper Door",
             "id": 445220,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -2195,9 +2681,18 @@
             "name": "Orange Tower Third Floor - DEER + WREN",
             "id": 444606,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -2211,9 +2706,18 @@
             "name": "Color Barriers - RED and YELLOW",
             "id": 445221,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -2311,9 +2815,18 @@
             "name": "Orange Tower Fourth Floor - LEARNS + UNSEW",
             "id": 444609,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -2327,9 +2840,18 @@
             "name": "Orange Tower Fourth Floor - HOT CRUSTS",
             "id": 444610,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -2343,9 +2865,18 @@
             "name": "Orange Tower Fourth Floor - IRK HORN",
             "id": 444611,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -2442,9 +2973,18 @@
             "name": "Orange Tower Fifth Floor - DRAWL + RUNS",
             "id": 444615,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -2458,9 +2998,18 @@
             "name": "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
             "id": 445222,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -2571,9 +3120,18 @@
             "name": "The End (Solved)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Victory",
@@ -3016,9 +3574,18 @@
             "name": "Courtyard - FIRST, SECOND, THIRD, FOURTH",
             "id": 445224,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -3056,9 +3623,18 @@
             "name": "The Colorful - White",
             "id": 445225,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -3097,9 +3673,18 @@
             "name": "The Colorful - Black",
             "id": 445226,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3138,9 +3723,18 @@
             "name": "The Colorful - Red",
             "id": 445227,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3179,9 +3773,18 @@
             "name": "The Colorful - Yellow",
             "id": 445228,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3220,9 +3823,18 @@
             "name": "The Colorful - Blue",
             "id": 445229,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Brown",
@@ -3261,9 +3873,18 @@
             "name": "The Colorful - Purple",
             "id": 445230,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3302,9 +3923,18 @@
             "name": "The Colorful - Orange",
             "id": 445231,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -3343,9 +3973,18 @@
             "name": "The Colorful - Green",
             "id": 445232,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -3384,9 +4023,18 @@
             "name": "The Colorful - Brown",
             "id": 445233,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3425,9 +4073,18 @@
             "name": "The Colorful - Gray",
             "id": 445234,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -3465,9 +4122,18 @@
             "name": "The Colorful - Achievement",
             "id": 444652,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -3515,9 +4181,18 @@
             "name": "Welcome Back Area - WELCOME BACK",
             "id": 444653,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3531,9 +4206,18 @@
             "name": "Welcome Back Area - CLOCKWISE",
             "id": 444655,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -3579,9 +4263,18 @@
             "name": "Owl Hallway - STRAYS",
             "id": 444656,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -3595,9 +4288,18 @@
             "name": "Owl Hallway - READS + RUST",
             "id": 444657,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3705,9 +4407,18 @@
             "name": "Outside The Initiated - UNCOVER",
             "id": 444664,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Orange",
@@ -3721,9 +4432,18 @@
             "name": "Outside The Initiated - OXEN",
             "id": 444665,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Pilgrim Room - Sun Painting",
@@ -3737,9 +4457,18 @@
             "name": "Color Barriers - BLUE and YELLOW",
             "id": 445235,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3753,9 +4482,18 @@
             "name": "Color Barriers - RED and BLUE",
             "id": 445236,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -3769,9 +4507,18 @@
             "name": "Color Barriers - GREEN, ORANGE and PURPLE",
             "id": 445237,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3791,9 +4538,18 @@
             "name": "The Initiated - Achievement",
             "id": 444676,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Gray",
@@ -3830,9 +4586,18 @@
             "name": "The Optimistic - Achievement",
             "id": 444667,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3871,9 +4636,18 @@
             "name": "The Traveled - Achievement",
             "id": 444693,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -3887,9 +4661,18 @@
             "name": "The Traveled - HELLO",
             "id": 444698,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -4019,9 +4802,18 @@
             "name": "Outside The Bold - UNOPEN",
             "id": 444711,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4035,9 +4827,18 @@
             "name": "Outside The Bold - BEGIN",
             "id": 444712,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -4057,9 +4858,18 @@
             "name": "The Bold - Achievement",
             "id": 444725,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4140,9 +4950,18 @@
             "name": "Outside The Undeterred - ART + ART",
             "id": 444743,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4156,9 +4975,18 @@
             "name": "Outside The Undeterred - PEN",
             "id": 444744,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Green",
@@ -4172,9 +5000,18 @@
             "name": "Outside The Undeterred - RAINY",
             "id": 444750,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4188,9 +5025,18 @@
             "name": "Outside The Undeterred - ZERO",
             "id": 444751,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4204,9 +5050,18 @@
             "name": "Outside The Undeterred - ONE",
             "id": 444752,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4220,9 +5075,18 @@
             "name": "Twos",
             "id": 445238,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -4236,9 +5100,18 @@
             "name": "Threes",
             "id": 445239,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4252,9 +5125,18 @@
             "name": "Fours",
             "id": 445240,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4274,9 +5156,18 @@
             "name": "The Undeterred - Achievement",
             "id": 444759,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4333,9 +5224,18 @@
             "name": "Fives",
             "id": 445241,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4349,9 +5249,18 @@
             "name": "Sixes",
             "id": 445242,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4365,9 +5274,18 @@
             "name": "Sevens",
             "id": 445243,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4381,9 +5299,18 @@
             "name": "Eights",
             "id": 445244,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -4397,9 +5324,18 @@
             "name": "Nines",
             "id": 445245,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4504,9 +5440,18 @@
             "name": "Directional Gallery - 834283054",
             "id": 444792,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -4520,9 +5465,18 @@
             "name": "Directional Gallery - PARANOID",
             "id": 444793,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -4536,9 +5490,18 @@
             "name": "Directional Gallery - WADED + WEE",
             "id": 444795,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4552,9 +5515,18 @@
             "name": "Directional Gallery - TURN, LEARN",
             "id": 445246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -4601,9 +5573,18 @@
             "name": "Color Hunt - EXIT",
             "id": 444806,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4617,9 +5598,18 @@
             "name": "Color Hunt - RED",
             "id": 444808,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4633,9 +5623,18 @@
             "name": "Color Hunt - BLUE",
             "id": 444809,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4649,9 +5648,18 @@
             "name": "Color Hunt - YELLOW",
             "id": 444810,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4665,9 +5673,18 @@
             "name": "Color Hunt - GREEN",
             "id": 444811,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -4681,9 +5698,18 @@
             "name": "Color Hunt - PURPLE",
             "id": 444812,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -4697,9 +5723,18 @@
             "name": "Color Hunt - ORANGE",
             "id": 444813,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -4729,9 +5764,18 @@
             "name": "Champion's Rest - YOU",
             "id": 444814,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4797,9 +5841,18 @@
             "name": "The Bearer - Achievement",
             "id": 444819,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4813,9 +5866,18 @@
             "name": "The Bearer - MIDDLE",
             "id": 444820,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4829,9 +5891,18 @@
             "name": "The Bearer - FARTHER",
             "id": 444821,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -5007,9 +6078,18 @@
             "name": "The Bearer - SHORTCUT",
             "id": 445247,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -5620,9 +6700,18 @@
             "name": "The Steady - Achievement",
             "id": 444859,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -5732,9 +6821,18 @@
             "name": "Knight Night Room - TRUSTED",
             "id": 445248,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -5846,9 +6944,18 @@
             "name": "The Artistic - Achievement",
             "id": 444885,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -5862,9 +6969,18 @@
             "name": "The Artistic - Smiley and Panda",
             "id": 445249,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -5911,9 +7027,18 @@
             "name": "The Artistic - Panda and Lattice",
             "id": 445250,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -5969,9 +7094,18 @@
             "name": "The Artistic - Lattice and Apple",
             "id": 445251,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Empty White Hallways",
@@ -6018,9 +7152,18 @@
             "name": "The Artistic - Apple and Smiley",
             "id": 445252,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -6045,9 +7188,18 @@
             "name": "The Discerning - Achievement",
             "id": 444920,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -6093,14 +7245,23 @@
             "name": "The Eyes They See - NEAR",
             "id": 444937,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Blue",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -6169,9 +7330,18 @@
             "name": "Outside The Wondrous - SHRINK",
             "id": 444940,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -6321,9 +7491,18 @@
             "name": "The Wondrous - Achievement",
             "id": 444947,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6392,9 +7571,18 @@
             "name": "Hallway Room (1) - OUT",
             "id": 444505,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -6408,14 +7596,23 @@
             "name": "Hallway Room - First Room",
             "id": 445214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Purple",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -6448,9 +7645,18 @@
             "name": "Hallway Room - Second Room",
             "id": 445253,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -6488,9 +7694,18 @@
             "name": "Hallway Room - Third Room",
             "id": 445254,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6528,14 +7743,23 @@
             "name": "Hallway Room - Fourth Room",
             "id": 445255,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Black",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -6576,9 +7800,18 @@
             "name": "Elements Area - UNDISTRACTED",
             "id": 444961,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -6625,14 +7858,23 @@
             "name": "Outside The Wanderer - WANDERLUST",
             "id": 444966,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Yellow",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -6647,9 +7889,18 @@
             "name": "The Wanderer - Achievement",
             "id": 444967,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -6738,9 +7989,18 @@
             "name": "Art Gallery - ORDER",
             "id": 444981,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -6769,9 +8029,18 @@
             "name": "Art Gallery - First Floor Puzzles",
             "id": 445256,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6800,9 +8069,18 @@
             "name": "Art Gallery - Second Floor Puzzles",
             "id": 445257,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -6831,9 +8109,18 @@
             "name": "Art Gallery - Third Floor Puzzles",
             "id": 445258,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -6862,9 +8149,18 @@
             "name": "Art Gallery - Fourth Floor Puzzles",
             "id": 445259,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -6912,9 +8208,18 @@
             "name": "Rhyme Room (Smiley) - Puzzles Toward Target",
             "id": 445260,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -6961,9 +8266,18 @@
             "name": "Rhyme Room (Cross) - Exit Puzzles",
             "id": 445261,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -7010,9 +8324,18 @@
             "name": "Rhyme Room - Circle/Smiley Wall",
             "id": 445262,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -7069,9 +8392,18 @@
             "name": "Rhyme Room - Circle/Looped Square Wall",
             "id": 445263,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Puzzle Skip",
@@ -7085,9 +8417,18 @@
             "name": "Rhyme Room - Cross/Looped Square Wall",
             "id": 445264,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": ":)",
@@ -7101,9 +8442,18 @@
             "name": "Rhyme Room - Target/Looped Square Wall",
             "id": 445265,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -7150,9 +8500,18 @@
             "name": "Rhyme Room (Target) - Puzzles Toward Cross",
             "id": 445266,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Slowness Trap",
@@ -7190,9 +8549,18 @@
             "name": "Room Room - BASE",
             "id": 445076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -7262,9 +8630,18 @@
             "name": "Outside The Wise - KITTEN, CAT",
             "id": 445267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Atbash Trap",
@@ -7284,9 +8661,18 @@
             "name": "The Wise - Achievement",
             "id": 445086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -7381,9 +8767,18 @@
             "name": "Challenge Room - WELCOME",
             "id": 445176,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Iceland Trap",
@@ -7397,9 +8792,18 @@
             "name": "Challenge Room - Achievement",
             "id": 445178,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "helper",
+              "name": "_lingo_can_satisfy_requirements",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "access"
+                }
+              ]
             },
             "item": {
               "name": "Wanderlust",
@@ -7433,7 +8837,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Red": {
         "name": "Red",
@@ -7445,7 +8849,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Blue": {
         "name": "Blue",
@@ -7457,7 +8861,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Yellow": {
         "name": "Yellow",
@@ -7469,7 +8873,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Green": {
         "name": "Green",
@@ -7529,7 +8933,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       ":)": {
         "name": ":)",
@@ -11003,7 +12407,187 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "PROGRESSIVE_ITEMS": [
+        "Progressive Art Gallery",
+        "Progressive Colorful",
+        "Progressive Fearless",
+        "Progressive Hallway Room",
+        "Progressive Number Hunt",
+        "Progressive Orange Tower",
+        "Progressive Pilgrimage",
+        "Progressive Suits Area",
+        "Progressive Symmetry Room"
+      ],
+      "PROGRESSIVE_DOORS_BY_ROOM": {
+        "Sunwarps": {
+          "1 Sunwarp": {
+            "item_name": "Progressive Pilgrimage",
+            "index": 1
+          },
+          "2 Sunwarp": {
+            "item_name": "Progressive Pilgrimage",
+            "index": 2
+          },
+          "3 Sunwarp": {
+            "item_name": "Progressive Pilgrimage",
+            "index": 3
+          },
+          "4 Sunwarp": {
+            "item_name": "Progressive Pilgrimage",
+            "index": 4
+          },
+          "5 Sunwarp": {
+            "item_name": "Progressive Pilgrimage",
+            "index": 5
+          },
+          "6 Sunwarp": {
+            "item_name": "Progressive Pilgrimage",
+            "index": 6
+          }
+        },
+        "The Fearless (First Floor)": {
+          "Second Floor": {
+            "item_name": "Progressive Fearless",
+            "index": 1
+          }
+        },
+        "The Fearless (Second Floor)": {
+          "Third Floor": {
+            "item_name": "Progressive Fearless",
+            "index": 2
+          }
+        },
+        "Orange Tower": {
+          "Second Floor": {
+            "item_name": "Progressive Orange Tower",
+            "index": 1
+          },
+          "Third Floor": {
+            "item_name": "Progressive Orange Tower",
+            "index": 2
+          },
+          "Fourth Floor": {
+            "item_name": "Progressive Orange Tower",
+            "index": 3
+          },
+          "Fifth Floor": {
+            "item_name": "Progressive Orange Tower",
+            "index": 4
+          },
+          "Sixth Floor": {
+            "item_name": "Progressive Orange Tower",
+            "index": 5
+          },
+          "Seventh Floor": {
+            "item_name": "Progressive Orange Tower",
+            "index": 6
+          }
+        },
+        "The Colorful (White)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 1
+          }
+        },
+        "The Colorful (Black)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 2
+          }
+        },
+        "The Colorful (Red)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 3
+          }
+        },
+        "The Colorful (Yellow)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 4
+          }
+        },
+        "The Colorful (Blue)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 5
+          }
+        },
+        "The Colorful (Purple)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 6
+          }
+        },
+        "The Colorful (Orange)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 7
+          }
+        },
+        "The Colorful (Green)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 8
+          }
+        },
+        "The Colorful (Brown)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 9
+          }
+        },
+        "The Colorful (Gray)": {
+          "Progress Door": {
+            "item_name": "Progressive Colorful",
+            "index": 10
+          }
+        },
+        "Hallway Room (1)": {
+          "Exit": {
+            "item_name": "Progressive Hallway Room",
+            "index": 1
+          }
+        },
+        "Hallway Room (2)": {
+          "Exit": {
+            "item_name": "Progressive Hallway Room",
+            "index": 2
+          }
+        },
+        "Hallway Room (3)": {
+          "Exit": {
+            "item_name": "Progressive Hallway Room",
+            "index": 3
+          }
+        },
+        "Hallway Room (4)": {
+          "Exit": {
+            "item_name": "Progressive Hallway Room",
+            "index": 4
+          }
+        },
+        "Art Gallery": {
+          "Second Floor": {
+            "item_name": "Progressive Art Gallery",
+            "index": 1
+          },
+          "Third Floor": {
+            "item_name": "Progressive Art Gallery",
+            "index": 2
+          },
+          "Fourth Floor": {
+            "item_name": "Progressive Art Gallery",
+            "index": 3
+          },
+          "Fifth Floor": {
+            "item_name": "Progressive Art Gallery",
+            "index": 4
+          }
+        }
+      },
+      "world_directory": "lingo_worldgen"
     }
   },
   "game_info": {

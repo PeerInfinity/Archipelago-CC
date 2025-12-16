@@ -8621,7 +8621,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "trade_quest_hinting": 2
-      }
+      },
+      "world_directory": "mmbn3"
     }
   },
   "game_info": {

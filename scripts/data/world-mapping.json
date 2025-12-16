@@ -540,13 +540,13 @@
     "world_directory": "jakanddaxter"
   },
   "Kingdom Hearts": {
-    "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 59806,
-    "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
-    "game_logic_size": 5572,
-    "has_custom_exporter": true,
-    "has_custom_game_logic": true,
-    "world_directory": "kh1"
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "kh1_worldgen"
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
@@ -573,11 +573,11 @@
     "game_logic_size": 0,
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "world_directory": "kh1_worldgen"
+    "world_directory": "kh1_worldgen_worldgen"
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 11598,
+    "exporter_size": 11156,
     "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
     "game_logic_size": 9231,
     "has_custom_exporter": true,
@@ -613,7 +613,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 34499,
+    "exporter_size": 34520,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10922,
     "has_custom_exporter": true,
@@ -1279,7 +1279,7 @@
   },
   "The Wind Waker": {
     "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 9424,
+    "exporter_size": 6402,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

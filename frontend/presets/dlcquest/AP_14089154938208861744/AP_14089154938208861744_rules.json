@@ -1799,6 +1799,7 @@
       "game": "DLCQuest",
       "assume_bidirectional_exits": false,
       "use_resolved_items": true,
+      "add_sphere_items_upfront": true,
       "options": {
         "accessibility": 0,
         "campaign": 0,
@@ -1821,7 +1822,7 @@
         "start_location_hints": [],
         "time_is_money": 0
       },
-      "add_sphere_items_upfront": true
+      "world_directory": "dlcquest"
     }
   },
   "game_info": {

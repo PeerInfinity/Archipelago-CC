@@ -1,0 +1,445 @@
+{
+  "schema_version": 3,
+  "game_name": "APQuest WorldGen",
+  "game_directory": "apquest_worldgen",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "APQuestWorldGenWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "MenuToStart",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Overworld": {
+        "name": "Overworld",
+        "exits": [
+          {
+            "name": "Overworld to Bottom Right Room",
+            "connected_region": "Bottom Right Room",
+            "access_rule": {
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sword",
+                "count": 1
+              }
+            }
+          },
+          {
+            "name": "Overworld to Right Room",
+            "connected_region": "Right Room",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Overworld to Top Left Room",
+            "connected_region": "Top Left Room",
+            "access_rule": {
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key",
+                "count": 1
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Bottom Left Chest",
+            "id": 3,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Confetti Cannon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Top Middle Chest",
+            "id": 2,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Top Left Room": {
+        "name": "Top Left Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Top Left Room Chest",
+            "id": 1,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shield",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Top Left Room Button",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Top Left Room Button Pressed",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Bottom Right Room": {
+        "name": "Bottom Right Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Bottom Right Room Left Chest",
+            "id": 5,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Health Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bottom Right Room Right Chest",
+            "id": 6,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Health Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Right Room": {
+        "name": "Right Room",
+        "exits": [
+          {
+            "name": "Right Room to Final Boss Room",
+            "connected_region": "Final Boss Room",
+            "access_rule": {
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Top Left Room Button Pressed",
+                "count": 1
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Right Room Enemy Drop",
+            "id": 10,
+            "access_rule": {
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sword",
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Final Boss Room": {
+        "name": "Final Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Final Boss Defeated",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Shield",
+                  "Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Key": {
+        "name": "Key",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Sword": {
+        "name": "Sword",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression|useful"
+      },
+      "Shield": {
+        "name": "Shield",
+        "id": 3,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Hammer": {
+        "name": "Hammer",
+        "id": 4,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Health Upgrade": {
+        "name": "Health Upgrade",
+        "id": 5,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Confetti Cannon": {
+        "name": "Confetti Cannon",
+        "id": 6,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Math Trap": {
+        "name": "Math Trap",
+        "id": 7,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Top Left Room Button Pressed": {
+        "name": "Top Left Room Button Pressed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Event",
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Confetti Cannon": 1,
+      "Health Upgrade": 2,
+      "Key": 1,
+      "Shield": 1,
+      "Sword": 1,
+      "Top Left Room Button Pressed": 1,
+      "Victory": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "Bottom Left Chest": "Confetti Cannon",
+      "Top Middle Chest": "Sword",
+      "Top Left Room Chest": "Shield",
+      "Top Left Room Button": "Top Left Room Button Pressed",
+      "Bottom Right Room Left Chest": "Health Upgrade",
+      "Bottom Right Room Right Chest": "Health Upgrade",
+      "Right Room Enemy Drop": "Key",
+      "Final Boss Defeated": "Victory"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "APQuest WorldGen",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
+      "world_directory": "apquest_worldgen"
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "APQuest WorldGen",
+      "rule_format": {
+        "version": "1.0"
+      },
+      "web_theme": "grassFlowers",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up APQuest for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "NewSoupVi"
+          ]
+        },
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up APQuest for MultiWorld.",
+          "language": "German",
+          "file_name": "setup_de.md",
+          "link": "setup/de",
+          "authors": [
+            "NewSoupVi"
+          ]
+        }
+      ],
+      "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
+      "slot_data": {
+        "hard_mode": 0,
+        "hammer": 0,
+        "extra_starting_chest": 0,
+        "confetti_explosiveness": 3,
+        "player_sprite": 0
+      }
+    }
+  },
+  "helpers": {}
+}

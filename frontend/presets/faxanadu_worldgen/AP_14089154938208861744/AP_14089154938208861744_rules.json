@@ -64,9 +64,26 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_can_buy_in_eolis",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "can_buy_in_eolis",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Deluge",
+                        "Progressive Sword",
+                        "Ring of Elf"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Elixir",
@@ -80,9 +97,26 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_can_buy_in_eolis",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "can_buy_in_eolis",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Deluge",
+                        "Progressive Sword",
+                        "Ring of Elf"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Key King",
@@ -96,9 +130,26 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_can_buy_in_eolis",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "can_buy_in_eolis",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Deluge",
+                        "Progressive Sword",
+                        "Ring of Elf"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Key Jack",
@@ -112,9 +163,26 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_can_buy_in_eolis",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "can_buy_in_eolis",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Deluge",
+                        "Progressive Sword",
+                        "Ring of Elf"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Black Onyx",
@@ -128,9 +196,26 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_can_buy_in_eolis",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "can_buy_in_eolis",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Deluge",
+                        "Progressive Sword",
+                        "Ring of Elf"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -1124,9 +1209,28 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_has_any_magic",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "has_any_magic",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Death",
+                        "Deluge",
+                        "Fire",
+                        "Thunder",
+                        "Tilte"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -2040,9 +2144,28 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_has_any_magic",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "has_any_magic",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Death",
+                        "Deluge",
+                        "Fire",
+                        "Thunder",
+                        "Tilte"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Ring of Elf",
@@ -2128,9 +2251,28 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "type": "helper",
-              "name": "_faxanaduworldgen_has_any_magic",
-              "args": []
+              "rule": "HelperCall",
+              "options": [],
+              "args": {
+                "helper_name": "has_any_magic",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Death",
+                        "Deluge",
+                        "Fire",
+                        "Thunder",
+                        "Tilte"
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -2920,7 +3062,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "faxanadu_worldgen"
     }
   },
   "game_info": {
@@ -2954,38 +3097,5 @@
       }
     }
   },
-  "helpers": {
-    "1": {
-      "_faxanaduworldgen_can_buy_in_eolis": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Deluge",
-              "Progressive Sword",
-              "Ring of Elf"
-            ]
-          }
-        ]
-      },
-      "_faxanaduworldgen_has_any_magic": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Death",
-              "Deluge",
-              "Fire",
-              "Thunder",
-              "Tilte"
-            ]
-          }
-        ]
-      }
-    }
-  }
+  "helpers": {}
 }

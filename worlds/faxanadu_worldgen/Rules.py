@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAll
+from rule_builder import True_, False_, Has, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -110,20 +110,30 @@ def set_rules(world: "World") -> None:
         Has("Demons Ring")
     )
     # Location rules
-    multiworld.get_location("Eolis Key Jack", player).access_rule = \
-        lambda state: _faxanaduworldgen_can_buy_in_eolis(state, player)
+    world.set_rule(
+        multiworld.get_location("Eolis Key Jack", player),
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Deluge', 'Progressive Sword', 'Ring of Elf']}]})
+    )
 
-    multiworld.get_location("Eolis Hand Dagger", player).access_rule = \
-        lambda state: _faxanaduworldgen_can_buy_in_eolis(state, player)
+    world.set_rule(
+        multiworld.get_location("Eolis Hand Dagger", player),
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Deluge', 'Progressive Sword', 'Ring of Elf']}]})
+    )
 
-    multiworld.get_location("Eolis Red Potion", player).access_rule = \
-        lambda state: _faxanaduworldgen_can_buy_in_eolis(state, player)
+    world.set_rule(
+        multiworld.get_location("Eolis Red Potion", player),
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Deluge', 'Progressive Sword', 'Ring of Elf']}]})
+    )
 
-    multiworld.get_location("Eolis Elixir", player).access_rule = \
-        lambda state: _faxanaduworldgen_can_buy_in_eolis(state, player)
+    world.set_rule(
+        multiworld.get_location("Eolis Elixir", player),
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Deluge', 'Progressive Sword', 'Ring of Elf']}]})
+    )
 
-    multiworld.get_location("Eolis Deluge", player).access_rule = \
-        lambda state: _faxanaduworldgen_can_buy_in_eolis(state, player)
+    world.set_rule(
+        multiworld.get_location("Eolis Deluge", player),
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Deluge', 'Progressive Sword', 'Ring of Elf']}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Path to Apolune Magic Shield", player),
@@ -175,8 +185,10 @@ def set_rules(world: "World") -> None:
         Has("Unlock Wingboots")
     )
 
-    multiworld.get_location("Misty Doctor Office", player).access_rule = \
-        lambda state: _faxanaduworldgen_has_any_magic(state, player)
+    world.set_rule(
+        multiworld.get_location("Misty Doctor Office", player),
+        HelperCall(helper_func=_faxanaduworldgen_has_any_magic, helper_name="has_any_magic", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Death', 'Deluge', 'Fire', 'Thunder', 'Tilte']}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Tower of Suffer Hidden Wingboots", player),
@@ -213,11 +225,15 @@ def set_rules(world: "World") -> None:
         Has("Unlock Wingboots")
     )
 
-    multiworld.get_location("Dartmoor Castle Hidden Red Potion", player).access_rule = \
-        lambda state: _faxanaduworldgen_has_any_magic(state, player)
+    world.set_rule(
+        multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
+        HelperCall(helper_func=_faxanaduworldgen_has_any_magic, helper_name="has_any_magic", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Death', 'Deluge', 'Fire', 'Thunder', 'Tilte']}]})
+    )
 
-    multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player).access_rule = \
-        lambda state: _faxanaduworldgen_has_any_magic(state, player)
+    world.set_rule(
+        multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player),
+        HelperCall(helper_func=_faxanaduworldgen_has_any_magic, helper_name="has_any_magic", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Death', 'Deluge', 'Fire', 'Thunder', 'Tilte']}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Fraternal Castle Guru", player),

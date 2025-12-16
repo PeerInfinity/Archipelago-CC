@@ -43047,7 +43047,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "celeste_open_world_worldgen"
     }
   },
   "game_info": {
