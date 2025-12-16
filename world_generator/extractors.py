@@ -309,16 +309,31 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
 
+    # Get the items dict to check if items are events
+    items_data = json_data.get('items', {}).get('1', {})
+
     regions_data = json_data.get('regions', {}).get('1', {})
 
     for region_name, region_info in regions_data.items():
         for loc_info in region_info.get('locations', []):
             loc_name = loc_info.get('name', '')
             loc_id = loc_info.get('id')
-            is_event = loc_id is None
             is_locked = loc_info.get('locked', False)
             progress_type = loc_info.get('progress_type')  # 'EXCLUDED', 'PRIORITY', or None
             show_in_spoiler = loc_info.get('show_in_spoiler', True)
+
+            # Check if the location has a locked event item
+            # If so, the location must also be an event location (None ID)
+            item_info = loc_info.get('item')
+            if is_locked and item_info:
+                item_name = item_info.get('name', '')
+                # Look up the item in items_data to check if it's an event
+                item_in_items = items_data.get(item_name, {})
+                if item_in_items.get('event', False) or item_in_items.get('id') is None:
+                    # Locked with an event item - location must be event (no ID)
+                    loc_id = None
+
+            is_event = loc_id is None
 
             locations[loc_name] = LocationData(
                 name=loc_name,
@@ -332,7 +347,6 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
             )
 
             # Track original item placement for seed=1 mode
-            item_info = loc_info.get('item')
             if item_info:
                 item_name = item_info.get('name', '')
                 original_placements[loc_name] = item_name
@@ -689,6 +703,19 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
                 # Also update prog_items_init so the frontend test world matches
                 # the original sphere log (which has the precollected total at sphere 0)
                 prog_items_init[target] = total
+
+    # Extract QP items for OSRS-like games that have quest points
+    # Pattern: "N QP (Quest Name)" where N is the quest point value
+    import re
+    qp_pattern = re.compile(r'^(\d+)\s*QP\s*\((.+)\)$')
+    qp_items = {}
+    for item_name in items.keys():
+        match = qp_pattern.match(item_name)
+        if match:
+            qp_value = int(match.group(1))
+            qp_items[item_name] = qp_value
+    if qp_items:
+        metadata.resolved_settings['qp_items'] = qp_items
 
     return ExtractedData(
         metadata=metadata,

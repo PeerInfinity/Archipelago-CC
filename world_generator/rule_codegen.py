@@ -830,7 +830,14 @@ class HelperCodeGenerator:
             else:
                 sig_params.append(param)
 
-        signature = f"def {func_name}({', '.join(sig_params)}) -> bool:"
+        # Determine return type based on body structure
+        return_type = "bool"
+        if isinstance(body, dict):
+            body_type = body.get('type', '')
+            if body_type in ('sum_of', 'count_item', 'binary_op', 'binop', 'negate'):
+                return_type = "int"
+
+        signature = f"def {func_name}({', '.join(sig_params)}) -> {return_type}:"
 
         # Generate function body
         body_code = self._generate_body(body)
@@ -1061,6 +1068,7 @@ class HelperCodeGenerator:
             'group_count': self._expr_group_count,
             'setting_value': self._expr_setting_value,
             'prog_item_count': self._expr_prog_item_count,
+            'sum_of': self._expr_sum_of,
         }
 
         handler = handlers.get(expr_type)
@@ -1503,6 +1511,34 @@ class HelperCodeGenerator:
         key = expr.get('key', '')
         key_escaped = key.replace('\\', '\\\\').replace("'", "\\'")
         return f"state.prog_items[player].get('{key_escaped}', 0)"
+
+    def _expr_sum_of(self, expr: Dict[str, Any]) -> str:
+        """Generate sum() expression from sum_of CC format.
+
+        CC export format: {
+            "type": "sum_of",
+            "iterator_info": {
+                "target": {...},  // tuple of variable names
+                "iterator": {...}  // expression to iterate over
+            },
+            "element_rule": {...}  // expression for each element
+        }
+        """
+        iterator_info = expr.get('iterator_info', {})
+        target = iterator_info.get('target', {})
+        iterator = iterator_info.get('iterator', {})
+        element_rule = expr.get('element_rule', {'type': 'constant', 'value': 0})
+
+        # Generate target variable names
+        target_expr = self._generate_expression(target)
+
+        # Generate iterator expression
+        iterator_expr = self._generate_expression(iterator)
+
+        # Generate element rule expression
+        element_expr = self._generate_expression(element_rule)
+
+        return f"sum({element_expr} for {target_expr} in {iterator_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
         """Extract constant value from a potential constant wrapper."""
