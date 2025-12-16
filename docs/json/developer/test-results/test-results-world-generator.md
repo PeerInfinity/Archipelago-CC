@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-15 21:45:42 UTC
+**Generated:** 2025-12-16 01:25:27 UTC
 **Seed:** 1
 **Mode:** Both (Canonical and Random)
 
@@ -42,12 +42,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Total Templates | 73 |
 | Successful Original Generations | 73 |
 | Failed Original Generations | 0 |
-| Successful Test World Generations | 73 |
-| Failed Test World Generations | 0 |
-| Successful Test Seed Generations | 46 |
-| Failed Test Seed Generations | 27 |
-| Cross-Validation Passed | 25 |
-| Cross-Validation Failed | 21 |
+| Successful Test World Generations | 71 |
+| Failed Test World Generations | 2 |
+| Successful Test Seed Generations | 49 |
+| Failed Test Seed Generations | 24 |
+| Cross-Validation Passed | 27 |
+| Cross-Validation Failed | 22 |
 
 ## Canonical Detailed Results
 
@@ -59,7 +59,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | APQuest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ❌ | - | - |
+| Bomb Rush Cyberfunk | ✅ | ✅ | ❌ | - | - | - |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Castlevania 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
@@ -69,12 +69,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| DLCQuest | ✅ | ✅ | ✅ | ❌ | - | - |
+| DLCQuest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Factorio | ✅ | ✅ | ✅ | ❌ | - | - |
+| Factorio | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Faxanadu | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -87,7 +87,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Lingo | ✅ | ✅ | ✅ | ❌ | - | - |
 | Links Awakening DX | ✅ | ✅ | ✅ | ❌ | - | - |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Mega Man 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
@@ -102,7 +102,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
 | Secret of Evermore | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Shivers | ✅ | ✅ | ✅ | ❌ | - | - |
+| Shivers | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Starcraft 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Stardew Valley | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -115,11 +115,11 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | TOEM rule builder | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Terraria | ✅ | ✅ | ✅ | ❌ | - | - |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| The Messenger | ✅ | ✅ | ✅ | ❌ | - | - |
+| The Messenger | ✅ | ✅ | ❌ | - | - | - |
 | The Wind Waker | ✅ | ✅ | ✅ | ❌ | - | - |
 | The Witness | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Timespinner | ✅ | ✅ | ✅ | ❌ | - | - |
-| Undertale | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | VVVVVV | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -140,12 +140,12 @@ Tests run with standard randomized item placement.
 | Total Templates | 73 |
 | Successful Original Generations | 73 |
 | Failed Original Generations | 0 |
-| Successful Test World Generations | 73 |
-| Failed Test World Generations | 0 |
-| Successful Test Seed Generations | 46 |
-| Failed Test Seed Generations | 27 |
-| Cross-Validation Passed | 10 |
-| Cross-Validation Failed | 36 |
+| Successful Test World Generations | 71 |
+| Failed Test World Generations | 2 |
+| Successful Test Seed Generations | 49 |
+| Failed Test Seed Generations | 24 |
+| Cross-Validation Passed | 12 |
+| Cross-Validation Failed | 37 |
 
 ## Random Detailed Results
 
@@ -157,7 +157,7 @@ Tests run with standard randomized item placement.
 | APQuest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ❌ | - | - |
+| Bomb Rush Cyberfunk | ✅ | ✅ | ❌ | - | - | - |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Castlevania 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
@@ -167,12 +167,12 @@ Tests run with standard randomized item placement.
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| DLCQuest | ✅ | ✅ | ✅ | ❌ | - | - |
+| DLCQuest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Factorio | ✅ | ✅ | ✅ | ❌ | - | - |
+| Factorio | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Faxanadu | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
@@ -185,7 +185,7 @@ Tests run with standard randomized item placement.
 | Lingo | ✅ | ✅ | ✅ | ❌ | - | - |
 | Links Awakening DX | ✅ | ✅ | ✅ | ❌ | - | - |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Mega Man 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
@@ -200,7 +200,7 @@ Tests run with standard randomized item placement.
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
 | Secret of Evermore | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Shivers | ✅ | ✅ | ✅ | ❌ | - | - |
+| Shivers | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Starcraft 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Stardew Valley | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -213,11 +213,11 @@ Tests run with standard randomized item placement.
 | TOEM rule builder | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Terraria | ✅ | ✅ | ✅ | ❌ | - | - |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| The Messenger | ✅ | ✅ | ✅ | ❌ | - | - |
+| The Messenger | ✅ | ✅ | ❌ | - | - | - |
 | The Wind Waker | ✅ | ✅ | ✅ | ❌ | - | - |
 | The Witness | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Timespinner | ✅ | ✅ | ✅ | ❌ | - | - |
-| Undertale | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | VVVVVV | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
