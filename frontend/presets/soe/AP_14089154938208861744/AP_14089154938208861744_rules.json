@@ -13403,7 +13403,8 @@
         "trap_chance_quake": 20,
         "trap_count": 0,
         "turdo_mode": 0
-      }
+      },
+      "world_directory": "soe"
     }
   },
   "game_info": {

@@ -19,7 +19,6 @@ from .Rules import set_rules
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
     "1-Up": 5,
-    "Air Man Access Codes": 1,
     "Air Shooter": 1,
     "Atomic Fire": 1,
     "Bubble Lead": 1,

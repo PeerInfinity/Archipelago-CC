@@ -2007,7 +2007,8 @@
         "task_advances": 4,
         "trap_count": 5,
         "turners": 3
-      }
+      },
+      "world_directory": "bumpstik"
     }
   },
   "game_info": {

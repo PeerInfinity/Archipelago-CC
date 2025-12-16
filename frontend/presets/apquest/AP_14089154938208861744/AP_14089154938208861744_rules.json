@@ -367,7 +367,8 @@
         "start_location_hints": [],
         "start_with_one_confetti_cannon": 0,
         "trap_chance": 0
-      }
+      },
+      "world_directory": "apquest"
     }
   },
   "game_info": {

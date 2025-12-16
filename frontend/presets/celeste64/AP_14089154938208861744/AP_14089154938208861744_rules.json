@@ -1550,21 +1550,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 20
-      },
-      "Raspberry": {
-        "name": "Raspberry",
-        "id": 13238281,
-        "groups": [
-          "Everything"
-        ],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 2
+        "max_count": 20,
+        "classification": "progression_skip_balancing"
       },
       "Dash Refills": {
         "name": "Dash Refills",
@@ -1572,10 +1561,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Double Dash Refills": {
         "name": "Double Dash Refills",
@@ -1583,10 +1572,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Feathers": {
         "name": "Feathers",
@@ -1594,10 +1583,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Coins": {
         "name": "Coins",
@@ -1605,10 +1594,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cassettes": {
         "name": "Cassettes",
@@ -1616,10 +1605,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Traffic Blocks": {
         "name": "Traffic Blocks",
@@ -1627,10 +1616,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Springs": {
         "name": "Springs",
@@ -1638,10 +1627,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Breakable Blocks": {
         "name": "Breakable Blocks",
@@ -1649,10 +1638,21 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Raspberry": {
+        "name": "Raspberry",
+        "id": 13238281,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "Ground Dash": {
         "name": "Ground Dash",
@@ -1660,10 +1660,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Air Dash": {
         "name": "Air Dash",
@@ -1671,10 +1671,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Skid Jump": {
         "name": "Skid Jump",
@@ -1682,10 +1682,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Climb": {
         "name": "Climb",
@@ -1693,10 +1693,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Intro Checkpoint": {
         "name": "Intro Checkpoint",
@@ -1704,10 +1704,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Granny Checkpoint": {
         "name": "Granny Checkpoint",
@@ -1715,10 +1715,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "South-East Tower Checkpoint": {
         "name": "South-East Tower Checkpoint",
@@ -1727,10 +1727,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Climb Sign Checkpoint": {
         "name": "Climb Sign Checkpoint",
@@ -1738,10 +1738,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Freeway Checkpoint": {
         "name": "Freeway Checkpoint",
@@ -1749,10 +1749,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Freeway Feather Checkpoint": {
         "name": "Freeway Feather Checkpoint",
@@ -1760,10 +1760,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Feather Maze Checkpoint": {
         "name": "Feather Maze Checkpoint",
@@ -1771,10 +1771,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Double Dash House Checkpoint": {
         "name": "Double Dash House Checkpoint",
@@ -1782,10 +1782,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Badeline Tower Checkpoint": {
         "name": "Badeline Tower Checkpoint",
@@ -1793,10 +1793,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Badeline Island Checkpoint": {
         "name": "Badeline Island Checkpoint",
@@ -1804,10 +1804,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -1893,7 +1893,8 @@
         "strawberries_required_percentage": 80,
         "total_strawberries": 20
       },
-      "strawberries_required": 16
+      "strawberries_required": 16,
+      "world_directory": "celeste64"
     }
   },
   "game_info": {

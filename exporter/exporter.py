@@ -1914,7 +1914,7 @@ def cleanup_export_data(data):
                 cleaned_settings = game_handler.cleanup_settings(settings.copy())
                 data['settings'][player] = cleaned_settings # Update with cleaned settings
             except Exception as e:
-                logger.error(f"Error cleaning settings via handler for player {player} ({game}): {e}")
+                logger.error(f"Error cleaning settings via handler for player {player} ({world_dir}): {e}")
                 # Keep original settings in case of error during cleanup
 
     # Clean up region types

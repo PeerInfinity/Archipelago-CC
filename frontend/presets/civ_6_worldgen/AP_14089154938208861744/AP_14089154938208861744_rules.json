@@ -2618,9 +2618,11 @@
             "name": "Complete a victory type",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "ERA_FUTURE"
+              }
             },
             "item": {
               "name": "Victory",
@@ -4803,7 +4805,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "civ_6_worldgen"
     }
   },
   "game_info": {

@@ -2394,7 +2394,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "meritous_worldgen"
     }
   },
   "game_info": {

@@ -9753,7 +9753,8 @@
         "starting_song_count": 5,
         "streamer_mode_enabled": 0,
         "trap_count_percentage": 15
-      }
+      },
+      "world_directory": "musedash"
     }
   },
   "game_info": {

@@ -31924,7 +31924,7 @@
     },
     "2": {
       "Activated Flute": 1,
-      "Arrows (10)": 13,
+      "Arrows (10)": 12,
       "Beat Agahnim 1": 1,
       "Beat Agahnim 2": 1,
       "Big Key (Desert Palace)": 1,
@@ -31941,14 +31941,14 @@
       "Big Key (Turtle Rock)": 1,
       "Blue Boomerang": 1,
       "Blue Pendant": 1,
-      "Bombos": 2,
-      "Bombs (10)": 2,
-      "Bombs (3)": 20,
+      "Bombos": 1,
+      "Bombs (10)": 1,
+      "Bombs (3)": 16,
       "Book of Mudora": 1,
-      "Boss Heart Container": 14,
+      "Boss Heart Container": 10,
       "Bottle (Fairy)": 2,
       "Bottle (Green Potion)": 1,
-      "Bottle (Red Potion)": 2,
+      "Bottle (Red Potion)": 1,
       "Bug Catching Net": 1,
       "Cane of Byrna": 1,
       "Cane of Somaria": 1,
@@ -31975,15 +31975,15 @@
       "Ether": 1,
       "Fire Rod": 1,
       "Flippers": 1,
-      "Flute": 2,
+      "Flute": 1,
       "Get Frog": 1,
       "Green Pendant": 1,
       "Hammer": 1,
       "Hookshot": 1,
       "Ice Rod": 1,
-      "Lamp": 2,
+      "Lamp": 1,
       "Magic Mirror": 1,
-      "Magic Powder": 2,
+      "Magic Powder": 1,
       "Magic Upgrade (1/2)": 1,
       "Map (Desert Palace)": 1,
       "Map (Eastern Palace)": 1,
@@ -32000,27 +32000,27 @@
       "Moon Pearl": 1,
       "Mushroom": 1,
       "Open Floodgate": 1,
-      "Pegasus Boots": 2,
+      "Pegasus Boots": 1,
       "Pick Up Purple Chest": 1,
-      "Piece of Heart": 30,
-      "Progressive Bow": 3,
-      "Progressive Glove": 3,
-      "Progressive Mail": 4,
-      "Progressive Shield": 5,
-      "Progressive Sword": 6,
+      "Piece of Heart": 24,
+      "Progressive Bow": 2,
+      "Progressive Glove": 2,
+      "Progressive Mail": 2,
+      "Progressive Shield": 3,
+      "Progressive Sword": 4,
       "Quake": 1,
       "Red Boomerang": 1,
       "Red Pendant": 1,
       "Return Smith": 1,
-      "Rupee (1)": 4,
+      "Rupee (1)": 2,
       "Rupees (100)": 1,
-      "Rupees (20)": 33,
-      "Rupees (300)": 7,
-      "Rupees (5)": 7,
-      "Rupees (50)": 9,
-      "Sanctuary Heart Container": 2,
+      "Rupees (20)": 28,
+      "Rupees (300)": 5,
+      "Rupees (5)": 4,
+      "Rupees (50)": 7,
+      "Sanctuary Heart Container": 1,
       "Shovel": 1,
-      "Single Arrow": 2,
+      "Single Arrow": 1,
       "Small Key (Agahnims Tower)": 4,
       "Small Key (Desert Palace)": 4,
       "Small Key (Eastern Palace)": 2,
@@ -32179,7 +32179,7 @@
             "level": 2
           }
         ],
-        "base_item": "Progressive Bow (Alt)"
+        "base_item": "Progressive Bow"
       }
     },
     "3": {},
@@ -32283,7 +32283,8 @@
       "ShuffleSubconPaintings": false,
       "LogicDifficulty": -1,
       "NoPaintingSkips": false,
-      "ShuffleAlpineZiplines": false
+      "ShuffleAlpineZiplines": false,
+      "world_directory": "ahit"
     },
     "2": {
       "game": "A Link to the Past",
@@ -32447,7 +32448,8 @@
             "Capacity Upgrade"
           ]
         }
-      }
+      },
+      "world_directory": "alttp"
     },
     "3": {
       "game": "A Short Hike",
@@ -32480,7 +32482,8 @@
         "start_location_hints": [],
         "sticks": 8,
         "toy_shovels": 5
-      }
+      },
+      "world_directory": "shorthike"
     },
     "4": {
       "game": "Adventure",
@@ -32513,7 +32516,8 @@
         "start_location_hints": [],
         "yorgle_min_speed": 1,
         "yorgle_speed": 2
-      }
+      },
+      "world_directory": "adventure"
     }
   },
   "game_info": {

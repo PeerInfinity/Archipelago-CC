@@ -1,0 +1,50 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            APQuest WorldGen
+Location Count:                  6
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+
+
+Locations:
+
+Bottom Left Chest: Confetti Cannon
+Top Middle Chest: Sword
+Top Left Room Chest: Shield
+Top Left Room Button: Top Left Room Button Pressed
+Bottom Right Room Left Chest: Health Upgrade
+Bottom Right Room Right Chest: Health Upgrade
+Right Room Enemy Drop: Key
+Final Boss Defeated: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Top Middle Chest: Sword
+}
+2: {
+  Right Room Enemy Drop: Key
+}
+3: {
+  Top Left Room Button: Top Left Room Button Pressed
+  Top Left Room Chest: Shield
+}
+4: {
+  Final Boss Defeated: Victory
+}

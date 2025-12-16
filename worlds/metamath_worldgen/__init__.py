@@ -18,7 +18,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Statement 1": 1,
+
 }
 
 # Locked placements - items that must be placed via place_locked_item

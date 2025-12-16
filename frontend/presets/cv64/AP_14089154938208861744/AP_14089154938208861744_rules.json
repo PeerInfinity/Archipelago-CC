@@ -5012,7 +5012,8 @@
         "window_color_b": 15,
         "window_color_g": 5,
         "window_color_r": 1
-      }
+      },
+      "world_directory": "cv64"
     }
   },
   "game_info": {

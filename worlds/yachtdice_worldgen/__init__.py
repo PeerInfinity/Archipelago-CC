@@ -20,12 +20,11 @@ from .Rules import set_rules
 ITEMPOOL_COUNTS: Dict[str, int] = {
     "10 Points": 5,
     "Bonus Point": 20,
-    "Category Choice": 2,
+    "Category Choice": 1,
     "Category Fives": 1,
     "Category Four of a Kind": 1,
     "Category Fours": 1,
     "Category Full House": 1,
-    "Category Inverse Choice": 1,
     "Category Large Straight": 1,
     "Category Ones": 1,
     "Category Pair": 1,
@@ -36,11 +35,9 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Category Tiny Straight": 3,
     "Category Twos": 2,
     "Category Yacht": 1,
-    "Dice": 1,
     "Dice Fragment": 16,
     "Encouragement": 5,
     "Fixed Score Multiplier": 11,
-    "Roll": 1,
     "Roll Fragment": 9,
 }
 

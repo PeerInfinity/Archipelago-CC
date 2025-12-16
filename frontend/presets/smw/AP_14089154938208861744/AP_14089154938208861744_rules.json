@@ -6635,7 +6635,8 @@
         "timer_trap_weight": 2,
         "trap_fill_percentage": 0,
         "trap_link": 0
-      }
+      },
+      "world_directory": "smw"
     }
   },
   "game_info": {

@@ -7905,7 +7905,8 @@
         "start_location_hints": [],
         "total_seals": 45,
         "traps": 0
-      }
+      },
+      "world_directory": "messenger"
     }
   },
   "game_info": {

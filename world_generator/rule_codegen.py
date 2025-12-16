@@ -283,14 +283,20 @@ class RuleCodeGenerator:
         method = rule.get('method', '')
         args = rule.get('args', [])
 
-        # Handle can_reach_region state method
+        # Handle can_reach state method - check second arg for type (Region or Location)
         if method in ('can_reach', 'can_reach_region'):
             if args and isinstance(args[0], dict):
                 target = self._extract_constant_value(args[0], '')
+                # Check if second argument specifies "Location" type
+                reach_type = self._extract_constant_value(args[1], 'Region') if len(args) > 1 else 'Region'
                 if target:
-                    self.required_imports.add('CanReachRegion')
                     target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
-                    return f'CanReachRegion("{target_escaped}")'
+                    if reach_type == 'Location':
+                        self.required_imports.add('CanReachLocation')
+                        return f'CanReachLocation("{target_escaped}")'
+                    else:
+                        self.required_imports.add('CanReachRegion')
+                        return f'CanReachRegion("{target_escaped}")'
             return 'True_()'
 
         # Handle can_reach_location state method
@@ -345,8 +351,25 @@ class RuleCodeGenerator:
             self.required_imports.add('True_')
             return 'True_()'
 
-        # First arg should be a constant with the list
         first_arg = args[0]
+
+        # Handle 'set' type with 'elements' array (CC format)
+        # Example: {"type": "set", "elements": [{"type": "constant", "value": "Item1"}, ...]}
+        if first_arg.get('type') == 'set':
+            elements = first_arg.get('elements', [])
+            items = []
+            for elem in elements:
+                if elem.get('type') == 'constant':
+                    items.append(elem.get('value'))
+            if not items:
+                # Empty item checks are trivially satisfied
+                self.required_imports.add('True_')
+                return 'True_()'
+            # Unpack the items as separate arguments
+            items_repr = ', '.join(repr(item) for item in items)
+            return f'{class_name}({items_repr})'
+
+        # Handle 'constant' type with the list directly
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
             if not items:

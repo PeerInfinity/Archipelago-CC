@@ -3525,7 +3525,8 @@
         "trap_count": 0
       },
       "canvas_size_increment": 100,
-      "logic_percent": 80
+      "logic_percent": 80,
+      "world_directory": "paint"
     }
   },
   "game_info": {

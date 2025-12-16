@@ -3394,20 +3394,23 @@
         ],
         "locations": []
       },
-      "Shapesanity Colorful East Windmill Mixed": {
-        "name": "Shapesanity Colorful East Windmill Mixed",
+      "Achievements needing a MAM": {
+        "name": "Achievements needing a MAM",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "placeholder": true
       },
       "Shapesanity Colorful Half Mixed": {
         "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "placeholder": true
       },
-      "Achievements needing a MAM": {
-        "name": "Achievements needing a MAM",
+      "Shapesanity Colorful East Windmill Mixed": {
+        "name": "Shapesanity Colorful East Windmill Mixed",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "placeholder": true
       }
     }
   },
@@ -4403,7 +4406,8 @@
         "throughput_levels_ratio": 0,
         "toolbar_shuffling": 1,
         "traps_percentage": 0
-      }
+      },
+      "world_directory": "shapez"
     }
   },
   "game_info": {

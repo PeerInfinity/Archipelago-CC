@@ -23252,7 +23252,8 @@
         "trendy_game": 1,
         "warp_improvements": "",
         "warps": 0
-      }
+      },
+      "world_directory": "ladx"
     }
   },
   "game_info": {

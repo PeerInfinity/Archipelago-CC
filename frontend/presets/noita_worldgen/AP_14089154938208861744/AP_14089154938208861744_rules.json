@@ -2199,7 +2199,7 @@
             "item": {
               "name": "All-Seeing Eye Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2214,7 +2214,7 @@
             "item": {
               "name": "Tinker with Wands Everywhere Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2229,7 +2229,7 @@
             "item": {
               "name": "Electricity Immunity Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2244,7 +2244,7 @@
             "item": {
               "name": "Melee Immunity Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2289,7 +2289,7 @@
             "item": {
               "name": "Explosion Immunity Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2304,7 +2304,7 @@
             "item": {
               "name": "Toxic Immunity Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2319,7 +2319,7 @@
             "item": {
               "name": "Fire Immunity Perk",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -2567,7 +2567,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Toxic Immunity Perk": {
         "name": "Toxic Immunity Perk",
@@ -2579,7 +2579,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Explosion Immunity Perk": {
         "name": "Explosion Immunity Perk",
@@ -2591,7 +2591,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Melee Immunity Perk": {
         "name": "Melee Immunity Perk",
@@ -2603,7 +2603,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Electricity Immunity Perk": {
         "name": "Electricity Immunity Perk",
@@ -2615,7 +2615,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Tinker with Wands Everywhere Perk": {
         "name": "Tinker with Wands Everywhere Perk",
@@ -2627,7 +2627,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "All-Seeing Eye Perk": {
         "name": "All-Seeing Eye Perk",
@@ -2640,7 +2640,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "progression|useful"
       },
       "Spatial Awareness Perk": {
         "name": "Spatial Awareness Perk",
@@ -3076,7 +3076,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "noita_worldgen"
     }
   },
   "game_info": {

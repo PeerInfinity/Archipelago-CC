@@ -5443,7 +5443,8 @@
         "start_inventory_from_pool": {},
         "start_location_hints": [],
         "swim_rule": 0
-      }
+      },
+      "world_directory": "subnautica"
     }
   },
   "game_info": {

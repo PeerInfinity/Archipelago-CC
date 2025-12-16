@@ -8709,7 +8709,8 @@
         "start_location_hints": [],
         "starting_movestyle": 2,
         "total_rep": 1400
-      }
+      },
+      "world_directory": "bomb_rush_cyberfunk"
     }
   },
   "game_info": {

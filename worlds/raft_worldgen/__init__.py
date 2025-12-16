@@ -180,6 +180,33 @@ class RaftWorldGenWorld(RuleWorldMixin, World):
         "Event": frozenset(["Victory"]),
     }
 
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {
+        "progressive-salve": ["Healing salve", "Good healing salve"],
+        "progressive-backpack": ["Backpack", "Big backpack"],
+        "progressive-containers": ["Clay bowl", "Drinking glass"],
+        "progressive-headlight": ["Head light", "Advanced head light"],
+        "progressive-biofuel": ["Biofuel refiner", "Advanced biofuel refiner"],
+        "progressive-bottle": ["Empty bottle", "Empty canteen"],
+        "progressive-grill": ["Advanced grill", "Electric grill"],
+        "progressive-purifier": ["Advanced purifier", "Electric purifier"],
+        "progressive-crop-plot": ["Medium crop plot", "Large crop plot", "Advanced small crop plot", "Advanced medium crop plot", "Advanced large crop plot"],
+        "progressive-battery": ["Battery", "Battery charger", "Advanced Battery", "Wind turbine"],
+        "progressive-anchor": ["Stationary anchor", "Advanced stationary anchor"],
+        "progressive-engine": ["Engine", "Steering Wheel", "Engine controls"],
+        "progressive-scarecrow": ["Scarecrow", "Advanced Scarecrow"],
+        "progressive-net": ["Simple collection net", "Advanced collection net"],
+        "progressive-storage": ["Storage", "Large Storage"],
+        "progressive-zipline": ["Zipline tool", "Zipline", "Electric zipline tool"],
+        "progressive-metals": ["Smelter", "Metal detector", "Electric Smelter"],
+        "progressive-bow": ["Basic bow", "Stone arrow", "Metal arrow", "Titanium arrow"],
+        "progressive-axe": ["Metal axe", "Titanium axe"],
+        "progressive-hook": ["Scrap hook", "Titanium hook"],
+        "progressive-spear": ["Metal spear", "Machete", "Titanium sword"],
+        "progressive-frequency": ["Vasagatan Frequency", "Balboa Island Frequency", "Caravan Island Frequency", "Tangaroa Frequency", "Varuna Point Frequency", "Temperance Frequency", "Utopia Frequency"],
+    }
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
@@ -447,6 +474,29 @@ class RaftWorldGenWorld(RuleWorldMixin, World):
         data = item_table[name]
         return RaftWorldGenItem(name, data.classification, data.id, self.player)
 
+
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
