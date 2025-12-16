@@ -36,15 +36,16 @@ class RuleCodeGenerator:
         """
         Recursively expand helper references in a rule body.
 
-        This ensures body_data is self-contained and doesn't reference other helpers,
-        which allows the frontend to evaluate rules without needing helper lookups.
+        This ensures body_data is self-contained and doesn't reference other helpers
+        or setting values, which allows the frontend to evaluate rules without needing
+        helper or settings lookups.
 
         Args:
             rule: Rule dict in CC format
             visited: Set of helper names already visited (for cycle detection)
 
         Returns:
-            Rule dict with helper references expanded to their bodies
+            Rule dict with helper references and setting_value references expanded
         """
         if visited is None:
             visited = set()
@@ -66,6 +67,25 @@ class RuleCodeGenerator:
                 return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
             # Unknown helper - return as-is
             return rule
+
+        # If this is a setting_value reference, resolve it to a constant
+        # This is critical because worldgen worlds don't have the original game options
+        if rule_type == 'setting_value':
+            setting_name = rule.get('setting', '')
+            if setting_name in self.settings:
+                return {'type': 'constant', 'value': self.settings[setting_name]}
+            # Unknown setting - return as-is (will evaluate to undefined in frontend)
+            return rule
+
+        # If this is an attribute access on a setting_value (e.g., world.options.goal.value),
+        # resolve it to a constant
+        if rule_type == 'attribute':
+            obj = rule.get('object', {})
+            attr = rule.get('attr', '')
+            if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
+                setting_name = obj.get('setting', '')
+                if setting_name in self.settings:
+                    return {'type': 'constant', 'value': self.settings[setting_name]}
 
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
