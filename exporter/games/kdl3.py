@@ -15,8 +15,10 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     # Module path for helper functions
     HELPER_MODULES = ['worlds.kdl3.rules']
 
-    # Whitelist ability helpers that are called dynamically via ability_map
-    # These need to be exported even though they're not discovered via direct calls
+    # Whitelist ability helpers - despite being called directly in rules.py,
+    # these are needed because helper discovery requires the whitelist as a
+    # seed to start the export process (discovered helpers are registered
+    # during helper definition analysis, not during rule analysis)
     HELPERS_TO_EXPORT_WHITELIST = {
         'can_reach_burning',
         'can_reach_stone',

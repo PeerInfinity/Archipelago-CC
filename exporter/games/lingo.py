@@ -18,10 +18,12 @@ class LingoGameExportHandler(GenericGameExportHandler):
     # Helper module paths - needed for auto-export to find helper functions
     HELPER_MODULES = ['worlds.lingo.rules']
 
-    # Whitelist helpers that can be auto-exported as rule definitions
+    # Whitelist helpers - despite being called directly in rules.py, these are
+    # needed because helper discovery requires the whitelist as a seed to start
+    # the export process
     HELPERS_TO_EXPORT_WHITELIST = {
-        '_lingo_can_open_door',  # dict lookups now work via settings conversion
-        '_lingo_can_satisfy_requirements',  # for loops with early returns, capitalize()
+        '_lingo_can_open_door',
+        '_lingo_can_satisfy_requirements',
     }
 
     # Blacklist helpers with loops or complex logic that cannot be auto-exported

@@ -148,7 +148,3 @@ class PaintGameExportHandler(GenericGameExportHandler):
                         location_count += 1
 
         logger.info(f"Paint: Finished post-processing {location_count} locations")
-
-    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-process rules (currently unused, kept for future use)."""
-        return rule

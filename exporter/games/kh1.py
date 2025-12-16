@@ -15,10 +15,12 @@ class KH1GameExportHandler(BaseGameExportHandler):
     # Module paths containing helper functions
     HELPER_MODULES: List[str] = ['worlds.kh1.Rules']
 
-    # Helpers to export (whitelist) - these will be exported as definitions
+    # Whitelist helpers - despite being called directly in Rules.py, these are
+    # needed because helper discovery requires the whitelist as a seed to start
+    # the export process
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
-        'has_all_magic_lvx',    # Simple checks, no loops
-        'has_x_worlds',         # Now exportable with block-mode support
+        'has_all_magic_lvx',
+        'has_x_worlds',
     }
 
     # Helpers that should be preserved as helper calls (not inlined)
