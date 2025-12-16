@@ -15,6 +15,7 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
+from .converter.rule_builder_to_cc import convert_rule_builder_to_cc
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
 
@@ -1022,14 +1023,19 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
             # Check if this is a Rule Builder Resolved rule with native serialization
             # Rule Builder rules have a to_dict() method that provides native JSON serialization
-            # The frontend now supports Rule Builder format natively, so we output it directly
+            # Convert Rule Builder format to CC format for frontend compatibility
             if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
                 try:
                     rb_dict = rule_func.to_dict()
-                    # Cache and return Rule Builder format directly (frontend supports it natively)
-                    _rule_analysis_cache[cache_key] = rb_dict
-                    logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
-                    return rb_dict
+                    # Convert Rule Builder format to CC format
+                    cc_dict, warnings = convert_rule_builder_to_cc(rb_dict)
+                    if warnings:
+                        for w in warnings:
+                            logger.debug(f"Rule Builder to CC conversion warning for {target_type} '{rule_target_name}': {w}")
+                    # Cache and return CC format
+                    _rule_analysis_cache[cache_key] = cc_dict
+                    logger.debug(f"Converted Rule Builder to CC format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
+                    return cc_dict
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback

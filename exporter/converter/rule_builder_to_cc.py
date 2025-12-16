@@ -268,10 +268,7 @@ class RuleBuilderToCC:
         Convert HasAll rule.
 
         Rule Builder: {"rule": "HasAll", "args": {"items": ["Key1", "Key2"]}}
-        CC Format: {"type": "and", "conditions": [{"type": "item_check", "item": "Key1"}, ...]}
-
-        Or as state_method for efficiency:
-        CC Format: {"type": "state_method", "method": "has_all", "args": [{"type": "constant", "value": ["Key1", "Key2"]}]}
+        CC Format: {"type": "and", "conditions": [{"type": "item_check", "item": {"type": "constant", "value": "Key1"}}, ...]}
         """
         args = rule.get('args', {})
         items = args.get('items', [])
@@ -279,22 +276,25 @@ class RuleBuilderToCC:
         if not items:
             return {'type': 'constant', 'value': True}
 
-        # Use state_method representation for efficiency
-        return {
-            'type': 'state_method',
-            'method': 'has_all',
-            'args': [{'type': 'constant', 'value': sorted(items)}]
-        }
+        # Convert to AND of item_checks for frontend compatibility
+        conditions = []
+        for item_name in sorted(items):
+            conditions.append({
+                'type': 'item_check',
+                'item': {'type': 'constant', 'value': item_name}
+            })
+
+        if len(conditions) == 1:
+            return conditions[0]
+
+        return {'type': 'and', 'conditions': conditions}
 
     def _convert_has_any(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert HasAny rule.
 
         Rule Builder: {"rule": "HasAny", "args": {"items": ["Sword", "Axe"]}}
-        CC Format: {"type": "or", "conditions": [{"type": "item_check", "item": "Sword"}, ...]}
-
-        Or as state_method:
-        CC Format: {"type": "state_method", "method": "has_any", "args": [{"type": "constant", "value": ["Sword", "Axe"]}]}
+        CC Format: {"type": "or", "conditions": [{"type": "item_check", "item": {"type": "constant", "value": "Sword"}}, ...]}
         """
         args = rule.get('args', {})
         items = args.get('items', [])
@@ -302,12 +302,18 @@ class RuleBuilderToCC:
         if not items:
             return {'type': 'constant', 'value': False}
 
-        # Use state_method representation
-        return {
-            'type': 'state_method',
-            'method': 'has_any',
-            'args': [{'type': 'constant', 'value': sorted(items)}]
-        }
+        # Convert to OR of item_checks for frontend compatibility
+        conditions = []
+        for item_name in sorted(items):
+            conditions.append({
+                'type': 'item_check',
+                'item': {'type': 'constant', 'value': item_name}
+            })
+
+        if len(conditions) == 1:
+            return conditions[0]
+
+        return {'type': 'or', 'conditions': conditions}
 
     def _convert_has_all_counts(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
