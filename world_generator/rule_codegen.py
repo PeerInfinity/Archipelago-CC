@@ -283,6 +283,39 @@ class RuleCodeGenerator:
         method = rule.get('method', '')
         args = rule.get('args', [])
 
+        # Handle can_reach_region state method
+        if method in ('can_reach', 'can_reach_region'):
+            if args and isinstance(args[0], dict):
+                target = self._extract_constant_value(args[0], '')
+                if target:
+                    self.required_imports.add('CanReachRegion')
+                    target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CanReachRegion("{target_escaped}")'
+            return 'True_()'
+
+        # Handle can_reach_location state method
+        if method == 'can_reach_location':
+            if args and isinstance(args[0], dict):
+                location = self._extract_constant_value(args[0], '')
+                if location:
+                    self.required_imports.add('CanReachLocation')
+                    location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CanReachLocation("{location_escaped}")'
+            return 'True_()'
+
+        # Handle basic has state method
+        if method == 'has':
+            if args:
+                item = self._extract_constant_value(args[0], '') if args else ''
+                count = self._extract_constant_value(args[1], 1) if len(args) > 1 else 1
+                if item:
+                    self.required_imports.add('Has')
+                    item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+                    if count == 1:
+                        return f'Has("{item_escaped}")'
+                    return f'Has("{item_escaped}", {count})'
+            return 'True_()'
+
         method_map = {
             'has_all': ('HasAll', self._extract_item_list),
             'has_any': ('HasAny', self._extract_item_list),

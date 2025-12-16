@@ -4649,6 +4649,103 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return undefined;
     }
 
+    // Compare: comparison between two values
+    // Rule Builder: {"rule": "Compare", "args": {"left": ..., "op": ">=", "right": ...}}
+    case 'Compare': {
+      const left = args.left;
+      const op = args.op || '==';
+      const right = args.right;
+
+      // Recursively evaluate left and right operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compare
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      // Perform the comparison
+      switch (op) {
+        case '==':
+        case 'eq':
+          return leftValue === rightValue;
+        case '!=':
+        case 'ne':
+          return leftValue !== rightValue;
+        case '<':
+        case 'lt':
+          return leftValue < rightValue;
+        case '<=':
+        case 'le':
+          return leftValue <= rightValue;
+        case '>':
+        case 'gt':
+          return leftValue > rightValue;
+        case '>=':
+        case 'ge':
+          return leftValue >= rightValue;
+        default:
+          log('warn', `[evaluateRuleBuilderRule] Unknown Compare operator '${op}'`);
+          return undefined;
+      }
+    }
+
+    // Arithmetic: arithmetic operation between two values
+    // Rule Builder: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
+    case 'Arithmetic': {
+      const left = args.left;
+      const op = args.op || '+';
+      const right = args.right;
+
+      // Recursively evaluate operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compute
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      // Perform the arithmetic operation
+      switch (op) {
+        case '+':
+          return leftValue + rightValue;
+        case '-':
+          return leftValue - rightValue;
+        case '*':
+          return leftValue * rightValue;
+        case '/':
+          return rightValue !== 0 ? leftValue / rightValue : undefined;
+        case '//':
+          return rightValue !== 0 ? Math.floor(leftValue / rightValue) : undefined;
+        case '%':
+          return rightValue !== 0 ? leftValue % rightValue : undefined;
+        case '**':
+          return Math.pow(leftValue, rightValue);
+        default:
+          log('warn', `[evaluateRuleBuilderRule] Unknown Arithmetic operator '${op}'`);
+          return undefined;
+      }
+    }
+
+    // Count: get the count of an item (used as operand in Compare/Arithmetic)
+    // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
+    case 'Count': {
+      const itemName = args.item_name;
+      if (!itemName) {
+        log('warn', '[evaluateRuleBuilderRule] Count rule missing item_name');
+        return 0;
+      }
+      // Use countItem if available, otherwise fall back to has check
+      if (typeof context?.countItem === 'function') {
+        return context.countItem(itemName) || 0;
+      }
+      // Fallback: return 1 if has, 0 if not
+      const hasItem = evaluateRule({ type: 'item_check', item: itemName, count: 1 }, context, depth + 1, localScope);
+      return hasItem ? 1 : 0;
+    }
+
     // Unknown rule type - try to find as a custom helper
     default: {
       log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);

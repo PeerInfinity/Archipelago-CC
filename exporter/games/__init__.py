@@ -25,6 +25,10 @@ def _get_world_directory(world) -> Optional[str]:
     The world's module path is like 'worlds.alttp' or 'worlds.alttp.SubModule',
     so we extract the second component which is the world directory.
 
+    For worldgen worlds (e.g., 'mmbn3_worldgen'), we strip the '_worldgen' suffix
+    to use the parent game's handler (e.g., 'mmbn3'), since worldgen worlds need
+    the same helper definitions and export logic as their parent games.
+
     Args:
         world: A world instance
 
@@ -38,7 +42,11 @@ def _get_world_directory(world) -> Optional[str]:
         module_path = type(world).__module__
         parts = module_path.split('.')
         if len(parts) >= 2 and parts[0] == 'worlds':
-            return parts[1]
+            world_dir = parts[1]
+            # Strip _worldgen suffix so worldgen worlds use parent game's handler
+            if world_dir.endswith('_worldgen'):
+                world_dir = world_dir[:-9]  # Remove '_worldgen' (9 chars)
+            return world_dir
     except Exception as e:
         logger.debug(f"Could not extract world directory: {e}")
 

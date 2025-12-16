@@ -15,6 +15,8 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
+# Rule Builder format is now output directly to the frontend (no conversion to CC format)
+# The frontend's evaluateRuleBuilderRule handles Rule Builder format natively
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
 
@@ -986,6 +988,28 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
     return export_data
 
+def _make_rule_dict_serializable(obj: Any) -> Any:
+    """
+    Recursively convert Rule.Resolved objects in a dict to their serializable form.
+
+    When to_dict() is called on a rule, nested rules (like in Compare.left)
+    may still be Rule.Resolved objects that need to be converted.
+    """
+    if hasattr(obj, 'to_dict') and callable(obj.to_dict):
+        # This is a Rule.Resolved object - convert it
+        return _make_rule_dict_serializable(obj.to_dict())
+    elif isinstance(obj, dict):
+        return {k: _make_rule_dict_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_make_rule_dict_serializable(item) for item in obj]
+    else:
+        # Primitive value (str, int, bool, etc.) or other non-rule object
+        # If it has __str__ and is a rule-like object, convert to string
+        if hasattr(obj, '__str__') and hasattr(obj, 'player'):
+            return str(obj)
+        return obj
+
+
 def process_regions(multiworld, player: int, game_handler=None, location_name_to_id: Dict[str, int] = None) -> tuple:
     """
     Process complete region data including all available backend data.
@@ -1022,11 +1046,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
             # Check if this is a Rule Builder Resolved rule with native serialization
             # Rule Builder rules have a to_dict() method that provides native JSON serialization
-            # The frontend now supports Rule Builder format natively, so we output it directly
+            # The frontend now supports Rule Builder format natively via evaluateRuleBuilderRule
             if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
                 try:
                     rb_dict = rule_func.to_dict()
-                    # Cache and return Rule Builder format directly (frontend supports it natively)
+                    # Recursively convert nested Resolved objects to their dict form
+                    rb_dict = _make_rule_dict_serializable(rb_dict)
+                    # Cache and return Rule Builder format directly
                     _rule_analysis_cache[cache_key] = rb_dict
                     logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
                     return rb_dict
