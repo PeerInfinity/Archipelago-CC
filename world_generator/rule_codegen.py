@@ -304,21 +304,29 @@ class RuleCodeGenerator:
         """Extract item list for HasAll/HasAny.
 
         Note: HasAll/HasAny expect unpacked arguments (*item_names), not a list.
+        Empty HasAny should return True_ (vacuously satisfied - any of nothing).
+        Empty HasAll should return True_ (trivially satisfied - all of nothing).
         """
         if not args:
-            return f'{class_name}()'
+            # Empty item checks are trivially satisfied
+            self.required_imports.add('True_')
+            return 'True_()'
 
         # First arg should be a constant with the list
         first_arg = args[0]
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
             if not items:
-                return f'{class_name}()'
+                # Empty item checks are trivially satisfied
+                self.required_imports.add('True_')
+                return 'True_()'
             # Unpack the items as separate arguments
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}()'
+        # Unknown format - return True_ as safe fallback
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
