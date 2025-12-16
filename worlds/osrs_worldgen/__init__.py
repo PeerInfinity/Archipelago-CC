@@ -274,6 +274,24 @@ class OldSchoolRunescapeWorldGenWorld(RuleWorldMixin, World):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
 
+    def generate_basic(self) -> None:
+        """Place victory event item."""
+        victory_location = self.multiworld.get_location("Quest: Dragon Slayer", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = OldSchoolRunescapeWorldGenItem(
+                "Victory",
+                item_table["Victory"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Victory", self.player)
+
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing."""
         if not self.options.randomize_items.value:

@@ -690,6 +690,19 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
                 # the original sphere log (which has the precollected total at sphere 0)
                 prog_items_init[target] = total
 
+    # Extract QP items for OSRS-like games that have quest points
+    # Pattern: "N QP (Quest Name)" where N is the quest point value
+    import re
+    qp_pattern = re.compile(r'^(\d+)\s*QP\s*\((.+)\)$')
+    qp_items = {}
+    for item_name in items.keys():
+        match = qp_pattern.match(item_name)
+        if match:
+            qp_value = int(match.group(1))
+            qp_items[item_name] = qp_value
+    if qp_items:
+        metadata.resolved_settings['qp_items'] = qp_items
+
     return ExtractedData(
         metadata=metadata,
         items=items,

@@ -1485,7 +1485,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                             location_data = {
                                 'name': location_name,
-                                'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
+                                'id': getattr(location, 'address', None),  # Use actual location address (None for events)
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
                                 'item': None,
