@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, True_
+from rule_builder import True_, False_, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -111,12 +111,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        True_()
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Bedroom Elevator", player),
-        True_()
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
@@ -366,7 +366,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        True_()
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(

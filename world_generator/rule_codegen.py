@@ -345,8 +345,25 @@ class RuleCodeGenerator:
             self.required_imports.add('True_')
             return 'True_()'
 
-        # First arg should be a constant with the list
         first_arg = args[0]
+
+        # Handle 'set' type with 'elements' array (CC format)
+        # Example: {"type": "set", "elements": [{"type": "constant", "value": "Item1"}, ...]}
+        if first_arg.get('type') == 'set':
+            elements = first_arg.get('elements', [])
+            items = []
+            for elem in elements:
+                if elem.get('type') == 'constant':
+                    items.append(elem.get('value'))
+            if not items:
+                # Empty item checks are trivially satisfied
+                self.required_imports.add('True_')
+                return 'True_()'
+            # Unpack the items as separate arguments
+            items_repr = ', '.join(repr(item) for item in items)
+            return f'{class_name}({items_repr})'
+
+        # Handle 'constant' type with the list directly
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
             if not items:
