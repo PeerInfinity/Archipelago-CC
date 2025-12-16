@@ -7,6 +7,7 @@ This directory contains detailed technical reference material for specific subsy
 - **[State Snapshots](./state-snapshots.md)**: Complete reference for StateManager snapshot structure and static data
 - **[Logging System](./logging-system.md)**: Comprehensive guide to the structured logging system
 - **[URL Parameters](./url-parameters.md)**: All supported URL parameters for configuring the web client
+- **[Rule Types Reference](./rule-types-reference.md)**: Complete catalog of all rule types supported by the rule system
 
 ## Project Information
 

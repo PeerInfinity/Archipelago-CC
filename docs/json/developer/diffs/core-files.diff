@@ -21,7 +21,7 @@ index 4d88fde4f..91b2454ef 100644
          # get locations containing progress items
          multiworld = self.multiworld
 diff --git a/Main.py b/Main.py
-index 47a28813f..e4ec20a39 100644
+index 47a28813f..ef55d6662 100644
 --- a/Main.py
 +++ b/Main.py
 @@ -19,6 +19,7 @@ from Utils import __version__, output_path, restricted_dumps, version_tuple
