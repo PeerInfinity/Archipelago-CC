@@ -184,10 +184,15 @@ Playthrough:
 
 }
 1: {
+  Hallway Room - First Room: Purple
+  Hallway Room - Fourth Room: Black
   Outside The Initiated - OXEN: Pilgrim Room - Sun Painting
   Outside The Initiated - UNCOVER: Orange
   Outside The Undeterred - PEN: Green
+  Outside The Wanderer - WANDERLUST: Yellow
+  The Agreeable - Achievement: Red
   The Colorful - Blue: Brown
   The End (Solved): Victory
+  The Eyes They See - NEAR: Blue
   The Initiated - Achievement: Gray
 }

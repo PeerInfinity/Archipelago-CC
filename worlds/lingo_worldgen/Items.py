@@ -23,15 +23,15 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
-    "Black": ItemData(444400, ItemClassification.filler),
-    "Red": ItemData(444401, ItemClassification.filler),
-    "Blue": ItemData(444402, ItemClassification.filler),
-    "Yellow": ItemData(444403, ItemClassification.filler),
+    "Black": ItemData(444400, ItemClassification.progression | ItemClassification.useful),
+    "Red": ItemData(444401, ItemClassification.progression | ItemClassification.useful),
+    "Blue": ItemData(444402, ItemClassification.progression | ItemClassification.useful),
+    "Yellow": ItemData(444403, ItemClassification.progression | ItemClassification.useful),
     "Green": ItemData(444404, ItemClassification.progression),
     "Orange": ItemData(444405, ItemClassification.progression),
     "Gray": ItemData(444406, ItemClassification.progression),
     "Brown": ItemData(444407, ItemClassification.progression),
-    "Purple": ItemData(444408, ItemClassification.filler),
+    "Purple": ItemData(444408, ItemClassification.progression | ItemClassification.useful),
     ":)": ItemData(444409, ItemClassification.filler),
     "Slowness Trap": ItemData(444410, ItemClassification.trap),
     "Iceland Trap": ItemData(444411, ItemClassification.trap),
