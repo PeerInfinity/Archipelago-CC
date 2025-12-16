@@ -2399,7 +2399,9 @@ class Compare(Rule[TWorld], game="Archipelago"):
         def _get_value(self, operand: Any, state: CollectionState) -> Any:
             """Get the value of an operand."""
             if isinstance(operand, Rule.Resolved):
-                # Check if it's a CountItem (has get_count method)
+                # Check for get_value (Arithmetic) or get_count (CountItem)
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
                 if hasattr(operand, 'get_count'):
                     return operand.get_count(state)
                 # Otherwise evaluate as boolean
@@ -2462,6 +2464,155 @@ class Compare(Rule[TWorld], game="Archipelago"):
             left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
             right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
             return f"({left_str} {self.op} {right_str})"
+
+        @override
+        def __str__(self) -> str:
+            return f"({self.left} {self.op} {self.right})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"left": self.left, "op": self.op, "right": self.right}
+
+
+@dataclasses.dataclass()
+class Arithmetic(Rule[TWorld], game="Archipelago"):
+    """
+    Arithmetic operation between two numeric values/rules.
+
+    Supports operators: +, -, *, /, //, %, **
+
+    Returns the computed numeric value via get_value().
+    When used in Compare, enables expressions like:
+        Compare(Arithmetic(CountItem("Puppy"), "*", 3), ">=", 10)
+
+    Usage:
+        # Puppy value calculation (each Puppy item worth 3)
+        rule = Compare(Arithmetic(CountItem("Puppy"), "*", 3), ">=", 10)
+
+        # Arrow capacity: 30 + (upgrades * 5)
+        rule = Arithmetic(30, "+", Arithmetic(CountItem("Arrow +5"), "*", 5))
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    op: str = "+"
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            self.op,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"({self.left} {self.op} {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        op: str
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the computed value of this arithmetic expression."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+
+            if self.op == '+':
+                return left_val + right_val
+            elif self.op == '-':
+                return left_val - right_val
+            elif self.op == '*':
+                return left_val * right_val
+            elif self.op == '/':
+                return left_val / right_val if right_val != 0 else 0
+            elif self.op == '//':
+                return left_val // right_val if right_val != 0 else 0
+            elif self.op == '%':
+                return left_val % right_val if right_val != 0 else 0
+            elif self.op == '**':
+                return left_val ** right_val
+            else:
+                return left_val + right_val  # Default to addition
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": f" {self.op} "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"({left_str} {self.op} {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
 
         @override
         def __str__(self) -> str:

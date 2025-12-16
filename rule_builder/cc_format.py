@@ -120,6 +120,9 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
     elif rule_type == 'compare' or rule_type == 'comparison':
         return _parse_compare(data, world_cls)
 
+    elif rule_type == 'binary_op' or rule_type == 'binop':
+        return _parse_binary_op(data, world_cls)
+
     else:
         # Unknown type - wrap in CCRule for explain support
         logger.debug(f"Wrapping unknown CC rule type '{rule_type}' in CCRule")
@@ -580,3 +583,74 @@ def _extract_prog_items_item_name(expr: Any) -> str | None:
         return None
 
     return item_name
+
+
+def _parse_binary_op(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
+    """
+    Parse a binary_op rule (arithmetic expression).
+
+    CC Format:
+        {"type": "binary_op", "left": {...}, "op": "*", "right": {...}}
+
+    Converts to Arithmetic rule for use in Compare expressions.
+    """
+    from rule_builder.rules import Arithmetic
+
+    left_data = data.get('left', {})
+    op = data.get('op', '+')
+    right_data = data.get('right', {})
+
+    # Normalize operator names from Python AST
+    op_map = {
+        'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+        'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+    }
+    op = op_map.get(op, op)
+
+    left = _parse_arithmetic_operand(left_data, world_cls)
+    right = _parse_arithmetic_operand(right_data, world_cls)
+
+    return Arithmetic(left=left, op=op, right=right)
+
+
+def _parse_arithmetic_operand(operand: Any, world_cls: type["RuleWorldMixin"]) -> Any:
+    """
+    Parse an arithmetic operand into a value or Rule.
+
+    Handles constants, state_method calls (count), and nested binary_ops.
+    """
+    from rule_builder.rules import CountItem, Arithmetic
+
+    if not isinstance(operand, dict):
+        return operand
+
+    op_type = operand.get('type')
+
+    if op_type == 'constant':
+        return operand.get('value', 0)
+
+    if op_type == 'state_method':
+        method = operand.get('method', '')
+        args = operand.get('args', [])
+
+        if method == 'count':
+            if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                item_name = args[0].get('value', '')
+                return CountItem(item_name=item_name)
+
+        if method == 'count_group_unique':
+            from rule_builder.rules import HasGroupUnique
+            if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                group_name = args[0].get('value', '')
+                # HasGroupUnique doesn't have get_value, so wrap for now
+                # This will evaluate as boolean (True=1, False=0 in Arithmetic)
+                return HasGroupUnique(item_name_group=group_name, count=1)
+
+    if op_type == 'binary_op' or op_type == 'binop':
+        return _parse_binary_op(operand, world_cls)
+
+    # For other types, try parsing as a rule
+    try:
+        return parse_cc_rule(operand, world_cls)
+    except (ValueError, KeyError):
+        return 0  # Default to 0 for unknown operands

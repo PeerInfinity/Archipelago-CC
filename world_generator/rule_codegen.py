@@ -283,6 +283,39 @@ class RuleCodeGenerator:
         method = rule.get('method', '')
         args = rule.get('args', [])
 
+        # Handle can_reach_region state method
+        if method in ('can_reach', 'can_reach_region'):
+            if args and isinstance(args[0], dict):
+                target = self._extract_constant_value(args[0], '')
+                if target:
+                    self.required_imports.add('CanReachRegion')
+                    target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CanReachRegion("{target_escaped}")'
+            return 'True_()'
+
+        # Handle can_reach_location state method
+        if method == 'can_reach_location':
+            if args and isinstance(args[0], dict):
+                location = self._extract_constant_value(args[0], '')
+                if location:
+                    self.required_imports.add('CanReachLocation')
+                    location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CanReachLocation("{location_escaped}")'
+            return 'True_()'
+
+        # Handle basic has state method
+        if method == 'has':
+            if args:
+                item = self._extract_constant_value(args[0], '') if args else ''
+                count = self._extract_constant_value(args[1], 1) if len(args) > 1 else 1
+                if item:
+                    self.required_imports.add('Has')
+                    item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+                    if count == 1:
+                        return f'Has("{item_escaped}")'
+                    return f'Has("{item_escaped}", {count})'
+            return 'True_()'
+
         method_map = {
             'has_all': ('HasAll', self._extract_item_list),
             'has_any': ('HasAny', self._extract_item_list),
@@ -304,21 +337,29 @@ class RuleCodeGenerator:
         """Extract item list for HasAll/HasAny.
 
         Note: HasAll/HasAny expect unpacked arguments (*item_names), not a list.
+        Empty HasAny should return True_ (vacuously satisfied - any of nothing).
+        Empty HasAll should return True_ (trivially satisfied - all of nothing).
         """
         if not args:
-            return f'{class_name}()'
+            # Empty item checks are trivially satisfied
+            self.required_imports.add('True_')
+            return 'True_()'
 
         # First arg should be a constant with the list
         first_arg = args[0]
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
             if not items:
-                return f'{class_name}()'
+                # Empty item checks are trivially satisfied
+                self.required_imports.add('True_')
+                return 'True_()'
             # Unpack the items as separate arguments
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}()'
+        # Unknown format - return True_ as safe fallback
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
@@ -380,7 +421,8 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
-        # Use Compare class for other patterns
+        # Use Compare class for all other patterns
+        # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
         self.required_imports.add('Compare')
         left_code = self._convert_compare_operand(left)
         right_code = self._convert_compare_operand(right)
@@ -409,7 +451,57 @@ class RuleCodeGenerator:
                     item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                     return f'CountItem("{item_escaped}")'
 
+        if op_type == 'binary_op':
+            return self._convert_binary_op(operand)
+
         # For other types, try to convert as a rule
+        return self._convert_rule(operand)
+
+    def _convert_binary_op(self, operand: Dict[str, Any]) -> str:
+        """Convert a binary_op to Arithmetic rule."""
+        self.required_imports.add('Arithmetic')
+
+        left = operand.get('left', {})
+        op = operand.get('op', '+')
+        right = operand.get('right', {})
+
+        # Normalize operator names from Python AST
+        op_map = {
+            'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+            'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+        }
+        op = op_map.get(op, op)
+
+        left_code = self._convert_arithmetic_operand(left)
+        right_code = self._convert_arithmetic_operand(right)
+
+        return f'Arithmetic({left_code}, "{op}", {right_code})'
+
+    def _convert_arithmetic_operand(self, operand: Any) -> str:
+        """Convert an arithmetic operand to Python code."""
+        if not isinstance(operand, dict):
+            return repr(operand)
+
+        op_type = operand.get('type', '')
+
+        if op_type == 'constant':
+            return repr(operand.get('value'))
+
+        if op_type == 'state_method':
+            method = operand.get('method', '')
+            args = operand.get('args', [])
+
+            if method == 'count':
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    item_name = args[0].get('value', '')
+                    self.required_imports.add('CountItem')
+                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CountItem("{item_escaped}")'
+
+        if op_type == 'binary_op':
+            return self._convert_binary_op(operand)
+
+        # Fall back to converting as a rule
         return self._convert_rule(operand)
 
     def _try_convert_prog_items_compare(
