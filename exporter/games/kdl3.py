@@ -15,24 +15,8 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     # Module path for helper functions
     HELPER_MODULES = ['worlds.kdl3.rules']
 
-    # Whitelist ability helpers that are called dynamically via ability_map
-    # These need to be exported even though they're not discovered via direct calls
-    HELPERS_TO_EXPORT_WHITELIST = {
-        'can_reach_burning',
-        'can_reach_stone',
-        'can_reach_ice',
-        'can_reach_needle',
-        'can_reach_clean',
-        'can_reach_parasol',
-        'can_reach_spark',
-        'can_reach_cutter',
-        'can_reach_rick',
-        'can_reach_kine',
-        'can_reach_coo',
-        'can_reach_nago',
-        'can_reach_chuchu',
-        'can_reach_pitch',
-    }
+    # Note: Ability helpers (can_reach_*) are auto-discovered during rule analysis
+    # and no longer need to be whitelisted explicitly.
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
