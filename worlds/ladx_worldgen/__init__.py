@@ -175,7 +175,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-
+    "RUPEES": 10000,  # Precollect enough rupees to satisfy all rule requirements
 }
 
 
@@ -239,6 +239,12 @@ class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
         "Instruments": frozenset(["Full Moon Cello", "Conch Horn", "Sea Lily's Bell", "Surf Harp", "Wind Marimba", "Coral Triangle", "Organ of Evening Calm", "Thunder Drum"]),
         "Trading Items": frozenset(["Yoshi Doll", "Ribbon", "Dog Food", "Bananas", "Stick", "Honeycomb", "Pineapple", "Hibiscus", "Letter", "Broom", "Fishing Hook", "Necklace", "Scale", "Magnifying Glass"]),
         "Event": frozenset(["ANGLER_KEYHOLE", "CASTLE_BUTTON", "RAFT", "MEDICINE2", "An Alarm Clock", "Can Play Trendy Game"]),
+    }
+
+    # Initial values for progression item accumulators (like RUPEES)
+    # This is exported to rules.json so the frontend can initialize these values
+    prog_items_init: ClassVar[Dict[str, int]] = {
+        "RUPEES": 10000,  # Start with enough rupees to satisfy all rule requirements
     }
 
     # Canonical item placements - where items belong in the "vanilla" game
