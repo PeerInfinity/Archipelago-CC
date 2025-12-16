@@ -388,10 +388,33 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
+        # Try to recognize the pattern: (count * constant) >= value
+        result = self._try_convert_binary_op_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Check if this comparison involves complex expressions we can't handle
+        # If the left side is a binary_op that we can't simplify, make it always True
+        # This is safer than generating broken code that makes locations inaccessible
+        if isinstance(left, dict) and left.get('type') == 'binary_op':
+            # Check if it involves min/max/complex operations
+            bin_left = left.get('left', {})
+            bin_right = left.get('right', {})
+            if (isinstance(bin_left, dict) and bin_left.get('type') in ('min', 'max') or
+                isinstance(bin_right, dict) and bin_right.get('type') in ('min', 'max')):
+                # Complex comparison we can't handle - make accessible
+                self.required_imports.add('True_')
+                return 'True_()'
+
         # Use Compare class for other patterns
         self.required_imports.add('Compare')
         left_code = self._convert_compare_operand(left)
         right_code = self._convert_compare_operand(right)
+
+        # Check if we generated True_() for a complex operand - make the whole thing True
+        if 'True_()' in left_code and 'True_()' not in right_code:
+            # The left operand couldn't be converted - make accessible
+            return 'True_()'
 
         return f'Compare({left_code}, "{op}", {right_code})'
 
@@ -417,8 +440,66 @@ class RuleCodeGenerator:
                     item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                     return f'CountItem("{item_escaped}")'
 
+        if op_type == 'binary_op':
+            # Handle binary operations - return metadata for later processing
+            # See _try_convert_binary_op_compare for the main handler
+            pass
+
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
+
+    def _try_convert_binary_op_compare(self, left: Any, op: str, right: Any) -> Optional[str]:
+        """
+        Try to convert a comparison with binary_op to Has().
+
+        Pattern: (count * constant) >= value
+        Converts to: Has(item, ceil(value/constant))
+
+        Returns None if the pattern doesn't match.
+        """
+        import math
+
+        # Check if left is a binary_op and right is a constant
+        if not isinstance(left, dict) or left.get('type') != 'binary_op':
+            return None
+        if not isinstance(right, dict) or right.get('type') != 'constant':
+            return None
+
+        bin_left = left.get('left', {})
+        bin_op = left.get('op', '')
+        bin_right = left.get('right', {})
+        compare_value = right.get('value', 0)
+
+        # Handle count * constant >= value pattern
+        if bin_op in ('*', 'Mult'):
+            # Check if left is count and right is constant
+            if (isinstance(bin_left, dict) and bin_left.get('type') == 'state_method' and
+                bin_left.get('method') == 'count' and
+                isinstance(bin_right, dict) and bin_right.get('type') == 'constant'):
+
+                count_args = bin_left.get('args', [])
+                if count_args and isinstance(count_args[0], dict) and count_args[0].get('type') == 'constant':
+                    item_name = count_args[0].get('value', '')
+                    multiplier = bin_right.get('value', 1)
+
+                    if multiplier > 0:
+                        # Calculate the required count
+                        if op == '>=':
+                            required_count = math.ceil(compare_value / multiplier)
+                        elif op == '>':
+                            required_count = math.floor(compare_value / multiplier) + 1
+                        elif op == '==':
+                            # Approximate as >=
+                            required_count = math.ceil(compare_value / multiplier)
+                        else:
+                            return None
+
+                        # Generate Has() call
+                        self.required_imports.add('Has')
+                        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                        return f'Has("{item_escaped}", {required_count})'
+
+        return None
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
