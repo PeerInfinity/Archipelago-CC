@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-16T01:44:07.757974",
-    "last_updated": "2025-12-16T01:44:07.757981",
+    "last_updated": "2025-12-16T21:26:37.232207",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2719,6 +2719,53 @@
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
         "world_directory": "raft"
+      }
+    },
+    "Risk of Rain 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "ror2_worldgen",
+      "game_name_from_yaml": "Risk of Rain 2 WorldGen",
+      "generation": {
+        "error_count": 4,
+        "error_type": null,
+        "processing_time_seconds": 6.12,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/ror2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 164885,
+        "size_mb": 0.16
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 10.37,
+        "return_code": 0,
+        "sphere_reached": 8.3,
+        "success": true,
+        "total_spheres": 8.3,
+        "warning_count": 0
+      },
+      "template_filename": "Risk of Rain 2 WorldGen.yaml",
+      "timestamp": "2025-12-16T21:26:20.364071",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "ror2_worldgen",
+        "game_name_from_yaml": "Risk of Rain 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ror2_worldgen"
       }
     },
     "Risk of Rain 2.yaml": {
