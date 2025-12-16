@@ -13847,7 +13847,8 @@
         "start_location_hints": [],
         "tattle_hp": 0,
         "xp_multiplier": 1
-      }
+      },
+      "world_directory": "mlss"
     }
   },
   "game_info": {

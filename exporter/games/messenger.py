@@ -7,42 +7,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class MessengerGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'The Messenger'
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    """Export handler for The Messenger."""
+
     AUTO_PRESERVE_LARGE_HELPERS = False
-
-    def __init__(self, world=None):
-        super().__init__()
-        self.world = world
-
-    def _extract_items_from_arg(self, items_arg: Dict[str, Any]) -> list:
-        """
-        Extract item names from a rule argument that could be either:
-        - {"type": "constant", "value": ["item1", "item2", ...]}
-        - {"type": "set", "elements": [{"type": "constant", "value": "item1"}, ...]}
-
-        Returns a list of item name strings, or empty list if unable to extract.
-        """
-        items = []
-        if not items_arg:
-            return items
-
-        arg_type = items_arg.get('type')
-
-        # Handle {"type": "constant", "value": [...]}
-        if arg_type == 'constant' and isinstance(items_arg.get('value'), list):
-            items = items_arg.get('value')
-
-        # Handle {"type": "set", "elements": [...]}
-        elif arg_type == 'set' and isinstance(items_arg.get('elements'), list):
-            for element in items_arg.get('elements', []):
-                if element.get('type') == 'constant':
-                    value = element.get('value')
-                    if isinstance(value, str):
-                        items.append(value)
-
-        return items
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
@@ -175,7 +142,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             if method == 'has_any' and args:
                 # has_any([item1, item2, ...]) -> or([item_check(item1), item_check(item2), ...])
                 items_arg = args[0]
-                items = self._extract_items_from_arg(items_arg)
+                items = self._resolve_items_collection(items_arg)
 
                 if items:
                     return {
@@ -189,7 +156,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             if method == 'has_all' and args:
                 # has_all([item1, item2, ...]) -> and([item_check(item1), item_check(item2), ...])
                 items_arg = args[0]
-                items = self._extract_items_from_arg(items_arg)
+                items = self._resolve_items_collection(items_arg)
 
                 if items:
                     return {
@@ -200,10 +167,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                         ]
                     }
 
-        # Recursively expand conditions in and/or rules
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
+        # Recursive expansion of children is handled by super().expand_rule()
         return rule
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:

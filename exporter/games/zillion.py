@@ -13,7 +13,6 @@ class ZillionGameExportHandler(GenericGameExportHandler):
     testing (which doesn't work during export), we read the requirements directly from
     the zilliandomizer location objects and convert them to our rules format.
     """
-    GAME_NAME = 'Zillion'
 
     def expand_helper(self, helper_name: str):
         """Zillion does not use helper functions in its access rules."""

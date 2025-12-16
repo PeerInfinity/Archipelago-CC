@@ -16,19 +16,17 @@ class SMGameExportHandler(GenericGameExportHandler):
     This exporter transforms the Python-specific patterns into JavaScript-friendly
     helper calls that the frontend can execute.
     """
-    GAME_NAME = 'Super Metroid'
+
     # Note: AUTO_EXPORT_DISCOVERED_HELPERS has limited effect for SM because:
     # 1. Helpers are methods on SMBoolManager class, not standalone functions
     # 2. Helper calls are created in expand_rule post-processing, not during analysis
     # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
     # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
 
     def __init__(self, world=None):
-        super().__init__()  # Base class doesn't take arguments
-        self.world = world
+        super().__init__(world=world)
         self._simple_accessfrom_locations: Optional[Set[str]] = None
         self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None

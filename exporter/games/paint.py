@@ -20,14 +20,11 @@ class PaintGameExportHandler(GenericGameExportHandler):
     Where threshold is calculated from the location's address: (address % 198600) / 4
     """
 
-    GAME_NAME = 'Paint'
-
     # Enable auto-export for discovered helpers.
     # calculate_paint_percent_available can now be exported thanks to support for:
     # - world.options.<setting> pattern (converted to setting_value)
     # - sqrt() function (handled as helper type)
     # - if_statement with multiple assignments in body
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     # Blacklist paint_percent_available - it has caching logic with state mutation
     # (state.paint_percent_stale) that doesn't translate to the pure function model.

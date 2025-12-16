@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Pokemon Emerald'
     # Disable automatic helper export (use old behavior)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
     AUTO_PRESERVE_LARGE_HELPERS = False
@@ -27,10 +26,6 @@ class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
         "HM07 Waterfall": "can_waterfall",
         "HM08 Dive": "can_dive",
     }
-
-    def __init__(self, world=None):
-        super().__init__()
-        self.world = world
 
     def get_game_info(self, world) -> Dict[str, Any]:
         """Export Pokemon Emerald specific game information."""
@@ -58,50 +53,35 @@ class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
-        Return Pokemon Emerald-specific item table data including event items.
+        Return Pokemon Emerald-specific item table data.
 
-        Pokemon Emerald may place items with item.code = None at runtime,
-        which need to be marked as event items.
+        Updates items that were converted to events at runtime (item.code = None)
+        but were already in item_name_to_id. New event items are handled by
+        GenericGameExportHandler.
         """
-        # Get base item data from parent
+        # Get base item data from parent (handles new event items)
         item_data = super().get_item_data(world)
 
-        # Scan locations to find items that have been converted to events at runtime
-        # (items placed with item.code = None)
+        # Update existing items that have been converted to events at runtime
         if hasattr(world, 'multiworld'):
             for location in world.multiworld.get_locations(world.player):
                 if location.item and location.item.player == world.player:
                     item_name = location.item.name
-                    item_classification = location.item.classification
-
-                    # Check if this is an event item (no code/ID)
-                    if location.item.code is None:
-                        if item_name not in item_data:
-                            # New event item not in item_name_to_id
-                            item_data[item_name] = {
-                                'name': item_name,
-                                'id': None,
-                                'groups': ['Event'],
-                                'advancement': item_classification == ItemClassification.progression,
-                                'useful': item_classification == ItemClassification.useful,
-                                'trap': item_classification == ItemClassification.trap,
-                                'event': True,
-                                'type': 'Event',
-                                'max_count': 1
-                            }
-                        else:
-                            # Update existing item to mark it as an event
-                            if not item_data[item_name]['event']:
-                                logger.info(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
-                                item_data[item_name]['event'] = True
-                                item_data[item_name]['type'] = 'Event'
-                                item_data[item_name]['id'] = None
-                                item_data[item_name]['advancement'] = item_classification == ItemClassification.progression
-                                item_data[item_name]['useful'] = item_classification == ItemClassification.useful
-                                item_data[item_name]['trap'] = item_classification == ItemClassification.trap
-                                if 'Event' not in item_data[item_name]['groups']:
-                                    item_data[item_name]['groups'].append('Event')
-                                    item_data[item_name]['groups'].sort()
+                    # Check if this is an event item that exists but isn't marked as event
+                    if (location.item.code is None and
+                        item_name in item_data and
+                        not item_data[item_name]['event']):
+                        logger.info(f"Correcting {item_name} to event based on runtime placement")
+                        item_classification = location.item.classification
+                        item_data[item_name]['event'] = True
+                        item_data[item_name]['type'] = 'Event'
+                        item_data[item_name]['id'] = None
+                        item_data[item_name]['advancement'] = item_classification == ItemClassification.progression
+                        item_data[item_name]['useful'] = item_classification == ItemClassification.useful
+                        item_data[item_name]['trap'] = item_classification == ItemClassification.trap
+                        if 'Event' not in item_data[item_name]['groups']:
+                            item_data[item_name]['groups'].append('Event')
+                            item_data[item_name]['groups'].sort()
 
         return item_data
 

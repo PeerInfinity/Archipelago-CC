@@ -8,10 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class SubnauticaGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Subnautica'
-
-    # Enable automatic export of discovered helpers
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def expand_helper(self, helper_def: dict, helper_name: str) -> dict:
         """Expand SwimRule property accesses in helper definitions.

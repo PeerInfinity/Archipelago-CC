@@ -2,9 +2,7 @@
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
-import logging
 
-logger = logging.getLogger(__name__)
 
 class MMBN3GameExportHandler(GenericGameExportHandler):
     """Export handler for MegaMan Battle Network 3.
@@ -15,8 +13,7 @@ class MMBN3GameExportHandler(GenericGameExportHandler):
     definition that the frontend can evaluate.
     """
 
-    GAME_NAME = 'MegaMan Battle Network 3'
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:

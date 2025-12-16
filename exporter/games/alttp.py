@@ -10,8 +10,7 @@ import logging
 logger = logging.getLogger(__name__) # Add logger if needed later
 
 
-class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
-    GAME_NAME = 'A Link to the Past'
+class ALttPGameExportHandler(BaseGameExportHandler):
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported
@@ -380,27 +379,34 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # Add Progressive Bow (Alt) with same progression as Progressive Bow
         # This handles the runtime conversion that happens in ItemPool.py line 330-335
         # where one Progressive Bow is converted to Progressive Bow (Alt) for hint text
+        # IMPORTANT: base_item must be 'Progressive Bow' so both variants count toward
+        # the same progression level (needed for Silver Bow which requires 2 bows)
         if 'Progressive Bow' in mapping_data:
             mapping_data['Progressive Bow (Alt)'] = {
                 'items': [item.copy() for item in mapping_data['Progressive Bow']['items']],
-                'base_item': 'Progressive Bow (Alt)'
+                'base_item': 'Progressive Bow'
             }
 
         return mapping_data
 
     # --- Add overrides for itempool/settings/info/cleanup ---
     def get_itempool_counts(self, world, multiworld, player) -> Dict[str, int]:
-        """Calculate ALTTP item counts including dungeon items."""
-        # Start with generic counts
+        """Calculate ALTTP item counts including dungeon items.
+
+        Note: After the fill process, items are placed in locations, not in itempool.
+        We count from precollected items and filled locations to avoid double-counting.
+        """
+        # Start with generic counts from precollected and filled locations
         itempool_counts = collections.defaultdict(int)
-        for item in multiworld.itempool:
-            if item.player == player:
-                itempool_counts[item.name] += 1
+
+        # Count precollected items (items player starts with)
         if hasattr(multiworld, 'precollected_items'):
             for item in multiworld.precollected_items.get(player, []):
                 itempool_counts[item.name] += 1
-        for location in multiworld.get_locations(player):
-             if location.item and location.item.player == player:
+
+        # Count items placed in locations (after fill, items are at locations not in pool)
+        for location in multiworld.get_filled_locations():
+            if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
 
         # Add ALTTP dungeon-specific items

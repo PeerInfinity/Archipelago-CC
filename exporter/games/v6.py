@@ -18,8 +18,6 @@ class V6GameExportHandler(GenericGameExportHandler):
     rules with simple inlined item_check rules.
     """
 
-    GAME_NAME = 'VVVVVV'
-
     # Store world data for post-processing
     _world_data: Dict[int, Dict[str, Any]] = {}
 

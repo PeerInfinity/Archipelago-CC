@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachRegion, False_, Has, True_
+from rule_builder import True_, False_, CanReachRegion, Conditional, False_, Has, HelperCall, Not, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -21,38 +21,38 @@ def _ahatintimeworldgen_Difficulty(state: "CollectionState", player: int, value)
 
 
 def _ahatintimeworldgen_can_clear_required_act(state: "CollectionState", player: int, act_entrance) -> bool:
-    entrance = world.multiworld.get_entrance(act_entrance)
+    entrance = state.multiworld.worlds[player].multiworld.get_entrance(act_entrance)
     if not (state.can_reach('', "Region", player)):
         return False
     if ('Free Roam' in entrance.connected_region.name):
         return True
     name = True
-    return world.multiworld.get_location(name).access_rule()
+    return state.multiworld.worlds[player].multiworld.get_location(name).access_rule()
 
 
 def _ahatintimeworldgen_can_use_hat(state: "CollectionState", player: int, hat) -> bool:
-    return (state.has('', player) if True else (True if (world.hat_yarn_costs[hat] <= 0) else state.has('Yarn', player)))
+    return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if False else (True if (state.multiworld.worlds[player].hat_yarn_costs[hat] <= 0) else state.has('Yarn', player, _ahatintimeworldgen_get_hat_cost(state, player, hat))))
 
 
 def _ahatintimeworldgen_get_difficulty(state: "CollectionState", player: int) -> bool:
-    return _ahatintimeworldgen_Difficulty(state, player, True)
+    return _ahatintimeworldgen_Difficulty(state, player, -1)
 
 
 def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat) -> bool:
     cost = 0
-    for h in world.hat_craft_order:
-        cost += world.hat_yarn_costs[h]
+    for h in state.multiworld.worlds[player].hat_craft_order:
+        cost += state.multiworld.worlds[player].hat_yarn_costs[h]
         if (h == hat):
             break
     return cost
 
 
 def _ahatintimeworldgen_has_relic_combo(state: "CollectionState", player: int, relic) -> bool:
-    return state.has_group('', player)
+    return state.has_group(relic, player, len(state.multiworld.worlds[player].item_name_groups[relic]))
 
 
 def _ahatintimeworldgen_painting_logic(state: "CollectionState", player: int) -> bool:
-    return _ahatintimeworldgen_bool(state, player, True)
+    return bool(False)
 
 
 def set_rules(world: "World") -> None:
@@ -81,14 +81,20 @@ def set_rules(world: "World") -> None:
         Has("Time Piece", 8)
     )
 
-    multiworld.get_entrance("Telescope -> Time's End", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) and (_ahatintimeworldgen_can_use_hat(state, player, 3)) and (state.has('Time Piece', player, 35))
+    world.set_rule(
+        multiworld.get_entrance("Telescope -> Time's End", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Time Piece", 35))
+    )
 
-    multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 3)) and (state.has('Time Piece', player, 8))
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Time Piece", 8))
+    )
 
-    multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) and (state.has('Time Piece', player, 17))
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Time Piece", 17))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 6", player),
@@ -120,8 +126,10 @@ def set_rules(world: "World") -> None:
         False_()
     )
 
-    multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Burger')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player),
@@ -133,8 +141,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("The Golden Vault")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Burger')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player),
@@ -146,8 +156,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("The Golden Vault")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Burger')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player),
@@ -159,8 +171,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("The Golden Vault")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Burger')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
@@ -187,8 +201,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("The Golden Vault")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Burger')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
@@ -200,8 +216,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("The Golden Vault")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Burger')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
@@ -243,11 +261,15 @@ def set_rules(world: "World") -> None:
         False_()
     )
 
-    multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Train')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
-    multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
@@ -259,14 +281,20 @@ def set_rules(world: "World") -> None:
         ((CanReachRegion("Heating Up Mafia Town")) & (True_())) & (CanReachRegion("Alpine Free Roam"))
     )
 
-    multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
-    multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player).access_rule = \
-        lambda state: ((True) and (state.has('Hookshot Badge', player))) and (_ahatintimeworldgen_can_use_hat(state, player, 0))
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))
+    )
 
-    multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player).access_rule = \
-        lambda state: ((True) and (state.has('Hookshot Badge', player))) and (_ahatintimeworldgen_can_use_hat(state, player, 0))
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
@@ -278,8 +306,10 @@ def set_rules(world: "World") -> None:
         (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Train')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
@@ -311,8 +341,10 @@ def set_rules(world: "World") -> None:
         Has("Snatcher's Contract - Queen Vanessa's Manor")
     )
 
-    multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'UFO')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
@@ -324,8 +356,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'UFO')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
@@ -337,8 +371,10 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'UFO')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
@@ -350,14 +386,20 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
-    multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player).access_rule = \
-        lambda state: ((True if not (_ahatintimeworldgen_painting_logic(state, player)) else ((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (False) and (not (True)) else state.has('Progressive Painting Unlock', player)))) and ((True if not (True) else ((True) and (_ahatintimeworldgen_can_use_hat(state, player, 1))) or (state.has('Umbrella', player)))) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
+        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+    )
 
-    multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player).access_rule = \
-        lambda state: ((True if not (_ahatintimeworldgen_painting_logic(state, player)) else ((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (False) and (not (True)) else state.has('Progressive Painting Unlock', player)))) and ((True if not (True) else ((True) and (_ahatintimeworldgen_can_use_hat(state, player, 1))) or (state.has('Umbrella', player)))) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
+        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+    )
 
-    multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'UFO')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
@@ -374,8 +416,10 @@ def set_rules(world: "World") -> None:
         (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
-    multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'UFO')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
@@ -387,11 +431,15 @@ def set_rules(world: "World") -> None:
         (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
-    multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player).access_rule = \
-        lambda state: ((True) and (state.has('Hookshot Badge', player))) and (_ahatintimeworldgen_can_use_hat(state, player, 0))
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))
+    )
 
-    multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player).access_rule = \
-        lambda state: ((True) and (state.has('Hookshot Badge', player))) and (_ahatintimeworldgen_can_use_hat(state, player, 0))
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
@@ -413,16 +461,20 @@ def set_rules(world: "World") -> None:
         Has("Windmill Cleared")
     )
 
-    multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player).access_rule = \
-        lambda state: (((True if not (True) else ((True) and (_ahatintimeworldgen_can_use_hat(state, player, 1))) or (state.has('Umbrella', player)))) and (state.has('Hookshot Badge', player))) and (_ahatintimeworldgen_has_relic_combo(state, player, 'Crayon'))
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
+        ((Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Twilight Bell Portal - Entrance 1", player),
         Has("Twilight Bell Cleared")
     )
 
-    multiworld.get_entrance("-> The Birdhouse", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_entrance("-> The Birdhouse", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Hookshot Badge"))
+    )
 
     world.set_rule(
         multiworld.get_entrance("-> The Lava Cake", player),
@@ -434,14 +486,20 @@ def set_rules(world: "World") -> None:
         Has("Hookshot Badge")
     )
 
-    multiworld.get_entrance("-> The Twilight Bell", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 3)) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_entrance("-> The Twilight Bell", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Hookshot Badge"))
+    )
 
-    multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player).access_rule = \
-        lambda state: _ahatintimeworldgen_has_relic_combo(state, player, 'Crayon')
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',), body_data={'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}})
+    )
 
-    multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player).access_rule = \
-        lambda state: (True if not (_ahatintimeworldgen_painting_logic(state, player)) else ((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (False) and (not (True)) else state.has('Progressive Painting Unlock', player)))
+    world.set_rule(
+        multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player),
+        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))
+    )
 
     world.set_rule(
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
@@ -453,23 +511,35 @@ def set_rules(world: "World") -> None:
         (Has("Time Piece", 12)) & (Has("Time Piece", 17))
     )
 
-    multiworld.get_location("Act Completion (Time Rift - Gallery)", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Gallery)", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Mafia HQ - Hallway Brewing Crate", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Mafia HQ - Hallway Brewing Crate", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Mafia HQ - Secret Room", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 2)
+    world.set_rule(
+        multiworld.get_location("Mafia HQ - Secret Room", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Act Completion (Cheating the Race)", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 4)
+    world.set_rule(
+        multiworld.get_location("Act Completion (Cheating the Race)", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Act Completion (Dead Bird Studio)", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_location("Act Completion (Dead Bird Studio)", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
-    multiworld.get_location("Murder on the Owl Express - Raven Suite Room", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Murder on the Owl Express - Raven Suite Room", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Train Rush)", player),
@@ -516,14 +586,20 @@ def set_rules(world: "World") -> None:
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
-    multiworld.get_location("Dead Bird Studio - Tepee Chest", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Tepee Chest", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
-    multiworld.get_location("Dead Bird Studio - Conductor Chest", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Conductor Chest", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
     world.set_rule(
         multiworld.get_location("Subcon Well - On Pipe", player),
@@ -535,28 +611,40 @@ def set_rules(world: "World") -> None:
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Act Completion (Toilet of Doom)", player).access_rule = \
-        lambda state: ((True if not (_ahatintimeworldgen_painting_logic(state, player)) else ((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (False) and (not (True)) else state.has('Progressive Painting Unlock', player)))) and ((True if not (True) else ((True) and (_ahatintimeworldgen_can_use_hat(state, player, 1))) or (state.has('Umbrella', player)))) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_location("Act Completion (Toilet of Doom)", player),
+        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+    )
 
-    multiworld.get_location("Act Completion (Mail Delivery Service)", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 0)
+    world.set_rule(
+        multiworld.get_location("Act Completion (Mail Delivery Service)", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 0)) or (_ahatintimeworldgen_can_use_hat(state, player, 4))
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))
+    )
 
-    multiworld.get_location("Alpine Skyline - The Twilight Path", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Twilight Path", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Alpine Skyline - Goat Refinery", player).access_rule = \
-        lambda state: (((True if not (True) else ((False) and (_ahatintimeworldgen_can_use_hat(state, player, 1))) or (state.has('Umbrella', player)))) and (state.has('AFR Access', player)) and (state.has('Hookshot Badge', player))) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - Goat Refinery", player),
+        ((Conditional(test=Not(True_()), if_true=True_(), if_false=((False_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}}))) | (Has("Umbrella")))) & (Has("AFR Access")) & (Has("Hookshot Badge"))) & (Has("Hookshot Badge"))
+    )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Bird Pass Fork", player),
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Alpine Skyline - Yellow Band Hills", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Hookshot Badge"))
+    )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Ember Summit", player),
@@ -573,19 +661,25 @@ def set_rules(world: "World") -> None:
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Alpine Skyline - The Birdhouse: Dweller Platforms Relic", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Birdhouse: Dweller Platforms Relic", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Illness has Spread)", player),
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Act Completion (Time Rift - The Twilight Bell)", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - The Twilight Bell)", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Act Completion (Time Rift - Curly Tail Trail)", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 2)
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Curly Tail Trail)", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Old Man (Seaside Spaghetti)", player),
@@ -597,25 +691,35 @@ def set_rules(world: "World") -> None:
         (True_()) | (True_()) | (True_()) | (True_()) | (True_())
     )
 
-    multiworld.get_location("Mafia Town - Blue Vault Brewing Crate", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Blue Vault Brewing Crate", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Mafia Town - Ice Hat Cage", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 2)
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Ice Hat Cage", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - On Scaffolding", player),
         (True_()) | (True_()) | (True_()) | (True_()) | (True_()) | (True_())
     )
 
-    multiworld.get_location("Mafia Town - Top of Ruined Tower", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 2)
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Top of Ruined Tower", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Mafia Town - Hot Air Balloon", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 2)
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Hot Air Balloon", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Mafia Town - Secret Cave", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (state.has('HUMT Access', player))
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Secret Cave", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("HUMT Access"))
+    )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Above Boats", player),
@@ -642,34 +746,50 @@ def set_rules(world: "World") -> None:
         (True_()) | (True_()) | (True_()) | (True_())
     )
 
-    multiworld.get_location("Subcon Forest - Swamp Gravestone", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Gravestone", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Noose Treehouse", player),
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Subcon Forest - Long Tree Climb Chest", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Long Tree Climb Chest", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Subcon Forest - Infinite Yarn Bush", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Infinite Yarn Bush", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Subcon Forest - Magnet Badge Bush", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 1)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Magnet Badge Bush", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Subcon Forest - Dweller Stump", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Dweller Stump", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Subcon Forest - Dweller Floating Rocks", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Dweller Floating Rocks", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Subcon Forest - Dweller Platforming Tree B", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Dweller Platforming Tree B", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
-    multiworld.get_location("Subcon Forest - Dweller Shack", player).access_rule = \
-        lambda state: _ahatintimeworldgen_can_use_hat(state, player, 3)
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Dweller Shack", player),
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})
+    )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Tall Tree Hookshot Swing", player),
@@ -681,11 +801,17 @@ def set_rules(world: "World") -> None:
         Has("Hookshot Badge")
     )
 
-    multiworld.get_location("Act Completion (Time Rift - Village)", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 1)) or (_ahatintimeworldgen_can_use_hat(state, player, 3)) or (state.has('Umbrella', player))
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Village)", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) | (Has("Umbrella"))
+    )
 
-    multiworld.get_location("Act Completion (The Finale)", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 3)) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Finale)", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Hookshot Badge"))
+    )
 
-    multiworld.get_location("Time Piece Cluster", player).access_rule = \
-        lambda state: (_ahatintimeworldgen_can_use_hat(state, player, 3)) and (state.has('Hookshot Badge', player))
+    world.set_rule(
+        multiworld.get_location("Time Piece Cluster", player),
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'type': 'conditional', 'test': {'type': 'setting_value', 'setting': 'HatItems'}, 'if_true': {'type': 'item_check', 'item': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'0': 'Sprint Hat', '1': 'Brewing Hat', '2': 'Ice Hat', '3': 'Dweller Mask', '4': 'Time Stop Hat'}}, 'index': {'type': 'name', 'name': 'hat'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'helper', 'name': 'get_hat_cost', 'args': [{'type': 'name', 'name': 'hat'}]}}}})) & (Has("Hookshot Badge"))
+    )

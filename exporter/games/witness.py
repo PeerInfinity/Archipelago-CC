@@ -7,10 +7,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WitnessGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'The Witness'
+    """Export handler for The Witness.
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    The Witness uses event locations that grant items when accessible.
+    Uses 'add_sphere_items_upfront' mode to match sphere log expectations.
+    """
+
+    # Enable upfront item adding for sphere test compatibility
+    # This ensures the comparison happens with the exact items from the sphere log
+    # rather than relying on auto-collection of event items
+    ADD_SPHERE_ITEMS_UPFRONT = True
 
     # Mapping of laser activation locations to the regions containing their panels
     LASER_ACTIVATION_TO_REGION = {
@@ -31,25 +37,6 @@ class WitnessGameExportHandler(GenericGameExportHandler):
     def __init__(self):
         super().__init__()
         self._current_location_name = None
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """
-        Return settings data for The Witness.
-
-        The Witness uses event locations that grant items when accessible.
-        To match the sphere log's expectations during testing, we need to use
-        the 'add_sphere_items_upfront' mode which adds items from the sphere log
-        to inventory before comparing accessibility (rather than checking locations
-        one by one which would trigger auto-collection of event items).
-        """
-        settings_dict = super().get_settings_data(world, multiworld, player)
-
-        # Enable upfront item adding for sphere test compatibility
-        # This ensures the comparison happens with the exact items from the sphere log
-        # rather than relying on auto-collection of event items
-        settings_dict['add_sphere_items_upfront'] = True
-
-        return settings_dict
 
     def set_context(self, location_name: str):
         """Store the current location name for context-aware processing."""

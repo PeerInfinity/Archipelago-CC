@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAll
+from rule_builder import True_, False_, CanReachLocation, CanReachRegion, Compare, Has, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -43,22 +43,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("ACDC Cyberworld -> SciLab Cyberworld", player),
-        (True_()) | (Has("CSciPass"))
+        (CanReachRegion("SciLab Overworld")) | (Has("CSciPass"))
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Cyberworld -> Yoka Cyberworld", player),
-        ((True_()) & (Has("Press"))) | (Has("CYokaPas"))
+        ((CanReachRegion("SciLab Overworld")) & (Has("Press"))) | (Has("CYokaPas"))
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Cyberworld -> Beach Cyberworld", player),
-        (True_()) & (Has("CBeacPas"))
+        (CanReachRegion("Yoka Overworld")) & (Has("CBeacPas"))
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Overworld -> SciLab Cyberworld", player),
-        (True_()) | (Has("CSciPass"))
+        (CanReachRegion("SciLab Overworld")) | (Has("CSciPass"))
     )
 
     world.set_rule(
@@ -73,17 +73,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player),
-        ((True_()) & (Has("Press"))) | (Has("CYokaPas"))
+        ((CanReachRegion("SciLab Overworld")) & (Has("Press"))) | (Has("CYokaPas"))
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player),
-        (True_()) & (Has("CBeacPas"))
+        (CanReachRegion("Yoka Overworld")) & (Has("CBeacPas"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Yoka Cyberworld", player),
-        ((True_()) & (Has("Press"))) | (Has("CYokaPas"))
+        ((CanReachRegion("SciLab Overworld")) & (Has("Press"))) | (Has("CYokaPas"))
     )
 
     world.set_rule(
@@ -96,17 +96,19 @@ def set_rules(world: "World") -> None:
         Has("PETCase")
     )
 
-    multiworld.get_entrance("Yoka Overworld -> Secret Area", player).access_rule = \
-        lambda state: ((_megamanbattlenetwork3worldgen_explore_score(state, player) > 12)) and (state.has('Hammer', player))
+    world.set_rule(
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
+        (Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 12)) & (Has("Hammer"))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player),
-        (True_()) | (Has("CSciPass"))
+        (CanReachRegion("SciLab Overworld")) | (Has("CSciPass"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player),
-        (True_()) & (Has("CBeacPas"))
+        (CanReachRegion("Yoka Overworld")) & (Has("CBeacPas"))
     )
 
     world.set_rule(
@@ -126,16 +128,99 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> SciLab Cyberworld", player),
-        (True_()) | (Has("CSciPass"))
+        (CanReachRegion("SciLab Overworld")) | (Has("CSciPass"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Yoka Cyberworld", player),
-        ((True_()) & (Has("Press"))) | (Has("CYokaPas"))
+        ((CanReachRegion("SciLab Overworld")) & (Has("Press"))) | (Has("CYokaPas"))
     )
 
-    multiworld.get_entrance("Beach Cyberworld -> Undernet", player).access_rule = \
-        lambda state: ((_megamanbattlenetwork3worldgen_explore_score(state, player) > 8)) and (state.has('Press', player))
+    world.set_rule(
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
+        (Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 8)) & (Has("Press"))
+    )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("ACDC SonicWav W Trade", player),
@@ -152,83 +237,129 @@ def set_rules(world: "World") -> None:
         Has("Recov120 S")
     )
 
-    multiworld.get_location("Numberman Code 09", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 09", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 10", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 10", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 11", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 11", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 12", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 12", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 13", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 13", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 14", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 14", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 15", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 15", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 16", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 2)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 16", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 2)
+    )
 
-    multiworld.get_location("Numberman Code 17", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 17", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 18", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 18", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 19", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 19", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 20", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 20", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 21", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 21", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 22", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 22", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 23", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 23", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 24", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 4)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 24", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 4)
+    )
 
-    multiworld.get_location("Numberman Code 25", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 8)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 25", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 8)
+    )
 
-    multiworld.get_location("Numberman Code 26", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 8)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 26", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 8)
+    )
 
-    multiworld.get_location("Numberman Code 27", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 8)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 27", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 8)
+    )
 
-    multiworld.get_location("Numberman Code 28", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 8)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 28", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 8)
+    )
 
-    multiworld.get_location("Numberman Code 29", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 10)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 29", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 10)
+    )
 
-    multiworld.get_location("Numberman Code 30", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 10)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 30", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 10)
+    )
 
-    multiworld.get_location("Numberman Code 31", player).access_rule = \
-        lambda state: (_megamanbattlenetwork3worldgen_explore_score(state, player) > 10)
+    world.set_rule(
+        multiworld.get_location("Numberman Code 31", player),
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'WWW Island'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 999}, 'if_false': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'binary_op', 'op': '+', 'left': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'SciLab Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Yoka Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Overworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 3}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Beach Cyberworld'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 2}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Deep Undernet'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}, 'right': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'can_reach', 'region': {'type': 'constant', 'value': 'Secret Area'}}, 'op': '==', 'right': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': 1}, 'if_false': {'type': 'constant', 'value': 0}}}}), ">", 10)
+    )
 
     world.set_rule(
         multiworld.get_location("Mayl's HP PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
         multiworld.get_location("ACDC 1 PMD", player),
-        ((True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))) & (Has("WWW ID"))
+        ((CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))) & (Has("WWW ID"))
     )
 
     world.set_rule(
@@ -238,12 +369,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SciLab Dad's Computer PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Please deliver this", player),
-        (True_()) & (True_())
+        (CanReachRegion("ACDC Cyberworld")) & (CanReachRegion("ACDC Overworld"))
     )
 
     world.set_rule(
@@ -253,127 +384,127 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Job: Help me with my son!", player),
-        (True_()) & (True_())
+        (CanReachRegion("ACDC Cyberworld")) & (CanReachRegion("Yoka Overworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Transmission error", player),
-        True_()
+        CanReachRegion("Yoka Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Chip Prices", player),
-        (True_()) & (True_())
+        (CanReachRegion("ACDC Cyberworld")) & (CanReachRegion("SciLab Cyberworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: I'm broke?!", player),
-        (True_()) & (True_())
+        (CanReachRegion("Yoka Cyberworld")) & (CanReachRegion("Yoka Overworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Rare chips for cheap!", player),
-        True_()
+        CanReachRegion("ACDC Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Be my boyfriend", player),
-        True_()
+        CanReachRegion("Beach Cyberworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Will you deliver?", player),
-        (True_()) & (True_()) & (True_())
+        (CanReachRegion("ACDC Cyberworld")) & (CanReachRegion("Beach Overworld")) & (CanReachRegion("Yoka Overworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Somebody, please help!", player),
-        True_()
+        CanReachRegion("ACDC Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Looking for condor", player),
-        (True_()) & (True_()) & (True_())
+        (CanReachRegion("ACDC Overworld")) & (CanReachRegion("Beach Overworld")) & (CanReachRegion("Yoka Overworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help with rehab", player),
-        True_()
+        CanReachRegion("Beach Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help with rehab bonus", player),
-        True_()
+        CanReachRegion("Beach Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Old Master", player),
-        (True_()) & (True_())
+        (CanReachRegion("ACDC Overworld")) & (CanReachRegion("Beach Overworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Catching gang members", player),
-        (True_()) & (Has("Press"))
+        (CanReachRegion("Yoka Cyberworld")) & (Has("Press"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Please adopt a virus!", player),
-        True_()
+        CanReachRegion("SciLab Cyberworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes", player),
-        (True_()) & (True_()) & (True_()) & (HasAll())
+        (CanReachRegion("Beach Overworld")) & (CanReachRegion("Deep Undernet")) & (CanReachRegion("Undernet")) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes - Treasure", player),
-        (True_()) & (True_())
+        (CanReachLocation("Job: Legendary Tomes")) & (CanReachRegion("ACDC Overworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! First Child", player),
-        True_()
+        CanReachRegion("Yoka Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Second Child", player),
-        True_()
+        CanReachRegion("Yoka Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Third Child", player),
-        True_()
+        CanReachRegion("Yoka Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Fourth Child", player),
-        True_()
+        CanReachRegion("Yoka Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Completion", player),
-        True_()
+        CanReachRegion("Yoka Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Finding the blue Navi", player),
-        True_()
+        CanReachRegion("Undernet")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Give your support", player),
-        True_()
+        CanReachRegion("Beach Overworld")
     )
 
     world.set_rule(
         multiworld.get_location("Job: Stamp collecting", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (True_())
+        (CanReachRegion("ACDC Cyberworld")) & (CanReachRegion("Beach Cyberworld")) & (CanReachRegion("Beach Overworld")) & (CanReachRegion("SciLab Cyberworld")) & (CanReachRegion("Yoka Cyberworld"))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help with a will", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())
+        (CanReachRegion("ACDC Cyberworld")) & (CanReachRegion("ACDC Overworld")) & (CanReachRegion("Beach Overworld")) & (CanReachRegion("Undernet")) & (CanReachRegion("Yoka Cyberworld")) & (CanReachRegion("Yoka Overworld"))
     )
 
     world.set_rule(
@@ -388,12 +519,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zoo Panda PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
         multiworld.get_location("Tamako's HP PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
@@ -408,7 +539,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Yoka 1 PMD", player),
-        ((True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))) & (Has("Press"))
+        ((CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))) & (Has("Press"))
     )
 
     world.set_rule(
@@ -448,17 +579,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beach DNN Security Panel PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN Main Console PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
         multiworld.get_location("Beach 1 PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(
@@ -478,7 +609,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Undernet 7 PMD", player),
-        (True_()) | (True_()) | (True_()) | (Has("Unlocker", 8))
+        (CanReachRegion("SciLab Cyberworld")) | (CanReachRegion("SciLab Overworld")) | (CanReachRegion("Yoka Cyberworld")) | (Has("Unlocker", 8))
     )
 
     world.set_rule(

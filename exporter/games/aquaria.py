@@ -1,20 +1,20 @@
 """Aquaria game-specific export handler."""
 
 from typing import Dict, Any
-from .base import BaseGameExportHandler
-from BaseClasses import ItemClassification
+from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class AquariaGameExportHandler(BaseGameExportHandler):
-    """Aquaria-specific expander for handling game-specific rules."""
+class AquariaGameExportHandler(GenericGameExportHandler):
+    """Aquaria-specific expander for handling game-specific rules.
 
-    GAME_NAME = 'Aquaria'
+    Uses GenericGameExportHandler for automatic item discovery and event
+    item scanning. Only overrides region handling for Aquaria-specific needs.
+    """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def postprocess_regions(self, multiworld, player):
         """
@@ -75,40 +75,5 @@ class AquariaGameExportHandler(BaseGameExportHandler):
 
         return attributes
 
-    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
-        """
-        Return Aquaria-specific item table data including dynamically created event items.
-
-        Aquaria creates event items at runtime for boss defeats and secrets that are not
-        in the static item_table. These need to be discovered by scanning placed items.
-        """
-        aquaria_items_data = {}
-
-        # Handle dynamically created event items that are placed at locations
-        # In Aquaria, event items like "Drunian God beated", "Victory", etc. are created
-        # at runtime via create_event() but not in any static item_table
-        if hasattr(world, 'multiworld'):
-            multiworld = world.multiworld
-            player = world.player
-
-            for location in multiworld.get_locations(player):
-                if location.item and location.item.player == player:
-                    item_name = location.item.name
-                    # Check if this is an event item (no code/ID)
-                    if (location.item.code is None and
-                        item_name not in aquaria_items_data and
-                        hasattr(location.item, 'classification')):
-
-                        aquaria_items_data[item_name] = {
-                            'name': item_name,
-                            'id': None,
-                            'groups': ['Event'],
-                            'advancement': location.item.classification == ItemClassification.progression,
-                            'useful': location.item.classification == ItemClassification.useful,
-                            'trap': location.item.classification == ItemClassification.trap,
-                            'event': True,
-                            'type': 'Event',
-                            'max_count': 1
-                        }
-
-        return aquaria_items_data
+    # Note: get_item_data is NOT overridden - GenericGameExportHandler handles
+    # both static items from item_name_to_id and dynamic event items automatically.

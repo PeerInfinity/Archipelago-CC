@@ -10,13 +10,11 @@ import inspect
 logger = logging.getLogger(__name__)
 
 class BlasphemousGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Blasphemous'
     """Blasphemous-specific rule expander with direct logic data conversion."""
     
-    def __init__(self, world):
+    def __init__(self, world=None):
         """Initialize handler with world reference."""
-        super().__init__()  # Base class doesn't take arguments
-        self.world = world
+        super().__init__(world=world)
         self.player = world.player if hasattr(world, 'player') else 1
         self.blas_logic = None
         self.logic_data_cache = {}

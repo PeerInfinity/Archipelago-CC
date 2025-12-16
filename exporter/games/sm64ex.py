@@ -14,8 +14,6 @@ import os
 logger = logging.getLogger(__name__)
 
 class SM64EXGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Super Mario 64'
-
     # Movement abilities - affected by enable_move_rando
     MOVEMENT_TOKENS = {
         "TJ": "Triple Jump",
@@ -42,10 +40,9 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
     TOKEN_TABLE = {**MOVEMENT_TOKENS, **CAP_TOKENS}
 
     def __init__(self, world=None):
-        super().__init__()
+        super().__init__(world=world)
         self._rule_expressions = {}  # Cache for parsed rules
         self._options = {}  # Store world options
-        self._world = world  # Store world reference
 
         # Parse rules file and extract options if world is available
         if world:

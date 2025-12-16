@@ -57,6 +57,17 @@ class BaseGameExportHandler:
     # Example: {'my_helper': {'param1': 'slot_data_key1', 'param2': 'setting_key2'}}
     HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]] = {}
 
+    # Settings class attributes that control export behavior
+    # These are applied in get_settings_data and can be overridden in subclasses
+
+    # When True, eventProcessor uses resolved_items from sphere log instead of base_items
+    # Use for games with complex event items or computed tracking items
+    USE_RESOLVED_ITEMS: bool = False
+
+    # When True, add all items from sphere log before comparing accessible locations
+    # Required for games that need items in prog_items before evaluating rules
+    ADD_SPHERE_ITEMS_UPFRONT: bool = False
+
     # Set of helper function names that should be preserved as helper calls
     # during rule analysis (not inlined/expanded by generic pattern matching)
     # This is used by should_preserve_as_helper() - games can set this instead
@@ -72,8 +83,16 @@ class BaseGameExportHandler:
     # Helpers with more than this many nodes will be preserved as helper calls
     HELPER_INLINE_THRESHOLD: int = 0
 
-    def __init__(self):
-        """Initialize the handler with an empty set of discovered helpers."""
+    def __init__(self, world=None):
+        """Initialize the handler with an empty set of discovered helpers.
+
+        Args:
+            world: Optional world object for game-specific data access.
+                   Many game handlers need access to the world during rule
+                   expansion or other processing.
+        """
+        # Store world reference if provided
+        self.world = world
         # Set of helper names discovered during rule analysis
         # Populated automatically by register_helper_usage()
         self._discovered_helpers: Set[str] = set()
@@ -256,12 +275,35 @@ class BaseGameExportHandler:
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
-        if rule.get('type') in ['and', 'or']:
+        # Recursively expand children of compound rules
+        return self._recursively_expand_rule_children(rule, _depth)
+
+    def _recursively_expand_rule_children(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """
+        Recursively expand children of compound rules (and, or, not, conditional).
+
+        This utility method can be called by game-specific expand_rule implementations
+        to handle standard recursion after doing game-specific transformations.
+
+        Args:
+            rule: The rule dictionary to process
+            _depth: Current recursion depth (for cycle detection)
+
+        Returns:
+            The rule with children recursively expanded
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        if rule_type in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
-        if rule.get('type') == 'not':
+        elif rule_type == 'not':
             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
-        if rule.get('type') == 'conditional':
+
+        elif rule_type == 'conditional':
             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
@@ -360,7 +402,131 @@ class BaseGameExportHandler:
                 for item in items
             ]
         }
-        
+
+    def resolve_f_string(self, f_string_rule: Dict[str, Any]) -> Optional[str]:
+        """
+        Resolve an f_string AST node to a simple string.
+
+        This is a utility method for game-specific handlers that need to resolve
+        f-strings in rules. Override _resolve_f_string_value for game-specific
+        value resolution (e.g., subscript lookups).
+
+        Args:
+            f_string_rule: The f_string rule node with 'parts' array
+
+        Returns:
+            The resolved string, or None if resolution fails
+        """
+        if f_string_rule.get('type') != 'f_string':
+            return None
+
+        parts = f_string_rule.get('parts', [])
+        if not parts:
+            return ''
+
+        result_parts = []
+        for part in parts:
+            if part.get('type') == 'constant':
+                result_parts.append(str(part.get('value', '')))
+            elif part.get('type') == 'formatted_value':
+                value_node = part.get('value', {})
+                resolved = self._resolve_f_string_value(value_node)
+                if resolved is None:
+                    logger.debug(f"Cannot resolve f_string formatted_value: {value_node}")
+                    return None
+                result_parts.append(str(resolved))
+            else:
+                logger.debug(f"Cannot resolve f_string part type: {part.get('type')}")
+                return None
+
+        return ''.join(result_parts)
+
+    def _resolve_f_string_value(self, value_node: Dict[str, Any]) -> Optional[Any]:
+        """
+        Resolve a single value node within an f-string.
+
+        Override this method in game-specific handlers to support additional
+        value types (like subscript lookups, attribute access, etc.).
+
+        Args:
+            value_node: The value node from a formatted_value part
+
+        Returns:
+            The resolved value, or None if resolution fails
+        """
+        node_type = value_node.get('type')
+
+        if node_type == 'constant':
+            return value_node.get('value', '')
+        elif node_type == 'binary_op':
+            return self._evaluate_binary_op(value_node)
+        elif node_type == 'name':
+            # Variable reference - can't resolve without context
+            logger.debug(f"Variable reference in f-string: {value_node.get('name')}")
+            return None
+
+        # Unknown type - subclasses can handle additional types
+        return None
+
+    def _evaluate_binary_op(self, node: Dict[str, Any]) -> Optional[Any]:
+        """
+        Evaluate a binary operation node.
+
+        Supports +, -, *, /, //, % operators on constant values.
+
+        Args:
+            node: The binary_op node
+
+        Returns:
+            The result of the operation, or None if evaluation fails
+        """
+        if node.get('type') != 'binary_op':
+            return None
+
+        left = node.get('left', {})
+        right = node.get('right', {})
+        op = node.get('op', '')
+
+        # Get values (recursively resolve if needed)
+        if left.get('type') == 'constant':
+            left_val = left.get('value')
+        elif left.get('type') == 'binary_op':
+            left_val = self._evaluate_binary_op(left)
+            if left_val is None:
+                return None
+        else:
+            return None
+
+        if right.get('type') == 'constant':
+            right_val = right.get('value')
+        elif right.get('type') == 'binary_op':
+            right_val = self._evaluate_binary_op(right)
+            if right_val is None:
+                return None
+        else:
+            return None
+
+        # Perform operation
+        try:
+            if op == '-':
+                return left_val - right_val
+            elif op == '+':
+                return left_val + right_val
+            elif op == '*':
+                return left_val * right_val
+            elif op == '/':
+                return left_val / right_val
+            elif op == '//':
+                return left_val // right_val
+            elif op == '%':
+                return left_val % right_val
+            else:
+                logger.debug(f"Unknown binary operator: {op}")
+                return None
+        except Exception as e:
+            logger.debug(f"Error evaluating binary op: {e}")
+            return None
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
         Return game-specific item definitions beyond the base item_id_to_name.
@@ -448,11 +614,15 @@ class BaseGameExportHandler:
         # Add assume_bidirectional_exits setting with default false
         settings_dict['assume_bidirectional_exits'] = False
 
-        # Add use_resolved_items setting with default false
+        # Add use_resolved_items setting from class attribute
         # When false (default), eventProcessor uses only base_items from sphere log
         # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
-        # Games that need resolved_items should override get_settings_data and set this to True
-        settings_dict['use_resolved_items'] = False
+        settings_dict['use_resolved_items'] = self.USE_RESOLVED_ITEMS
+
+        # Add add_sphere_items_upfront setting from class attribute
+        # When true, adds items at the start of each sphere before accessibility checks
+        if self.ADD_SPHERE_ITEMS_UPFRONT:
+            settings_dict['add_sphere_items_upfront'] = True
 
         # Export all game-specific options from the world
         # This allows the world generator to recreate fill_slot_data behavior
@@ -954,7 +1124,7 @@ class BaseGameExportHandler:
                 except Exception as e:
                     logger.error(f"Error analyzing helper '{helper_name}': {e}")
         else:
-            logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
+            logger.warning(f"Helper discovery reached max iterations ({MAX_HELPER_DISCOVERY_ITERATIONS}), may have circular dependencies")
 
         # Sort alphabetically for consistent output
         return dict(sorted(helper_definitions.items()))
@@ -1081,11 +1251,12 @@ class BaseGameExportHandler:
 
     def _resolve_items_collection(self, collection_node: Dict[str, Any]) -> Optional[List[str]]:
         """
-        Resolve a tuple/list of item attributes to a list of item name strings.
+        Resolve a tuple/list/set of item attributes to a list of item name strings.
 
-        Handles both:
-        - Tuple/list nodes with attribute elements (not yet resolved)
+        Handles:
         - Constant nodes with list/tuple values (already resolved by analyzer)
+        - Tuple/list/set nodes with attribute or constant elements
+        - Set nodes used in has_any/has_all patterns
 
         Args:
             collection_node: The collection node dictionary from the analyzer
@@ -1097,15 +1268,16 @@ class BaseGameExportHandler:
             return None
 
         items = []
+        node_type = collection_node.get('type')
 
         # Handle constant type with list/tuple value (already resolved by analyzer)
-        if collection_node.get('type') == 'constant':
+        if node_type == 'constant':
             value = collection_node.get('value')
             if isinstance(value, (list, tuple)):
                 return list(value)
 
-        # Handle tuple type
-        if collection_node.get('type') == 'tuple':
+        # Handle tuple, list, or set types
+        if node_type in ('tuple', 'list', 'set'):
             elements = collection_node.get('elements', [])
             for elem in elements:
                 if elem.get('type') == 'attribute':
@@ -1113,17 +1285,8 @@ class BaseGameExportHandler:
                     if item_name:
                         items.append(item_name)
                 elif elem.get('type') == 'constant':
-                    items.append(elem.get('value'))
-
-        # Handle list type
-        elif collection_node.get('type') == 'list':
-            elements = collection_node.get('elements', [])
-            for elem in elements:
-                if elem.get('type') == 'attribute':
-                    item_name = self._resolve_item_attribute(elem)
-                    if item_name:
-                        items.append(item_name)
-                elif elem.get('type') == 'constant':
-                    items.append(elem.get('value'))
+                    value = elem.get('value')
+                    if isinstance(value, str):
+                        items.append(value)
 
         return items if items else None

@@ -114,15 +114,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class FactorioWorldGenWeb(WebWorld):
     """Web interface for Factorio WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago Factorio software on your computer.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Berserker, Farrak Kilhn"]
+        )
+    ]
 
 
 class FactorioWorldGenWorld(RuleWorldMixin, World):
     """
-    Factorio WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Factorio is a game about automation. You play as an engineer who has crash landed on the planet
+    Nauvis, an inhospitable world filled with dangerous creatures called biters. Build a factory,
+    research new technologies, and become more efficient in your quest to build a rocket and return home.
     """
 
     game: ClassVar[str] = "Factorio WorldGen"
@@ -144,9 +153,51 @@ class FactorioWorldGenWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["advanced-circuit", "advanced-combinators", "advanced-material-processing", "advanced-material-processing-2", "advanced-oil-processing", "artillery", "atomic-bomb", "automated-rail-transportation", "automation", "automation-2", "automation-3", "automation-science-pack", "automobilism", "battery", "battery-equipment", "battery-mk2-equipment", "belt-immunity-equipment", "braking-force-1", "braking-force-2", "braking-force-3", "braking-force-4", "braking-force-5", "braking-force-6", "braking-force-7", "bulk-inserter", "chemical-science-pack", "circuit-network", "cliff-explosives", "coal-liquefaction", "concrete", "construction-robotics", "defender", "destroyer", "discharge-defense-equipment", "distractor", "effect-transmission", "efficiency-module", "efficiency-module-2", "efficiency-module-3", "electric-energy-accumulators", "electric-energy-distribution-1", "electric-energy-distribution-2", "electric-engine", "electric-mining-drill", "electronics", "energy-shield-equipment", "energy-shield-mk2-equipment", "engine", "exoskeleton-equipment", "explosive-rocketry", "explosives", "fast-inserter", "fission-reactor-equipment", "flamethrower", "flammables", "fluid-handling", "fluid-wagon", "follower-robot-count-1", "follower-robot-count-2", "follower-robot-count-3", "follower-robot-count-4", "gate", "gun-turret", "heavy-armor", "inserter-capacity-bonus-1", "inserter-capacity-bonus-2", "inserter-capacity-bonus-3", "inserter-capacity-bonus-4", "inserter-capacity-bonus-5", "inserter-capacity-bonus-6", "inserter-capacity-bonus-7", "kovarex-enrichment-process", "lamp", "land-mine", "landfill", "laser", "laser-shooting-speed-1", "laser-shooting-speed-2", "laser-shooting-speed-3", "laser-shooting-speed-4", "laser-shooting-speed-5", "laser-shooting-speed-6", "laser-shooting-speed-7", "laser-turret", "laser-weapons-damage-1", "laser-weapons-damage-2", "laser-weapons-damage-3", "laser-weapons-damage-4", "laser-weapons-damage-5", "laser-weapons-damage-6", "logistic-robotics", "logistic-science-pack", "logistic-system", "logistics", "logistics-2", "logistics-3", "low-density-structure", "lubricant", "military", "military-2", "military-3", "military-4", "military-science-pack", "mining-productivity-1", "mining-productivity-2", "mining-productivity-3", "modular-armor", "modules", "night-vision-equipment", "nuclear-fuel-reprocessing", "nuclear-power", "oil-gathering", "oil-processing", "personal-laser-defense-equipment", "personal-roboport-equipment", "personal-roboport-mk2-equipment", "physical-projectile-damage-1", "physical-projectile-damage-2", "physical-projectile-damage-3", "physical-projectile-damage-4", "physical-projectile-damage-5", "physical-projectile-damage-6", "plastics", "power-armor", "power-armor-mk2", "processing-unit", "production-science-pack", "productivity-module", "productivity-module-2", "productivity-module-3", "radar", "railway", "refined-flammables-1", "refined-flammables-2", "refined-flammables-3", "refined-flammables-4", "refined-flammables-5", "refined-flammables-6", "repair-pack", "research-speed-1", "research-speed-2", "research-speed-3", "research-speed-4", "research-speed-5", "research-speed-6", "robotics", "rocket-fuel", "rocket-silo", "rocketry", "solar-energy", "solar-panel-equipment", "space-science-pack", "speed-module", "speed-module-2", "speed-module-3", "spidertron", "steam-power", "steel-axe", "steel-processing", "stone-wall", "stronger-explosives-1", "stronger-explosives-2", "stronger-explosives-3", "stronger-explosives-4", "stronger-explosives-5", "stronger-explosives-6", "sulfur-processing", "tank", "toolbelt", "uranium-ammo", "uranium-mining", "uranium-processing", "utility-science-pack", "weapon-shooting-speed-1", "weapon-shooting-speed-2", "weapon-shooting-speed-3", "weapon-shooting-speed-4", "weapon-shooting-speed-5", "weapon-shooting-speed-6", "worker-robots-speed-1", "worker-robots-speed-2", "worker-robots-speed-3", "worker-robots-speed-4", "worker-robots-speed-5", "worker-robots-storage-1", "worker-robots-storage-2", "worker-robots-storage-3", "progressive-advanced-material-processing", "progressive-armor", "progressive-automation", "progressive-braking-force", "progressive-efficiency-module", "progressive-electric-energy-distribution", "progressive-energy-shield", "progressive-engine", "progressive-flamethrower", "progressive-fluid-handling", "progressive-follower", "progressive-follower-robot-count", "progressive-inserter", "progressive-inserter-capacity-bonus", "progressive-laser-shooting-speed", "progressive-laser-weapons-damage", "progressive-logistics", "progressive-military", "progressive-mining-productivity", "progressive-personal-battery", "progressive-personal-roboport-equipment", "progressive-physical-projectile-damage", "progressive-processing", "progressive-productivity-module", "progressive-refined-flammables", "progressive-research-speed", "progressive-rocketry", "progressive-science-pack", "progressive-speed-module", "progressive-stronger-explosives", "progressive-train-network", "progressive-turret", "progressive-vehicle", "progressive-wall", "progressive-weapon-shooting-speed", "progressive-worker-robots-speed", "progressive-worker-robots-storage", "Attack Trap", "Evolution Trap", "Teleport Trap", "Grenade Trap", "Cluster Grenade Trap", "Artillery Trap", "Atomic Rocket Trap", "Atomic Cliff Remover Trap", "Inventory Spill Trap"]),
+        "Everything": frozenset(["Inventory Spill Trap", "Atomic Cliff Remover Trap", "Atomic Rocket Trap", "Artillery Trap", "Cluster Grenade Trap", "Grenade Trap", "Teleport Trap", "Evolution Trap", "Attack Trap", "advanced-circuit", "advanced-combinators", "advanced-material-processing", "advanced-material-processing-2", "advanced-oil-processing", "artillery", "atomic-bomb", "automated-rail-transportation", "automation", "automation-2", "automation-3", "automation-science-pack", "automobilism", "battery", "battery-equipment", "battery-mk2-equipment", "belt-immunity-equipment", "braking-force-1", "braking-force-2", "braking-force-3", "braking-force-4", "braking-force-5", "braking-force-6", "braking-force-7", "bulk-inserter", "chemical-science-pack", "circuit-network", "cliff-explosives", "coal-liquefaction", "concrete", "construction-robotics", "defender", "destroyer", "discharge-defense-equipment", "distractor", "effect-transmission", "efficiency-module", "efficiency-module-2", "efficiency-module-3", "electric-energy-accumulators", "electric-energy-distribution-1", "electric-energy-distribution-2", "electric-engine", "electric-mining-drill", "electronics", "energy-shield-equipment", "energy-shield-mk2-equipment", "engine", "exoskeleton-equipment", "explosive-rocketry", "explosives", "fast-inserter", "fission-reactor-equipment", "flamethrower", "flammables", "fluid-handling", "fluid-wagon", "follower-robot-count-1", "follower-robot-count-2", "follower-robot-count-3", "follower-robot-count-4", "gate", "gun-turret", "heavy-armor", "inserter-capacity-bonus-1", "inserter-capacity-bonus-2", "inserter-capacity-bonus-3", "inserter-capacity-bonus-4", "inserter-capacity-bonus-5", "inserter-capacity-bonus-6", "inserter-capacity-bonus-7", "kovarex-enrichment-process", "lamp", "land-mine", "landfill", "laser", "laser-shooting-speed-1", "laser-shooting-speed-2", "laser-shooting-speed-3", "laser-shooting-speed-4", "laser-shooting-speed-5", "laser-shooting-speed-6", "laser-shooting-speed-7", "laser-turret", "laser-weapons-damage-1", "laser-weapons-damage-2", "laser-weapons-damage-3", "laser-weapons-damage-4", "laser-weapons-damage-5", "laser-weapons-damage-6", "logistic-robotics", "logistic-science-pack", "logistic-system", "logistics", "logistics-2", "logistics-3", "low-density-structure", "lubricant", "military", "military-2", "military-3", "military-4", "military-science-pack", "mining-productivity-1", "mining-productivity-2", "mining-productivity-3", "modular-armor", "modules", "night-vision-equipment", "nuclear-fuel-reprocessing", "nuclear-power", "oil-gathering", "oil-processing", "personal-laser-defense-equipment", "personal-roboport-equipment", "personal-roboport-mk2-equipment", "physical-projectile-damage-1", "physical-projectile-damage-2", "physical-projectile-damage-3", "physical-projectile-damage-4", "physical-projectile-damage-5", "physical-projectile-damage-6", "plastics", "power-armor", "power-armor-mk2", "processing-unit", "production-science-pack", "productivity-module", "productivity-module-2", "productivity-module-3", "radar", "railway", "refined-flammables-1", "refined-flammables-2", "refined-flammables-3", "refined-flammables-4", "refined-flammables-5", "refined-flammables-6", "repair-pack", "research-speed-1", "research-speed-2", "research-speed-3", "research-speed-4", "research-speed-5", "research-speed-6", "robotics", "rocket-fuel", "rocket-silo", "rocketry", "solar-energy", "solar-panel-equipment", "space-science-pack", "speed-module", "speed-module-2", "speed-module-3", "spidertron", "steam-power", "steel-axe", "steel-processing", "stone-wall", "stronger-explosives-1", "stronger-explosives-2", "stronger-explosives-3", "stronger-explosives-4", "stronger-explosives-5", "stronger-explosives-6", "sulfur-processing", "tank", "toolbelt", "uranium-ammo", "uranium-mining", "uranium-processing", "utility-science-pack", "weapon-shooting-speed-1", "weapon-shooting-speed-2", "weapon-shooting-speed-3", "weapon-shooting-speed-4", "weapon-shooting-speed-5", "weapon-shooting-speed-6", "worker-robots-speed-1", "worker-robots-speed-2", "worker-robots-speed-3", "worker-robots-speed-4", "worker-robots-speed-5", "worker-robots-storage-1", "worker-robots-storage-2", "worker-robots-storage-3", "progressive-advanced-material-processing", "progressive-armor", "progressive-automation", "progressive-braking-force", "progressive-efficiency-module", "progressive-electric-energy-distribution", "progressive-energy-shield", "progressive-engine", "progressive-flamethrower", "progressive-fluid-handling", "progressive-follower", "progressive-follower-robot-count", "progressive-inserter", "progressive-inserter-capacity-bonus", "progressive-laser-shooting-speed", "progressive-laser-weapons-damage", "progressive-logistics", "progressive-military", "progressive-mining-productivity", "progressive-personal-battery", "progressive-personal-roboport-equipment", "progressive-physical-projectile-damage", "progressive-processing", "progressive-productivity-module", "progressive-refined-flammables", "progressive-research-speed", "progressive-rocketry", "progressive-science-pack", "progressive-speed-module", "progressive-stronger-explosives", "progressive-train-network", "progressive-turret", "progressive-vehicle", "progressive-wall", "progressive-weapon-shooting-speed", "progressive-worker-robots-speed", "progressive-worker-robots-storage"]),
         "Progressive": frozenset(["progressive-advanced-material-processing", "progressive-armor", "progressive-automation", "progressive-braking-force", "progressive-efficiency-module", "progressive-electric-energy-distribution", "progressive-energy-shield", "progressive-engine", "progressive-flamethrower", "progressive-fluid-handling", "progressive-follower", "progressive-follower-robot-count", "progressive-inserter", "progressive-inserter-capacity-bonus", "progressive-laser-shooting-speed", "progressive-laser-weapons-damage", "progressive-logistics", "progressive-military", "progressive-mining-productivity", "progressive-personal-battery", "progressive-personal-roboport-equipment", "progressive-physical-projectile-damage", "progressive-processing", "progressive-productivity-module", "progressive-refined-flammables", "progressive-research-speed", "progressive-rocketry", "progressive-science-pack", "progressive-speed-module", "progressive-stronger-explosives", "progressive-train-network", "progressive-turret", "progressive-vehicle", "progressive-wall", "progressive-weapon-shooting-speed", "progressive-worker-robots-speed", "progressive-worker-robots-storage"]),
         "Event": frozenset(["Victory", "Automated automation-science-pack", "Automated chemical-science-pack", "Automated logistic-science-pack", "Automated military-science-pack", "Automated production-science-pack", "Automated utility-science-pack"]),
+    }
+
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {
+        "progressive-advanced-material-processing": ["advanced-material-processing", "advanced-material-processing-2"],
+        "progressive-armor": ["heavy-armor", "modular-armor", "power-armor", "power-armor-mk2"],
+        "progressive-automation": ["automation", "automation-2", "automation-3"],
+        "progressive-braking-force": ["braking-force-1", "braking-force-2", "braking-force-3", "braking-force-4", "braking-force-5", "braking-force-6", "braking-force-7"],
+        "progressive-efficiency-module": ["efficiency-module", "efficiency-module-2", "efficiency-module-3"],
+        "progressive-electric-energy-distribution": ["electric-energy-distribution-1", "electric-energy-distribution-2"],
+        "progressive-energy-shield": ["energy-shield-equipment", "energy-shield-mk2-equipment"],
+        "progressive-engine": ["engine", "electric-engine"],
+        "progressive-flamethrower": ["flamethrower", "refined-flammables-1", "refined-flammables-2", "refined-flammables-3", "refined-flammables-4", "refined-flammables-5", "refined-flammables-6"],
+        "progressive-fluid-handling": ["fluid-handling", "fluid-wagon"],
+        "progressive-follower": ["defender", "distractor", "destroyer"],
+        "progressive-follower-robot-count": ["follower-robot-count-1", "follower-robot-count-2", "follower-robot-count-3", "follower-robot-count-4"],
+        "progressive-inserter": ["fast-inserter", "bulk-inserter", "inserter-capacity-bonus-1", "inserter-capacity-bonus-2", "inserter-capacity-bonus-3", "inserter-capacity-bonus-4", "inserter-capacity-bonus-5", "inserter-capacity-bonus-6", "inserter-capacity-bonus-7"],
+        "progressive-inserter-capacity-bonus": ["inserter-capacity-bonus-1", "inserter-capacity-bonus-2", "inserter-capacity-bonus-3", "inserter-capacity-bonus-4", "inserter-capacity-bonus-5", "inserter-capacity-bonus-6", "inserter-capacity-bonus-7"],
+        "progressive-laser-shooting-speed": ["laser-shooting-speed-1", "laser-shooting-speed-2", "laser-shooting-speed-3", "laser-shooting-speed-4", "laser-shooting-speed-5", "laser-shooting-speed-6", "laser-shooting-speed-7"],
+        "progressive-laser-weapons-damage": ["laser-weapons-damage-1", "laser-weapons-damage-2", "laser-weapons-damage-3", "laser-weapons-damage-4", "laser-weapons-damage-5", "laser-weapons-damage-6"],
+        "progressive-logistics": ["logistics", "logistics-2", "logistics-3"],
+        "progressive-military": ["military", "military-2", "military-3", "military-4"],
+        "progressive-mining-productivity": ["mining-productivity-1", "mining-productivity-2", "mining-productivity-3"],
+        "progressive-personal-battery": ["battery-equipment", "battery-mk2-equipment"],
+        "progressive-personal-roboport-equipment": ["personal-roboport-equipment", "personal-roboport-mk2-equipment"],
+        "progressive-physical-projectile-damage": ["physical-projectile-damage-1", "physical-projectile-damage-2", "physical-projectile-damage-3", "physical-projectile-damage-4", "physical-projectile-damage-5", "physical-projectile-damage-6"],
+        "progressive-processing": ["steel-processing", "oil-processing", "sulfur-processing", "advanced-oil-processing", "coal-liquefaction", "uranium-processing", "kovarex-enrichment-process", "nuclear-fuel-reprocessing"],
+        "progressive-productivity-module": ["productivity-module", "productivity-module-2", "productivity-module-3"],
+        "progressive-refined-flammables": ["refined-flammables-1", "refined-flammables-2", "refined-flammables-3", "refined-flammables-4", "refined-flammables-5", "refined-flammables-6"],
+        "progressive-research-speed": ["research-speed-1", "research-speed-2", "research-speed-3", "research-speed-4", "research-speed-5", "research-speed-6"],
+        "progressive-rocketry": ["rocketry", "explosive-rocketry", "atomic-bomb"],
+        "progressive-science-pack": ["logistic-science-pack", "military-science-pack", "chemical-science-pack", "production-science-pack", "utility-science-pack", "space-science-pack"],
+        "progressive-speed-module": ["speed-module", "speed-module-2", "speed-module-3"],
+        "progressive-stronger-explosives": ["stronger-explosives-1", "stronger-explosives-2", "stronger-explosives-3", "stronger-explosives-4", "stronger-explosives-5", "stronger-explosives-6"],
+        "progressive-train-network": ["railway", "automated-rail-transportation", "braking-force-1", "braking-force-2", "braking-force-3", "braking-force-4", "braking-force-5", "braking-force-6", "braking-force-7"],
+        "progressive-turret": ["gun-turret", "laser-turret"],
+        "progressive-vehicle": ["automobilism", "tank", "spidertron"],
+        "progressive-wall": ["stone-wall", "gate"],
+        "progressive-weapon-shooting-speed": ["weapon-shooting-speed-1", "weapon-shooting-speed-2", "weapon-shooting-speed-3", "weapon-shooting-speed-4", "weapon-shooting-speed-5", "weapon-shooting-speed-6"],
+        "progressive-worker-robots-speed": ["worker-robots-speed-1", "worker-robots-speed-2", "worker-robots-speed-3", "worker-robots-speed-4", "worker-robots-speed-5"],
+        "progressive-worker-robots-storage": ["worker-robots-storage-1", "worker-robots-storage-2", "worker-robots-storage-3"],
     }
 
     # Canonical item placements - where items belong in the "vanilla" game
@@ -447,6 +498,29 @@ class FactorioWorldGenWorld(RuleWorldMixin, World):
         data = item_table[name]
         return FactorioWorldGenItem(name, data.classification, data.id, self.player)
 
+
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""

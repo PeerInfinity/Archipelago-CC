@@ -97,6 +97,67 @@ This directory contains a subset of the original Python implementation from the 
 
 ---
 
+### Backend: Rule Builder (`rule_builder/`)
+
+A declarative rule definition system for Archipelago. The original code is from [drtchops/Archipelago](https://github.com/drtchops/Archipelago) branch [`rules-engine`](https://github.com/drtchops/Archipelago/tree/rules-engine), associated with [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048). The code is MIT licensed and has been copied into this repository with ongoing modifications.
+
+Rule Builder provides a clean, Python-first API for defining game logic rules that are inherently serializable to JSON.
+
+**Key features:**
+-   Easy-to-use declarative syntax: `Has("Sword") & Has("Shield")`
+-   Rule caching and serialization to/from JSON
+-   Logic optimization and human-readable explanations
+-   Custom rule support for game-specific logic
+
+**Files:**
+-   **`rule_builder/rules.py`**: Core rule classes (`Has`, `HasAll`, `HasAny`, `CanReachRegion`, etc.)
+-   **`rule_builder/__init__.py`**: Module exports and `RuleWorldMixin` for integrating with Archipelago worlds
+-   **`rule_builder/cc_format.py`**: Conversion between Rule Builder and Archipelago-CC JSON formats
+-   **`rule_builder/cc_explain.py`**: Human-readable rule explanations
+
+For more details, see [rule_builder/README.md](../rule_builder/README.md).
+
+---
+
+### Backend: World Generator (`world_generator/`)
+
+The World Generator automates the process of converting a JSON rules file (exported from an Archipelago world) into a fully functional Archipelago world package. This enables a complete development workflow where game definitions can be created, edited, and converted back into working Python worlds.
+
+**Key features:**
+-   Generates complete Archipelago world structure from JSON
+-   Converts Archipelago-CC format rules to Rule Builder syntax
+-   Supports canonical placement mode for testing
+-   Creates Items.py, Locations.py, Regions.py, Rules.py, and Options.py
+
+**Usage:**
+```bash
+python -m world_generator path/to/rules.json --output worlds/mygame/
+```
+
+**Files:**
+-   **`world_generator/generator.py`**: Main `WorldGenerator` class
+-   **`world_generator/extractors.py`**: JSON data extraction
+-   **`world_generator/rule_codegen.py`**: CC rules → Python code generation
+-   **`world_generator/templates.py`**: File content templates
+-   **`world_generator/cli.py`**: Command-line interface
+
+For full documentation, see [docs/json/developer/guides/world-generator.md](../docs/json/developer/guides/world-generator.md).
+
+---
+
+### Auto-Generated Worlds (`worlds/*_worldgen/`)
+
+The repository contains 79 auto-generated world directories created by the World Generator from JSON rules files. These worlds:
+
+-   Use Rule Builder for clean, declarative rules
+-   Are fully functional Archipelago worlds
+-   Can generate seeds and be played in multiworld
+-   Serve as validation that the JSON export → World Generator round-trip works correctly
+
+These worlds are identified by the `_worldgen` suffix (e.g., `worlds/alttp_worldgen/`, `worlds/witness_worldgen/`).
+
+---
+
 ### Frontend: Application Root (`frontend/`)
 
 These files are at the root of the `frontend/` directory and are critical for the application's setup, configuration, and operation.

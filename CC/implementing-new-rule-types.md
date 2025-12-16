@@ -60,7 +60,7 @@ grep -r "HELPERS_TO_EXPORT_BLACKLIST" exporter/games/
    frontend/presets/<game>/AP_<seed>/AP_<seed>_rules.json
    ```
 2. Search for rule types you don't recognize
-3. Compare with the [Rule Types Reference](rule-types-reference.md)
+3. Compare with the [Rule Types Reference](../docs/json/developer/reference/rule-types-reference.md)
 
 ### Method 4: Check Python Analyzer Output
 
@@ -527,12 +527,12 @@ Ensure the context object has the methods your rule type needs. Check `StateMana
 - [ ] Added case in `frontend/modules/shared/ruleEngine.js`
 - [ ] Handled `undefined` values appropriately
 - [ ] Updated `frontend/schema/rules.schema.json` with new fields (if applicable)
-- [ ] Updated `CC/rule-types-reference.md` with the new type
+- [ ] Updated `docs/json/developer/reference/rule-types-reference.md` with the new type
 - [ ] Tested with a game that uses this pattern
 - [ ] Removed helper from blacklist if applicable
 - [ ] Verified spoiler tests pass
 
 ## See Also
 
-- [Rule Types Reference](rule-types-reference.md) - Complete list of supported rule types
+- [Rule Types Reference](../docs/json/developer/reference/rule-types-reference.md) - Complete list of supported rule types
 - [Helper Export Guide](helper-export-guide.md) - Exporting helper functions as rule definitions

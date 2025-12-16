@@ -7,24 +7,23 @@ This directory contains diff files showing changes made to this repository compa
 ### 1. `core-files.diff` (151 lines)
 Changes to the main Archipelago core files:
 - **BaseClasses.py** - Core data structures and sphere logging modifications
-- **Main.py** - Main generation logic, vanilla placement trigger, and workflow changes
-- **settings.py** - Configuration settings
+- **Main.py** - Main generation logic, vanilla placement trigger, JSON export, and workflow changes
+- **settings.py** - Configuration settings for JSON export, sphere logging, and skip_required_files
 
 These are the most significant changes that affect core Archipelago functionality.
 
-### 2. `config-files.diff` (123 lines)
+### 2. `config-files.diff` (144 lines)
 Changes to configuration and repository setup files:
-- **.gitattributes** - Git attribute configurations
-- **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications
-- **.gitignore** - Ignore patterns for project-specific files
-- **ModuleUpdate.py** - Module update logic changes
-- **pytest.ini** - Test configuration
-- **requirements.txt** - Python dependency modifications
+- **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
+- **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (added permissions)
+- **.gitignore** - Ignore patterns for project-specific files (extensive additions)
+- **pytest.ini** - Test configuration (added warning filters)
+- **requirements.txt** - Python dependency modifications (added astunparse, psutil)
 
 These files configure the development environment and CI/CD pipeline.
 
-### 3. `world-init-files.diff` (435 lines)
-Changes to world implementation initialization files:
+### 3. `world-init-files.diff` (494 lines)
+Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
 - **worlds/dkc3/__init__.py** - Donkey Kong Country 3
@@ -37,7 +36,7 @@ Changes to world implementation initialization files:
 - **worlds/tloz/__init__.py** - The Legend of Zelda
 - **worlds/yoshisisland/__init__.py** - Yoshi's Island
 
-These modifications customize world implementations for specific features or fixes.
+These modifications allow world generation to proceed without ROM files when `skip_required_files` is enabled, enabling JSON export for games without requiring their base ROMs.
 
 ## How to Use These Diffs
 
@@ -69,8 +68,8 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 
 ## Notes
 
-- These diffs were generated on 2025-11-29 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
-- Total lines changed across all diffs: 709 lines (151 + 123 + 435)
+- These diffs were last updated on 2025-12-16 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
+- Total lines changed across all diffs: 789 lines (151 + 144 + 494)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)

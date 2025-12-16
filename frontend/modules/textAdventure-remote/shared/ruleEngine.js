@@ -519,6 +519,37 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // No static data available for helper lookup
         }
 
+        // Check for inline body in the rule itself (used by worldgen worlds)
+        // The body field contains the helper's rule definition inline
+        if (rule.body) {
+          const params = rule.params || []; // Parameter names from helper definition
+          const args = rule.args || [];
+          let helperLocalScope = localScope ? { ...localScope } : {};
+
+          // Map arguments to parameter names if available, otherwise use positional naming
+          for (let i = 0; i < args.length; i++) {
+            const argValue = evaluateRule(args[i], context, depth + 1, localScope);
+            if (params[i]) {
+              // Use the actual parameter name from the helper definition
+              helperLocalScope[params[i]] = argValue;
+            } else {
+              // Fallback to positional naming
+              helperLocalScope[`arg${i}`] = argValue;
+            }
+          }
+
+          result = evaluateRule(rule.body, context, depth + 1, helperLocalScope);
+
+          // Unwrap return marker if present
+          if (result && typeof result === 'object' && result.__isReturn) {
+            result = result.value;
+          }
+          if (result !== undefined) {
+            break;
+          }
+          log('debug', `[evaluateRule] Inline body for '${rule.name}' returned undefined, trying fallbacks`);
+        }
+
         // Handle Python built-in functions
         if (rule.name === 'any') {
           // Python's any() returns True if any element is truthy
@@ -4437,7 +4468,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasAllCounts: all items with specific counts
     case 'HasAllCounts': {
-      const itemCounts = args.item_counts || {};
+      // Support both Rule Builder format (items) and legacy format (item_counts)
+      const itemCounts = args.items || args.item_counts || {};
       for (const [item, count] of Object.entries(itemCounts)) {
         const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
         if (result === false) return false;
@@ -4448,7 +4480,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasAnyCount: any item with specific count
     case 'HasAnyCount': {
-      const itemCounts = args.item_counts || {};
+      // Support both Rule Builder format (items) and legacy format (item_counts)
+      const itemCounts = args.items || args.item_counts || {};
       let hasUndefined = false;
       for (const [item, count] of Object.entries(itemCounts)) {
         const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
@@ -4458,29 +4491,31 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return hasUndefined ? undefined : false;
     }
 
-    // HasFromList: N items from a list
+    // HasFromList: N items from a list (sums total item counts)
+    // Python: found += player_prog_items[item_name] for each item
     case 'HasFromList': {
-      const items = args.item_names || [];
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
+      const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
-      let hasUndefined = false;
+      // Sum the count of each item (not just presence)
       for (const item of items) {
-        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
-        if (result === true) {
-          found++;
-          if (found >= count) return true;
-        } else if (result === undefined) {
-          hasUndefined = true;
+        if (typeof context.countItem === 'function') {
+          found += context.countItem(item) || 0;
+        } else {
+          // Fallback: check presence only
+          const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+          if (result === true) found++;
         }
+        if (found >= count) return true;
       }
-      // If we have undefined results, we can't be sure
-      if (hasUndefined && found < count) return undefined;
       return found >= count;
     }
 
     // HasFromListUnique: N unique items from a list
     case 'HasFromListUnique': {
-      const items = args.item_names || [];
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
+      const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
       let hasUndefined = false;
@@ -4499,14 +4534,16 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasGroup: items from an item group
     case 'HasGroup': {
-      const groupName = args.item_name_group;
+      // Support both "group" (from Resolved._get_args_dict) and "item_name_group" (from Rule.to_dict)
+      const groupName = args.group || args.item_name_group;
       const count = args.count ?? 1;
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
     }
 
     // HasGroupUnique: unique items from an item group
     case 'HasGroupUnique': {
-      const groupName = args.item_name_group;
+      // Support both "group" (from Resolved._get_args_dict) and "item_name_group" (from Rule.to_dict)
+      const groupName = args.group || args.item_name_group;
       const count = args.count ?? 1;
       // For unique, we use the same group_check - the semantics are handled by the group logic
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
@@ -4571,6 +4608,142 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         return undefined;
       }
       return evaluateRule(child, context, depth + 1, localScope);
+    }
+
+    // HelperCall: Rule Builder rule that wraps a helper function
+    // The body_data contains the CC format rule to evaluate
+    case 'HelperCall': {
+      const bodyData = args.body_data;
+      if (bodyData) {
+        // Check if body_data has params wrapper: {params: [...], body: {...}}
+        if (bodyData.params && bodyData.body) {
+          const params = bodyData.params;
+          const helperArgs = args.args || [];
+          let helperLocalScope = localScope ? { ...localScope } : {};
+
+          // Bind arguments to parameter names
+          for (let i = 0; i < helperArgs.length; i++) {
+            const argValue = evaluateRule(helperArgs[i], context, depth + 1, localScope);
+            if (params[i]) {
+              helperLocalScope[params[i]] = argValue;
+            }
+          }
+
+          let result = evaluateRule(bodyData.body, context, depth + 1, helperLocalScope);
+          // Unwrap return marker if present
+          if (result && typeof result === 'object' && result.__isReturn) {
+            result = result.value;
+          }
+          return result;
+        }
+        // No params wrapper - evaluate body_data directly
+        return evaluateRule(bodyData, context, depth + 1, localScope);
+      }
+      // No body_data - try evaluating as a CC helper with the helper name
+      const helperName = args.helper_name;
+      if (helperName) {
+        const helperArgs = args.args || [];
+        return evaluateRule({ type: 'helper', name: helperName, args: helperArgs }, context, depth + 1, localScope);
+      }
+      log('warn', '[evaluateRuleBuilderRule] HelperCall missing both body_data and helper_name');
+      return undefined;
+    }
+
+    // Compare: comparison between two values
+    // Rule Builder: {"rule": "Compare", "args": {"left": ..., "op": ">=", "right": ...}}
+    case 'Compare': {
+      const left = args.left;
+      const op = args.op || '==';
+      const right = args.right;
+
+      // Recursively evaluate left and right operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compare
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      // Perform the comparison
+      switch (op) {
+        case '==':
+        case 'eq':
+          return leftValue === rightValue;
+        case '!=':
+        case 'ne':
+          return leftValue !== rightValue;
+        case '<':
+        case 'lt':
+          return leftValue < rightValue;
+        case '<=':
+        case 'le':
+          return leftValue <= rightValue;
+        case '>':
+        case 'gt':
+          return leftValue > rightValue;
+        case '>=':
+        case 'ge':
+          return leftValue >= rightValue;
+        default:
+          log('warn', `[evaluateRuleBuilderRule] Unknown Compare operator '${op}'`);
+          return undefined;
+      }
+    }
+
+    // Arithmetic: arithmetic operation between two values
+    // Rule Builder: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
+    case 'Arithmetic': {
+      const left = args.left;
+      const op = args.op || '+';
+      const right = args.right;
+
+      // Recursively evaluate operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compute
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      // Perform the arithmetic operation
+      switch (op) {
+        case '+':
+          return leftValue + rightValue;
+        case '-':
+          return leftValue - rightValue;
+        case '*':
+          return leftValue * rightValue;
+        case '/':
+          return rightValue !== 0 ? leftValue / rightValue : undefined;
+        case '//':
+          return rightValue !== 0 ? Math.floor(leftValue / rightValue) : undefined;
+        case '%':
+          return rightValue !== 0 ? leftValue % rightValue : undefined;
+        case '**':
+          return Math.pow(leftValue, rightValue);
+        default:
+          log('warn', `[evaluateRuleBuilderRule] Unknown Arithmetic operator '${op}'`);
+          return undefined;
+      }
+    }
+
+    // Count: get the count of an item (used as operand in Compare/Arithmetic)
+    // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
+    case 'Count': {
+      const itemName = args.item_name;
+      if (!itemName) {
+        log('warn', '[evaluateRuleBuilderRule] Count rule missing item_name');
+        return 0;
+      }
+      // Use countItem if available, otherwise fall back to has check
+      if (typeof context?.countItem === 'function') {
+        return context.countItem(itemName) || 0;
+      }
+      // Fallback: return 1 if has, 0 if not
+      const hasItem = evaluateRule({ type: 'item_check', item: itemName, count: 1 }, context, depth + 1, localScope);
+      return hasItem ? 1 : 0;
     }
 
     // Unknown rule type - try to find as a custom helper

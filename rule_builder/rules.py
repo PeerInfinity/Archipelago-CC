@@ -93,6 +93,9 @@ class RuleWorldMixin(World):
 
     def get_cached_rule(self, resolved_rule: "Rule.Resolved") -> "Rule.Resolved":
         """Returns a cached instance of a resolved rule based on the hash"""
+        # Skip caching for rules that have caching disabled (e.g., HelperCall with unhashable body_data)
+        if not resolved_rule.caching_enabled:
+            return resolved_rule
         rule_hash = hash(resolved_rule)
         if rule_hash in self.rules_by_hash:
             return self.rules_by_hash[rule_hash]
@@ -459,13 +462,25 @@ class OptionFilter(Generic[T]):
         return f"{self.option.__name__} {op} {self.value}"
 
 
+def _make_hashable(value: Any) -> Any:
+    """Convert a value to a hashable form, recursively handling dicts and lists."""
+    if isinstance(value, dict):
+        # Convert dict to a sorted tuple of (key, value) pairs
+        return tuple(sorted((_make_hashable(k), _make_hashable(v)) for k, v in value.items()))
+    elif isinstance(value, list):
+        return tuple(_make_hashable(item) for item in value)
+    elif isinstance(value, set):
+        return frozenset(_make_hashable(item) for item in value)
+    return value
+
+
 def _create_hash_fn(resolved_rule_cls: "CustomRuleRegister") -> Callable[..., int]:
     def hash_impl(self: "Rule.Resolved") -> int:
         return hash(
             (
                 self.__class__.__module__,
                 self.rule_name,
-                *[getattr(self, f.name) for f in dataclasses.fields(self)],
+                *[_make_hashable(getattr(self, f.name)) for f in dataclasses.fields(self)],
             )
         )
 
@@ -2165,6 +2180,660 @@ class CanReachEntrance(Rule[TWorld], game="Archipelago"):
         @override
         def _get_args_dict(self) -> dict[str, Any]:
             return {"entrance_name": self.entrance_name}
+
+
+# =============================================================================
+# CC Format Support Classes
+# =============================================================================
+
+
+@dataclasses.dataclass()
+class CCRule(Rule[TWorld], game="Archipelago"):
+    """
+    Wraps a CC format rule that can't be converted to a native Rule Builder class.
+
+    This class provides explain support for complex CC format rules while
+    delegating evaluation to either a pre-computed value or returning True
+    as a fallback.
+    """
+    rule_data: dict = dataclasses.field(default_factory=dict)
+    """The original CC format rule data"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.rule_data,
+            player=world.player,
+            caching_enabled=False,  # Bypass caching for CC rules
+        )
+
+    @override
+    def __str__(self) -> str:
+        rule_type = self.rule_data.get('type', 'unknown')
+        return f"CCRule({rule_type})"
+
+    class Resolved(Rule.Resolved):
+        rule_data: dict
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # CC rules currently return True as fallback
+            # Future enhancement: implement CC rule evaluation
+            return True
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            from rule_builder.cc_explain import explain_cc_rule
+            return explain_cc_rule(self.rule_data, state, self.player)
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            rule_type = self.rule_data.get('type', 'unknown')
+            return f"[CC:{rule_type}]"
+
+        @override
+        def __str__(self) -> str:
+            rule_type = self.rule_data.get('type', 'unknown')
+            return f"CCRule({rule_type})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"rule_data": self.rule_data}
+
+
+@dataclasses.dataclass()
+class Not(WrapperRule[TWorld], game="Archipelago"):
+    """
+    Logical negation of a rule.
+
+    Usage:
+        rule = Not(Has("Sword"))  # True if player doesn't have Sword
+    """
+
+    @override
+    def __str__(self) -> str:
+        return f"NOT ({self.child})"
+
+    class Resolved(WrapperRule.Resolved):
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            return not self.child(state)
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "NOT ("}]
+            messages.extend(self.child.explain_json(state))
+            messages.append({"type": "text", "text": ")"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            return f"NOT ({self.child.explain_str(state)})"
+
+        @override
+        def __str__(self) -> str:
+            return f"NOT ({self.child})"
+
+
+@dataclasses.dataclass()
+class CountItem(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the count of an item.
+
+    When used as a boolean (in _evaluate), returns True if count > 0.
+    Also provides get_count() for use in comparisons.
+
+    Usage:
+        rule = CountItem("Key")  # True if player has at least 1 Key
+    """
+    item_name: str = ""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.item_name,
+            player=world.player,
+            caching_enabled=False,  # Count can change frequently
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"Count({self.item_name})"
+
+    class Resolved(Rule.Resolved):
+        item_name: str
+        skip_cache: ClassVar[bool] = True
+
+        def get_count(self, state: CollectionState) -> int:
+            """Get the actual count of this item."""
+            return state.count(self.item_name, self.player)
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if count > 0
+            return self.get_count(state) > 0
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            return {self.item_name: {id(self)}}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is not None:
+                count = self.get_count(state)
+                return [
+                    {"type": "text", "text": "Count("},
+                    {"type": "item_name", "text": self.item_name, "player": self.player, "flags": 0},
+                    {"type": "text", "text": f"): {count}"},
+                ]
+            return [
+                {"type": "text", "text": "Count("},
+                {"type": "item_name", "text": self.item_name, "player": self.player, "flags": 0},
+                {"type": "text", "text": ")"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                return f"Count({self.item_name}): {self.get_count(state)}"
+            return f"Count({self.item_name})"
+
+        @override
+        def __str__(self) -> str:
+            return f"Count({self.item_name})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"item_name": self.item_name}
+
+
+@dataclasses.dataclass()
+class Compare(Rule[TWorld], game="Archipelago"):
+    """
+    Comparison between two values/rules.
+
+    Supports operators: ==, !=, <, >, <=, >=
+
+    Usage:
+        rule = Compare(CountItem("Key"), ">=", 3)
+    """
+    left: "Rule[TWorld] | int | float | str" = dataclasses.field(default_factory=lambda: True_())
+    op: str = "=="
+    right: "Rule[TWorld] | int | float | str" = dataclasses.field(default_factory=lambda: True_())
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Resolve left and right if they are rules
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            self.op,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"({self.left} {self.op} {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        op: str
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_value(self, operand: Any, state: CollectionState) -> Any:
+            """Get the value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                # Check for get_value (Arithmetic) or get_count (CountItem)
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Otherwise evaluate as boolean
+                return operand(state)
+            return operand
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            left_val = self._get_value(self.left, state)
+            right_val = self._get_value(self.right, state)
+
+            if self.op == '==':
+                return left_val == right_val
+            elif self.op == '!=':
+                return left_val != right_val
+            elif self.op == '<':
+                return left_val < right_val
+            elif self.op == '>':
+                return left_val > right_val
+            elif self.op == '<=':
+                return left_val <= right_val
+            elif self.op == '>=':
+                return left_val >= right_val
+            else:
+                return False
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = []
+
+            # Explain left side
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": f" {self.op} "})
+
+            # Explain right side
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            return f"({left_str} {self.op} {right_str})"
+
+        @override
+        def __str__(self) -> str:
+            return f"({self.left} {self.op} {self.right})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"left": self.left, "op": self.op, "right": self.right}
+
+
+@dataclasses.dataclass()
+class Arithmetic(Rule[TWorld], game="Archipelago"):
+    """
+    Arithmetic operation between two numeric values/rules.
+
+    Supports operators: +, -, *, /, //, %, **
+
+    Returns the computed numeric value via get_value().
+    When used in Compare, enables expressions like:
+        Compare(Arithmetic(CountItem("Puppy"), "*", 3), ">=", 10)
+
+    Usage:
+        # Puppy value calculation (each Puppy item worth 3)
+        rule = Compare(Arithmetic(CountItem("Puppy"), "*", 3), ">=", 10)
+
+        # Arrow capacity: 30 + (upgrades * 5)
+        rule = Arithmetic(30, "+", Arithmetic(CountItem("Arrow +5"), "*", 5))
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    op: str = "+"
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            self.op,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"({self.left} {self.op} {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        op: str
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the computed value of this arithmetic expression."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+
+            if self.op == '+':
+                return left_val + right_val
+            elif self.op == '-':
+                return left_val - right_val
+            elif self.op == '*':
+                return left_val * right_val
+            elif self.op == '/':
+                return left_val / right_val if right_val != 0 else 0
+            elif self.op == '//':
+                return left_val // right_val if right_val != 0 else 0
+            elif self.op == '%':
+                return left_val % right_val if right_val != 0 else 0
+            elif self.op == '**':
+                return left_val ** right_val
+            else:
+                return left_val + right_val  # Default to addition
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": f" {self.op} "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"({left_str} {self.op} {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
+
+        @override
+        def __str__(self) -> str:
+            return f"({self.left} {self.op} {self.right})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"left": self.left, "op": self.op, "right": self.right}
+
+
+@dataclasses.dataclass()
+class Conditional(Rule[TWorld], game="Archipelago"):
+    """
+    Conditional (ternary) rule: if test then if_true else if_false.
+
+    Usage:
+        rule = Conditional(
+            test=Has("Key"),
+            if_true=Has("Door Open"),
+            if_false=True_()
+        )
+    """
+    test: "Rule[TWorld]" = dataclasses.field(default_factory=lambda: True_())
+    if_true: "Rule[TWorld]" = dataclasses.field(default_factory=lambda: True_())
+    if_false: "Rule[TWorld]" = dataclasses.field(default_factory=lambda: True_())
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.test._instantiate(world),
+            self.if_true._instantiate(world),
+            self.if_false._instantiate(world),
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"If({self.test}) then ({self.if_true}) else ({self.if_false})"
+
+    class Resolved(Rule.Resolved):
+        test: "Rule.Resolved"
+        if_true: "Rule.Resolved"
+        if_false: "Rule.Resolved"
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            if self.test(state):
+                return self.if_true(state)
+            return self.if_false(state)
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            for rule in [self.test, self.if_true, self.if_false]:
+                for name, ids in rule.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def region_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            for rule in [self.test, self.if_true, self.if_false]:
+                for name, ids in rule.region_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "If ("}]
+            messages.extend(self.test.explain_json(state))
+            messages.append({"type": "text", "text": ") then ("})
+            messages.extend(self.if_true.explain_json(state))
+            messages.append({"type": "text", "text": ") else ("})
+            messages.extend(self.if_false.explain_json(state))
+            messages.append({"type": "text", "text": ")"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            return f"If ({self.test.explain_str(state)}) then ({self.if_true.explain_str(state)}) else ({self.if_false.explain_str(state)})"
+
+        @override
+        def __str__(self) -> str:
+            return f"If({self.test}) then ({self.if_true}) else ({self.if_false})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"test": self.test, "if_true": self.if_true, "if_false": self.if_false}
+
+
+@dataclasses.dataclass()
+class HelperCall(Rule[TWorld], game="Archipelago"):
+    """
+    Calls a helper function with explain support.
+
+    This class supports three tiers of helper integration:
+    1. body_rule set: Full Rule Builder evaluation and explain (best)
+    2. helper_func + body_data set: Python evaluation, CC format explain
+    3. helper_func only: Python evaluation, helper name display
+
+    Usage:
+        # Tier 1: Rule Builder body
+        rule = HelperCall(helper_name="can_swim", body_rule=Has("Flippers"))
+
+        # Tier 2/3: Python function
+        rule = HelperCall(
+            helper_func=_game_can_swim,
+            helper_name="can_swim",
+            args=(),
+            body_data={"type": "item_check", "item": "Flippers"}
+        )
+    """
+    helper_func: Callable[..., bool] | None = None
+    helper_name: str = ""
+    args: tuple[Any, ...] = ()
+    body_rule: "Rule[TWorld] | None" = None
+    body_data: dict | None = None
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Instantiate the body_rule if present
+        resolved_body_rule = None
+        if self.body_rule is not None:
+            resolved_body_rule = self.body_rule._instantiate(world)
+
+        return self.Resolved(
+            self.helper_func,
+            self.helper_name,
+            self.args,
+            resolved_body_rule,
+            self.body_data,
+            player=world.player,
+            caching_enabled=False,  # Helpers may have complex dependencies
+        )
+
+    @override
+    def __str__(self) -> str:
+        if self.args:
+            args_str = ", ".join(repr(a) for a in self.args)
+            return f"Helper:{self.helper_name}({args_str})"
+        return f"Helper:{self.helper_name}"
+
+    class Resolved(Rule.Resolved):
+        helper_func: Callable[..., bool] | None
+        helper_name: str
+        args: tuple[Any, ...]
+        body_rule: "Rule.Resolved | None"
+        body_data: dict | None
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # Tier 1: Use Rule Builder evaluation (preferred)
+            if self.body_rule is not None:
+                return self.body_rule(state)
+
+            # Tier 2/3: Fall back to Python function
+            if self.helper_func is not None:
+                return self.helper_func(state, self.player, *self.args)
+
+            # No evaluation available
+            return True
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            if self.body_rule is not None:
+                return self.body_rule.item_dependencies()
+            return {}
+
+        @override
+        def region_dependencies(self) -> dict[str, set[int]]:
+            if self.body_rule is not None:
+                return self.body_rule.region_dependencies()
+            return {}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            # Tier 1: Use Rule Builder explain (best - shows actual state)
+            if self.body_rule is not None:
+                return self.body_rule.explain_json(state)
+
+            # Tier 2: Use CC format explain
+            if self.body_data is not None:
+                from rule_builder.cc_explain import explain_cc_rule
+                return explain_cc_rule(self.body_data, state, self.player)
+
+            # Tier 3: Fallback - just show helper name and args
+            messages: list[JSONMessagePart] = [
+                {"type": "text", "text": "Helper: "},
+                {"type": "color", "color": "magenta", "text": self.helper_name},
+            ]
+            if self.args:
+                args_str = ", ".join(repr(a) for a in self.args)
+                messages.append({"type": "text", "text": f"({args_str})"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if self.body_rule is not None:
+                return self.body_rule.explain_str(state)
+            if self.args:
+                args_str = ", ".join(repr(a) for a in self.args)
+                return f"Helper:{self.helper_name}({args_str})"
+            return f"Helper:{self.helper_name}"
+
+        @override
+        def __str__(self) -> str:
+            if self.args:
+                args_str = ", ".join(repr(a) for a in self.args)
+                return f"Helper:{self.helper_name}({args_str})"
+            return f"Helper:{self.helper_name}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {
+                "helper_name": self.helper_name,
+                "args": self.args,
+                "body_data": self.body_data,
+            }
 
 
 DEFAULT_RULES = {

@@ -1,34 +1,27 @@
 """DLCQuest-specific export handler."""
 
 from typing import Dict, Any
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 from BaseClasses import ItemClassification
 import logging
-import ast
 
 logger = logging.getLogger(__name__)
 
-class DLCQuestGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'DLCQuest'
+class DLCQuestGameExportHandler(GenericGameExportHandler):
     """Handle DLCQuest-specific rule expansions and coin item export."""
 
+    # DLCQuest uses coin-based access rules that check state.prog_items accumulators.
+    # The standard location checking flow doesn't properly update inventory during
+    # spoiler tests, so we use add_sphere_items_upfront mode which adds items
+    # at the start of each sphere before accessibility checks.
+    ADD_SPHERE_ITEMS_UPFRONT = True
+
+    # Use resolved_items which includes accumulated coin counts
+    USE_RESOLVED_ITEMS = True
+
     def __init__(self, world=None):
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.coin_items = {}  # Track coin items we find
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export DLCQuest settings with add_sphere_items_upfront enabled.
-
-        DLCQuest uses coin-based access rules that check state.prog_items accumulators.
-        The standard location checking flow doesn't properly update inventory during
-        spoiler tests, so we use add_sphere_items_upfront mode which adds items
-        at the start of each sphere before accessibility checks.
-        """
-        settings = super().get_settings_data(world, multiworld, player)
-        settings['add_sphere_items_upfront'] = True
-        settings['use_resolved_items'] = True  # Use resolved_items which includes accumulated coin counts
-        return settings
 
     def get_game_info(self, world):
         """Export DLCQuest game info including accumulator rules."""
@@ -67,10 +60,6 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
             logger.info("Original world: prog_items_init set to 0 (coins accumulate during play)")
 
         return game_info
-
-    def expand_helper(self, helper_name: str):
-        """Expand DLCQuest-specific helpers."""
-        return None  # No special helpers for now
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
@@ -207,16 +196,5 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
                 for item_name, item_data in coin_items.items():
                     data['items'][player_id][item_name] = item_data
                     logger.info(f"Set coin item '{item_name}' in items dictionary for player {player_id} (event=False)")
-        
+
         return data
-                    
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand DLCQuest-specific rules."""
-        if not rule:
-            return rule
-
-        # Recursively process nested rules
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
-        return rule

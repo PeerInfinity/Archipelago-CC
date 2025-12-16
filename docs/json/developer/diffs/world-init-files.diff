@@ -246,6 +246,65 @@ index 80716977d..ba210dfe8 100644
  
      def create_item(self, name: str) -> "Item":
          item = item_table[name]
+diff --git a/worlds/oot/__init__.py b/worlds/oot/__init__.py
+index d9465f176..348b39502 100644
+--- a/worlds/oot/__init__.py
++++ b/worlds/oot/__init__.py
+@@ -202,8 +202,15 @@ class OOTWorld(World):
+ 
+     @classmethod
+     def stage_assert_generate(cls, multiworld: MultiWorld):
++        from settings import skip_required_files
+         oot_settings = OOTWorld.settings
+-        rom = Rom(file=oot_settings.rom_file)
++        try:
++            rom = Rom(file=oot_settings.rom_file)
++        except Exception as e:
++            if skip_required_files:
++                logger.warning("OOT ROM file not found but skip_required_files is set. ROM generation will be skipped, but other generation steps will continue.")
++            else:
++                raise e
+ 
+ 
+     # Option parsing, handling incompatible options, building useful-item table
+@@ -1075,6 +1082,24 @@ class OOTWorld(World):
+             for entrance in all_entrances:
+                 self.multiworld.spoiler.set_entrance(entrance, entrance.replaces, 'entrance', self.player)
+ 
++        # Check if ROM exists and skip ROM-dependent steps if not
++        from settings import skip_required_files
++        oot_settings = OOTWorld.settings
++        try:
++            rom = Rom(file=oot_settings.rom_file)
++        except Exception:
++            if not skip_required_files:
++                # This should not happen if stage_assert_generate worked correctly,
++                # but preserve original behavior just in case
++                raise
++            logger.warning("OOT ROM file not found but skip_required_files is set. Skipping ROM generation for player %s.", self.player)
++            # Set a placeholder to indicate ROM wasn't generated
++            self.rom_name = "OOT_ROM_NOT_GENERATED"
++            # Make sure hint data and collectible flags are set so the process can continue
++            self.hint_data_available.set()
++            self.collectible_flags_available.set()
++            return
++
+         if self.hints != 'none':
+             self.hint_data_available.wait()
+ 
+@@ -1225,8 +1250,10 @@ class OOTWorld(World):
+ 
+     def modify_multidata(self, multidata: dict):
+ 
+-        # Replace connect name
+-        multidata['connect_names'][self.connect_name] = multidata['connect_names'][self.multiworld.player_name[self.player]]
++        # Replace connect name, but skip if ROM generation was skipped
++        rom_name = getattr(self, "rom_name", None)
++        if rom_name != "OOT_ROM_NOT_GENERATED":
++            multidata['connect_names'][self.connect_name] = multidata['connect_names'][self.multiworld.player_name[self.player]]
+ 
+         # Remove undesired items from start_inventory
+         # This is because we don't want them to show up in the autotracker,
 diff --git a/worlds/smw/__init__.py b/worlds/smw/__init__.py
 index 56ca82abb..b569fec06 100644
 --- a/worlds/smw/__init__.py

@@ -43,6 +43,7 @@ class GameMetadata:
     world_description: Optional[str] = None
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
+    resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
 
 
 @dataclass
@@ -89,6 +90,47 @@ class RegionData:
     hint_text: Optional[str] = None  # Display name if different from name
 
 
+def _param_is_used_in_body(param_name: str, body: Any) -> bool:
+    """
+    Check if a parameter name is referenced anywhere in a rule body.
+
+    Since helper bodies can be fully expanded (with params like 'damaging_items'
+    becoming direct item checks), we need to detect unused params and exclude
+    them from the function signature to avoid "missing required argument" errors.
+
+    Args:
+        param_name: The parameter name to search for
+        body: The rule body (dict, list, or primitive)
+
+    Returns:
+        True if the param_name appears to be referenced in the body
+    """
+    if body is None:
+        return False
+
+    if isinstance(body, dict):
+        # Check for explicit param reference (type: param_ref, variable, etc.)
+        if body.get('type') in ('param_ref', 'variable', 'param'):
+            if body.get('name') == param_name or body.get('param') == param_name:
+                return True
+        # Check if param name appears as a value
+        for key, value in body.items():
+            if key == param_name:
+                return True
+            if isinstance(value, str) and param_name in value:
+                return True
+            if _param_is_used_in_body(param_name, value):
+                return True
+    elif isinstance(body, list):
+        for item in body:
+            if _param_is_used_in_body(param_name, item):
+                return True
+    elif isinstance(body, str) and param_name in body:
+        return True
+
+    return False
+
+
 @dataclass
 class HelperData:
     """Extracted helper function data."""
@@ -117,6 +159,7 @@ class ExtractedData:
     accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
+    progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -166,6 +209,14 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     settings = json_data.get('settings', {}).get('1', {})
     game_options = settings.get('options', {})
 
+    # Extract resolved settings for evaluating setting_value nodes in helpers
+    # These are the actual values used in the seed, stored at the top level of settings
+    # Also include game_options since many setting_value nodes reference world.options.X.value
+    resolved_settings = {k: v for k, v in settings.items()
+                        if k not in ('game', 'options', 'world_directory', 'assume_bidirectional_exits', 'use_resolved_items')}
+    # Merge in game options for settings like goal, castle_skip, etc.
+    resolved_settings.update(game_options)
+
     return GameMetadata(
         game_name=game_name,
         game_directory=json_data.get('game_directory', game_name.lower().replace(' ', '_')),
@@ -178,6 +229,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         world_description=world_description,
         slot_data_fields=slot_data_fields,
         game_options=game_options,
+        resolved_settings=resolved_settings,
     )
 
 
@@ -414,6 +466,32 @@ def extract_canonical_placements(json_data: Dict[str, Any]) -> Dict[str, str]:
     return dict(canonical_data)
 
 
+def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str]]:
+    """
+    Extract progression mapping from JSON.
+
+    Progression mapping defines how progressive items map to their component items.
+    For example, 'progressive-processing' might map to ['steel-processing', 'oil-processing', ...].
+    When a progressive item is collected, it grants access to the next uncollected component.
+
+    Returns:
+        Dict mapping progressive item name to ordered list of component item names
+    """
+    progression_data = json_data.get('progression_mapping', {}).get('1', {})
+    result: Dict[str, List[str]] = {}
+
+    for prog_name, prog_info in progression_data.items():
+        # prog_info has structure: {'items': [{'name': '...', 'level': N}, ...], 'base_item': '...'}
+        items_list = prog_info.get('items', [])
+        # Sort by level to ensure correct order
+        sorted_items = sorted(items_list, key=lambda x: x.get('level', 0))
+        component_names = [item.get('name') for item in sorted_items if item.get('name')]
+        if component_names:
+            result[prog_name] = component_names
+
+    return result
+
+
 def compute_state_counter_accumulator_rules(
     items: Dict[str, 'ItemData'],
     original_placements: Dict[str, str]
@@ -439,11 +517,13 @@ def compute_state_counter_accumulator_rules(
 
     # Find items that are used in rules but have id=None (event/counter items)
     # and have a name pattern like " coins" or " coins freemium"
-    counter_items = set()
+    # Use a list to preserve input order for deterministic output
+    counter_items = []
     for item_name, item_data in items.items():
         if item_data.item_id is None and item_name.startswith(' '):
             # This looks like a counter item (e.g., " coins")
-            counter_items.add(item_name)
+            if item_name not in counter_items:
+                counter_items.append(item_name)
 
     if not counter_items:
         return accumulator_rules, prog_items_init
@@ -524,11 +604,23 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
 
         if 'params' in helper_def or 'body' in helper_def:
             # Parameterized helper with explicit params/body structure
+            raw_params = helper_def.get('params', [])
+            body = helper_def.get('body', helper_def)
+            defaults = helper_def.get('defaults', {})
+
+            # Filter out params that are not actually used in the body
+            # This handles cases where the body was expanded and no longer
+            # references the original parameter (e.g., _has_damaging_item)
+            used_params = [p for p in raw_params if _param_is_used_in_body(p, body)]
+
+            # Also filter defaults to only include used params
+            used_defaults = {k: v for k, v in defaults.items() if k in used_params}
+
             helpers[helper_name] = HelperData(
                 name=helper_name,
-                params=helper_def.get('params', []),
-                body=helper_def.get('body', helper_def),
-                defaults=helper_def.get('defaults', {})
+                params=used_params,
+                body=body,
+                defaults=used_defaults
             )
         else:
             # Simple helper - the entire helper_def is the body
@@ -565,6 +657,9 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
 
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data)
+
+    # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
+    progression_mapping = extract_progression_mapping(json_data)
 
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
@@ -612,4 +707,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         accumulator_rules=accumulator_rules,
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
+        progression_mapping=progression_mapping,
     )

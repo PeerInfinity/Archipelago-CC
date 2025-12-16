@@ -8,7 +8,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class KH1GameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Kingdom Hearts'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
@@ -16,11 +15,8 @@ class KH1GameExportHandler(BaseGameExportHandler):
     # Module paths containing helper functions
     HELPER_MODULES: List[str] = ['worlds.kh1.Rules']
 
-    # Helpers to export (whitelist) - these will be exported as definitions
-    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
-        'has_all_magic_lvx',    # Simple checks, no loops
-        'has_x_worlds',         # Now exportable with block-mode support
-    }
+    # Note: Simple helpers (has_all_magic_lvx, has_x_worlds, etc.) are auto-discovered
+    # during rule analysis and no longer need to be whitelisted explicitly.
 
     # Helpers that should be preserved as helper calls (not inlined)
     # Complex helpers with for loops, assignments, etc. need localScope
@@ -47,8 +43,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with optional world reference."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.options_cache = {}
     
     def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
@@ -498,7 +493,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                                     'name': 'has_x_worlds',
                                     'args': [
                                         {'type': 'constant', 'value': num_of_worlds},
-                                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                        {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                        {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                                     ]
                                 },
                                 second  # Keep the item_check
@@ -524,7 +521,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                                         'name': 'has_x_worlds',
                                         'args': [
                                             {'type': 'constant', 'value': num_of_worlds},
-                                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                            {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                            {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                                         ]
                                     },
                                     second  # Keep the 'or' conditions as-is
@@ -760,7 +759,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'name': 'has_x_worlds',
                             'args': [
                                 {'type': 'constant', 'value': 3},
-                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                             ]
                         })
                     else:
@@ -877,7 +878,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'name': 'has_x_worlds',
                             'args': [
                                 {'type': 'constant', 'value': 8},
-                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                             ]
                         })
                     else:
@@ -935,7 +938,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'name': 'has_x_worlds',
                             'args': [
                                 {'type': 'constant', 'value': num_worlds},
-                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                             ]
                         })
                     else:
@@ -971,7 +976,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                         'name': 'has_x_worlds',
                         'args': [
                             {'type': 'constant', 'value': num_of_worlds},
-                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                            {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                            {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                         ]
                     }
 
@@ -999,7 +1006,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                     'name': 'has_x_worlds',
                     'args': [
                         {'type': 'constant', 'value': 3},
-                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                        {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                        {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                     ]
                 }
 
@@ -1117,7 +1126,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                 'name': 'has_x_worlds',
                 'args': [
                     {'type': 'constant', 'value': num_of_worlds},
-                    {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                    {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                    {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                    {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                 ]
             }
 

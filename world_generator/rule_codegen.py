@@ -11,12 +11,82 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from CC format rules."""
 
-    def __init__(self) -> None:
+    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None) -> None:
         self.required_imports: Set[str] = set()
+        self.game_name = game_name
+        self.settings = settings or {}  # Resolved settings for evaluating setting_value nodes
+        # Sanitize game name for use in Python identifiers
+        import re
+        self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
+        self.known_helpers: Set[str] = set()
+        self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> CC format body
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
+
+    def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
+                     helper_params: Dict[str, List[str]] = None) -> None:
+        """Set known helpers and optionally their bodies and params for explain support."""
+        self.known_helpers = helper_names
+        self.helper_bodies = helper_bodies or {}
+        self.helper_params = helper_params or {}  # helper_name -> list of param names
+
+    def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None) -> Dict[str, Any]:
+        """
+        Recursively expand helper references in a rule body.
+
+        This ensures body_data is self-contained and doesn't reference other helpers,
+        which allows the frontend to evaluate rules without needing helper lookups.
+
+        Args:
+            rule: Rule dict in CC format
+            visited: Set of helper names already visited (for cycle detection)
+
+        Returns:
+            Rule dict with helper references expanded to their bodies
+        """
+        if visited is None:
+            visited = set()
+
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type', '')
+
+        # If this is a helper reference, expand it
+        if rule_type == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name in visited:
+                # Circular reference - return as-is to avoid infinite loop
+                return rule
+            if helper_name in self.helper_bodies:
+                # Expand the helper body, marking this helper as visited
+                new_visited = visited | {helper_name}
+                return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
+            # Unknown helper - return as-is
+            return rule
+
+        # For other rule types, recursively expand any nested rules
+        result = dict(rule)
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                result[key] = self._expand_helper_refs(value, visited)
+            elif isinstance(value, list):
+                result[key] = [
+                    self._expand_helper_refs(item, visited) if isinstance(item, dict) else item
+                    for item in value
+                ]
+        return result
+
+    def get_function_name(self, helper_name: str) -> str:
+        """Get the Python function name for a helper."""
+        prefix = f"_{self.game_name_lower}_"
+        if helper_name.startswith(prefix):
+            return helper_name
+        if helper_name.startswith('_'):
+            return helper_name
+        return f"{prefix}{helper_name}"
 
     def get_imports(self) -> List[str]:
         """Get the list of required Rule Builder imports."""
@@ -65,12 +135,15 @@ class RuleCodeGenerator:
             'and': self._convert_and,
             'or': self._convert_or,
             'can_reach': self._convert_can_reach_region,
+            'region_check': self._convert_can_reach_region,
             'location_check': self._convert_location_check,
             'can_reach_entrance': self._convert_can_reach_entrance,
             'state_method': self._convert_state_method,
             'not': self._convert_not,
             'helper': self._convert_helper,
             'compare': self._convert_compare,
+            'comparison': self._convert_compare,
+            'conditional': self._convert_conditional,
         }
 
         converter = converters.get(rule_type)
@@ -210,6 +283,39 @@ class RuleCodeGenerator:
         method = rule.get('method', '')
         args = rule.get('args', [])
 
+        # Handle can_reach_region state method
+        if method in ('can_reach', 'can_reach_region'):
+            if args and isinstance(args[0], dict):
+                target = self._extract_constant_value(args[0], '')
+                if target:
+                    self.required_imports.add('CanReachRegion')
+                    target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CanReachRegion("{target_escaped}")'
+            return 'True_()'
+
+        # Handle can_reach_location state method
+        if method == 'can_reach_location':
+            if args and isinstance(args[0], dict):
+                location = self._extract_constant_value(args[0], '')
+                if location:
+                    self.required_imports.add('CanReachLocation')
+                    location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CanReachLocation("{location_escaped}")'
+            return 'True_()'
+
+        # Handle basic has state method
+        if method == 'has':
+            if args:
+                item = self._extract_constant_value(args[0], '') if args else ''
+                count = self._extract_constant_value(args[1], 1) if len(args) > 1 else 1
+                if item:
+                    self.required_imports.add('Has')
+                    item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+                    if count == 1:
+                        return f'Has("{item_escaped}")'
+                    return f'Has("{item_escaped}", {count})'
+            return 'True_()'
+
         method_map = {
             'has_all': ('HasAll', self._extract_item_list),
             'has_any': ('HasAny', self._extract_item_list),
@@ -231,21 +337,29 @@ class RuleCodeGenerator:
         """Extract item list for HasAll/HasAny.
 
         Note: HasAll/HasAny expect unpacked arguments (*item_names), not a list.
+        Empty HasAny should return True_ (vacuously satisfied - any of nothing).
+        Empty HasAll should return True_ (trivially satisfied - all of nothing).
         """
         if not args:
-            return f'{class_name}()'
+            # Empty item checks are trivially satisfied
+            self.required_imports.add('True_')
+            return 'True_()'
 
         # First arg should be a constant with the list
         first_arg = args[0]
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
             if not items:
-                return f'{class_name}()'
+                # Empty item checks are trivially satisfied
+                self.required_imports.add('True_')
+                return 'True_()'
             # Unpack the items as separate arguments
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}()'
+        # Unknown format - return True_ as safe fallback
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
@@ -292,7 +406,8 @@ class RuleCodeGenerator:
 
     def _convert_compare(self, rule: Dict[str, Any]) -> str:
         """
-        Convert compare rule to Has() if it matches the prog_items pattern.
+        Convert compare rule to Has() if it matches the prog_items pattern,
+        otherwise to Compare().
 
         Pattern: state.prog_items[player][item_name] OP count
         Converts to: Has(item_name, count)
@@ -306,8 +421,88 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
-        # Unknown compare pattern - return True_() as placeholder
-        return 'True_()'
+        # Use Compare class for all other patterns
+        # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
+        self.required_imports.add('Compare')
+        left_code = self._convert_compare_operand(left)
+        right_code = self._convert_compare_operand(right)
+
+        return f'Compare({left_code}, "{op}", {right_code})'
+
+    def _convert_compare_operand(self, operand: Any) -> str:
+        """Convert a compare operand to Python code."""
+        if not isinstance(operand, dict):
+            return repr(operand)
+
+        op_type = operand.get('type', '')
+
+        if op_type == 'constant':
+            return repr(operand.get('value'))
+
+        if op_type == 'state_method':
+            method = operand.get('method', '')
+            args = operand.get('args', [])
+
+            # Handle count method specially
+            if method == 'count':
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    item_name = args[0].get('value', '')
+                    self.required_imports.add('CountItem')
+                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CountItem("{item_escaped}")'
+
+        if op_type == 'binary_op':
+            return self._convert_binary_op(operand)
+
+        # For other types, try to convert as a rule
+        return self._convert_rule(operand)
+
+    def _convert_binary_op(self, operand: Dict[str, Any]) -> str:
+        """Convert a binary_op to Arithmetic rule."""
+        self.required_imports.add('Arithmetic')
+
+        left = operand.get('left', {})
+        op = operand.get('op', '+')
+        right = operand.get('right', {})
+
+        # Normalize operator names from Python AST
+        op_map = {
+            'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+            'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+        }
+        op = op_map.get(op, op)
+
+        left_code = self._convert_arithmetic_operand(left)
+        right_code = self._convert_arithmetic_operand(right)
+
+        return f'Arithmetic({left_code}, "{op}", {right_code})'
+
+    def _convert_arithmetic_operand(self, operand: Any) -> str:
+        """Convert an arithmetic operand to Python code."""
+        if not isinstance(operand, dict):
+            return repr(operand)
+
+        op_type = operand.get('type', '')
+
+        if op_type == 'constant':
+            return repr(operand.get('value'))
+
+        if op_type == 'state_method':
+            method = operand.get('method', '')
+            args = operand.get('args', [])
+
+            if method == 'count':
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    item_name = args[0].get('value', '')
+                    self.required_imports.add('CountItem')
+                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CountItem("{item_escaped}")'
+
+        if op_type == 'binary_op':
+            return self._convert_binary_op(operand)
+
+        # Fall back to converting as a rule
+        return self._convert_rule(operand)
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
@@ -352,11 +547,19 @@ class RuleCodeGenerator:
         Extract the item name from a prog_items subscript expression.
 
         Pattern: state.prog_items[player][item_name]
+        Also handles CC export format: {"type": "prog_item_count", "key": " coins"}
         Returns the item_name string if the pattern matches, None otherwise.
         """
-        # Expected structure:
+        if not isinstance(expr, dict):
+            return None
+
+        # Handle CC export format: {"type": "prog_item_count", "key": " coins"}
+        if expr.get('type') == 'prog_item_count':
+            return expr.get('key')
+
+        # Expected structure for subscript pattern:
         # {"type": "subscript", "value": {...}, "index": {"type": "constant", "value": "item_name"}}
-        if not isinstance(expr, dict) or expr.get('type') != 'subscript':
+        if expr.get('type') != 'subscript':
             return None
 
         # Get the item name from the outer subscript index
@@ -385,21 +588,111 @@ class RuleCodeGenerator:
         return item_name
 
     def _convert_not(self, rule: Dict[str, Any]) -> str:
-        """Convert not rule - Rule Builder doesn't have Not, use lambda fallback."""
-        inner = rule.get('condition', rule.get('value', {}))
+        """Convert not rule to Not()."""
+        self.required_imports.add('Not')
+
+        # Handle both 'condition' and 'operand' keys
+        inner = rule.get('condition', rule.get('operand', rule.get('value', {})))
         inner_code = self._convert_rule(inner)
 
-        # Note: Rule Builder doesn't have a Not class
-        # Return True_() as a placeholder - NOT logic needs manual review
-        # Don't use inline comments as they break when combined with & or |
-        return 'True_()'
+        return f'Not({inner_code})'
 
     def _convert_helper(self, rule: Dict[str, Any]) -> str:
-        """Convert helper rule - these are custom functions."""
-        # Helper functions are game-specific and can't be auto-generated
-        # Return True_() as a placeholder - don't use inline comments
-        # as they break when combined with & or | in expressions
+        """Convert helper rule to HelperCall()."""
+        helper_name = rule.get('name', '')
+        args = rule.get('args', [])
+
+        # If we know about this helper, generate a proper HelperCall
+        if helper_name in self.known_helpers:
+            self.required_imports.add('HelperCall')
+            func_name = self.get_function_name(helper_name)
+
+            # Convert arguments to Python code
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    arg_strs.append(repr(arg.get('value')))
+                elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
+                    # Resolve setting_value args to their actual values
+                    setting = arg.get('setting', '')
+                    if setting in self.settings:
+                        arg_strs.append(repr(self.settings[setting]))
+                    else:
+                        arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('type') == 'attribute':
+                    # Handle attribute access on setting_value (e.g., world.options.goal.value)
+                    obj = arg.get('object', {})
+                    if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
+                        setting = obj.get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    else:
+                        arg_strs.append('None')
+                else:
+                    # For complex args, try to convert
+                    arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
+
+            # Build HelperCall with helper_func reference and body_data for explain
+            parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
+
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            # Include body_data if available for explain support
+            # Expand nested helper references so body_data is self-contained
+            if helper_name in self.helper_bodies:
+                body = self.helper_bodies[helper_name]
+                # Expand any nested helper references to their bodies
+                expanded_body = self._expand_helper_refs(body)
+
+                # Include params if available so frontend can map args to param names
+                if helper_name in self.helper_params and self.helper_params[helper_name]:
+                    # Wrap body with params info for proper argument binding
+                    body_with_params = {
+                        'params': self.helper_params[helper_name],
+                        'body': expanded_body
+                    }
+                    parts.append(f'body_data={repr(body_with_params)}')
+                else:
+                    # No params - just use the body directly
+                    parts.append(f'body_data={repr(expanded_body)}')
+
+            return f'HelperCall({", ".join(parts)})'
+
+        # Unknown helper - return True_() as placeholder
+        self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_conditional(self, rule: Dict[str, Any]) -> str:
+        """Convert conditional rule to Conditional()."""
+        self.required_imports.add('Conditional')
+
+        test = rule.get('test', {})
+        if_true = rule.get('if_true', {})
+        if_false = rule.get('if_false')
+
+        # Handle None or missing if_false - default to True (always pass)
+        if if_false is None:
+            if_false = {'type': 'constant', 'value': True}
+
+        # Check if if_false is just True (option-filtered rules)
+        if_false_is_true = (
+            isinstance(if_false, dict) and
+            if_false.get('type') == 'constant' and
+            if_false.get('value') is True
+        )
+
+        if if_false_is_true:
+            # Option-filtered rule - just return the if_true branch
+            return self._convert_rule(if_true)
+
+        test_code = self._convert_rule(test)
+        if_true_code = self._convert_rule(if_true)
+        if_false_code = self._convert_rule(if_false)
+
+        return f'Conditional(test={test_code}, if_true={if_true_code}, if_false={if_false_code})'
 
 
 def cc_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:
@@ -441,14 +734,16 @@ class HelperCodeGenerator:
     this generates raw Python code with lambda-compatible expressions.
     """
 
-    def __init__(self, game_name: str) -> None:
+    def __init__(self, game_name: str, settings: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize the helper code generator.
 
         Args:
             game_name: The game name (used for generating function names)
+            settings: Optional dict of resolved setting values for evaluating setting_value nodes
         """
         self.game_name = game_name
+        self.settings = settings or {}
         # Sanitize game name for use in Python identifiers
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
@@ -741,6 +1036,8 @@ class HelperCodeGenerator:
             'location_check': self._expr_location_check,
             'count_item': self._expr_count_item,
             'group_count': self._expr_group_count,
+            'setting_value': self._expr_setting_value,
+            'prog_item_count': self._expr_prog_item_count,
         }
 
         handler = handlers.get(expr_type)
@@ -749,6 +1046,23 @@ class HelperCodeGenerator:
 
         # Unknown type - return True as placeholder
         return 'True'
+
+    def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
+        """Resolve a setting value to its actual value from the seed's settings."""
+        setting = expr.get('setting', '')
+        # Look up the setting value in the resolved settings from rules.json
+        # If the setting was captured during export, use its value
+        if setting in self.settings:
+            value = self.settings[setting]
+            if isinstance(value, bool):
+                return 'True' if value else 'False'
+            elif isinstance(value, str):
+                return repr(value)
+            else:
+                return str(value)
+        # If not found in settings, default to False for safety
+        # This prevents inaccessible regions from being created with always-True rules
+        return 'False'
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
@@ -762,42 +1076,122 @@ class HelperCodeGenerator:
         if isinstance(value, list):
             items = [self._generate_expression({'type': 'constant', 'value': v}) for v in value]
             return f"[{', '.join(items)}]"
+        if isinstance(value, dict):
+            # Handle dict constants - convert string keys that look like integers
+            items = []
+            for k, v in value.items():
+                # Try to convert string keys that look like integers
+                try:
+                    key_repr = str(int(k))
+                except (ValueError, TypeError):
+                    key_repr = repr(k)
+                val_repr = self._generate_expression({'type': 'constant', 'value': v})
+                items.append(f"{key_repr}: {val_repr}")
+            return "{" + ", ".join(items) + "}"
         return str(value)
 
     def _expr_name(self, expr: Dict[str, Any]) -> str:
         """Generate variable name reference."""
-        return expr.get('name', '_')
+        name = expr.get('name', '_')
+        # In helper functions, 'world' isn't available directly - access via state
+        if name == 'world':
+            return 'state.multiworld.worlds[player]'
+        return name
 
     def _expr_item_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has() call."""
         item_raw = expr.get('item', '')
-        item = self._extract_constant(item_raw, '')
         count_raw = expr.get('count', 1)
-        count = self._extract_constant(count_raw, 1)
 
-        if count == 1:
-            return f'state.has({repr(item)}, player)'
-        return f'state.has({repr(item)}, player, {count})'
+        # Handle item - could be a constant string or a variable/expression
+        if isinstance(item_raw, dict):
+            if item_raw.get('type') == 'constant':
+                item_expr = repr(item_raw.get('value', ''))
+            else:
+                # Variable reference or complex expression (e.g., dict[hat])
+                item_expr = self._generate_expression(item_raw)
+        elif isinstance(item_raw, str):
+            item_expr = repr(item_raw)
+        else:
+            item_expr = repr(str(item_raw))
+
+        # Handle count - could be a constant or a complex expression
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'constant':
+                count_expr = str(count_raw.get('value', 1))
+            else:
+                # Complex expression (e.g., get_hat_cost(hat))
+                count_expr = self._generate_expression(count_raw)
+        elif isinstance(count_raw, (int, float)):
+            count_expr = str(int(count_raw))
+        else:
+            count_expr = '1'
+
+        if count_expr == '1':
+            return f'state.has({item_expr}, player)'
+        return f'state.has({item_expr}, player, {count_expr})'
 
     def _expr_count_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has() with count check."""
         item_raw = expr.get('item', '')
-        item = self._extract_constant(item_raw, '')
         count_raw = expr.get('count', 1)
-        count = self._extract_constant(count_raw, 1)
 
-        return f'state.has({repr(item)}, player, {count})'
+        # Handle item - could be a constant string or a variable/expression
+        if isinstance(item_raw, dict):
+            if item_raw.get('type') == 'constant':
+                item_expr = repr(item_raw.get('value', ''))
+            else:
+                item_expr = self._generate_expression(item_raw)
+        elif isinstance(item_raw, str):
+            item_expr = repr(item_raw)
+        else:
+            item_expr = repr(str(item_raw))
+
+        # Handle count - could be a constant or a complex expression
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'constant':
+                count_expr = str(count_raw.get('value', 1))
+            else:
+                count_expr = self._generate_expression(count_raw)
+        elif isinstance(count_raw, (int, float)):
+            count_expr = str(int(count_raw))
+        else:
+            count_expr = '1'
+
+        return f'state.has({item_expr}, player, {count_expr})'
 
     def _expr_group_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has_group() call."""
         group_raw = expr.get('group', '')
-        group = self._extract_constant(group_raw, '')
         count_raw = expr.get('count', 1)
-        count = self._extract_constant(count_raw, 1)
 
-        if count == 1:
-            return f'state.has_group({repr(group)}, player)'
-        return f'state.has_group({repr(group)}, player, {count})'
+        # Handle group - could be a constant string or a variable reference
+        if isinstance(group_raw, dict):
+            if group_raw.get('type') == 'constant':
+                group_expr = repr(group_raw.get('value', ''))
+            else:
+                # Variable reference or other expression - generate the expression
+                group_expr = self._generate_expression(group_raw)
+        elif isinstance(group_raw, str):
+            group_expr = repr(group_raw)
+        else:
+            group_expr = repr(str(group_raw))
+
+        # Handle count - could be a constant or a complex expression
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'constant':
+                count_expr = str(count_raw.get('value', 1))
+            else:
+                # Complex expression (e.g., len(world.item_name_groups[relic]))
+                count_expr = self._generate_expression(count_raw)
+        elif isinstance(count_raw, (int, float)):
+            count_expr = str(int(count_raw))
+        else:
+            count_expr = '1'
+
+        if count_expr == '1':
+            return f'state.has_group({group_expr}, player)'
+        return f'state.has_group({group_expr}, player, {count_expr})'
 
     def _expr_and(self, expr: Dict[str, Any]) -> str:
         """Generate and expression."""
@@ -880,14 +1274,14 @@ class HelperCodeGenerator:
             return self.get_helper_call(name, args)
 
         # Built-in Python functions
-        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next'):
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - may be a built-in or external, use proper function name
-        func_name = self.get_function_name(name)
-        arg_exprs = ['state', 'player'] + [self._generate_expression(a) for a in args]
-        return f"{func_name}({', '.join(arg_exprs)})"
+        # Unknown helper - return True as safe fallback
+        # This handles helpers that were blacklisted during export (too complex to export)
+        # Returning True makes the location always accessible, which is safer than crashing
+        return 'True'
 
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""
@@ -955,8 +1349,17 @@ class HelperCodeGenerator:
 
     def _expr_attribute(self, expr: Dict[str, Any]) -> str:
         """Generate attribute access expression."""
-        obj = self._generate_expression(expr.get('object', {}))
+        obj_expr = expr.get('object', {})
         attr = expr.get('attr', '')
+
+        # Special case: when accessing .value on a setting_value, the setting_value
+        # is already resolved to its actual value, so just return it directly.
+        # This handles cases like world.options.goal.value where we captured the
+        # setting as setting_value and now just need the numeric/boolean value.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
+            return self._generate_expression(obj_expr)
+
+        obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
     def _expr_function_call(self, expr: Dict[str, Any]) -> str:
@@ -966,6 +1369,11 @@ class HelperCodeGenerator:
 
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
+
+        # Special handling for state.multiworld.get_location - needs player argument
+        # The exported helper body may be missing the player argument
+        if func_code == 'state.multiworld.get_location' and len(arg_exprs) == 1:
+            arg_exprs.append('player')
 
         return f"{func_code}({', '.join(arg_exprs)})"
 
@@ -1009,20 +1417,47 @@ class HelperCodeGenerator:
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""
         region_raw = expr.get('region', '')
-        region = self._extract_constant(region_raw, '')
-        return f'state.can_reach({repr(region)}, "Region", player)'
+        # Handle region - could be a constant string or a variable/expression
+        if isinstance(region_raw, dict):
+            if region_raw.get('type') == 'constant':
+                region_expr = repr(region_raw.get('value', ''))
+            else:
+                region_expr = self._generate_expression(region_raw)
+        elif isinstance(region_raw, str):
+            region_expr = repr(region_raw)
+        else:
+            region_expr = repr(str(region_raw))
+        return f'state.can_reach({region_expr}, "Region", player)'
 
     def _expr_can_reach_entrance(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for entrance."""
         entrance_raw = expr.get('entrance', '')
-        entrance = self._extract_constant(entrance_raw, '')
-        return f'state.can_reach({repr(entrance)}, "Entrance", player)'
+        # Handle entrance - could be a constant string or a variable/expression
+        if isinstance(entrance_raw, dict):
+            if entrance_raw.get('type') == 'constant':
+                entrance_expr = repr(entrance_raw.get('value', ''))
+            else:
+                entrance_expr = self._generate_expression(entrance_raw)
+        elif isinstance(entrance_raw, str):
+            entrance_expr = repr(entrance_raw)
+        else:
+            entrance_expr = repr(str(entrance_raw))
+        return f'state.can_reach({entrance_expr}, "Entrance", player)'
 
     def _expr_location_check(self, expr: Dict[str, Any]) -> str:
         """Generate location accessibility check."""
         location_raw = expr.get('location', '')
-        location = self._extract_constant(location_raw, '')
-        return f'state.can_reach_location({repr(location)}, player)'
+        # Handle location - could be a constant string or a variable/expression
+        if isinstance(location_raw, dict):
+            if location_raw.get('type') == 'constant':
+                location_expr = repr(location_raw.get('value', ''))
+            else:
+                location_expr = self._generate_expression(location_raw)
+        elif isinstance(location_raw, str):
+            location_expr = repr(location_raw)
+        else:
+            location_expr = repr(str(location_raw))
+        return f'state.can_reach_location({location_expr}, player)'
 
     def _expr_count_item(self, expr: Dict[str, Any]) -> str:
         """Generate state.count() for item."""
@@ -1036,6 +1471,16 @@ class HelperCodeGenerator:
         group = self._extract_constant(group_raw, '')
         return f'state.count_group({repr(group)}, player)'
 
+    def _expr_prog_item_count(self, expr: Dict[str, Any]) -> str:
+        """Generate state.prog_items access for counter items like coins.
+
+        CC export format: {"type": "prog_item_count", "key": " coins"}
+        This accesses state.prog_items[player][key] which counts accumulated items.
+        """
+        key = expr.get('key', '')
+        key_escaped = key.replace('\\', '\\\\').replace("'", "\\'")
+        return f"state.prog_items[player].get('{key_escaped}', 0)"
+
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
         """Extract constant value from a potential constant wrapper."""
         if isinstance(value, dict):
@@ -1043,5 +1488,9 @@ class HelperCodeGenerator:
                 return value.get('value', default)
             if value.get('type') == 'value':
                 return value.get('value', default)
+            if value.get('type') == 'set':
+                # Extract all elements from the set
+                elements = value.get('elements', [])
+                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
             return default
         return value if value is not None else default

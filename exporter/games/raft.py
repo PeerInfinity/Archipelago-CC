@@ -9,35 +9,20 @@ import os
 logger = logging.getLogger(__name__)
 
 class RaftGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Raft'
-
-    # Enable automatic export of discovered helpers
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    """Export handler for Raft."""
 
     # Module paths for helper functions
     HELPER_MODULES = ['worlds.raft.Rules']
 
-    # Blacklist for helpers that cannot be exported
-    # Previously blacklisted, now supported:
-    # - raft_paddleboard_mode_enabled: Uses self.multiworld.worlds[player].options (now supported)
-    # - raft_big_islands_available: Uses self.multiworld.worlds[player].options (now supported)
-    HELPERS_TO_EXPORT_BLACKLIST = set()
+    # Raft uses resolved_items instead of base_items for sphere inventory
+    # This allows the generic has() function to find resolved progressive items
+    # (e.g., "Smelter" instead of "progressive-metals") directly in inventory
+    USE_RESOLVED_ITEMS = True
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Raft-specific settings."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
-
-        # Raft uses resolved_items instead of base_items for sphere inventory
-        # This allows the generic has() function to find resolved progressive items
-        # (e.g., "Smelter" instead of "progressive-metals") directly in inventory
-        settings_dict['use_resolved_items'] = True
-
-        # Add sphere items upfront so resolved items are added directly to inventory
-        # Without this, checking locations would add base items (progressive-metals)
-        # instead of resolved items (Smelter)
-        settings_dict['add_sphere_items_upfront'] = True
-
-        return settings_dict
+    # Add sphere items upfront so resolved items are added directly to inventory
+    # Without this, checking locations would add base items (progressive-metals)
+    # instead of resolved items (Smelter)
+    ADD_SPHERE_ITEMS_UPFRONT = True
 
     # Item check rules - maps item names to their access rule structures
     # Based on the itemChecks dictionary in worlds/raft/Rules.py

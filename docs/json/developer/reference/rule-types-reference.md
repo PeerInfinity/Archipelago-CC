@@ -206,7 +206,3 @@ These types are used internally or as supporting structures:
 | `formatted_value` | Individual formatted part of an f-string | Used internally within `f_string` parts |
 | `unknown` | Placeholder for unhandled expressions | Generated when AST node cannot be converted |
 
-## See Also
-
-- [Helper Export Guide](helper-export-guide.md) - Exporting helper functions as rule definitions
-- [Implementing New Rule Types](implementing-new-rule-types.md) - Adding support for new rule types

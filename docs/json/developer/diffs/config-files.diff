@@ -24,10 +24,19 @@ index 3abbb5f64..dbde0d080 100644
      strategy:
        fail-fast: false
 diff --git a/.gitignore b/.gitignore
-index 3bb4e68c9..36b2d35ad 100644
+index 3bb4e68c9..542eec747 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -195,3 +195,68 @@ _speedups.html
+@@ -53,7 +53,7 @@ _persistent_storage.yaml
+ mystery_result_*.yaml
+ *-errors.txt
+ success.txt
+-output/
++/output/
+ Output Logs/
+ /factorio/
+ /WebHostLib/static/generated
+@@ -195,3 +195,80 @@ _speedups.html
  .LSOverride
  Thumbs.db
  [Dd]esktop.ini
@@ -46,7 +55,6 @@ index 3bb4e68c9..36b2d35ad 100644
 +ContextList2.txt
 +missingFiles.txt
 +FixedContextList.txt
-+CLAUDE.md
 +generate_output.txt
 +pytest_output.txt
 +pytest-list.txt
@@ -72,23 +80,36 @@ index 3bb4e68c9..36b2d35ad 100644
 +test-results/*
 +set.mm
 +
-+/output/
-+
 +!scripts/build/
 +!scripts/lib/
++!scripts/test/lib/
++!frontend/modules/spoilerTest/lib/
 +
 +scripts/output/spoiler-minimal/test-results-*
 +scripts/output/spoiler-minimal/test-results_*
++scripts/output/spoiler-minimal-worldgen/test-results-*
++scripts/output/spoiler-minimal-worldgen/test-results_*
 +scripts/output/spoiler-full/test-results-*
 +scripts/output/spoiler-full/test-results_*
++scripts/output/spoiler-full-worldgen/test-results-*
++scripts/output/spoiler-full-worldgen/test-results_*
 +scripts/output/multiclient/test-results-*
 +scripts/output/multiclient/test-results_*
++scripts/output/multiclient-worldgen/test-results-*
++scripts/output/multiclient-worldgen/test-results_*
 +scripts/output/multiworld/test-results-*
 +scripts/output/multiworld/test-results_*
++scripts/output/multiworld-worldgen/test-results-*
++scripts/output/multiworld-worldgen/test-results_*
 +scripts/output/multitemplate-minimal/test-results-*
 +scripts/output/multitemplate-minimal/test-results_*
 +scripts/output/multitemplate-full/test-results-*
 +scripts/output/multitemplate-full/test-results_*
++
++!CC/scripts/prompts/gen-errors.txt
++
++coverage/
++benchmark-results.json
 +
 +test1/
 +test2/

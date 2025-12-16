@@ -1,41 +1,22 @@
 """Kirby's Dream Land 3 game-specific export handler."""
 
 from typing import Dict, Any, List, Optional
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 import importlib
 
 logger = logging.getLogger(__name__)
 
-class KDL3GameExportHandler(BaseGameExportHandler):
+class KDL3GameExportHandler(GenericGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
-    GAME_NAME = "Kirby's Dream Land 3"
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Module path for helper functions
     HELPER_MODULES = ['worlds.kdl3.rules']
 
-    # Whitelist ability helpers that are called dynamically via ability_map
-    # These need to be exported even though they're not discovered via direct calls
-    HELPERS_TO_EXPORT_WHITELIST = {
-        'can_reach_burning',
-        'can_reach_stone',
-        'can_reach_ice',
-        'can_reach_needle',
-        'can_reach_clean',
-        'can_reach_parasol',
-        'can_reach_spark',
-        'can_reach_cutter',
-        'can_reach_rick',
-        'can_reach_kine',
-        'can_reach_coo',
-        'can_reach_nago',
-        'can_reach_chuchu',
-        'can_reach_pitch',
-    }
+    # Note: Ability helpers (can_reach_*) are auto-discovered during rule analysis
+    # and no longer need to be whitelisted explicitly.
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
@@ -164,47 +145,33 @@ class KDL3GameExportHandler(BaseGameExportHandler):
         return rule
     
     def _convert_f_string(self, f_string_rule: Dict[str, Any]) -> Any:
-        """Convert an f_string AST node to a simple concatenated string."""
-        if f_string_rule.get('type') != 'f_string':
-            return f_string_rule
-            
-        parts = f_string_rule.get('parts', [])
-        result_parts = []
-        
-        for part in parts:
-            if part.get('type') == 'constant':
-                # Regular string literal part
-                result_parts.append(part.get('value', ''))
-            elif part.get('type') == 'formatted_value':
-                # Expression inside f-string
-                value_node = part.get('value', {})
-                if value_node.get('type') == 'constant':
-                    result_parts.append(str(value_node.get('value', '')))
-                elif value_node.get('type') == 'name':
-                    # This is a variable reference - for now just use the name
-                    # In a more complete implementation, we'd resolve the variable
-                    logger.warning(f"Variable reference in f-string: {value_node.get('name')}")
-                    result_parts.append(f"{{{value_node.get('name')}}}")
-                elif value_node.get('type') == 'binary_op':
-                    # Handle binary operations like "3 - 1"
-                    result = self._evaluate_binary_op(value_node)
-                    result_parts.append(str(result))
-                elif value_node.get('type') == 'subscript':
-                    # Handle subscript expressions like location_name.level_names_inverse[level]
-                    result = self._evaluate_subscript(value_node)
-                    if result is not None:
-                        result_parts.append(str(result))
-                    else:
-                        logger.warning(f"Could not evaluate subscript in f-string: {value_node}")
-                        result_parts.append(str(value_node))
-                else:
-                    # Other expression types - convert to string representation
-                    logger.warning(f"Complex expression in f-string: {value_node}")
-                    result_parts.append(str(value_node))
-                    
-        # Join all parts into a single string
-        return ''.join(result_parts)
-    
+        """Convert an f_string AST node to a simple concatenated string.
+
+        Uses base class resolve_f_string with game-specific subscript handling.
+        """
+        result = self.resolve_f_string(f_string_rule)
+        if result is not None:
+            return result
+        # Fallback: return original rule if we can't resolve
+        return f_string_rule
+
+    def _resolve_f_string_value(self, value_node: Dict[str, Any]) -> Optional[Any]:
+        """
+        Override to handle KDL3-specific subscript expressions.
+
+        Handles level_names_inverse[level] lookups in addition to base class support.
+        """
+        # First try base class resolution
+        result = super()._resolve_f_string_value(value_node)
+        if result is not None:
+            return result
+
+        # Handle subscript expressions like location_name.level_names_inverse[level]
+        if value_node.get('type') == 'subscript':
+            return self._evaluate_subscript(value_node)
+
+        return None
+
     def _evaluate_subscript(self, node: Dict[str, Any]) -> Any:
         """
         Evaluate a subscript expression node.
@@ -245,36 +212,6 @@ class KDL3GameExportHandler(BaseGameExportHandler):
         else:
             logger.debug(f"Non-attribute value in subscript: {value_node}")
             return None
-
-    def _evaluate_binary_op(self, node: Dict[str, Any]) -> Any:
-        """Evaluate a binary operation node."""
-        if node.get('type') != 'binary_op':
-            return node
-
-        left = node.get('left', {})
-        right = node.get('right', {})
-        op = node.get('op', '')
-
-        # Get values
-        left_val = left.get('value') if left.get('type') == 'constant' else left
-        right_val = right.get('value') if right.get('type') == 'constant' else right
-
-        # Perform operation
-        if op == '-':
-            return left_val - right_val
-        elif op == '+':
-            return left_val + right_val
-        elif op == '*':
-            return left_val * right_val
-        elif op == '/':
-            return left_val / right_val
-        elif op == '//':
-            return left_val // right_val
-        elif op == '%':
-            return left_val % right_val
-        else:
-            logger.warning(f"Unknown binary operator: {op}")
-            return f"{left_val} {op} {right_val}"
     
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process the exported data to resolve f-strings in rules."""

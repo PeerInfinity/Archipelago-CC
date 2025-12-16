@@ -14,13 +14,6 @@ class MM2GameExportHandler(GenericGameExportHandler):
     Inherits all default behavior from GenericGameExportHandler.
     Injects module-level variables needed for helper function analysis.
     """
-    GAME_NAME = 'Mega Man 2'
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
-
-    # No helpers blacklisted - can_defeat_enough_rbms is now supported with
-    # tuple unpacking in for loops and map() function support
-    HELPERS_TO_EXPORT_BLACKLIST = set()
 
     # Parameter name mappings for helpers whose parameter names don't match slot_data keys.
     # Maps helper_name -> {param_name: slot_data_key}

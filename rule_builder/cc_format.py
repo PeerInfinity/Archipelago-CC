@@ -66,6 +66,7 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
         True_, False_, Has, HasAll, HasAny, HasAllCounts, HasAnyCount,
         HasFromList, HasFromListUnique, HasGroup, HasGroupUnique,
         And, Or, CanReachRegion, CanReachLocation, CanReachEntrance,
+        CCRule, Not, CountItem, Compare, Conditional,
     )
 
     rule_type = data.get('type')
@@ -95,8 +96,14 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
     elif rule_type == 'or':
         return _parse_or(data, world_cls)
 
+    elif rule_type == 'not':
+        return _parse_not(data, world_cls)
+
     elif rule_type == 'can_reach':
         return _parse_can_reach(data)
+
+    elif rule_type == 'region_check':
+        return _parse_region_check(data)
 
     elif rule_type == 'location_check':
         return _parse_location_check(data)
@@ -110,13 +117,16 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
     elif rule_type == 'helper':
         return _parse_helper(data, world_cls)
 
-    elif rule_type == 'compare':
+    elif rule_type == 'compare' or rule_type == 'comparison':
         return _parse_compare(data, world_cls)
 
+    elif rule_type == 'binary_op' or rule_type == 'binop':
+        return _parse_binary_op(data, world_cls)
+
     else:
-        # Unknown type - log warning and return True_ as fallback
-        logger.warning(f"Unknown CC rule type '{rule_type}', treating as True: {data}")
-        return True_()
+        # Unknown type - wrap in CCRule for explain support
+        logger.debug(f"Wrapping unknown CC rule type '{rule_type}' in CCRule")
+        return CCRule(rule_data=dict(data))
 
 
 def _parse_constant(data: Mapping[str, Any]) -> "Rule[Any]":
@@ -183,7 +193,7 @@ def _parse_state_method(data: Mapping[str, Any], world_cls: type["RuleWorldMixin
     """
     from rule_builder.rules import (
         Has, HasAll, HasAny, HasAllCounts, HasFromList, HasFromListUnique,
-        HasGroup, HasGroupUnique, CanReachRegion, CanReachLocation, True_
+        HasGroup, HasGroupUnique, CanReachRegion, CanReachLocation, CountItem, CCRule
     )
 
     method = data.get('method', '')
@@ -207,33 +217,33 @@ def _parse_state_method(data: Mapping[str, Any], world_cls: type["RuleWorldMixin
         items = get_arg_value(0, [])
         if isinstance(items, list):
             return HasAll(*items)
-        return True_()
+        return CCRule(rule_data=dict(data))
 
     elif method == 'has_any':
         items = get_arg_value(0, [])
         if isinstance(items, list):
             return HasAny(*items)
-        return True_()
+        return CCRule(rule_data=dict(data))
 
     elif method == 'has_all_counts':
         items = get_arg_value(0, {})
         if isinstance(items, dict):
             return HasAllCounts(item_counts=items)
-        return True_()
+        return CCRule(rule_data=dict(data))
 
     elif method == 'has_from_list':
         items = get_arg_value(0, [])
         count = get_arg_value(1, 1)
         if isinstance(items, list):
             return HasFromList(*items, count=count)
-        return True_()
+        return CCRule(rule_data=dict(data))
 
     elif method == 'has_from_list_unique':
         items = get_arg_value(0, [])
         count = get_arg_value(1, 1)
         if isinstance(items, list):
             return HasFromListUnique(*items, count=count)
-        return True_()
+        return CCRule(rule_data=dict(data))
 
     elif method == 'has_group':
         group = get_arg_value(0, '')
@@ -245,7 +255,7 @@ def _parse_state_method(data: Mapping[str, Any], world_cls: type["RuleWorldMixin
         count = get_arg_value(1, 1)
         return HasGroupUnique(item_name_group=group, count=count)
 
-    elif method == 'can_reach':
+    elif method == 'can_reach' or method == 'can_reach_region':
         name = get_arg_value(0, '')
         reach_type = get_arg_value(1, 'Region')
         if reach_type == 'Location':
@@ -253,9 +263,14 @@ def _parse_state_method(data: Mapping[str, Any], world_cls: type["RuleWorldMixin
         else:
             return CanReachRegion(region_name=name)
 
+    elif method == 'count':
+        item = get_arg_value(0, '')
+        return CountItem(item_name=item)
+
     else:
-        logger.warning(f"Unknown state_method '{method}', treating as True")
-        return True_()
+        # Unknown state method - wrap in CCRule for explain support
+        logger.debug(f"Wrapping unknown state_method '{method}' in CCRule")
+        return CCRule(rule_data=dict(data))
 
 
 def _parse_and(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
@@ -292,11 +307,33 @@ def _parse_or(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Ru
     return Or(*children)
 
 
+def _parse_not(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
+    """Parse a not rule: {"type": "not", "condition": {...}} or {"type": "not", "operand": {...}}"""
+    from rule_builder.rules import Not, True_
+
+    # Handle both 'condition' and 'operand' keys
+    condition = data.get('condition') or data.get('operand', {})
+
+    if not condition:
+        return True_()
+
+    child = parse_cc_rule(condition, world_cls)
+    return Not(child=child)
+
+
 def _parse_can_reach(data: Mapping[str, Any]) -> "Rule[Any]":
     """Parse a can_reach rule: {"type": "can_reach", "region": "Castle"}"""
     from rule_builder.rules import CanReachRegion
 
     region = data.get('region', '')
+    return CanReachRegion(region_name=region)
+
+
+def _parse_region_check(data: Mapping[str, Any]) -> "Rule[Any]":
+    """Parse a region_check rule: {"type": "region_check", "region": "Castle"}"""
+    from rule_builder.rules import CanReachRegion
+
+    region = _extract_value(data.get('region', ''), '')
     return CanReachRegion(region_name=region)
 
 
@@ -324,35 +361,33 @@ def _parse_conditional(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"
         {"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}
 
     This is complex because option filters in Rule Builder become conditionals in CC format.
-    For simplicity, we parse the if_true branch since option filtering is typically
-    handled at the world level.
+    We use the Conditional class to preserve all branches for explain support.
     """
-    from rule_builder.rules import True_
+    from rule_builder.rules import True_, Conditional
 
-    test = data.get('test', {})
-    if_true = data.get('if_true', {})
-    if_false = data.get('if_false', {})
+    test_data = data.get('test', {})
+    if_true_data = data.get('if_true', {})
+    if_false_data = data.get('if_false', {})
+
+    # Parse all branches
+    test_rule = parse_cc_rule(test_data, world_cls) if isinstance(test_data, dict) and test_data else True_()
+    if_true_rule = parse_cc_rule(if_true_data, world_cls) if isinstance(if_true_data, dict) and if_true_data else True_()
+    if_false_rule = parse_cc_rule(if_false_data, world_cls) if isinstance(if_false_data, dict) and if_false_data else True_()
 
     # Check if if_false is just True (typical for option-filtered rules)
     if_false_is_true = (
-        isinstance(if_false, dict) and
-        if_false.get('type') == 'constant' and
-        if_false.get('value') is True
+        isinstance(if_false_data, dict) and
+        if_false_data.get('type') == 'constant' and
+        if_false_data.get('value') is True
     )
 
     if if_false_is_true:
-        # This is an option-filtered rule - parse the if_true branch
+        # This is an option-filtered rule - parse the if_true branch directly
         # The option filtering will be handled by world options at runtime
-        if isinstance(if_true, dict):
-            return parse_cc_rule(if_true, world_cls)
+        return if_true_rule
 
-    # Complex conditional - for now, parse the if_true branch
-    # A more complete implementation would handle the test condition
-    logger.warning(f"Complex conditional rule, parsing if_true branch only")
-    if isinstance(if_true, dict):
-        return parse_cc_rule(if_true, world_cls)
-
-    return True_()
+    # Return a Conditional rule to preserve all branches for explain support
+    return Conditional(test=test_rule, if_true=if_true_rule, if_false=if_false_rule)
 
 
 def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
@@ -363,9 +398,10 @@ def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
         {"type": "helper", "name": "CustomRule", "args": [...]}
 
     Helper rules may have been converted from Rule Builder custom rules,
-    or may be game-specific logic.
+    or may be game-specific logic. Unknown helpers are wrapped in CCRule
+    for explain support.
     """
-    from rule_builder.rules import True_
+    from rule_builder.rules import CCRule
 
     helper_name = data.get('name', 'Unknown')
     args = data.get('args', [])
@@ -405,8 +441,9 @@ def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
             'args': parsed_args
         }, world_cls)
     except (ValueError, KeyError, AttributeError):
-        logger.warning(f"Unknown helper rule '{helper_name}', treating as True")
-        return True_()
+        # Unknown helper - wrap in CCRule for explain support
+        logger.debug(f"Wrapping unknown helper rule '{helper_name}' in CCRule")
+        return CCRule(rule_data=dict(data))
 
 
 def _parse_compare(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
@@ -420,22 +457,58 @@ def _parse_compare(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -
     - state.prog_items[player][item_name] >= count -> Has(item_name, count)
     - state.prog_items[player][item_name] > 0 -> Has(item_name, 1)
 
-    For other patterns, we log a warning and return True_ as fallback.
+    For other patterns, we use the Compare class to preserve for explain support.
     """
-    from rule_builder.rules import Has, True_
+    from rule_builder.rules import Has, Compare, CountItem
 
-    left = data.get('left', {})
+    left_data = data.get('left', {})
     op = data.get('op', '')
-    right = data.get('right', {})
+    right_data = data.get('right', {})
 
     # Try to recognize the pattern: state.prog_items[player][item_name] >= count
-    item_check = _try_parse_prog_items_check(left, op, right)
+    item_check = _try_parse_prog_items_check(left_data, op, right_data)
     if item_check is not None:
         return item_check
 
-    # Unknown compare pattern - return True_ as fallback
-    logger.warning(f"Unrecognized compare pattern, treating as True: {data}")
-    return True_()
+    # Parse left and right operands for Compare class
+    left_value = _parse_compare_operand(left_data, world_cls)
+    right_value = _parse_compare_operand(right_data, world_cls)
+
+    # Return a Compare rule to preserve for explain support
+    return Compare(left=left_value, op=op, right=right_value)
+
+
+def _parse_compare_operand(operand: Any, world_cls: type["RuleWorldMixin"]) -> Any:
+    """
+    Parse a compare operand into a value or Rule.
+
+    Handles constants, state_method calls, and nested rules.
+    """
+    from rule_builder.rules import CountItem
+
+    if not isinstance(operand, dict):
+        return operand
+
+    op_type = operand.get('type')
+
+    if op_type == 'constant':
+        return operand.get('value')
+
+    if op_type == 'state_method':
+        method = operand.get('method', '')
+        args = operand.get('args', [])
+
+        # Handle count method specially
+        if method == 'count':
+            if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                item_name = args[0].get('value', '')
+                return CountItem(item_name=item_name)
+
+    # For other types, try parsing as a rule
+    try:
+        return parse_cc_rule(operand, world_cls)
+    except (ValueError, KeyError):
+        return operand
 
 
 def _try_parse_prog_items_check(left: Any, op: str, right: Any) -> "Rule[Any] | None":
@@ -510,3 +583,74 @@ def _extract_prog_items_item_name(expr: Any) -> str | None:
         return None
 
     return item_name
+
+
+def _parse_binary_op(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
+    """
+    Parse a binary_op rule (arithmetic expression).
+
+    CC Format:
+        {"type": "binary_op", "left": {...}, "op": "*", "right": {...}}
+
+    Converts to Arithmetic rule for use in Compare expressions.
+    """
+    from rule_builder.rules import Arithmetic
+
+    left_data = data.get('left', {})
+    op = data.get('op', '+')
+    right_data = data.get('right', {})
+
+    # Normalize operator names from Python AST
+    op_map = {
+        'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+        'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+    }
+    op = op_map.get(op, op)
+
+    left = _parse_arithmetic_operand(left_data, world_cls)
+    right = _parse_arithmetic_operand(right_data, world_cls)
+
+    return Arithmetic(left=left, op=op, right=right)
+
+
+def _parse_arithmetic_operand(operand: Any, world_cls: type["RuleWorldMixin"]) -> Any:
+    """
+    Parse an arithmetic operand into a value or Rule.
+
+    Handles constants, state_method calls (count), and nested binary_ops.
+    """
+    from rule_builder.rules import CountItem, Arithmetic
+
+    if not isinstance(operand, dict):
+        return operand
+
+    op_type = operand.get('type')
+
+    if op_type == 'constant':
+        return operand.get('value', 0)
+
+    if op_type == 'state_method':
+        method = operand.get('method', '')
+        args = operand.get('args', [])
+
+        if method == 'count':
+            if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                item_name = args[0].get('value', '')
+                return CountItem(item_name=item_name)
+
+        if method == 'count_group_unique':
+            from rule_builder.rules import HasGroupUnique
+            if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                group_name = args[0].get('value', '')
+                # HasGroupUnique doesn't have get_value, so wrap for now
+                # This will evaluate as boolean (True=1, False=0 in Arithmetic)
+                return HasGroupUnique(item_name_group=group_name, count=1)
+
+    if op_type == 'binary_op' or op_type == 'binop':
+        return _parse_binary_op(operand, world_cls)
+
+    # For other types, try parsing as a rule
+    try:
+        return parse_cc_rule(operand, world_cls)
+    except (ValueError, KeyError):
+        return 0  # Default to 0 for unknown operands

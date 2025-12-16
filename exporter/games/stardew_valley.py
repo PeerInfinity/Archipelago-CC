@@ -17,8 +17,6 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
     The unique Has rules are then exported as helper definitions.
     """
 
-    GAME_NAME = 'Stardew Valley'
-
     # Threshold for preserving Has rules as helpers (in rule nodes)
     # Has rules with more than this many nodes will be preserved as helper calls
     # Set to 0 to disable (inline everything), or a positive number to enable

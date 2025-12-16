@@ -12,24 +12,14 @@ class TUNICGameExportHandler(GenericGameExportHandler):
 
     Exports ability_unlocks for runtime resolution and redirects Shop N regions to Shop.
     """
-    GAME_NAME = 'TUNIC'
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    # Note: has_combat_reqs is automatically detected as having dynamic for loops
-    # and is preserved as a helper without needing to be in HELPERS_TO_PRESERVE
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract TUNIC settings including ability_unlocks."""
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Export ability_unlocks for runtime subscript resolution
-        if hasattr(world, 'ability_unlocks'):
-            settings['ability_unlocks'] = world.ability_unlocks
-            logger.info(f"Exported ability_unlocks: {world.ability_unlocks}")
-
-        return settings
+    # Export ability_unlocks for runtime subscript resolution
+    COMPUTED_SETTINGS = {
+        'ability_unlocks': lambda w, m, p: getattr(w, 'ability_unlocks', None)
+    }
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process TUNIC export data.

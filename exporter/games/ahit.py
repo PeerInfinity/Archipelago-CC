@@ -14,26 +14,19 @@ evaluating the exported helper definitions directly.
 """
 
 from typing import Dict, Any, Set, Optional
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class AHitGameExportHandler(BaseGameExportHandler):
+class AHitGameExportHandler(GenericGameExportHandler):
     """A Hat in Time export handler with automatic helper export."""
-
-    GAME_NAME = 'A Hat in Time'
 
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
-
-    # No helpers blacklisted - can_clear_required_act is now resolved at export time
-    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
 
     # Preserve these helpers as helper calls (don't inline their bodies)
     # This is necessary for complex helpers that reference runtime objects
@@ -45,8 +38,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
     }
 
     def __init__(self, world=None):
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self._entrance_cache: Optional[Dict[str, str]] = None
 
     def _get_entrance_connected_region(self, entrance_name: str) -> Optional[str]:
@@ -134,25 +126,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
                     else:
                         logger.debug(f"Could not resolve entrance '{entrance_name}' for can_clear_required_act")
 
-        # Recursively process nested rules
-        if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
-        if rule_type == 'not':
-            if 'condition' in rule:
-                rule['condition'] = self.expand_rule(rule['condition'], _depth + 1)
-            if 'operand' in rule:
-                rule['operand'] = self.expand_rule(rule['operand'], _depth + 1)
-
-        if rule_type == 'conditional':
-            if 'test' in rule:
-                rule['test'] = self.expand_rule(rule['test'], _depth + 1)
-            if 'if_true' in rule:
-                rule['if_true'] = self.expand_rule(rule['if_true'], _depth + 1)
-            if 'if_false' in rule:
-                rule['if_false'] = self.expand_rule(rule['if_false'], _depth + 1)
-
-        # Let the parent class handle other expansions
+        # Let the parent class handle recursive expansion and other processing
         return super().expand_rule(rule, _depth)
 
     def get_settings_data(self, world, multiworld, player):
