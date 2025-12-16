@@ -15,6 +15,7 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
+from .converter import convert_rule_builder_to_cc
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
 
@@ -986,6 +987,28 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
     return export_data
 
+def _make_rule_dict_serializable(obj: Any) -> Any:
+    """
+    Recursively convert Rule.Resolved objects in a dict to their serializable form.
+
+    When to_dict() is called on a rule, nested rules (like in Compare.left)
+    may still be Rule.Resolved objects that need to be converted.
+    """
+    if hasattr(obj, 'to_dict') and callable(obj.to_dict):
+        # This is a Rule.Resolved object - convert it
+        return _make_rule_dict_serializable(obj.to_dict())
+    elif isinstance(obj, dict):
+        return {k: _make_rule_dict_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_make_rule_dict_serializable(item) for item in obj]
+    else:
+        # Primitive value (str, int, bool, etc.) or other non-rule object
+        # If it has __str__ and is a rule-like object, convert to string
+        if hasattr(obj, '__str__') and hasattr(obj, 'player'):
+            return str(obj)
+        return obj
+
+
 def process_regions(multiworld, player: int, game_handler=None, location_name_to_id: Dict[str, int] = None) -> tuple:
     """
     Process complete region data including all available backend data.
@@ -1022,14 +1045,21 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
             # Check if this is a Rule Builder Resolved rule with native serialization
             # Rule Builder rules have a to_dict() method that provides native JSON serialization
-            # The frontend now supports Rule Builder format natively, so we output it directly
+            # We convert from Rule Builder format to CC format for frontend compatibility
             if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
                 try:
                     rb_dict = rule_func.to_dict()
-                    # Cache and return Rule Builder format directly (frontend supports it natively)
-                    _rule_analysis_cache[cache_key] = rb_dict
-                    logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
-                    return rb_dict
+                    # Recursively convert nested Resolved objects to their dict form
+                    rb_dict = _make_rule_dict_serializable(rb_dict)
+                    # Convert Rule Builder format to CC format for frontend compatibility
+                    cc_dict, warnings = convert_rule_builder_to_cc(rb_dict)
+                    if warnings:
+                        for warning in warnings:
+                            logger.debug(f"Rule Builder to CC conversion warning for {target_type} '{rule_target_name}': {warning}")
+                    # Cache and return CC format
+                    _rule_analysis_cache[cache_key] = cc_dict
+                    logger.debug(f"Converted Rule Builder to CC format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
+                    return cc_dict
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback

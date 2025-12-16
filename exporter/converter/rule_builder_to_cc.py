@@ -88,6 +88,9 @@ class RuleBuilderToCC:
 
             # Helper calls
             'HelperCall': self._convert_helper_call,
+
+            # Comparison rules
+            'Compare': self._convert_compare,
         }
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
@@ -601,11 +604,14 @@ class RuleBuilderToCC:
 
         Rule Builder: {"rule": "HelperCall", "args": {"helper_name": "can_swim", "args": (), "body_data": {...}}}
         CC Format: {"type": "helper", "name": "can_swim", "args": [...]}
+
+        Note: We do NOT inline the body_data here. The frontend should look up helper
+        bodies from the helpers dictionary for proper evaluation (especially for helpers
+        that reference regions, to avoid circular dependency issues).
         """
         args = rule.get('args', {})
         helper_name = args.get('helper_name', 'unknown_helper')
         helper_args = args.get('args', ())
-        body_data = args.get('body_data')
 
         # Convert helper arguments to CC format
         converted_args = []
@@ -618,24 +624,47 @@ class RuleBuilderToCC:
             else:
                 converted_args.append({'type': 'constant', 'value': arg})
 
-        result = {
+        return {
             'type': 'helper',
             'name': helper_name,
             'args': converted_args
         }
 
-        # Include body_data if present - this allows the frontend to evaluate
-        # helpers that are inlined in the rule rather than in the helpers dictionary
-        if body_data:
-            # body_data may be wrapped with params: {'params': [...], 'body': {...}}
-            # or just the body directly for backward compatibility
-            if isinstance(body_data, dict) and 'params' in body_data and 'body' in body_data:
-                result['params'] = body_data['params']
-                result['body'] = body_data['body']
-            else:
-                result['body'] = body_data
+    # -------------------------------------------------------------------------
+    # Comparison Rule Converter
+    # -------------------------------------------------------------------------
 
-        return result
+    def _convert_compare(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert Compare rule to CC format compare expression.
+
+        Rule Builder: {"rule": "Compare", "args": {"left": "Helper:explore_score", "op": ">", "right": 2}}
+        CC Format: {"type": "compare", "left": {...}, "op": ">", "right": {"type": "constant", "value": 2}}
+        """
+        args = rule.get('args', {})
+        left_value = args.get('left', 0)
+        op = args.get('op', '==')
+        right_value = args.get('right', 0)
+
+        def convert_value(value):
+            """Convert a value to CC format."""
+            if isinstance(value, str) and value.startswith('Helper:'):
+                # Helper reference like "Helper:explore_score"
+                helper_name = value[7:]  # Remove "Helper:" prefix
+                return {'type': 'helper', 'name': helper_name, 'args': []}
+            elif isinstance(value, dict):
+                # Nested rule - convert recursively
+                return self._convert_rule(value)
+            else:
+                # Constant value
+                return {'type': 'constant', 'value': value}
+
+        return {
+            'type': 'compare',
+            'left': convert_value(left_value),
+            'op': op,
+            'right': convert_value(right_value)
+        }
 
     # -------------------------------------------------------------------------
     # Unknown/Custom Rule Handler
