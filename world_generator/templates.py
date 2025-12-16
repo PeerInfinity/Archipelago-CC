@@ -692,6 +692,50 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         prog_items_init_section = ''
 
+    # Generate progression_mapping section (for progressive items like progressive-processing)
+    progression_mapping_section = ''
+    collect_item_section = ''
+    if data.progression_mapping:
+        prog_map_entries = []
+        for prog_name, components in data.progression_mapping.items():
+            prog_escaped = prog_name.replace('\\', '\\\\').replace('"', '\\"')
+            components_list = ', '.join(f'"{c.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for c in components)
+            prog_map_entries.append(f'        "{prog_escaped}": [{components_list}],')
+        prog_map_content = '\n'.join(prog_map_entries)
+
+        progression_mapping_section = f'''
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {{
+{prog_map_content}
+    }}
+'''
+
+        collect_item_section = '''
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
+'''
+
     # Generate canonical_placements class attribute (for exporter to read)
     if canonical_seed1 and canonical_class_attr_content:
         canonical_placements_section = f'''
@@ -901,7 +945,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{canonical_placements_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -960,7 +1004,7 @@ class {world_class}(RuleWorldMixin, World):
         data = item_table[name]
         return {class_name}Item(name, data.classification, data.id, self.player)
 
-{fill_slot_data_section}'''
+{collect_item_section}{fill_slot_data_section}'''
 
 
 def _classification_to_enum(classification: str) -> str:
