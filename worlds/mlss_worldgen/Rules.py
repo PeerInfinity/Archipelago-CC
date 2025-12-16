@@ -265,6 +265,14 @@ def set_rules(world: "World") -> None:
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Enter Fungitown Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("Shop Mom Piranha Flag"),
         multiworld.get_entrance("Shop Chuckolator Flag", player)
     )
@@ -273,15 +281,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Shop Chuckolator Flag", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Shop Enter Fungitown Flag"),
-        multiworld.get_entrance("Shop Chuckolator Flag", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Shop Birdo Flag"),
-        multiworld.get_entrance("Shop Chuckolator Flag", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Shop Beanstar Complete Flag"),
         multiworld.get_entrance("Shop Mom Piranha Flag", player)
     )
     multiworld.register_indirect_condition(
@@ -289,15 +289,15 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Shop Mom Piranha Flag", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Shop Birdo Flag"),
+        world.get_region("Shop Beanstar Complete Flag"),
         multiworld.get_entrance("Shop Mom Piranha Flag", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Shop Beanstar Complete Flag"),
+        world.get_region("Shop Birdo Flag"),
         multiworld.get_entrance("Shop Enter Fungitown Flag", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Shop Birdo Flag"),
+        world.get_region("Shop Beanstar Complete Flag"),
         multiworld.get_entrance("Shop Enter Fungitown Flag", player)
     )
     multiworld.register_indirect_condition(

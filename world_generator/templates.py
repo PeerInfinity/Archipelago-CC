@@ -19,19 +19,21 @@ def sanitize_class_name(name: str) -> str:
     return re.sub(r'[^a-zA-Z0-9]', '', name)
 
 
-def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> Set[str]:
+def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> List[str]:
     """Extract region names from can_reach calls in a rule.
 
     This finds all state.can_reach("RegionName", "Region") calls
     that indicate the rule depends on a region's accessibility.
     Also resolves helper function calls to find can_reach calls in helper bodies.
 
+    Returns dependencies in the order they are encountered (preserves input order).
+
     Args:
         rule: The rule dict to analyze
         helpers: Dictionary of helper name to HelperData for resolving helper calls
         visited_helpers: Set of already visited helper names to prevent infinite recursion
     """
-    dependencies = set()
+    dependencies = []
 
     if not isinstance(rule, dict):
         return dependencies
@@ -63,7 +65,8 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
 
             # Only include Region dependencies (not Location or Entrance)
             if target_name and target_type == 'Region':
-                dependencies.add(target_name)
+                if target_name not in dependencies:
+                    dependencies.append(target_name)
 
     # Check for helper calls and resolve them
     if rule_type == 'helper':
@@ -72,21 +75,29 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
             visited_helpers.add(helper_name)
             helper_data = helpers[helper_name]
             if helper_data.body:
-                dependencies.update(_extract_region_dependencies(helper_data.body, helpers, visited_helpers))
+                for dep in _extract_region_dependencies(helper_data.body, helpers, visited_helpers):
+                    if dep not in dependencies:
+                        dependencies.append(dep)
 
     # Recurse into nested rules
     for key in ('conditions', 'children', 'if_true', 'if_false', 'test', 'args'):
         value = rule.get(key)
         if isinstance(value, list):
             for item in value:
-                dependencies.update(_extract_region_dependencies(item, helpers, visited_helpers))
+                for dep in _extract_region_dependencies(item, helpers, visited_helpers):
+                    if dep not in dependencies:
+                        dependencies.append(dep)
         elif isinstance(value, dict):
-            dependencies.update(_extract_region_dependencies(value, helpers, visited_helpers))
+            for dep in _extract_region_dependencies(value, helpers, visited_helpers):
+                if dep not in dependencies:
+                    dependencies.append(dep)
 
     # Check helper body field for inline helpers
     body = rule.get('body')
     if body:
-        dependencies.update(_extract_region_dependencies(body, helpers, visited_helpers))
+        for dep in _extract_region_dependencies(body, helpers, visited_helpers):
+            if dep not in dependencies:
+                dependencies.append(dep)
 
     return dependencies
 

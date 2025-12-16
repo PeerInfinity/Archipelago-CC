@@ -517,11 +517,13 @@ def compute_state_counter_accumulator_rules(
 
     # Find items that are used in rules but have id=None (event/counter items)
     # and have a name pattern like " coins" or " coins freemium"
-    counter_items = set()
+    # Use a list to preserve input order for deterministic output
+    counter_items = []
     for item_name, item_data in items.items():
         if item_data.item_id is None and item_name.startswith(' '):
             # This looks like a counter item (e.g., " coins")
-            counter_items.add(item_name)
+            if item_name not in counter_items:
+                counter_items.append(item_name)
 
     if not counter_items:
         return accumulator_rules, prog_items_init
