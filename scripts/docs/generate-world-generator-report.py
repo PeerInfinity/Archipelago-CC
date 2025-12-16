@@ -18,7 +18,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 
 def get_project_root() -> str:
@@ -72,10 +72,14 @@ def compute_summary_stats(results: Dict) -> Dict:
         'total_templates': 0,
         'successful_generations': 0,
         'failed_generations': 0,
+        'original_spoiler_passed': 0,
+        'original_spoiler_failed': 0,
         'successful_test_worlds': 0,
         'failed_test_worlds': 0,
         'successful_test_seeds': 0,
         'failed_test_seeds': 0,
+        'test_spoiler_passed': 0,
+        'test_spoiler_failed': 0,
         'cross_validation_passed': 0,
         'cross_validation_failed': 0,
     }
@@ -96,6 +100,13 @@ def compute_summary_stats(results: Dict) -> Dict:
         elif orig_gen:  # Only count as failed if there was an attempt
             stats['failed_generations'] += 1
 
+        # Original spoiler test
+        orig_spoiler = result.get('original', {}).get('spoiler_test', {})
+        if orig_spoiler.get('pass_fail') == 'pass':
+            stats['original_spoiler_passed'] += 1
+        elif orig_spoiler.get('pass_fail') == 'fail':
+            stats['original_spoiler_failed'] += 1
+
         # Test world generation (rules.json -> test world)
         world_gen = result.get('test_world', {}).get('world_generation', {})
         if world_gen.get('success'):
@@ -110,6 +121,13 @@ def compute_summary_stats(results: Dict) -> Dict:
         elif seed_gen:
             stats['failed_test_seeds'] += 1
 
+        # Test world spoiler test
+        test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
+        if test_spoiler.get('pass_fail') == 'pass':
+            stats['test_spoiler_passed'] += 1
+        elif test_spoiler.get('pass_fail') == 'fail':
+            stats['test_spoiler_failed'] += 1
+
         # Cross-validation
         cross_val = result.get('test_world', {}).get('cross_validation', {})
         if cross_val.get('pass_fail') == 'pass':
@@ -118,6 +136,259 @@ def compute_summary_stats(results: Dict) -> Dict:
             stats['cross_validation_failed'] += 1
 
     return stats
+
+
+def extract_processing_times(results: Dict) -> Dict[str, Dict[str, float]]:
+    """
+    Extract processing times for each game from results.
+
+    Returns dict mapping game_name to dict of timing categories:
+    - original_gen: Original seed generation time
+    - original_test: Original spoiler test time
+    - world_gen: World generator time
+    - test_gen: Test seed generation time
+    - test_spoiler: Test spoiler test time
+    """
+    template_results = results.get('results', {})
+    times = {}
+
+    # Handle both dict and list formats
+    if isinstance(template_results, dict):
+        results_items = list(template_results.items())
+    else:
+        results_items = [(r.get('game_name', 'Unknown'), r) for r in template_results]
+
+    for game_name, result in results_items:
+        game_times = {}
+
+        # Original generation time
+        orig_gen = result.get('original', {}).get('generation', {})
+        if orig_gen.get('processing_time_seconds'):
+            game_times['original_gen'] = orig_gen['processing_time_seconds']
+
+        # Original spoiler test time
+        orig_test = result.get('original', {}).get('spoiler_test', {})
+        if orig_test.get('processing_time_seconds'):
+            game_times['original_test'] = orig_test['processing_time_seconds']
+
+        # World generation time
+        world_gen = result.get('test_world', {}).get('world_generation', {})
+        if world_gen.get('processing_time_seconds'):
+            game_times['world_gen'] = world_gen['processing_time_seconds']
+
+        # Test seed generation time
+        test_gen = result.get('test_world', {}).get('seed_generation', {})
+        if test_gen.get('processing_time_seconds'):
+            game_times['test_gen'] = test_gen['processing_time_seconds']
+
+        # Test spoiler test time
+        test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
+        if test_spoiler.get('processing_time_seconds'):
+            game_times['test_spoiler'] = test_spoiler['processing_time_seconds']
+
+        if game_times:
+            times[game_name] = game_times
+
+    return times
+
+
+def compute_time_statistics(times: Dict[str, Dict[str, float]], category: str) -> Dict[str, Any]:
+    """Compute statistics for a specific timing category."""
+    values = []
+    for game_name, game_times in times.items():
+        if category in game_times:
+            values.append((game_name, game_times[category]))
+
+    if not values:
+        return {'total': 0, 'average': 0, 'max': 0, 'min': 0, 'count': 0,
+                'slowest': ('N/A', 0), 'fastest': ('N/A', 0)}
+
+    times_only = [v[1] for v in values]
+    sorted_by_time = sorted(values, key=lambda x: x[1], reverse=True)
+
+    return {
+        'total': sum(times_only),
+        'average': sum(times_only) / len(times_only),
+        'max': max(times_only),
+        'min': min(times_only),
+        'count': len(values),
+        'slowest': sorted_by_time[0],
+        'fastest': sorted_by_time[-1],
+        'top_10': sorted_by_time[:10]
+    }
+
+
+def generate_time_summary_table(times: Dict[str, Dict[str, float]]) -> str:
+    """Generate summary statistics table for processing times."""
+    categories = [
+        ('original_gen', 'Original Gen'),
+        ('original_test', 'Original Test'),
+        ('world_gen', 'World Gen'),
+        ('test_gen', 'Test Gen'),
+        ('test_spoiler', 'Test Spoiler')
+    ]
+
+    stats = {cat: compute_time_statistics(times, cat) for cat, _ in categories}
+
+    lines = [
+        "### Summary Statistics",
+        "",
+        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler |",
+        "|--------|--------------|---------------|-----------|----------|--------------|",
+    ]
+
+    # Total row
+    row = "| Total |"
+    for cat, _ in categories:
+        row += f" {stats[cat]['total']:.1f}s |"
+    lines.append(row)
+
+    # Average row
+    row = "| Average |"
+    for cat, _ in categories:
+        row += f" {stats[cat]['average']:.1f}s |"
+    lines.append(row)
+
+    # Max row
+    row = "| Max |"
+    for cat, _ in categories:
+        row += f" {stats[cat]['max']:.1f}s |"
+    lines.append(row)
+
+    # Min row
+    row = "| Min |"
+    for cat, _ in categories:
+        if stats[cat]['count'] > 0:
+            row += f" {stats[cat]['min']:.1f}s |"
+        else:
+            row += " N/A |"
+    lines.append(row)
+
+    lines.append("")
+    return '\n'.join(lines)
+
+
+def generate_slowest_fastest_table(times: Dict[str, Dict[str, float]]) -> str:
+    """Generate table showing slowest and fastest games per category."""
+    categories = [
+        ('original_gen', 'Original Gen'),
+        ('original_test', 'Original Test'),
+        ('world_gen', 'World Gen'),
+        ('test_gen', 'Test Gen'),
+        ('test_spoiler', 'Test Spoiler')
+    ]
+
+    stats = {cat: compute_time_statistics(times, cat) for cat, _ in categories}
+
+    lines = [
+        "### Slowest and Fastest Games",
+        "",
+        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler |",
+        "|--------|--------------|---------------|-----------|----------|--------------|",
+    ]
+
+    # Slowest row
+    row = "| Slowest |"
+    for cat, _ in categories:
+        name, time = stats[cat]['slowest']
+        if name != 'N/A':
+            row += f" {name} ({time:.1f}s) |"
+        else:
+            row += " N/A |"
+    lines.append(row)
+
+    # Fastest row
+    row = "| Fastest |"
+    for cat, _ in categories:
+        name, time = stats[cat]['fastest']
+        if name != 'N/A':
+            row += f" {name} ({time:.1f}s) |"
+        else:
+            row += " N/A |"
+    lines.append(row)
+
+    lines.append("")
+    return '\n'.join(lines)
+
+
+def generate_processing_times_table(times: Dict[str, Dict[str, float]]) -> str:
+    """Generate table with processing times for each game."""
+    lines = [
+        "### Individual Game Processing Times",
+        "",
+        "| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler |",
+        "|------|--------------|---------------|-----------|----------|--------------|",
+    ]
+
+    for game_name in sorted(times.keys()):
+        game_times = times[game_name]
+        row = f"| {game_name} |"
+        for cat in ['original_gen', 'original_test', 'world_gen', 'test_gen', 'test_spoiler']:
+            if cat in game_times:
+                row += f" {game_times[cat]:.1f}s |"
+            else:
+                row += " - |"
+        lines.append(row)
+
+    lines.append("")
+    return '\n'.join(lines)
+
+
+def generate_top_10_section(times: Dict[str, Dict[str, float]]) -> str:
+    """Generate section showing top 10 longest times for each category."""
+    categories = [
+        ('original_gen', 'Original Generation'),
+        ('original_test', 'Original Spoiler Test'),
+        ('world_gen', 'World Generation'),
+        ('test_gen', 'Test Seed Generation'),
+        ('test_spoiler', 'Test Spoiler Test')
+    ]
+
+    lines = [
+        "### Top 10 Longest Processing Times",
+        "",
+    ]
+
+    for cat, display_name in categories:
+        stats = compute_time_statistics(times, cat)
+        top_10 = stats.get('top_10', [])
+
+        if not top_10:
+            continue
+
+        lines.append(f"#### {display_name}")
+        lines.append("")
+        lines.append("| Rank | Game | Time |")
+        lines.append("|------|------|------|")
+
+        for i, (game_name, time) in enumerate(top_10, 1):
+            lines.append(f"| {i} | {game_name} | {time:.1f}s |")
+
+        lines.append("")
+
+    return '\n'.join(lines)
+
+
+def generate_processing_times_section(results: Dict, title: str = "Processing Times") -> str:
+    """Generate complete processing times section."""
+    times = extract_processing_times(results)
+
+    if not times:
+        return f"## {title}\n\nNo processing time data available.\n"
+
+    lines = [
+        f"## {title}",
+        "",
+        "Processing times for each test phase. Times are in seconds.",
+        "",
+    ]
+
+    lines.append(generate_time_summary_table(times))
+    lines.append(generate_slowest_fastest_table(times))
+    lines.append(generate_processing_times_table(times))
+    lines.append(generate_top_10_section(times))
+
+    return '\n'.join(lines)
 
 
 def generate_summary_table(results: Dict, title: str = "Summary") -> str:
@@ -130,20 +401,27 @@ def generate_summary_table(results: Dict, title: str = "Summary") -> str:
     else:
         stats = compute_summary_stats(results)
 
+    # Calculate totals for each step
+    orig_gen_total = stats.get('successful_generations', 0) + stats.get('failed_generations', 0)
+    orig_spoiler_total = stats.get('original_spoiler_passed', 0) + stats.get('original_spoiler_failed', 0)
+    world_gen_total = stats.get('successful_test_worlds', 0) + stats.get('failed_test_worlds', 0)
+    test_seed_total = stats.get('successful_test_seeds', 0) + stats.get('failed_test_seeds', 0)
+    test_spoiler_total = stats.get('test_spoiler_passed', 0) + stats.get('test_spoiler_failed', 0)
+    cross_val_total = stats.get('cross_validation_passed', 0) + stats.get('cross_validation_failed', 0)
+
     lines = [
         f"## {title}",
         "",
-        "| Metric | Count |",
-        "|--------|-------|",
-        f"| Total Templates | {stats.get('total_templates', 0)} |",
-        f"| Successful Original Generations | {stats.get('successful_generations', 0)} |",
-        f"| Failed Original Generations | {stats.get('failed_generations', 0)} |",
-        f"| Successful Test World Generations | {stats.get('successful_test_worlds', 0)} |",
-        f"| Failed Test World Generations | {stats.get('failed_test_worlds', 0)} |",
-        f"| Successful Test Seed Generations | {stats.get('successful_test_seeds', 0)} |",
-        f"| Failed Test Seed Generations | {stats.get('failed_test_seeds', 0)} |",
-        f"| Cross-Validation Passed | {stats.get('cross_validation_passed', 0)} |",
-        f"| Cross-Validation Failed | {stats.get('cross_validation_failed', 0)} |",
+        f"**Total Templates:** {stats.get('total_templates', 0)}",
+        "",
+        "| Step | Passed | Failed | Total |",
+        "|------|--------|--------|-------|",
+        f"| Original Generation | {stats.get('successful_generations', 0)} | {stats.get('failed_generations', 0)} | {orig_gen_total} |",
+        f"| Original Spoiler Test | {stats.get('original_spoiler_passed', 0)} | {stats.get('original_spoiler_failed', 0)} | {orig_spoiler_total} |",
+        f"| Test World Generation | {stats.get('successful_test_worlds', 0)} | {stats.get('failed_test_worlds', 0)} | {world_gen_total} |",
+        f"| Test Seed Generation | {stats.get('successful_test_seeds', 0)} | {stats.get('failed_test_seeds', 0)} | {test_seed_total} |",
+        f"| Test Spoiler Test | {stats.get('test_spoiler_passed', 0)} | {stats.get('test_spoiler_failed', 0)} | {test_spoiler_total} |",
+        f"| Cross-Validation | {stats.get('cross_validation_passed', 0)} | {stats.get('cross_validation_failed', 0)} | {cross_val_total} |",
         "",
     ]
 
@@ -377,6 +655,11 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
     lines.append(generate_summary_table(results))
     lines.append(generate_results_table(results))
 
+    # Add processing times section
+    lines.append("---")
+    lines.append("")
+    lines.append(generate_processing_times_section(results))
+
     return '\n'.join(lines)
 
 
@@ -441,6 +724,17 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
 
     lines.append(generate_summary_table(random_results, "Random Summary"))
     lines.append(generate_results_table(random_results, "Random Detailed Results"))
+
+    # Add processing times sections
+    lines.append("---")
+    lines.append("")
+    lines.append("# Processing Times")
+    lines.append("")
+
+    lines.append(generate_processing_times_section(canonical_results, "Canonical Processing Times"))
+    lines.append("---")
+    lines.append("")
+    lines.append(generate_processing_times_section(random_results, "Random Processing Times"))
 
     return '\n'.join(lines)
 
