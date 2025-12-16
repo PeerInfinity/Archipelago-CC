@@ -25,8 +25,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Boss Item": 3,
     "Commencement": 1,
     "Common Item": 39,
-    "Dio's Best Friend": 8,
-    "Distant Roost": 1,
+    "Dio's Best Friend": 7,  # 8 total minus 1 starting item
     "Distant Roost (2)": 1,
     "Equipment": 18,
     "Hidden Realm: A Moment, Fractured": 1,
