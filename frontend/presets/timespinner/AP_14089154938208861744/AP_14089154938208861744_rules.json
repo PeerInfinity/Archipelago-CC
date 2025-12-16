@@ -9126,7 +9126,8 @@
       "pyramid_keys_unlock": "GateLakeSereneRight",
       "present_keys_unlock": "GateSealedSirensCave",
       "past_keys_unlock": "GateLakeSereneRight",
-      "time_keys_unlock": "GateRightPyramid"
+      "time_keys_unlock": "GateRightPyramid",
+      "world_directory": "timespinner"
     }
   },
   "game_info": {
@@ -9752,25 +9753,19 @@
         }
       },
       "has_doublejump": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Celestial Sash"
-              },
-              {
-                "type": "constant",
-                "value": "Lightwall"
-              },
-              {
-                "type": "constant",
-                "value": "Succubus Hairpin"
-              }
-            ]
+            "type": "item_check",
+            "item": "Celestial Sash"
+          },
+          {
+            "type": "item_check",
+            "item": "Lightwall"
+          },
+          {
+            "type": "item_check",
+            "item": "Succubus Hairpin"
           }
         ]
       },
@@ -9799,48 +9794,36 @@
         ]
       },
       "has_fastjump_on_npc": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Talaria Attachment"
-              },
-              {
-                "type": "constant",
-                "value": "Timespinner Wheel"
-              }
-            ]
+            "type": "item_check",
+            "item": "Talaria Attachment"
+          },
+          {
+            "type": "item_check",
+            "item": "Timespinner Wheel"
           }
         ]
       },
       "has_fire": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Djinn Inferno"
-              },
-              {
-                "type": "constant",
-                "value": "Fire Orb"
-              },
-              {
-                "type": "constant",
-                "value": "Infernal Flames"
-              },
-              {
-                "type": "constant",
-                "value": "Pyro Ring"
-              }
-            ]
+            "type": "item_check",
+            "item": "Djinn Inferno"
+          },
+          {
+            "type": "item_check",
+            "item": "Fire Orb"
+          },
+          {
+            "type": "item_check",
+            "item": "Infernal Flames"
+          },
+          {
+            "type": "item_check",
+            "item": "Pyro Ring"
           }
         ]
       },
@@ -9907,71 +9890,53 @@
         }
       },
       "has_pink": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Plasma Geyser"
-              },
-              {
-                "type": "constant",
-                "value": "Plasma Orb"
-              },
-              {
-                "type": "constant",
-                "value": "Royal Ring"
-              }
-            ]
+            "type": "item_check",
+            "item": "Plasma Geyser"
+          },
+          {
+            "type": "item_check",
+            "item": "Plasma Orb"
+          },
+          {
+            "type": "item_check",
+            "item": "Royal Ring"
           }
         ]
       },
       "has_timestop": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Celestial Sash"
-              },
-              {
-                "type": "constant",
-                "value": "Lightwall"
-              },
-              {
-                "type": "constant",
-                "value": "Succubus Hairpin"
-              },
-              {
-                "type": "constant",
-                "value": "Timespinner Wheel"
-              }
-            ]
+            "type": "item_check",
+            "item": "Celestial Sash"
+          },
+          {
+            "type": "item_check",
+            "item": "Lightwall"
+          },
+          {
+            "type": "item_check",
+            "item": "Succubus Hairpin"
+          },
+          {
+            "type": "item_check",
+            "item": "Timespinner Wheel"
           }
         ]
       },
       "has_upwarddash": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Celestial Sash"
-              },
-              {
-                "type": "constant",
-                "value": "Lightwall"
-              }
-            ]
+            "type": "item_check",
+            "item": "Celestial Sash"
+          },
+          {
+            "type": "item_check",
+            "item": "Lightwall"
           }
         ]
       }

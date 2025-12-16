@@ -41270,7 +41270,8 @@
             "misc": 0
           }
         ]
-      }
+      },
+      "world_directory": "marioland2"
     }
   },
   "game_info": {

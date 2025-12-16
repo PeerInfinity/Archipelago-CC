@@ -3714,7 +3714,8 @@
       "strict_cap_requirements": true,
       "strict_cannon_requirements": true,
       "strict_move_requirements": true,
-      "area_rando": 0
+      "area_rando": 0,
+      "world_directory": "sm64ex"
     }
   },
   "game_info": {

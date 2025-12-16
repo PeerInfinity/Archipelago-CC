@@ -3029,7 +3029,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "shorthike_worldgen"
     }
   },
   "game_info": {

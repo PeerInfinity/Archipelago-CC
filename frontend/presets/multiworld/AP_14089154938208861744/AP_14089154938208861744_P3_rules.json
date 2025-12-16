@@ -3065,7 +3065,8 @@
         "start_location_hints": [],
         "sticks": 8,
         "toy_shovels": 5
-      }
+      },
+      "world_directory": "shorthike"
     }
   },
   "game_info": {

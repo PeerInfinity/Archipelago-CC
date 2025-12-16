@@ -11248,7 +11248,8 @@
         "start_inventory_from_pool": {},
         "start_location_hints": [],
         "start_with_computer_area_maps": 0
-      }
+      },
+      "world_directory": "doom_1993"
     }
   },
   "game_info": {

@@ -48,13 +48,13 @@ Playthrough:
 
 }
 1: {
-  NPC Trinket: Trinket 07
   Overworld (Left of Ship): Trinket 03
   Overworld (Sad Elephant): Trinket 01
   Overworld (Square Room): Trinket 08
   Trench Warfare: Trinket 02
 }
 2: {
+  NPC Trinket: Trinket 07
   Purest Unobtainium: Trinket 10
   The Tantalizing Trinket: Trinket 09
   Young Man, It's Worth the Challenge: Trinket 04

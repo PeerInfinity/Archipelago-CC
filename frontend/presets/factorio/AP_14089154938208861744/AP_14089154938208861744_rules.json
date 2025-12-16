@@ -10389,6 +10389,105 @@
   },
   "items": {
     "1": {
+      "Inventory Spill Trap": {
+        "name": "Inventory Spill Trap",
+        "id": 131063,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Atomic Cliff Remover Trap": {
+        "name": "Atomic Cliff Remover Trap",
+        "id": 131064,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Atomic Rocket Trap": {
+        "name": "Atomic Rocket Trap",
+        "id": 131065,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Artillery Trap": {
+        "name": "Artillery Trap",
+        "id": 131066,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cluster Grenade Trap": {
+        "name": "Cluster Grenade Trap",
+        "id": 131067,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Grenade Trap": {
+        "name": "Grenade Trap",
+        "id": 131068,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Teleport Trap": {
+        "name": "Teleport Trap",
+        "id": 131069,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Evolution Trap": {
+        "name": "Evolution Trap",
+        "id": 131070,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Attack Trap": {
+        "name": "Attack Trap",
+        "id": 131071,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
       "advanced-circuit": {
         "name": "advanced-circuit",
         "hint_text": "advanced circuit",
@@ -12952,105 +13051,6 @@
         "max_count": 3,
         "classification": "filler"
       },
-      "Attack Trap": {
-        "name": "Attack Trap",
-        "id": 131071,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Evolution Trap": {
-        "name": "Evolution Trap",
-        "id": 131070,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Teleport Trap": {
-        "name": "Teleport Trap",
-        "id": 131069,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Grenade Trap": {
-        "name": "Grenade Trap",
-        "id": 131068,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Cluster Grenade Trap": {
-        "name": "Cluster Grenade Trap",
-        "id": 131067,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Artillery Trap": {
-        "name": "Artillery Trap",
-        "id": 131066,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Atomic Rocket Trap": {
-        "name": "Atomic Rocket Trap",
-        "id": 131065,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Atomic Cliff Remover Trap": {
-        "name": "Atomic Cliff Remover Trap",
-        "id": 131064,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
-      "Inventory Spill Trap": {
-        "name": "Inventory Spill Trap",
-        "id": 131063,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler"
-      },
       "Victory": {
         "name": "Victory",
         "id": null,
@@ -14401,7 +14401,8 @@
             }
           }
         }
-      }
+      },
+      "world_directory": "factorio"
     }
   },
   "game_info": {
@@ -14410,6 +14411,20 @@
       "rule_format": {
         "version": "1.0"
       },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Archipelago Factorio software on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Berserker, Farrak Kilhn"
+          ]
+        }
+      ],
+      "world_description": "Factorio is a game about automation. You play as an engineer who has crash landed on the planet\nNauvis, an inhospitable world filled with dangerous creatures called biters. Build a factory,\nresearch new technologies, and become more efficient in your quest to build a rocket and return home.",
       "variables": {
         "required_technologies": {
           "wood": [],

@@ -1789,7 +1789,8 @@
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "wargroove"
     }
   },
   "game_info": {

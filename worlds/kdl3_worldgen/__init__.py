@@ -595,6 +595,7 @@ class KirbysDreamLand3WorldGenWorld(RuleWorldMixin, World):
         "Copy Ability": frozenset(["Burning", "Stone", "Ice", "Needle", "Clean", "Parasol", "Spark", "Cutter"]),
         "Everything": frozenset(["Burning", "Stone", "Ice", "Needle", "Clean", "Parasol", "Spark", "Cutter", "Rick", "Kine", "Coo", "Nago", "ChuChu", "Pitch", "Heart Star", "1-Up", "Maxim Tomato", "Invincible Candy", "Little Star", "Medium Star", "Big Star", "Gooey Bag", "Slowness", "Eject Ability"]),
         "Animal Friend": frozenset(["Rick", "Kine", "Coo", "Nago", "ChuChu", "Pitch"]),
+        "Event": frozenset(["No Ability", "Cutter Ability", "Spark Ability", "Parasol Ability", "Nago Spawn", "Rick Spawn", "Stone Ability", "Clean Ability", "Burning Ability", "ChuChu Spawn", "Pitch Spawn", "Needle Ability", "Kine Spawn", "Coo Spawn", "Level 1 Boss Defeated", "Level 1 Boss Purified", "Level 2 Boss Defeated", "Level 2 Boss Purified", "Ice Ability", "Level 3 Boss Defeated", "Level 3 Boss Purified", "Level 4 Boss Defeated", "Level 4 Boss Purified", "Level 5 Boss Defeated", "Level 5 Boss Purified", "Grass Land - Stage Completion", "Ripple Field - Stage Completion", "Sand Canyon - Stage Completion", "Cloudy Park - Stage Completion", "Iceberg - Stage Completion", "Love-Love Rod"]),
     }
 
     # Canonical item placements - where items belong in the "vanilla" game

@@ -18,51 +18,51 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Arrows (10)": 24,
-    "Blue Boomerang": 2,
-    "Bombos": 2,
-    "Bombs (10)": 2,
-    "Bombs (3)": 32,
-    "Book of Mudora": 2,
-    "Boss Heart Container": 20,
-    "Bottle (Bee)": 2,
-    "Bottle (Blue Potion)": 4,
-    "Bottle (Red Potion)": 2,
-    "Bug Catching Net": 2,
-    "Cane of Byrna": 2,
-    "Cane of Somaria": 2,
-    "Cape": 2,
-    "Ether": 2,
-    "Fire Rod": 2,
-    "Flippers": 2,
-    "Flute": 2,
-    "Hammer": 2,
-    "Hookshot": 2,
-    "Ice Rod": 2,
-    "Lamp": 2,
-    "Magic Mirror": 2,
-    "Magic Powder": 2,
-    "Magic Upgrade (1/2)": 2,
-    "Moon Pearl": 2,
-    "Mushroom": 2,
-    "Pegasus Boots": 2,
-    "Piece of Heart": 48,
-    "Progressive Bow": 4,
-    "Progressive Glove": 4,
-    "Progressive Mail": 4,
-    "Progressive Shield": 6,
-    "Progressive Sword": 8,
-    "Quake": 2,
-    "Red Boomerang": 2,
-    "Rupee (1)": 4,
-    "Rupees (100)": 2,
-    "Rupees (20)": 56,
-    "Rupees (300)": 10,
-    "Rupees (5)": 8,
-    "Rupees (50)": 14,
-    "Sanctuary Heart Container": 2,
-    "Shovel": 2,
-    "Single Arrow": 2,
+    "Arrows (10)": 12,
+    "Blue Boomerang": 1,
+    "Bombos": 1,
+    "Bombs (10)": 1,
+    "Bombs (3)": 16,
+    "Book of Mudora": 1,
+    "Boss Heart Container": 10,
+    "Bottle (Bee)": 1,
+    "Bottle (Blue Potion)": 2,
+    "Bottle (Red Potion)": 1,
+    "Bug Catching Net": 1,
+    "Cane of Byrna": 1,
+    "Cane of Somaria": 1,
+    "Cape": 1,
+    "Ether": 1,
+    "Fire Rod": 1,
+    "Flippers": 1,
+    "Flute": 1,
+    "Hammer": 1,
+    "Hookshot": 1,
+    "Ice Rod": 1,
+    "Lamp": 1,
+    "Magic Mirror": 1,
+    "Magic Powder": 1,
+    "Magic Upgrade (1/2)": 1,
+    "Moon Pearl": 1,
+    "Mushroom": 1,
+    "Pegasus Boots": 1,
+    "Piece of Heart": 24,
+    "Progressive Bow": 2,
+    "Progressive Glove": 2,
+    "Progressive Mail": 2,
+    "Progressive Shield": 3,
+    "Progressive Sword": 4,
+    "Quake": 1,
+    "Red Boomerang": 1,
+    "Rupee (1)": 2,
+    "Rupees (100)": 1,
+    "Rupees (20)": 28,
+    "Rupees (300)": 5,
+    "Rupees (5)": 4,
+    "Rupees (50)": 7,
+    "Sanctuary Heart Container": 1,
+    "Shovel": 1,
+    "Single Arrow": 1,
     "__max_boss_heart_container": 10,
     "__max_heart_piece": 24,
     "__max_progressive_bottle": 4,
@@ -249,6 +249,16 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
         "Big Keys": frozenset(["Big Key (Eastern Palace)", "Big Key (Desert Palace)", "Big Key (Tower of Hera)", "Big Key (Hyrule Castle)", "Big Key (Agahnims Tower)", "Big Key (Palace of Darkness)", "Big Key (Thieves Town)", "Big Key (Skull Woods)", "Big Key (Swamp Palace)", "Big Key (Ice Palace)", "Big Key (Misery Mire)", "Big Key (Turtle Rock)", "Big Key (Ganons Tower)"]),
         "Compasses": frozenset(["Compass (Eastern Palace)", "Compass (Desert Palace)", "Compass (Tower of Hera)", "Compass (Hyrule Castle)", "Compass (Agahnims Tower)", "Compass (Palace of Darkness)", "Compass (Thieves Town)", "Compass (Skull Woods)", "Compass (Swamp Palace)", "Compass (Ice Palace)", "Compass (Misery Mire)", "Compass (Turtle Rock)", "Compass (Ganons Tower)"]),
         "Maps": frozenset(["Map (Eastern Palace)", "Map (Desert Palace)", "Map (Tower of Hera)", "Map (Hyrule Castle)", "Map (Agahnims Tower)", "Map (Palace of Darkness)", "Map (Thieves Town)", "Map (Skull Woods)", "Map (Swamp Palace)", "Map (Ice Palace)", "Map (Misery Mire)", "Map (Turtle Rock)", "Map (Ganons Tower)"]),
+    }
+
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {
+        "Progressive Sword": ["Fighter Sword", "Master Sword", "Tempered Sword", "Golden Sword"],
+        "Progressive Glove": ["Power Glove", "Titans Mitts"],
+        "Progressive Shield": ["Blue Shield", "Red Shield", "Mirror Shield"],
+        "Progressive Bow": ["Bow", "Silver Bow"],
+        "Progressive Bow (Alt)": ["Bow", "Silver Bow"],
     }
 
     # Canonical item placements - where items belong in the "vanilla" game
@@ -613,6 +623,29 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
         data = item_table[name]
         return ALinktothePastWorldGenItem(name, data.classification, data.id, self.player)
 
+
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""

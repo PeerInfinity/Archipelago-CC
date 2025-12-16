@@ -3286,7 +3286,8 @@
       "ignore_cleansing": 0,
       "iron_maiden_behavior": 0,
       "required_last_keys": 1,
-      "completion_goal": 0
+      "completion_goal": 0,
+      "world_directory": "cvcotm"
     }
   },
   "game_info": {

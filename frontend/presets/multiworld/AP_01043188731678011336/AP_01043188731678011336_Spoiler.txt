@@ -1411,17 +1411,17 @@ Act Completion (The Windmill) (Player1)
    =>   The Windmill
 Act Completion (Time Rift - Alpine Skyline) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
-   =>   Time Rift - Alpine Skyline
-Act Completion (Time Rift - Gallery) (Player1)
-        Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Time Rift - Sewers Portal - Entrance 4
+   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Time Rift - Alpine Skyline
+Act Completion (Time Rift - Gallery) (Player1)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Sewers Portal - Entrance 1
    =>   Time Rift - Gallery
 Act Completion (Time Rift - Pipe) (Player1)
         Menu -> Save File -> Spaceship
@@ -1474,24 +1474,27 @@ Agahnim 2 (Player2)
    =>   Agahnim 2
 Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
+   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
+   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Windmill Island Ledge (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
+   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline - Bird Pass Fork (Player1)
         Menu -> Save File -> Spaceship
@@ -2307,8 +2310,7 @@ Mafia of Cooks - Page: Fish Pile (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   She Came from Outer Space -> Battle of the Birds - Act 3: Connection 1
-   =>   Barrel Battle -> Time Rift - Mafia of Cooks Portal - Entrance 2
+   =>   She Came from Outer Space -> Time Rift - Mafia of Cooks Portal - Entrance 3
    =>   Time Rift - Mafia of Cooks
 Mimic Cave (Player2)
         Links House -> Links House Exit
@@ -2833,9 +2835,10 @@ Superbunny Cave - Bottom (Player2)
    =>   Dark Death Mountain (West Bottom) -> Spectacle Rock Mirror Spot
    =>   Spectacle Rock -> Spectacle Rock Drop
    =>   Death Mountain (Top) -> East Death Mountain (Top)
-   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
-   =>   Turtle Rock (Top) -> Turtle Rock Drop
-   =>   Dark Death Mountain (Top) -> Superbunny Cave (Top)
+   =>   East Death Mountain (Top) -> East Death Mountain Drop
+   =>   East Death Mountain (Bottom) -> East Death Mountain Teleporter
+   =>   Dark Death Mountain (East Bottom) -> Superbunny Cave (Bottom)
+   =>   Superbunny Cave (Bottom) -> Superbunny Cave Climb
    =>   Superbunny Cave (Top)
 Swamp Palace - Big Chest (Player2)
         Links House -> Links House Exit
@@ -2910,8 +2913,8 @@ Swamp Palace - Waterfall Room (Player2)
 TIHS Access (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Heating Up Mafia Town -> Subcon Forest - Finale: Connection 5
    =>   The Illness has Spread
 TOD Access (Player1)
         Menu -> Save File -> Spaceship

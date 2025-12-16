@@ -24,7 +24,6 @@ class ItemData:
 
 item_table: Dict[str, ItemData] = {
     "Strawberry": ItemData(13238272, ItemClassification.progression_skip_balancing),
-    "Raspberry": ItemData(13238281, ItemClassification.filler),
     "Dash Refills": ItemData(13238273, ItemClassification.progression),
     "Double Dash Refills": ItemData(13238274, ItemClassification.progression),
     "Feathers": ItemData(13238275, ItemClassification.progression),
@@ -33,6 +32,7 @@ item_table: Dict[str, ItemData] = {
     "Traffic Blocks": ItemData(13238278, ItemClassification.progression),
     "Springs": ItemData(13238279, ItemClassification.progression),
     "Breakable Blocks": ItemData(13238280, ItemClassification.progression),
+    "Raspberry": ItemData(13238281, ItemClassification.filler),
     "Ground Dash": ItemData(13238282, ItemClassification.progression),
     "Air Dash": ItemData(13238283, ItemClassification.progression),
     "Skid Jump": ItemData(13238284, ItemClassification.progression),

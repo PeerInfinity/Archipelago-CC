@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has
+from rule_builder import True_, False_, Has, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -17,15 +17,15 @@ if TYPE_CHECKING:
 
 # Helper functions
 def _savingprincessworldgen_all_weapons(state: "CollectionState", player: int) -> bool:
-    return state.has_all((), player)
+    return state.has_all(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player)
 
 
 def _savingprincessworldgen_can_hover(state: "CollectionState", player: int) -> bool:
-    return (state.has('Faster Reload', player, 4)) and (state.has_any((), player))
+    return (state.has('Faster Reload', player, 4)) and (state.has_any(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player))
 
 
 def _savingprincessworldgen_is_gate_unlocked(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) and (_savingprincessworldgen_super_nice_check(state, player))
+    return (state.has_all(('Arctic Key', 'Cave Key', 'Swamp Key', 'Volcanic Key'), player)) and (_savingprincessworldgen_super_nice_check(state, player))
 
 
 def _savingprincessworldgen_is_power_on(state: "CollectionState", player: int) -> bool:
@@ -37,7 +37,7 @@ def _savingprincessworldgen_nice_check(state: "CollectionState", player: int) ->
 
 
 def _savingprincessworldgen_super_nice_check(state: "CollectionState", player: int) -> bool:
-    return (state.has('Life Extension', player, 2)) and (state.has('Clip Extension', player, 2)) and (state.has('Faster Reload', player, 4)) and (state.has('Powered Blaster', player)) and (state.has_any((), player))
+    return (state.has('Life Extension', player, 2)) and (state.has('Clip Extension', player, 2)) and (state.has('Faster Reload', player, 4)) and (state.has('Powered Blaster', player)) and (state.has_any(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player))
 
 
 def set_rules(world: "World") -> None:
@@ -61,11 +61,15 @@ def set_rules(world: "World") -> None:
         Has("Powered Blaster")
     )
 
-    multiworld.get_entrance("Electrical entrance", player).access_rule = \
-        lambda state: _savingprincessworldgen_is_gate_unlocked(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Electrical entrance", player),
+        HelperCall(helper_func=_savingprincessworldgen_is_gate_unlocked, helper_name="is_gate_unlocked", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arctic Key'}, {'type': 'constant', 'value': 'Cave Key'}, {'type': 'constant', 'value': 'Swamp Key'}, {'type': 'constant', 'value': 'Volcanic Key'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Clip Extension', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 4}}, {'type': 'item_check', 'item': 'Powered Blaster'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]}]}]})
+    )
 
-    multiworld.get_entrance("Electrical (Power On) entrance", player).access_rule = \
-        lambda state: _savingprincessworldgen_is_power_on(state, player)
+    world.set_rule(
+        multiworld.get_entrance("Electrical (Power On) entrance", player),
+        HelperCall(helper_func=_savingprincessworldgen_is_power_on, helper_name="is_power_on", body_data={'type': 'item_check', 'item': 'System Power'})
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Cave: Powered Blaster chest", player),
@@ -77,30 +81,40 @@ def set_rules(world: "World") -> None:
         Has("Clip Extension")
     )
 
-    multiworld.get_location("Volcanic: Hot coals", player).access_rule = \
-        lambda state: (_savingprincessworldgen_can_hover(state, player)) or (state.has('Ice Spreadshot', player))
+    world.set_rule(
+        multiworld.get_location("Volcanic: Hot coals", player),
+        (HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 4}}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]}]})) | (Has("Ice Spreadshot"))
+    )
 
-    multiworld.get_location("Volcanic: Flamethrower chest", player).access_rule = \
-        lambda state: _savingprincessworldgen_nice_check(state, player)
+    world.set_rule(
+        multiworld.get_location("Volcanic: Flamethrower chest", player),
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+    )
 
-    multiworld.get_location("Volcanic: Cliff (Boss)", player).access_rule = \
-        lambda state: _savingprincessworldgen_nice_check(state, player)
+    world.set_rule(
+        multiworld.get_location("Volcanic: Cliff (Boss)", player),
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Arctic: Under snow", player),
         Has("Flamethrower")
     )
 
-    multiworld.get_location("Arctic: Ice Spreadshot chest", player).access_rule = \
-        lambda state: _savingprincessworldgen_nice_check(state, player)
+    world.set_rule(
+        multiworld.get_location("Arctic: Ice Spreadshot chest", player),
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Arctic: Jacket chest", player),
         Has("Flamethrower")
     )
 
-    multiworld.get_location("Arctic: Ace (Boss)", player).access_rule = \
-        lambda state: _savingprincessworldgen_nice_check(state, player)
+    world.set_rule(
+        multiworld.get_location("Arctic: Ace (Boss)", player),
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Hub: Hidden near Arctic", player),
@@ -112,22 +126,32 @@ def set_rules(world: "World") -> None:
         Has("Cave Key")
     )
 
-    multiworld.get_location("Swamp: Bramble room", player).access_rule = \
-        lambda state: _savingprincessworldgen_can_hover(state, player)
+    world.set_rule(
+        multiworld.get_location("Swamp: Bramble room", player),
+        HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 4}}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]}]})
+    )
 
-    multiworld.get_location("Swamp: Special Extension chest", player).access_rule = \
-        lambda state: _savingprincessworldgen_nice_check(state, player)
+    world.set_rule(
+        multiworld.get_location("Swamp: Special Extension chest", player),
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+    )
 
-    multiworld.get_location("Swamp: Snake (Boss)", player).access_rule = \
-        lambda state: _savingprincessworldgen_nice_check(state, player)
+    world.set_rule(
+        multiworld.get_location("Swamp: Snake (Boss)", player),
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Electrical: Tesla orb", player),
         Has("Volt Laser")
     )
 
-    multiworld.get_location("Electrical: BRAINOS (Boss)", player).access_rule = \
-        lambda state: _savingprincessworldgen_all_weapons(state, player)
+    world.set_rule(
+        multiworld.get_location("Electrical: BRAINOS (Boss)", player),
+        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]})
+    )
 
-    multiworld.get_location("Mission objective", player).access_rule = \
-        lambda state: _savingprincessworldgen_all_weapons(state, player)
+    world.set_rule(
+        multiworld.get_location("Mission objective", player),
+        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]})
+    )

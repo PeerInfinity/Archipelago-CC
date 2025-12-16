@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 def _megaman2worldgen_can_defeat_enough_rbms(state: "CollectionState", player: int, required, boss_requirements) -> bool:
     can_defeat = 0
     for _ in boss_requirements.items():
-        if (boss in {'0': 'Heat Man Defeated', '1': 'Air Man Defeated', '2': 'Wood Man Defeated', '3': 'Bubble Man Defeated', '4': 'Quick Man Defeated', '5': 'Flash Man Defeated', '6': 'Metal Man Defeated', '7': 'Crash Man Defeated'}):
+        if (boss in {0: 'Heat Man Defeated', 1: 'Air Man Defeated', 2: 'Wood Man Defeated', 3: 'Bubble Man Defeated', 4: 'Quick Man Defeated', 5: 'Flash Man Defeated', 6: 'Metal Man Defeated', 7: 'Crash Man Defeated'}):
             if state.has_all((), player):
                 can_defeat += 1
                 if (can_defeat >= required):

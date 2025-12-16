@@ -2556,7 +2556,8 @@
         "start_location_hints": [],
         "starting_area": 0,
         "temy_include": 1
-      }
+      },
+      "world_directory": "undertale"
     }
   },
   "game_info": {

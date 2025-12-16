@@ -33,41 +33,51 @@
             "name": "Hub -> Entryway (MAP01) Main",
             "connected_region": "Entryway (MAP01) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "Entryway (MAP01)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Entryway (MAP01)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Underhalls (MAP02) Main",
             "connected_region": "Underhalls (MAP02) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "Underhalls (MAP02)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Underhalls (MAP02)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Gantlet (MAP03) Main",
             "connected_region": "The Gantlet (MAP03) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Gantlet (MAP03)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Gantlet (MAP03)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -76,25 +86,27 @@
             "name": "Hub -> The Focus (MAP04) Main",
             "connected_region": "The Focus (MAP04) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Focus (MAP04)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Focus (MAP04)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -103,41 +115,40 @@
             "name": "Hub -> The Waste Tunnels (MAP05) Start",
             "connected_region": "The Waste Tunnels (MAP05) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Waste Tunnels (MAP05)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Waste Tunnels (MAP05)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Crusher (MAP06) Main",
             "connected_region": "The Crusher (MAP06) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Shotgun",
-                        "The Crusher (MAP06)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Plasma gun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Shotgun",
+                      "The Crusher (MAP06)"
+                    ]
+                  }
                 }
               ]
             }
@@ -146,44 +157,43 @@
             "name": "Hub -> Dead Simple (MAP07) Start",
             "connected_region": "Dead Simple (MAP07) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "Dead Simple (MAP07)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Dead Simple (MAP07)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Tricks and Traps (MAP08) Main",
             "connected_region": "Tricks and Traps (MAP08) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun",
-                        "Tricks and Traps (MAP08)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "Tricks and Traps (MAP08)"
+                    ]
+                  }
                 }
               ]
             }
@@ -192,52 +202,55 @@
             "name": "Hub -> The Pit (MAP09) Start",
             "connected_region": "The Pit (MAP09) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Pit (MAP09)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Pit (MAP09)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Refueling Base (MAP10) Start",
             "connected_region": "Refueling Base (MAP10) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "Refueling Base (MAP10)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Refueling Base (MAP10)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Circle of Death (MAP11) Main",
             "connected_region": "Circle of Death (MAP11) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Circle of Death (MAP11)",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Circle of Death (MAP11)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -246,44 +259,43 @@
             "name": "Hub -> The Factory (MAP12) Outdoors",
             "connected_region": "The Factory (MAP12) Outdoors",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Factory (MAP12)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Factory (MAP12)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Downtown (MAP13) Main",
             "connected_region": "Downtown (MAP13) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Downtown (MAP13)",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Downtown (MAP13)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -292,36 +304,31 @@
             "name": "Hub -> The Inmost Dens (MAP14) Main",
             "connected_region": "The Inmost Dens (MAP14) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun",
-                        "The Inmost Dens (MAP14)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "The Inmost Dens (MAP14)"
+                    ]
+                  }
                 }
               ]
             }
@@ -330,36 +337,31 @@
             "name": "Hub -> Industrial Zone (MAP15) Main",
             "connected_region": "Industrial Zone (MAP15) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Industrial Zone (MAP15)",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Industrial Zone (MAP15)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -368,36 +370,31 @@
             "name": "Hub -> Suburbs (MAP16) Main",
             "connected_region": "Suburbs (MAP16) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Suburbs (MAP16)",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Suburbs (MAP16)",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -406,36 +403,31 @@
             "name": "Hub -> Tenements (MAP17) Main",
             "connected_region": "Tenements (MAP17) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun",
-                        "Tenements (MAP17)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "Tenements (MAP17)"
+                    ]
+                  }
                 }
               ]
             }
@@ -444,36 +436,31 @@
             "name": "Hub -> The Courtyard (MAP18) Main",
             "connected_region": "The Courtyard (MAP18) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun",
-                        "The Courtyard (MAP18)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "The Courtyard (MAP18)"
+                    ]
+                  }
                 }
               ]
             }
@@ -482,36 +469,31 @@
             "name": "Hub -> The Citadel (MAP19) Main",
             "connected_region": "The Citadel (MAP19) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun",
-                        "The Citadel (MAP19)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "The Citadel (MAP19)"
+                    ]
+                  }
                 }
               ]
             }
@@ -520,36 +502,31 @@
             "name": "Hub -> Gotcha! (MAP20) Main",
             "connected_region": "Gotcha! (MAP20) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Gotcha! (MAP20)",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Gotcha! (MAP20)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -558,33 +535,39 @@
             "name": "Hub -> Nirvana (MAP21) Start",
             "connected_region": "Nirvana (MAP21) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nirvana (MAP21)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Nirvana (MAP21)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Catacombs (MAP22) Early",
             "connected_region": "The Catacombs (MAP22) Early",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Plasma gun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Plasma gun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Catacombs (MAP22)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Catacombs (MAP22)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -593,36 +576,31 @@
             "name": "Hub -> Barrels o' Fun (MAP23) Main",
             "connected_region": "Barrels o' Fun (MAP23) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Barrels o' Fun (MAP23)",
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Barrels o' Fun (MAP23)",
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -631,126 +609,119 @@
             "name": "Hub -> The Chasm (MAP24) Main",
             "connected_region": "The Chasm (MAP24) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "BFG9000",
-                    "Chaingun",
-                    "Plasma gun",
-                    "Rocket launcher",
-                    "Shotgun",
-                    "Super Shotgun",
-                    "The Chasm (MAP24)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Chasm (MAP24)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Bloodfalls (MAP25) Start",
             "connected_region": "Bloodfalls (MAP25) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bloodfalls (MAP25)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bloodfalls (MAP25)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Abandoned Mines (MAP26) Main",
             "connected_region": "The Abandoned Mines (MAP26) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "BFG9000",
-                    "Chaingun",
-                    "Plasma gun",
-                    "Rocket launcher",
-                    "Shotgun",
-                    "Super Shotgun",
-                    "The Abandoned Mines (MAP26)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Abandoned Mines (MAP26)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Monster Condo (MAP27) Main",
             "connected_region": "Monster Condo (MAP27) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "BFG9000",
-                    "Chaingun",
-                    "Monster Condo (MAP27)",
-                    "Plasma gun",
-                    "Rocket launcher",
-                    "Shotgun",
-                    "Super Shotgun"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Monster Condo (MAP27)",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Spirit World (MAP28) Main",
             "connected_region": "The Spirit World (MAP28) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "BFG9000",
-                    "Chaingun",
-                    "Plasma gun",
-                    "Rocket launcher",
-                    "Shotgun",
-                    "Super Shotgun",
-                    "The Spirit World (MAP28)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Spirit World (MAP28)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Living End (MAP29) Main",
             "connected_region": "The Living End (MAP29) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "BFG9000",
-                    "Chaingun",
-                    "Plasma gun",
-                    "Rocket launcher",
-                    "Shotgun",
-                    "Super Shotgun",
-                    "The Living End (MAP29)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Living End (MAP29)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Icon of Sin (MAP30) Start",
             "connected_region": "Icon of Sin (MAP30) Start",
             "access_rule": {
-              "type": "item_check",
-              "item": "Icon of Sin (MAP30)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Icon of Sin (MAP30)",
+                "count": 1
+              }
             }
           }
         ],
@@ -845,8 +816,12 @@
             "name": "Underhalls (MAP02) Main -> Underhalls (MAP02) Red",
             "connected_region": "Underhalls (MAP02) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Underhalls (MAP02) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Underhalls (MAP02) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -905,8 +880,12 @@
             "name": "Underhalls (MAP02) Blue -> Underhalls (MAP02) Red",
             "connected_region": "Underhalls (MAP02) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Underhalls (MAP02) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Underhalls (MAP02) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -935,8 +914,12 @@
             "name": "Underhalls (MAP02) Red -> Underhalls (MAP02) Blue",
             "connected_region": "Underhalls (MAP02) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Underhalls (MAP02) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Underhalls (MAP02) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -973,8 +956,12 @@
             "name": "The Gantlet (MAP03) Main -> The Gantlet (MAP03) Blue",
             "connected_region": "The Gantlet (MAP03) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Gantlet (MAP03) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Gantlet (MAP03) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1116,8 +1103,12 @@
             "name": "The Gantlet (MAP03) Blue -> The Gantlet (MAP03) Red",
             "connected_region": "The Gantlet (MAP03) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Gantlet (MAP03) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Gantlet (MAP03) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -1204,16 +1195,24 @@
             "name": "The Focus (MAP04) Main -> The Focus (MAP04) Red",
             "connected_region": "The Focus (MAP04) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Focus (MAP04) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Focus (MAP04) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Focus (MAP04) Main -> The Focus (MAP04) Blue",
             "connected_region": "The Focus (MAP04) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Focus (MAP04) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Focus (MAP04) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1287,8 +1286,12 @@
             "name": "The Focus (MAP04) Yellow -> The Focus (MAP04) Red",
             "connected_region": "The Focus (MAP04) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Focus (MAP04) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Focus (MAP04) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1317,16 +1320,24 @@
             "name": "The Focus (MAP04) Red -> The Focus (MAP04) Yellow",
             "connected_region": "The Focus (MAP04) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Focus (MAP04) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Focus (MAP04) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Focus (MAP04) Red -> The Focus (MAP04) Main",
             "connected_region": "The Focus (MAP04) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Focus (MAP04) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Focus (MAP04) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1355,16 +1366,24 @@
             "name": "The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Red",
             "connected_region": "The Waste Tunnels (MAP05) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Waste Tunnels (MAP05) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Waste Tunnels (MAP05) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Blue",
             "connected_region": "The Waste Tunnels (MAP05) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Waste Tunnels (MAP05) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Waste Tunnels (MAP05) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -1506,16 +1525,24 @@
             "name": "The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Yellow",
             "connected_region": "The Waste Tunnels (MAP05) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Waste Tunnels (MAP05) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Waste Tunnels (MAP05) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Main",
             "connected_region": "The Waste Tunnels (MAP05) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Waste Tunnels (MAP05) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Waste Tunnels (MAP05) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1544,8 +1571,12 @@
             "name": "The Waste Tunnels (MAP05) Yellow -> The Waste Tunnels (MAP05) Blue",
             "connected_region": "The Waste Tunnels (MAP05) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Waste Tunnels (MAP05) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Waste Tunnels (MAP05) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1604,33 +1635,28 @@
             "name": "The Waste Tunnels (MAP05) Start -> The Waste Tunnels (MAP05) Main",
             "connected_region": "The Waste Tunnels (MAP05) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Plasma gun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -1676,17 +1702,14 @@
             "name": "The Crusher (MAP06) Main -> The Crusher (MAP06) Blue",
             "connected_region": "The Crusher (MAP06) Blue",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Super Shotgun",
-                    "The Crusher (MAP06) - Blue keycard"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Super Shotgun",
+                  "The Crusher (MAP06) - Blue keycard"
+                ]
+              }
             }
           }
         ],
@@ -1805,16 +1828,24 @@
             "name": "The Crusher (MAP06) Blue -> The Crusher (MAP06) Red",
             "connected_region": "The Crusher (MAP06) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crusher (MAP06) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crusher (MAP06) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Crusher (MAP06) Blue -> The Crusher (MAP06) Main",
             "connected_region": "The Crusher (MAP06) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crusher (MAP06) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crusher (MAP06) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1918,8 +1949,12 @@
             "name": "The Crusher (MAP06) Yellow -> The Crusher (MAP06) Red",
             "connected_region": "The Crusher (MAP06) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crusher (MAP06) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crusher (MAP06) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1948,16 +1983,24 @@
             "name": "The Crusher (MAP06) Red -> The Crusher (MAP06) Yellow",
             "connected_region": "The Crusher (MAP06) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crusher (MAP06) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crusher (MAP06) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Crusher (MAP06) Red -> The Crusher (MAP06) Blue",
             "connected_region": "The Crusher (MAP06) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crusher (MAP06) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crusher (MAP06) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -2159,35 +2202,30 @@
             "name": "Dead Simple (MAP07) Start -> Dead Simple (MAP07) Main",
             "connected_region": "Dead Simple (MAP07) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -2233,16 +2271,24 @@
             "name": "Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Red",
             "connected_region": "Tricks and Traps (MAP08) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Tricks and Traps (MAP08) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tricks and Traps (MAP08) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Yellow",
             "connected_region": "Tricks and Traps (MAP08) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "Tricks and Traps (MAP08) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tricks and Traps (MAP08) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2646,16 +2692,24 @@
             "name": "The Pit (MAP09) Main -> The Pit (MAP09) Yellow",
             "connected_region": "The Pit (MAP09) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Pit (MAP09) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Pit (MAP09) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Pit (MAP09) Main -> The Pit (MAP09) Blue",
             "connected_region": "The Pit (MAP09) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Pit (MAP09) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Pit (MAP09) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -2893,8 +2947,12 @@
             "name": "The Pit (MAP09) Yellow -> The Pit (MAP09) Main",
             "connected_region": "The Pit (MAP09) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Pit (MAP09) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Pit (MAP09) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2923,35 +2981,30 @@
             "name": "The Pit (MAP09) Start -> The Pit (MAP09) Main",
             "connected_region": "The Pit (MAP09) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -2982,8 +3035,12 @@
             "name": "Refueling Base (MAP10) Main -> Refueling Base (MAP10) Yellow",
             "connected_region": "Refueling Base (MAP10) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "Refueling Base (MAP10) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Refueling Base (MAP10) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -3298,8 +3355,12 @@
             "name": "Refueling Base (MAP10) Yellow -> Refueling Base (MAP10) Yellow Blue",
             "connected_region": "Refueling Base (MAP10) Yellow Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Refueling Base (MAP10) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Refueling Base (MAP10) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3342,35 +3403,30 @@
             "name": "Refueling Base (MAP10) Start -> Refueling Base (MAP10) Main",
             "connected_region": "Refueling Base (MAP10) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -3401,16 +3457,24 @@
             "name": "Circle of Death (MAP11) Main -> Circle of Death (MAP11) Blue",
             "connected_region": "Circle of Death (MAP11) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Circle of Death (MAP11) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Circle of Death (MAP11) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Circle of Death (MAP11) Main -> Circle of Death (MAP11) Red",
             "connected_region": "Circle of Death (MAP11) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Circle of Death (MAP11) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Circle of Death (MAP11) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3702,16 +3766,24 @@
             "name": "The Factory (MAP12) Indoors -> The Factory (MAP12) Yellow",
             "connected_region": "The Factory (MAP12) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Factory (MAP12) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Factory (MAP12) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Factory (MAP12) Indoors -> The Factory (MAP12) Blue",
             "connected_region": "The Factory (MAP12) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Factory (MAP12) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Factory (MAP12) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -3904,17 +3976,14 @@
             "name": "The Factory (MAP12) Outdoors -> The Factory (MAP12) Main",
             "connected_region": "The Factory (MAP12) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Plasma gun",
-                    "Super Shotgun"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Plasma gun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -3973,33 +4042,28 @@
             "name": "The Factory (MAP12) Main -> The Factory (MAP12) Indoors",
             "connected_region": "The Factory (MAP12) Indoors",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -4068,24 +4132,36 @@
             "name": "Downtown (MAP13) Main -> Downtown (MAP13) Yellow",
             "connected_region": "Downtown (MAP13) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "Downtown (MAP13) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Downtown (MAP13) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Downtown (MAP13) Main -> Downtown (MAP13) Red",
             "connected_region": "Downtown (MAP13) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Downtown (MAP13) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Downtown (MAP13) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Downtown (MAP13) Main -> Downtown (MAP13) Blue",
             "connected_region": "Downtown (MAP13) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Downtown (MAP13) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Downtown (MAP13) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -4474,8 +4550,12 @@
             "name": "The Inmost Dens (MAP14) Main -> The Inmost Dens (MAP14) Red",
             "connected_region": "The Inmost Dens (MAP14) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Inmost Dens (MAP14) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Inmost Dens (MAP14) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4617,8 +4697,12 @@
             "name": "The Inmost Dens (MAP14) Blue -> The Inmost Dens (MAP14) Red East",
             "connected_region": "The Inmost Dens (MAP14) Red East",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Inmost Dens (MAP14) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Inmost Dens (MAP14) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4647,8 +4731,12 @@
             "name": "The Inmost Dens (MAP14) Red -> The Inmost Dens (MAP14) Main",
             "connected_region": "The Inmost Dens (MAP14) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Inmost Dens (MAP14) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Inmost Dens (MAP14) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
@@ -4677,8 +4765,12 @@
             "name": "The Inmost Dens (MAP14) Red East -> The Inmost Dens (MAP14) Blue",
             "connected_region": "The Inmost Dens (MAP14) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Inmost Dens (MAP14) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Inmost Dens (MAP14) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
@@ -4744,16 +4836,24 @@
             "name": "Industrial Zone (MAP15) Main -> Industrial Zone (MAP15) Yellow East",
             "connected_region": "Industrial Zone (MAP15) Yellow East",
             "access_rule": {
-              "type": "item_check",
-              "item": "Industrial Zone (MAP15) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Industrial Zone (MAP15) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Industrial Zone (MAP15) Main -> Industrial Zone (MAP15) Yellow West",
             "connected_region": "Industrial Zone (MAP15) Yellow West",
             "access_rule": {
-              "type": "item_check",
-              "item": "Industrial Zone (MAP15) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Industrial Zone (MAP15) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -4977,8 +5077,12 @@
             "name": "Industrial Zone (MAP15) Blue -> Industrial Zone (MAP15) Yellow East",
             "connected_region": "Industrial Zone (MAP15) Yellow East",
             "access_rule": {
-              "type": "item_check",
-              "item": "Industrial Zone (MAP15) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Industrial Zone (MAP15) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -5007,8 +5111,12 @@
             "name": "Industrial Zone (MAP15) Yellow East -> Industrial Zone (MAP15) Blue",
             "connected_region": "Industrial Zone (MAP15) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Industrial Zone (MAP15) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Industrial Zone (MAP15) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -5165,16 +5273,24 @@
             "name": "Suburbs (MAP16) Main -> Suburbs (MAP16) Red",
             "connected_region": "Suburbs (MAP16) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Suburbs (MAP16) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Suburbs (MAP16) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Suburbs (MAP16) Main -> Suburbs (MAP16) Blue",
             "connected_region": "Suburbs (MAP16) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Suburbs (MAP16) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Suburbs (MAP16) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5510,8 +5626,12 @@
             "name": "Tenements (MAP17) Main -> Tenements (MAP17) Red",
             "connected_region": "Tenements (MAP17) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Tenements (MAP17) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tenements (MAP17) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -5743,16 +5863,24 @@
             "name": "Tenements (MAP17) Red -> Tenements (MAP17) Yellow",
             "connected_region": "Tenements (MAP17) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "Tenements (MAP17) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tenements (MAP17) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Tenements (MAP17) Red -> Tenements (MAP17) Blue",
             "connected_region": "Tenements (MAP17) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Tenements (MAP17) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tenements (MAP17) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -5864,16 +5992,24 @@
             "name": "The Courtyard (MAP18) Main -> The Courtyard (MAP18) Yellow",
             "connected_region": "The Courtyard (MAP18) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Courtyard (MAP18) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Courtyard (MAP18) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Courtyard (MAP18) Main -> The Courtyard (MAP18) Blue",
             "connected_region": "The Courtyard (MAP18) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Courtyard (MAP18) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Courtyard (MAP18) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6127,8 +6263,12 @@
             "name": "The Courtyard (MAP18) Blue -> The Courtyard (MAP18) Main",
             "connected_region": "The Courtyard (MAP18) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Courtyard (MAP18) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Courtyard (MAP18) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6157,8 +6297,12 @@
             "name": "The Courtyard (MAP18) Yellow -> The Courtyard (MAP18) Main",
             "connected_region": "The Courtyard (MAP18) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Courtyard (MAP18) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Courtyard (MAP18) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6187,24 +6331,26 @@
             "name": "The Citadel (MAP19) Main -> The Citadel (MAP19) Red",
             "connected_region": "The Citadel (MAP19) Red",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "The Citadel (MAP19) - Blue skull key",
-                        "The Citadel (MAP19) - Yellow skull key"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "The Citadel (MAP19) - Blue skull key",
+                      "The Citadel (MAP19) - Yellow skull key"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Citadel (MAP19) - Red skull key"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Citadel (MAP19) - Red skull key",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -6445,24 +6591,26 @@
             "name": "The Citadel (MAP19) Red -> The Citadel (MAP19) Main",
             "connected_region": "The Citadel (MAP19) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "The Citadel (MAP19) - Blue skull key",
-                        "The Citadel (MAP19) - Yellow skull key"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "The Citadel (MAP19) - Blue skull key",
+                      "The Citadel (MAP19) - Yellow skull key"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Citadel (MAP19) - Red skull key"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Citadel (MAP19) - Red skull key",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -6724,34 +6872,29 @@
             "name": "Nirvana (MAP21) Main -> Nirvana (MAP21) Yellow",
             "connected_region": "Nirvana (MAP21) Yellow",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Nirvana (MAP21) - Yellow skull key",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Nirvana (MAP21) - Yellow skull key",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -6827,25 +6970,26 @@
             "name": "Nirvana (MAP21) Yellow -> Nirvana (MAP21) Main",
             "connected_region": "Nirvana (MAP21) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nirvana (MAP21) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Nirvana (MAP21) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Nirvana (MAP21) Yellow -> Nirvana (MAP21) Magenta",
             "connected_region": "Nirvana (MAP21) Magenta",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Nirvana (MAP21) - Blue skull key",
-                    "Nirvana (MAP21) - Red skull key"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Nirvana (MAP21) - Blue skull key",
+                  "Nirvana (MAP21) - Red skull key"
+                ]
+              }
             }
           }
         ],
@@ -6942,17 +7086,14 @@
             "name": "Nirvana (MAP21) Start -> Nirvana (MAP21) Main",
             "connected_region": "Nirvana (MAP21) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Plasma gun",
-                    "Super Shotgun"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Plasma gun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -6981,8 +7122,12 @@
             "name": "Nirvana (MAP21) Pro Magenta -> Nirvana (MAP21) Magenta",
             "connected_region": "Nirvana (MAP21) Magenta",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nirvana (MAP21) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Nirvana (MAP21) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6995,16 +7140,24 @@
             "name": "The Catacombs (MAP22) Main -> The Catacombs (MAP22) Blue",
             "connected_region": "The Catacombs (MAP22) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (MAP22) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (MAP22) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Catacombs (MAP22) Main -> The Catacombs (MAP22) Red",
             "connected_region": "The Catacombs (MAP22) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (MAP22) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (MAP22) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
@@ -7101,8 +7254,12 @@
             "name": "The Catacombs (MAP22) Red -> The Catacombs (MAP22) Main",
             "connected_region": "The Catacombs (MAP22) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (MAP22) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (MAP22) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7131,35 +7288,30 @@
             "name": "The Catacombs (MAP22) Early -> The Catacombs (MAP22) Main",
             "connected_region": "The Catacombs (MAP22) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Chaingun",
-                        "Shotgun",
-                        "Super Shotgun"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 }
               ]
             }
@@ -7235,8 +7387,12 @@
             "name": "Barrels o' Fun (MAP23) Main -> Barrels o' Fun (MAP23) Yellow",
             "connected_region": "Barrels o' Fun (MAP23) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "Barrels o' Fun (MAP23) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Barrels o' Fun (MAP23) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7415,8 +7571,12 @@
             "name": "Barrels o' Fun (MAP23) Yellow -> Barrels o' Fun (MAP23) Main",
             "connected_region": "Barrels o' Fun (MAP23) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "Barrels o' Fun (MAP23) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Barrels o' Fun (MAP23) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7445,8 +7605,12 @@
             "name": "The Chasm (MAP24) Main -> The Chasm (MAP24) Blue",
             "connected_region": "The Chasm (MAP24) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (MAP24) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (MAP24) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -7565,8 +7729,12 @@
             "name": "The Chasm (MAP24) Red -> The Chasm (MAP24) Blue",
             "connected_region": "The Chasm (MAP24) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (MAP24) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (MAP24) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -7595,8 +7763,12 @@
             "name": "The Chasm (MAP24) Blue -> The Chasm (MAP24) Red",
             "connected_region": "The Chasm (MAP24) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (MAP24) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (MAP24) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -7745,25 +7917,27 @@
             "name": "Bloodfalls (MAP25) Main -> Bloodfalls (MAP25) Blue",
             "connected_region": "Bloodfalls (MAP25) Blue",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "BFG9000",
-                        "Plasma gun",
-                        "Rocket launcher"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Bloodfalls (MAP25) - Blue skull key"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Bloodfalls (MAP25) - Blue skull key",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -7907,8 +8081,12 @@
             "name": "Bloodfalls (MAP25) Blue -> Bloodfalls (MAP25) Main",
             "connected_region": "Bloodfalls (MAP25) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bloodfalls (MAP25) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bloodfalls (MAP25) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7967,18 +8145,15 @@
             "name": "Bloodfalls (MAP25) Start -> Bloodfalls (MAP25) Main",
             "connected_region": "Bloodfalls (MAP25) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Chaingun",
-                    "Shotgun",
-                    "Super Shotgun"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -8007,24 +8182,36 @@
             "name": "The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Yellow",
             "connected_region": "The Abandoned Mines (MAP26) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Abandoned Mines (MAP26) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Abandoned Mines (MAP26) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Red",
             "connected_region": "The Abandoned Mines (MAP26) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Abandoned Mines (MAP26) - Red keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Abandoned Mines (MAP26) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Blue",
             "connected_region": "The Abandoned Mines (MAP26) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Abandoned Mines (MAP26) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Abandoned Mines (MAP26) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -8158,8 +8345,12 @@
             "name": "The Abandoned Mines (MAP26) Blue -> The Abandoned Mines (MAP26) Main",
             "connected_region": "The Abandoned Mines (MAP26) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Abandoned Mines (MAP26) - Blue keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Abandoned Mines (MAP26) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -8188,8 +8379,12 @@
             "name": "The Abandoned Mines (MAP26) Yellow -> The Abandoned Mines (MAP26) Main",
             "connected_region": "The Abandoned Mines (MAP26) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Abandoned Mines (MAP26) - Yellow keycard"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Abandoned Mines (MAP26) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -8278,24 +8473,36 @@
             "name": "Monster Condo (MAP27) Main -> Monster Condo (MAP27) Yellow",
             "connected_region": "Monster Condo (MAP27) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "Monster Condo (MAP27) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Monster Condo (MAP27) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Monster Condo (MAP27) Main -> Monster Condo (MAP27) Red",
             "connected_region": "Monster Condo (MAP27) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "Monster Condo (MAP27) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Monster Condo (MAP27) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Monster Condo (MAP27) Main -> Monster Condo (MAP27) Blue",
             "connected_region": "Monster Condo (MAP27) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "Monster Condo (MAP27) - Blue skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Monster Condo (MAP27) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -8789,8 +8996,12 @@
             "name": "Monster Condo (MAP27) Red -> Monster Condo (MAP27) Main",
             "connected_region": "Monster Condo (MAP27) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "Monster Condo (MAP27) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Monster Condo (MAP27) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -8819,16 +9030,24 @@
             "name": "The Spirit World (MAP28) Main -> The Spirit World (MAP28) Yellow",
             "connected_region": "The Spirit World (MAP28) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Spirit World (MAP28) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Spirit World (MAP28) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Spirit World (MAP28) Main -> The Spirit World (MAP28) Red",
             "connected_region": "The Spirit World (MAP28) Red",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Spirit World (MAP28) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Spirit World (MAP28) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9157,8 +9376,12 @@
             "name": "The Spirit World (MAP28) Yellow -> The Spirit World (MAP28) Main",
             "connected_region": "The Spirit World (MAP28) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Spirit World (MAP28) - Yellow skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Spirit World (MAP28) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9187,8 +9410,12 @@
             "name": "The Spirit World (MAP28) Red -> The Spirit World (MAP28) Main",
             "connected_region": "The Spirit World (MAP28) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Spirit World (MAP28) - Red skull key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Spirit World (MAP28) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9553,21 +9780,18 @@
             "name": "Icon of Sin (MAP30) Start -> Icon of Sin (MAP30) Main",
             "connected_region": "Icon of Sin (MAP30) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "BFG9000",
-                    "Chaingun",
-                    "Plasma gun",
-                    "Rocket launcher",
-                    "Shotgun",
-                    "Super Shotgun"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -12122,6 +12346,463 @@
       "Underhalls (MAP02) - Red keycard": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Entryway (MAP01) - Armor": "Energy cell pack",
+      "Entryway (MAP01) - Shotgun": "Energy cell pack",
+      "Entryway (MAP01) - Rocket launcher": "Refueling Base (MAP10)",
+      "Entryway (MAP01) - Chainsaw": "Armor",
+      "Entryway (MAP01) - Exit": "Entryway (MAP01) - Complete",
+      "Underhalls (MAP02) - Red keycard": "Armor",
+      "Underhalls (MAP02) - Mega Armor": "Partial invisibility",
+      "Underhalls (MAP02) - Super Shotgun": "Box of shotgun shells",
+      "Underhalls (MAP02) - Exit": "Underhalls (MAP02) - Complete",
+      "Underhalls (MAP02) - Blue keycard": "Nirvana (MAP21) - Computer area map",
+      "The Gantlet (MAP03) - Mega Armor": "Medikit",
+      "The Gantlet (MAP03) - Shotgun": "Box of bullets",
+      "The Gantlet (MAP03) - Blue keycard": "Medikit",
+      "The Gantlet (MAP03) - Rocket launcher": "Supercharge",
+      "The Gantlet (MAP03) - Partial invisibility": "Supercharge",
+      "The Gantlet (MAP03) - Supercharge": "Partial invisibility",
+      "The Gantlet (MAP03) - Mega Armor 2": "Medikit",
+      "The Gantlet (MAP03) - Chaingun": "Chaingun",
+      "The Gantlet (MAP03) - Red keycard": "Box of shotgun shells",
+      "The Gantlet (MAP03) - Backpack": "The Focus (MAP04) - Red keycard",
+      "The Gantlet (MAP03) - Exit": "The Gantlet (MAP03) - Complete",
+      "The Focus (MAP04) - Super Shotgun": "Box of shotgun shells",
+      "The Focus (MAP04) - Blue keycard": "Box of shotgun shells",
+      "The Focus (MAP04) - Red keycard": "The Waste Tunnels (MAP05) - Yellow keycard",
+      "The Focus (MAP04) - Exit": "The Focus (MAP04) - Complete",
+      "The Focus (MAP04) - Yellow keycard": "Supercharge",
+      "The Waste Tunnels (MAP05) - Rocket launcher": "Medikit",
+      "The Waste Tunnels (MAP05) - Plasma gun": "Box of bullets",
+      "The Waste Tunnels (MAP05) - Red keycard": "Armor",
+      "The Waste Tunnels (MAP05) - Supercharge": "Box of rockets",
+      "The Waste Tunnels (MAP05) - Mega Armor": "Box of rockets",
+      "The Waste Tunnels (MAP05) - Armor": "Berserk",
+      "The Waste Tunnels (MAP05) - Supercharge 2": "The Factory (MAP12) - Blue keycard",
+      "The Waste Tunnels (MAP05) - Berserk": "Box of shotgun shells",
+      "The Waste Tunnels (MAP05) - Yellow keycard": "Energy cell pack",
+      "The Waste Tunnels (MAP05) - Exit": "The Waste Tunnels (MAP05) - Complete",
+      "The Waste Tunnels (MAP05) - Blue keycard": "Box of rockets",
+      "The Waste Tunnels (MAP05) - Super Shotgun": "The Inmost Dens (MAP14) - Computer area map",
+      "The Waste Tunnels (MAP05) - Shotgun": "Tricks and Traps (MAP08) - Red skull key",
+      "The Crusher (MAP06) - Blue keycard": "The Inmost Dens (MAP14) - Red skull key",
+      "The Crusher (MAP06) - Supercharge": "Medikit",
+      "The Crusher (MAP06) - Plasma gun": "Armor",
+      "The Crusher (MAP06) - Blue keycard 2": "Medikit",
+      "The Crusher (MAP06) - Blue keycard 3": "Partial invisibility",
+      "The Crusher (MAP06) - Megasphere": "Supercharge",
+      "The Crusher (MAP06) - Armor": "Box of shotgun shells",
+      "The Crusher (MAP06) - Red keycard": "Supercharge",
+      "The Crusher (MAP06) - Super Shotgun": "Industrial Zone (MAP15) - Blue keycard",
+      "The Crusher (MAP06) - Mega Armor": "The Focus (MAP04) - Computer area map",
+      "The Crusher (MAP06) - Rocket launcher": "Box of shotgun shells",
+      "The Crusher (MAP06) - Backpack": "Circle of Death (MAP11) - Blue keycard",
+      "The Crusher (MAP06) - Megasphere 2": "Supercharge",
+      "The Crusher (MAP06) - Exit": "The Crusher (MAP06) - Complete",
+      "The Crusher (MAP06) - Yellow keycard": "Tricks and Traps (MAP08) - Computer area map",
+      "Dead Simple (MAP07) - Megasphere": "Box of bullets",
+      "Dead Simple (MAP07) - Rocket launcher": "Armor",
+      "Dead Simple (MAP07) - Partial invisibility": "Energy cell pack",
+      "Dead Simple (MAP07) - Chaingun": "Box of bullets",
+      "Dead Simple (MAP07) - Plasma gun": "Medikit",
+      "Dead Simple (MAP07) - Berserk": "Medikit",
+      "Dead Simple (MAP07) - Partial invisibility 2": "Box of rockets",
+      "Dead Simple (MAP07) - Partial invisibility 3": "Invulnerability",
+      "Dead Simple (MAP07) - Partial invisibility 4": "Box of shotgun shells",
+      "Dead Simple (MAP07) - Exit": "Dead Simple (MAP07) - Complete",
+      "Dead Simple (MAP07) - Super Shotgun": "Energy cell pack",
+      "Dead Simple (MAP07) - Backpack": "Box of shotgun shells",
+      "Tricks and Traps (MAP08) - Plasma gun": "Partial invisibility",
+      "Tricks and Traps (MAP08) - Rocket launcher": "Energy cell pack",
+      "Tricks and Traps (MAP08) - Armor": "The Waste Tunnels (MAP05) - Red keycard",
+      "Tricks and Traps (MAP08) - Chaingun": "Mega Armor",
+      "Tricks and Traps (MAP08) - Shotgun": "Box of bullets",
+      "Tricks and Traps (MAP08) - Supercharge": "Energy cell pack",
+      "Tricks and Traps (MAP08) - Invulnerability": "Box of shotgun shells",
+      "Tricks and Traps (MAP08) - Invulnerability 2": "Energy cell pack",
+      "Tricks and Traps (MAP08) - Yellow skull key": "Armor",
+      "Tricks and Traps (MAP08) - Backpack": "Partial invisibility",
+      "Tricks and Traps (MAP08) - Backpack 2": "Energy cell pack",
+      "Tricks and Traps (MAP08) - Invulnerability 3": "The Crusher (MAP06) - Red keycard",
+      "Tricks and Traps (MAP08) - Invulnerability 4": "Box of shotgun shells",
+      "Tricks and Traps (MAP08) - BFG9000": "Box of rockets",
+      "Tricks and Traps (MAP08) - Supercharge 2": "Box of rockets",
+      "Tricks and Traps (MAP08) - Backpack 3": "Box of bullets",
+      "Tricks and Traps (MAP08) - Backpack 4": "Armor",
+      "Tricks and Traps (MAP08) - Chainsaw": "Box of bullets",
+      "Tricks and Traps (MAP08) - Armor 2": "Medikit",
+      "Tricks and Traps (MAP08) - Backpack 5": "The Catacombs (MAP22) - Computer area map",
+      "Tricks and Traps (MAP08) - Partial invisibility": "Medikit",
+      "Tricks and Traps (MAP08) - Red skull key": "The Inmost Dens (MAP14) - Blue skull key",
+      "Tricks and Traps (MAP08) - Invulnerability 5": "Armor",
+      "Tricks and Traps (MAP08) - Exit": "Tricks and Traps (MAP08) - Complete",
+      "The Pit (MAP09) - Berserk": "Energy cell pack",
+      "The Pit (MAP09) - Shotgun": "Invulnerability",
+      "The Pit (MAP09) - Supercharge": "Icon of Sin (MAP30) - Computer area map",
+      "The Pit (MAP09) - Berserk 2": "Invulnerability",
+      "The Pit (MAP09) - Rocket launcher": "Box of shotgun shells",
+      "The Pit (MAP09) - BFG9000": "Box of rockets",
+      "The Pit (MAP09) - Blue keycard": "Box of rockets",
+      "The Pit (MAP09) - Armor": "Box of shotgun shells",
+      "The Pit (MAP09) - Yellow keycard": "Supercharge",
+      "The Pit (MAP09) - Backpack": "Energy cell pack",
+      "The Pit (MAP09) - Computer area map": "Entryway (MAP01) - Computer area map",
+      "The Pit (MAP09) - Supercharge 2": "Mega Armor",
+      "The Pit (MAP09) - Mega Armor 2": "Mega Armor",
+      "The Pit (MAP09) - Berserk 3": "Berserk",
+      "The Pit (MAP09) - Exit": "The Pit (MAP09) - Complete",
+      "The Pit (MAP09) - Mega Armor": "Mega Armor",
+      "Refueling Base (MAP10) - BFG9000": "Berserk",
+      "Refueling Base (MAP10) - Supercharge": "The Factory (MAP12) - Computer area map",
+      "Refueling Base (MAP10) - Plasma gun": "Mega Armor",
+      "Refueling Base (MAP10) - Blue keycard": "Medikit",
+      "Refueling Base (MAP10) - Chaingun": "Rocket launcher",
+      "Refueling Base (MAP10) - Armor": "Armor",
+      "Refueling Base (MAP10) - Rocket launcher": "Supercharge",
+      "Refueling Base (MAP10) - Supercharge 2": "Energy cell pack",
+      "Refueling Base (MAP10) - Backpack": "Box of shotgun shells",
+      "Refueling Base (MAP10) - Berserk": "Bloodfalls (MAP25) - Computer area map",
+      "Refueling Base (MAP10) - Mega Armor": "Monster Condo (MAP27) - Computer area map",
+      "Refueling Base (MAP10) - Invulnerability": "Energy cell pack",
+      "Refueling Base (MAP10) - Invulnerability 2": "Supercharge",
+      "Refueling Base (MAP10) - Armor 2": "Box of shotgun shells",
+      "Refueling Base (MAP10) - Berserk 2": "Medikit",
+      "Refueling Base (MAP10) - Partial invisibility": "Partial invisibility",
+      "Refueling Base (MAP10) - Chainsaw": "The Citadel (MAP19)",
+      "Refueling Base (MAP10) - Yellow keycard": "Armor",
+      "Refueling Base (MAP10) - Megasphere": "Berserk",
+      "Refueling Base (MAP10) - Exit": "Refueling Base (MAP10) - Complete",
+      "Refueling Base (MAP10) - Shotgun": "Icon of Sin (MAP30)",
+      "Circle of Death (MAP11) - Red keycard": "Mega Armor",
+      "Circle of Death (MAP11) - Chaingun": "Energy cell pack",
+      "Circle of Death (MAP11) - Supercharge": "The Waste Tunnels (MAP05)",
+      "Circle of Death (MAP11) - Plasma gun": "Armor",
+      "Circle of Death (MAP11) - Blue keycard": "Partial invisibility",
+      "Circle of Death (MAP11) - Armor": "Box of bullets",
+      "Circle of Death (MAP11) - Shotgun": "Box of bullets",
+      "Circle of Death (MAP11) - Partial invisibility": "The Focus (MAP04) - Yellow keycard",
+      "Circle of Death (MAP11) - Mega Armor": "Energy cell pack",
+      "Circle of Death (MAP11) - Invulnerability": "Armor",
+      "Circle of Death (MAP11) - Rocket launcher": "Box of rockets",
+      "Circle of Death (MAP11) - Backpack": "Partial invisibility",
+      "Circle of Death (MAP11) - Supercharge 2": "The Abandoned Mines (MAP26)",
+      "Circle of Death (MAP11) - BFG9000": "Energy cell pack",
+      "Circle of Death (MAP11) - Exit": "Circle of Death (MAP11) - Complete",
+      "The Factory (MAP12) - Supercharge": "Box of shotgun shells",
+      "The Factory (MAP12) - Blue keycard": "Shotgun",
+      "The Factory (MAP12) - Supercharge 2": "Box of shotgun shells",
+      "The Factory (MAP12) - Berserk 2": "Box of bullets",
+      "The Factory (MAP12) - Yellow keycard": "Armor",
+      "The Factory (MAP12) - Super Shotgun": "Megasphere",
+      "The Factory (MAP12) - Armor": "Box of bullets",
+      "The Factory (MAP12) - Backpack": "Partial invisibility",
+      "The Factory (MAP12) - BFG9000": "Energy cell pack",
+      "The Factory (MAP12) - Exit": "The Factory (MAP12) - Complete",
+      "The Factory (MAP12) - Shotgun": "Energy cell pack",
+      "The Factory (MAP12) - Armor 2": "Circle of Death (MAP11) - Red keycard",
+      "The Factory (MAP12) - Partial invisibility": "Gotcha! (MAP20) - Computer area map",
+      "The Factory (MAP12) - Berserk": "Mega Armor",
+      "The Factory (MAP12) - Chaingun": "The Waste Tunnels (MAP05) - Computer area map",
+      "The Factory (MAP12) - Berserk 3": "Chainsaw",
+      "Downtown (MAP13) - Rocket launcher": "Energy cell pack",
+      "Downtown (MAP13) - Shotgun": "The Spirit World (MAP28)",
+      "Downtown (MAP13) - Supercharge": "Armor",
+      "Downtown (MAP13) - Berserk": "The Spirit World (MAP28) - Computer area map",
+      "Downtown (MAP13) - Mega Armor": "Armor",
+      "Downtown (MAP13) - Chaingun": "Box of bullets",
+      "Downtown (MAP13) - Blue keycard": "Box of bullets",
+      "Downtown (MAP13) - Plasma gun": "Supercharge",
+      "Downtown (MAP13) - Partial invisibility": "Box of bullets",
+      "Downtown (MAP13) - Backpack": "Industrial Zone (MAP15) - Yellow keycard",
+      "Downtown (MAP13) - BFG9000": "Supercharge",
+      "Downtown (MAP13) - Invulnerability 2": "Box of shotgun shells",
+      "Downtown (MAP13) - Partial invisibility 2": "The Citadel (MAP19) - Blue skull key",
+      "Downtown (MAP13) - Partial invisibility 3": "Energy cell pack",
+      "Downtown (MAP13) - Computer area map": "Supercharge",
+      "Downtown (MAP13) - Chainsaw": "Nirvana (MAP21) - Yellow skull key",
+      "Downtown (MAP13) - Invulnerability": "Energy cell pack",
+      "Downtown (MAP13) - Red keycard": "Armor",
+      "Downtown (MAP13) - Berserk 3": "Underhalls (MAP02) - Blue keycard",
+      "Downtown (MAP13) - Exit": "Downtown (MAP13) - Complete",
+      "Downtown (MAP13) - Yellow keycard": "The Pit (MAP09)",
+      "Downtown (MAP13) - Berserk 2": "Box of shotgun shells",
+      "The Inmost Dens (MAP14) - Shotgun": "Mega Armor",
+      "The Inmost Dens (MAP14) - Supercharge": "Refueling Base (MAP10) - Yellow keycard",
+      "The Inmost Dens (MAP14) - Mega Armor": "Refueling Base (MAP10) - Blue keycard",
+      "The Inmost Dens (MAP14) - Berserk": "Berserk",
+      "The Inmost Dens (MAP14) - Chaingun": "Bloodfalls (MAP25) - Blue skull key",
+      "The Inmost Dens (MAP14) - Plasma gun": "Supercharge",
+      "The Inmost Dens (MAP14) - Red skull key": "Mega Armor",
+      "The Inmost Dens (MAP14) - Rocket launcher": "Medikit",
+      "The Inmost Dens (MAP14) - Exit": "The Inmost Dens (MAP14) - Complete",
+      "The Inmost Dens (MAP14) - Blue skull key": "Supercharge",
+      "The Inmost Dens (MAP14) - Partial invisibility": "The Living End (MAP29) - Computer area map",
+      "Industrial Zone (MAP15) - Berserk": "Box of bullets",
+      "Industrial Zone (MAP15) - Rocket launcher": "Supercharge",
+      "Industrial Zone (MAP15) - Shotgun": "The Crusher (MAP06)",
+      "Industrial Zone (MAP15) - Partial invisibility": "Downtown (MAP13)",
+      "Industrial Zone (MAP15) - Backpack": "Suburbs (MAP16) - Red skull key",
+      "Industrial Zone (MAP15) - BFG9000": "Energy cell pack",
+      "Industrial Zone (MAP15) - Supercharge": "Downtown (MAP13) - Blue keycard",
+      "Industrial Zone (MAP15) - Mega Armor": "Energy cell pack",
+      "Industrial Zone (MAP15) - Armor": "Backpack",
+      "Industrial Zone (MAP15) - Yellow keycard": "Downtown (MAP13) - Red keycard",
+      "Industrial Zone (MAP15) - Chaingun": "Box of bullets",
+      "Industrial Zone (MAP15) - Invulnerability": "Megasphere",
+      "Industrial Zone (MAP15) - Red keycard": "Tenements (MAP17) - Red keycard",
+      "Industrial Zone (MAP15) - Mega Armor 2": "Supercharge",
+      "Industrial Zone (MAP15) - Exit": "Industrial Zone (MAP15) - Complete",
+      "Industrial Zone (MAP15) - Chainsaw": "Suburbs (MAP16) - Computer area map",
+      "Industrial Zone (MAP15) - Megasphere": "Downtown (MAP13) - Yellow keycard",
+      "Industrial Zone (MAP15) - Berserk 2": "Box of shotgun shells",
+      "Industrial Zone (MAP15) - Plasma gun": "Box of shotgun shells",
+      "Industrial Zone (MAP15) - Partial invisibility 2": "The Courtyard (MAP18) - Blue skull key",
+      "Industrial Zone (MAP15) - Computer area map": "The Spirit World (MAP28) - Yellow skull key",
+      "Industrial Zone (MAP15) - Backpack 2": "Mega Armor",
+      "Industrial Zone (MAP15) - Blue keycard": "Supercharge",
+      "Suburbs (MAP16) - Megasphere": "Medikit",
+      "Suburbs (MAP16) - Super Shotgun": "Armor",
+      "Suburbs (MAP16) - Chaingun": "Box of bullets",
+      "Suburbs (MAP16) - Backpack": "Box of shotgun shells",
+      "Suburbs (MAP16) - Rocket launcher": "Medikit",
+      "Suburbs (MAP16) - Berserk": "Partial invisibility",
+      "Suburbs (MAP16) - BFG9000": "Box of shotgun shells",
+      "Suburbs (MAP16) - Shotgun": "Supercharge",
+      "Suburbs (MAP16) - Supercharge": "Berserk",
+      "Suburbs (MAP16) - Blue skull key": "The Pit (MAP09) - Yellow keycard",
+      "Suburbs (MAP16) - Invulnerability": "Medikit",
+      "Suburbs (MAP16) - Partial invisibility": "The Catacombs (MAP22) - Blue skull key",
+      "Suburbs (MAP16) - Plasma gun": "The Factory (MAP12) - Yellow keycard",
+      "Suburbs (MAP16) - Plasma gun 2": "Megasphere",
+      "Suburbs (MAP16) - Plasma gun 3": "Medikit",
+      "Suburbs (MAP16) - Plasma gun 4": "Invulnerability",
+      "Suburbs (MAP16) - Red skull key": "Underhalls (MAP02) - Red keycard",
+      "Suburbs (MAP16) - Exit": "Suburbs (MAP16) - Complete",
+      "Tenements (MAP17) - Shotgun": "The Chasm (MAP24) - Red keycard",
+      "Tenements (MAP17) - Red keycard": "Nirvana (MAP21) - Red skull key",
+      "Tenements (MAP17) - Supercharge 2": "Medikit",
+      "Tenements (MAP17) - Yellow skull key": "Box of bullets",
+      "Tenements (MAP17) - Rocket launcher": "Energy cell pack",
+      "Tenements (MAP17) - Partial invisibility": "Medikit",
+      "Tenements (MAP17) - Backpack": "Underhalls (MAP02)",
+      "Tenements (MAP17) - Supercharge": "Armor",
+      "Tenements (MAP17) - BFG9000": "Berserk",
+      "Tenements (MAP17) - Plasma gun": "Armor",
+      "Tenements (MAP17) - Megasphere": "Berserk",
+      "Tenements (MAP17) - Exit": "Tenements (MAP17) - Complete",
+      "Tenements (MAP17) - Armor": "Energy cell pack",
+      "Tenements (MAP17) - Blue keycard": "Box of bullets",
+      "Tenements (MAP17) - Chaingun": "Mega Armor",
+      "Tenements (MAP17) - Mega Armor": "Energy cell pack",
+      "Tenements (MAP17) - Armor 2": "The Courtyard (MAP18) - Computer area map",
+      "Tenements (MAP17) - Berserk": "Medikit",
+      "The Courtyard (MAP18) - Shotgun": "Medikit",
+      "The Courtyard (MAP18) - Plasma gun": "Invulnerability",
+      "The Courtyard (MAP18) - Armor": "The Citadel (MAP19) - Yellow skull key",
+      "The Courtyard (MAP18) - Berserk": "Mega Armor",
+      "The Courtyard (MAP18) - Chaingun": "Box of shotgun shells",
+      "The Courtyard (MAP18) - Rocket launcher": "Supercharge",
+      "The Courtyard (MAP18) - Partial invisibility": "Mega Armor",
+      "The Courtyard (MAP18) - Partial invisibility 2": "Tricks and Traps (MAP08) - Yellow skull key",
+      "The Courtyard (MAP18) - Backpack": "Invulnerability",
+      "The Courtyard (MAP18) - Supercharge": "Box of bullets",
+      "The Courtyard (MAP18) - Invulnerability": "Box of rockets",
+      "The Courtyard (MAP18) - Invulnerability 2": "Supercharge",
+      "The Courtyard (MAP18) - Yellow skull key": "Box of bullets",
+      "The Courtyard (MAP18) - BFG9000": "Medikit",
+      "The Courtyard (MAP18) - Computer area map": "Box of rockets",
+      "The Courtyard (MAP18) - Super Shotgun": "Box of shotgun shells",
+      "The Courtyard (MAP18) - Exit": "The Courtyard (MAP18) - Complete",
+      "The Courtyard (MAP18) - Blue skull key": "Mega Armor",
+      "The Citadel (MAP19) - Armor": "Box of rockets",
+      "The Citadel (MAP19) - Chaingun": "Box of bullets",
+      "The Citadel (MAP19) - Berserk": "Box of bullets",
+      "The Citadel (MAP19) - Mega Armor": "Medikit",
+      "The Citadel (MAP19) - Supercharge": "Invulnerability",
+      "The Citadel (MAP19) - Armor 2": "Mega Armor",
+      "The Citadel (MAP19) - Backpack": "The Citadel (MAP19) - Red skull key",
+      "The Citadel (MAP19) - Invulnerability": "The Crusher (MAP06) - Computer area map",
+      "The Citadel (MAP19) - Blue skull key": "Plasma gun",
+      "The Citadel (MAP19) - Partial invisibility": "Medikit",
+      "The Citadel (MAP19) - Red skull key": "Invulnerability",
+      "The Citadel (MAP19) - Yellow skull key": "Armor",
+      "The Citadel (MAP19) - Computer area map": "The Pit (MAP09) - Computer area map",
+      "The Citadel (MAP19) - Rocket launcher": "Partial invisibility",
+      "The Citadel (MAP19) - Super Shotgun": "Box of bullets",
+      "The Citadel (MAP19) - Exit": "The Citadel (MAP19) - Complete",
+      "Gotcha! (MAP20) - Mega Armor": "Medikit",
+      "Gotcha! (MAP20) - Rocket launcher": "Box of bullets",
+      "Gotcha! (MAP20) - Supercharge": "Box of rockets",
+      "Gotcha! (MAP20) - Armor": "Circle of Death (MAP11)",
+      "Gotcha! (MAP20) - Megasphere": "Energy cell pack",
+      "Gotcha! (MAP20) - Armor 2": "Mega Armor",
+      "Gotcha! (MAP20) - Super Shotgun": "Armor",
+      "Gotcha! (MAP20) - Plasma gun": "The Waste Tunnels (MAP05) - Blue keycard",
+      "Gotcha! (MAP20) - Mega Armor 2": "Box of rockets",
+      "Gotcha! (MAP20) - Berserk": "Energy cell pack",
+      "Gotcha! (MAP20) - Supercharge 2": "Energy cell pack",
+      "Gotcha! (MAP20) - Supercharge 3": "The Courtyard (MAP18) - Yellow skull key",
+      "Gotcha! (MAP20) - BFG9000": "Armor",
+      "Gotcha! (MAP20) - Supercharge 4": "Medikit",
+      "Gotcha! (MAP20) - Exit": "Gotcha! (MAP20) - Complete",
+      "Nirvana (MAP21) - Rocket launcher": "The Gantlet (MAP03)",
+      "Nirvana (MAP21) - Yellow skull key": "Circle of Death (MAP11) - Computer area map",
+      "Nirvana (MAP21) - Backpack": "Berserk",
+      "Nirvana (MAP21) - Megasphere": "Energy cell pack",
+      "Nirvana (MAP21) - Invulnerability": "Box of shotgun shells",
+      "Nirvana (MAP21) - Blue skull key": "Partial invisibility",
+      "Nirvana (MAP21) - Red skull key": "The Abandoned Mines (MAP26) - Yellow keycard",
+      "Nirvana (MAP21) - Exit": "Nirvana (MAP21) - Complete",
+      "Nirvana (MAP21) - Super Shotgun": "BFG9000",
+      "The Catacombs (MAP22) - Rocket launcher": "Box of shotgun shells",
+      "The Catacombs (MAP22) - Blue skull key": "Box of shotgun shells",
+      "The Catacombs (MAP22) - Berserk": "Box of shotgun shells",
+      "The Catacombs (MAP22) - Red skull key": "Box of bullets",
+      "The Catacombs (MAP22) - Exit": "The Catacombs (MAP22) - Complete",
+      "The Catacombs (MAP22) - Shotgun": "Armor",
+      "The Catacombs (MAP22) - Plasma gun": "Medikit",
+      "The Catacombs (MAP22) - Supercharge": "Tricks and Traps (MAP08)",
+      "The Catacombs (MAP22) - Armor": "Berserk",
+      "Barrels o' Fun (MAP23) - Shotgun": "The Citadel (MAP19) - Computer area map",
+      "Barrels o' Fun (MAP23) - Berserk": "Box of rockets",
+      "Barrels o' Fun (MAP23) - Backpack": "Megasphere",
+      "Barrels o' Fun (MAP23) - Computer area map": "Supercharge",
+      "Barrels o' Fun (MAP23) - Armor": "The Pit (MAP09) - Blue keycard",
+      "Barrels o' Fun (MAP23) - Rocket launcher": "Barrels o' Fun (MAP23) - Computer area map",
+      "Barrels o' Fun (MAP23) - Megasphere": "Partial invisibility",
+      "Barrels o' Fun (MAP23) - Supercharge": "Box of rockets",
+      "Barrels o' Fun (MAP23) - Backpack 2": "Box of shotgun shells",
+      "Barrels o' Fun (MAP23) - Yellow skull key": "Box of rockets",
+      "Barrels o' Fun (MAP23) - BFG9000": "Box of rockets",
+      "Barrels o' Fun (MAP23) - Exit": "Barrels o' Fun (MAP23) - Complete",
+      "The Chasm (MAP24) - Shotgun": "Partial invisibility",
+      "The Chasm (MAP24) - Rocket launcher": "Mega Armor",
+      "The Chasm (MAP24) - Blue keycard": "Armor",
+      "The Chasm (MAP24) - Berserk": "Barrels o' Fun (MAP23)",
+      "The Chasm (MAP24) - BFG9000": "The Inmost Dens (MAP14)",
+      "The Chasm (MAP24) - Super Shotgun": "Box of shotgun shells",
+      "The Chasm (MAP24) - Megasphere 2": "Box of shotgun shells",
+      "The Chasm (MAP24) - Exit": "The Chasm (MAP24) - Complete",
+      "The Chasm (MAP24) - Plasma gun": "Monster Condo (MAP27) - Red skull key",
+      "The Chasm (MAP24) - Invulnerability": "Megasphere",
+      "The Chasm (MAP24) - Backpack": "The Abandoned Mines (MAP26) - Computer area map",
+      "The Chasm (MAP24) - Berserk 2": "Medikit",
+      "The Chasm (MAP24) - Armor": "Armor",
+      "The Chasm (MAP24) - Red keycard": "Partial invisibility",
+      "The Chasm (MAP24) - Megasphere": "Suburbs (MAP16) - Blue skull key",
+      "Bloodfalls (MAP25) - Megasphere": "Box of rockets",
+      "Bloodfalls (MAP25) - Mega Armor": "Box of bullets",
+      "Bloodfalls (MAP25) - Armor": "Gotcha! (MAP20)",
+      "Bloodfalls (MAP25) - Blue skull key": "Nirvana (MAP21) - Blue skull key",
+      "Bloodfalls (MAP25) - Chaingun": "Box of shotgun shells",
+      "Bloodfalls (MAP25) - Plasma gun": "Armor",
+      "Bloodfalls (MAP25) - BFG9000 2": "The Chasm (MAP24) - Blue keycard",
+      "Bloodfalls (MAP25) - Rocket launcher": "Box of rockets",
+      "Bloodfalls (MAP25) - Partial invisibility": "The Chasm (MAP24) - Computer area map",
+      "Bloodfalls (MAP25) - BFG9000": "Supercharge",
+      "Bloodfalls (MAP25) - Exit": "Bloodfalls (MAP25) - Complete",
+      "Bloodfalls (MAP25) - Super Shotgun": "Energy cell pack",
+      "The Abandoned Mines (MAP26) - Super Shotgun": "The Spirit World (MAP28) - Red skull key",
+      "The Abandoned Mines (MAP26) - Rocket launcher": "Energy cell pack",
+      "The Abandoned Mines (MAP26) - Plasma gun": "Partial invisibility",
+      "The Abandoned Mines (MAP26) - Chaingun": "Medikit",
+      "The Abandoned Mines (MAP26) - Partial invisibility": "Box of bullets",
+      "The Abandoned Mines (MAP26) - Armor": "Box of rockets",
+      "The Abandoned Mines (MAP26) - Red keycard": "Mega Armor",
+      "The Abandoned Mines (MAP26) - Backpack": "Armor",
+      "The Abandoned Mines (MAP26) - Yellow keycard": "The Abandoned Mines (MAP26) - Red keycard",
+      "The Abandoned Mines (MAP26) - Exit": "The Abandoned Mines (MAP26) - Complete",
+      "The Abandoned Mines (MAP26) - Blue keycard": "Energy cell pack",
+      "The Abandoned Mines (MAP26) - Mega Armor": "The Catacombs (MAP22)",
+      "The Abandoned Mines (MAP26) - Supercharge": "Berserk",
+      "Monster Condo (MAP27) - Rocket launcher": "Refueling Base (MAP10) - Computer area map",
+      "Monster Condo (MAP27) - Partial invisibility": "Invulnerability",
+      "Monster Condo (MAP27) - Plasma gun": "Barrels o' Fun (MAP23) - Yellow skull key",
+      "Monster Condo (MAP27) - Invulnerability": "Box of rockets",
+      "Monster Condo (MAP27) - Armor": "Energy cell pack",
+      "Monster Condo (MAP27) - Backpack": "Box of rockets",
+      "Monster Condo (MAP27) - Invulnerability 2": "Mega Armor",
+      "Monster Condo (MAP27) - Partial invisibility 2": "Tenements (MAP17) - Computer area map",
+      "Monster Condo (MAP27) - Supercharge": "The Catacombs (MAP22) - Red skull key",
+      "Monster Condo (MAP27) - Armor 2": "Industrial Zone (MAP15)",
+      "Monster Condo (MAP27) - Chaingun": "Armor",
+      "Monster Condo (MAP27) - BFG9000": "Invulnerability",
+      "Monster Condo (MAP27) - Backpack 2": "Armor",
+      "Monster Condo (MAP27) - Backpack 3": "Box of rockets",
+      "Monster Condo (MAP27) - Backpack 4": "Armor",
+      "Monster Condo (MAP27) - Yellow skull key": "Dead Simple (MAP07) - Computer area map",
+      "Monster Condo (MAP27) - Chainsaw": "Armor",
+      "Monster Condo (MAP27) - Super Shotgun": "Armor",
+      "Monster Condo (MAP27) - Red skull key": "Armor",
+      "Monster Condo (MAP27) - Supercharge 2": "Armor",
+      "Monster Condo (MAP27) - Blue skull key": "The Gantlet (MAP03) - Red keycard",
+      "Monster Condo (MAP27) - Supercharge 3": "Mega Armor",
+      "Monster Condo (MAP27) - Computer area map": "Energy cell pack",
+      "Monster Condo (MAP27) - Berserk": "The Abandoned Mines (MAP26) - Blue keycard",
+      "Monster Condo (MAP27) - Supercharge 4": "Partial invisibility",
+      "Monster Condo (MAP27) - Supercharge 5": "The Gantlet (MAP03) - Blue keycard",
+      "Monster Condo (MAP27) - Computer area map 2": "Medikit",
+      "Monster Condo (MAP27) - Berserk 2": "Box of rockets",
+      "Monster Condo (MAP27) - Partial invisibility 3": "Box of rockets",
+      "Monster Condo (MAP27) - Invulnerability 3": "The Courtyard (MAP18)",
+      "Monster Condo (MAP27) - Exit": "Monster Condo (MAP27) - Complete",
+      "The Spirit World (MAP28) - Armor": "Box of shotgun shells",
+      "The Spirit World (MAP28) - Chainsaw": "Box of rockets",
+      "The Spirit World (MAP28) - Invulnerability": "The Chasm (MAP24)",
+      "The Spirit World (MAP28) - Yellow skull key": "Tenements (MAP17)",
+      "The Spirit World (MAP28) - Supercharge": "Dead Simple (MAP07)",
+      "The Spirit World (MAP28) - Chaingun": "Supercharge",
+      "The Spirit World (MAP28) - Rocket launcher": "Medikit",
+      "The Spirit World (MAP28) - Backpack": "The Living End (MAP29)",
+      "The Spirit World (MAP28) - Backpack 2": "Energy cell pack",
+      "The Spirit World (MAP28) - Backpack 3": "Energy cell pack",
+      "The Spirit World (MAP28) - Backpack 4": "Megasphere",
+      "The Spirit World (MAP28) - Berserk": "Box of rockets",
+      "The Spirit World (MAP28) - Plasma gun": "Mega Armor",
+      "The Spirit World (MAP28) - Invulnerability 2": "Underhalls (MAP02) - Computer area map",
+      "The Spirit World (MAP28) - Invulnerability 3": "Energy cell pack",
+      "The Spirit World (MAP28) - BFG9000": "Energy cell pack",
+      "The Spirit World (MAP28) - Megasphere": "Mega Armor",
+      "The Spirit World (MAP28) - Megasphere 2": "Medikit",
+      "The Spirit World (MAP28) - Invulnerability 4": "Downtown (MAP13) - Computer area map",
+      "The Spirit World (MAP28) - Invulnerability 5": "Tenements (MAP17) - Blue keycard",
+      "The Spirit World (MAP28) - Super Shotgun": "The Crusher (MAP06) - Blue keycard",
+      "The Spirit World (MAP28) - Red skull key": "Armor",
+      "The Spirit World (MAP28) - Exit": "The Spirit World (MAP28) - Complete",
+      "The Living End (MAP29) - Chaingun": "Bloodfalls (MAP25)",
+      "The Living End (MAP29) - Plasma gun": "Armor",
+      "The Living End (MAP29) - Backpack": "Partial invisibility",
+      "The Living End (MAP29) - Super Shotgun": "Industrial Zone (MAP15) - Computer area map",
+      "The Living End (MAP29) - Mega Armor": "The Crusher (MAP06) - Yellow keycard",
+      "The Living End (MAP29) - Armor": "Supercharge",
+      "The Living End (MAP29) - Backpack 2": "Armor",
+      "The Living End (MAP29) - Supercharge": "Armor",
+      "The Living End (MAP29) - Berserk": "Monster Condo (MAP27) - Blue skull key",
+      "The Living End (MAP29) - Berserk 2": "Energy cell pack",
+      "The Living End (MAP29) - Exit": "The Living End (MAP29) - Complete",
+      "Icon of Sin (MAP30) - Supercharge": "Supercharge",
+      "Icon of Sin (MAP30) - Supercharge 2": "Megasphere",
+      "Icon of Sin (MAP30) - Supercharge 3": "Box of shotgun shells",
+      "Icon of Sin (MAP30) - Invulnerability": "Box of shotgun shells",
+      "Icon of Sin (MAP30) - Invulnerability 2": "Box of rockets",
+      "Icon of Sin (MAP30) - Invulnerability 3": "Tenements (MAP17) - Yellow skull key",
+      "Icon of Sin (MAP30) - Invulnerability 4": "The Focus (MAP04) - Blue keycard",
+      "Icon of Sin (MAP30) - Megasphere 2": "The Gantlet (MAP03) - Computer area map",
+      "Icon of Sin (MAP30) - Berserk": "Monster Condo (MAP27)",
+      "Icon of Sin (MAP30) - Exit": "Icon of Sin (MAP30) - Complete",
+      "Icon of Sin (MAP30) - BFG9000": "Mega Armor",
+      "Icon of Sin (MAP30) - Chaingun": "Suburbs (MAP16)",
+      "Icon of Sin (MAP30) - Chainsaw": "The Focus (MAP04)",
+      "Icon of Sin (MAP30) - Plasma gun": "Super Shotgun",
+      "Icon of Sin (MAP30) - Rocket launcher": "Industrial Zone (MAP15) - Red keycard",
+      "Icon of Sin (MAP30) - Shotgun": "Armor",
+      "Icon of Sin (MAP30) - Super Shotgun": "Box of shotgun shells",
+      "Icon of Sin (MAP30) - Backpack": "Supercharge",
+      "Icon of Sin (MAP30) - Megasphere": "Monster Condo (MAP27) - Yellow skull key"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -12136,7 +12817,22 @@
     "1": {
       "game": "DOOM II WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
+      "world_directory": "doom_ii_worldgen"
     }
   },
   "game_info": {
@@ -12144,6 +12840,43 @@
       "name": "DOOM II WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "dirt",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the DOOM II randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Daivuk"
+          ]
+        }
+      ],
+      "world_description": "Doom II, also known as Doom II: Hell on Earth, is a first-person shooter game by id Software.\nIt was released for MS-DOS in 1994.\nCompared to its predecessor, Doom II features larger levels, new enemies, a new \"super shotgun\" weapon",
+      "slot_data": {
+        "difficulty": 2,
+        "random_monsters": 2,
+        "random_pickups": 1,
+        "random_music": 0,
+        "flip_levels": 0,
+        "allow_death_logic": 0,
+        "pro": 0,
+        "death_link": 0,
+        "reset_level_on_death": 1,
+        "episode1": 1,
+        "episode2": 1,
+        "episode3": 1,
+        "episode4": 0,
+        "ammo1start": 200,
+        "ammo2start": 50,
+        "ammo3start": 300,
+        "ammo4start": 50,
+        "ammo1add": 200,
+        "ammo2add": 50,
+        "ammo3add": 300,
+        "ammo4add": 50
       }
     }
   },

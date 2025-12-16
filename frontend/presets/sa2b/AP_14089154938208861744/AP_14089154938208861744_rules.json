@@ -6914,7 +6914,8 @@
         "trivia_trap_weight": 2,
         "voice_shuffle": 0,
         "whistlesanity": 0
-      }
+      },
+      "world_directory": "sa2b"
     }
   },
   "game_info": {

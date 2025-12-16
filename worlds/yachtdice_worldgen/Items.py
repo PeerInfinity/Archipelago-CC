@@ -22,7 +22,7 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
-    "Dice": ItemData(16871244000, ItemClassification.filler),
+    "Dice": ItemData(16871244000, ItemClassification.progression | ItemClassification.useful),
     "Dice Fragment": ItemData(16871244001, ItemClassification.progression),
     "Roll": ItemData(16871244002, ItemClassification.progression),
     "Roll Fragment": ItemData(16871244003, ItemClassification.progression),

@@ -33,32 +33,38 @@
             "name": "Hub -> The Docks (E1M1) Main",
             "connected_region": "The Docks (E1M1) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Docks (E1M1)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Docks (E1M1)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Dungeons (E1M2) Main",
             "connected_region": "The Dungeons (E1M2) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Dungeons (E1M2)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Dungeons (E1M2)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -67,24 +73,26 @@
             "name": "Hub -> The Gatehouse (E1M3) Main",
             "connected_region": "The Gatehouse (E1M3) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Gatehouse (E1M3)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Gatehouse (E1M3)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -93,24 +101,26 @@
             "name": "Hub -> The Guard Tower (E1M4) Main",
             "connected_region": "The Guard Tower (E1M4) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Guard Tower (E1M4)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Guard Tower (E1M4)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -119,33 +129,28 @@
             "name": "Hub -> The Citadel (E1M5) Main",
             "connected_region": "The Citadel (E1M5) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Ethereal Crossbow",
-                        "The Citadel (E1M5)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Gauntlets of the Necromancer"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Gauntlets of the Necromancer"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Ethereal Crossbow",
+                      "The Citadel (E1M5)"
+                    ]
+                  }
                 }
               ]
             }
@@ -154,33 +159,28 @@
             "name": "Hub -> The Cathedral (E1M6) Main",
             "connected_region": "The Cathedral (E1M6) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Ethereal Crossbow",
-                        "The Cathedral (E1M6)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Gauntlets of the Necromancer"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Gauntlets of the Necromancer"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Ethereal Crossbow",
+                      "The Cathedral (E1M6)"
+                    ]
+                  }
                 }
               ]
             }
@@ -189,33 +189,28 @@
             "name": "Hub -> The Crypts (E1M7) Main",
             "connected_region": "The Crypts (E1M7) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Ethereal Crossbow",
-                        "The Crypts (E1M7)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Gauntlets of the Necromancer"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Gauntlets of the Necromancer"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Ethereal Crossbow",
+                      "The Crypts (E1M7)"
+                    ]
+                  }
                 }
               ]
             }
@@ -224,70 +219,70 @@
             "name": "Hub -> Hell's Maw (E1M8) Main",
             "connected_region": "Hell's Maw (E1M8) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "Gauntlets of the Necromancer",
-                    "Hell's Maw (E1M8)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Gauntlets of the Necromancer",
+                  "Hell's Maw (E1M8)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Graveyard (E1M9) Main",
             "connected_region": "The Graveyard (E1M9) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "Gauntlets of the Necromancer",
-                    "The Graveyard (E1M9)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Gauntlets of the Necromancer",
+                  "The Graveyard (E1M9)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Crater (E2M1) Main",
             "connected_region": "The Crater (E2M1) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crater (E2M1)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crater (E2M1)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Lava Pits (E2M2) Main",
             "connected_region": "The Lava Pits (E2M2) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "The Lava Pits (E2M2)"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "The Lava Pits (E2M2)",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -296,52 +291,44 @@
             "name": "Hub -> The River of Fire (E2M3) Main",
             "connected_region": "The River of Fire (E2M3) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "The River of Fire (E2M3)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "The River of Fire (E2M3)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Ice Grotto (E2M4) Main",
             "connected_region": "The Ice Grotto (E2M4) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "The Ice Grotto (E2M4)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Hellstaff"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Firemace",
-                        "Hellstaff"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "The Ice Grotto (E2M4)"
+                    ]
+                  }
                 }
               ]
             }
@@ -350,36 +337,31 @@
             "name": "Hub -> The Catacombs (E2M5) Main",
             "connected_region": "The Catacombs (E2M5) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Gauntlets of the Necromancer",
-                        "The Catacombs (E2M5)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Firemace",
-                        "Hellstaff",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Gauntlets of the Necromancer",
+                      "The Catacombs (E2M5)"
+                    ]
+                  }
                 }
               ]
             }
@@ -388,36 +370,31 @@
             "name": "Hub -> The Labyrinth (E2M6) Main",
             "connected_region": "The Labyrinth (E2M6) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Gauntlets of the Necromancer",
-                        "The Labyrinth (E2M6)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Firemace",
-                        "Hellstaff",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Gauntlets of the Necromancer",
+                      "The Labyrinth (E2M6)"
+                    ]
+                  }
                 }
               ]
             }
@@ -426,36 +403,31 @@
             "name": "Hub -> The Great Hall (E2M7) Main",
             "connected_region": "The Great Hall (E2M7) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Firemace",
-                        "Gauntlets of the Necromancer",
-                        "The Great Hall (E2M7)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hellstaff",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "The Great Hall (E2M7)"
+                    ]
+                  }
                 }
               ]
             }
@@ -464,58 +436,50 @@
             "name": "Hub -> The Portals of Chaos (E2M8) Main",
             "connected_region": "The Portals of Chaos (E2M8) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "Firemace",
-                    "Gauntlets of the Necromancer",
-                    "Hellstaff",
-                    "Phoenix Rod",
-                    "The Portals of Chaos (E2M8)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Gauntlets of the Necromancer",
+                  "Hellstaff",
+                  "Phoenix Rod",
+                  "The Portals of Chaos (E2M8)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Glacier (E2M9) Main",
             "connected_region": "The Glacier (E2M9) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Firemace",
-                        "Gauntlets of the Necromancer",
-                        "The Glacier (E2M9)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hellstaff",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "The Glacier (E2M9)"
+                    ]
+                  }
                 }
               ]
             }
@@ -524,64 +488,60 @@
             "name": "Hub -> The Storehouse (E3M1) Main",
             "connected_region": "The Storehouse (E3M1) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Storehouse (E3M1)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Storehouse (E3M1)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> The Cesspool (E3M2) Main",
             "connected_region": "The Cesspool (E3M2) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "Firemace",
-                    "Hellstaff",
-                    "The Cesspool (E3M2)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Hellstaff",
+                  "The Cesspool (E3M2)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Confluence (E3M3) Main",
             "connected_region": "The Confluence (E3M3) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "The Confluence (E3M3)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Firemace",
-                        "Gauntlets of the Necromancer",
-                        "Hellstaff",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "The Confluence (E3M3)"
+                    ]
+                  }
                 }
               ]
             }
@@ -590,36 +550,31 @@
             "name": "Hub -> The Azure Fortress (E3M4) Main",
             "connected_region": "The Azure Fortress (E3M4) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Hellstaff",
-                        "The Azure Fortress (E3M4)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Firemace",
-                        "Gauntlets of the Necromancer",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Hellstaff",
+                      "The Azure Fortress (E3M4)"
+                    ]
+                  }
                 }
               ]
             }
@@ -628,36 +583,31 @@
             "name": "Hub -> The Ophidian Lair (E3M5) Main",
             "connected_region": "The Ophidian Lair (E3M5) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Hellstaff",
-                        "The Ophidian Lair (E3M5)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Firemace",
-                        "Gauntlets of the Necromancer",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Hellstaff",
+                      "The Ophidian Lair (E3M5)"
+                    ]
+                  }
                 }
               ]
             }
@@ -666,36 +616,31 @@
             "name": "Hub -> The Halls of Fear (E3M6) Main",
             "connected_region": "The Halls of Fear (E3M6) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Firemace",
-                        "Hellstaff",
-                        "The Halls of Fear (E3M6)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Gauntlets of the Necromancer",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Hellstaff",
+                      "The Halls of Fear (E3M6)"
+                    ]
+                  }
                 }
               ]
             }
@@ -704,36 +649,31 @@
             "name": "Hub -> The Chasm (E3M7) Main",
             "connected_region": "The Chasm (E3M7) Main",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Dragon Claw",
-                        "Ethereal Crossbow",
-                        "Firemace",
-                        "Hellstaff",
-                        "The Chasm (E3M7)"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Gauntlets of the Necromancer",
-                        "Phoenix Rod"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Hellstaff",
+                      "The Chasm (E3M7)"
+                    ]
+                  }
                 }
               ]
             }
@@ -742,44 +682,38 @@
             "name": "Hub -> D'Sparil's Keep (E3M8) Main",
             "connected_region": "D'Sparil's Keep (E3M8) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "D'Sparil's Keep (E3M8)",
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "Firemace",
-                    "Gauntlets of the Necromancer",
-                    "Hellstaff",
-                    "Phoenix Rod"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "D'Sparil's Keep (E3M8)",
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Gauntlets of the Necromancer",
+                  "Hellstaff",
+                  "Phoenix Rod"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Aquifer (E3M9) Main",
             "connected_region": "The Aquifer (E3M9) Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Dragon Claw",
-                    "Ethereal Crossbow",
-                    "Firemace",
-                    "Gauntlets of the Necromancer",
-                    "Hellstaff",
-                    "Phoenix Rod",
-                    "The Aquifer (E3M9)"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Gauntlets of the Necromancer",
+                  "Hellstaff",
+                  "Phoenix Rod",
+                  "The Aquifer (E3M9)"
+                ]
+              }
             }
           }
         ],
@@ -792,8 +726,12 @@
             "name": "The Docks (E1M1) Main -> The Docks (E1M1) Yellow",
             "connected_region": "The Docks (E1M1) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Docks (E1M1) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Docks (E1M1) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -950,16 +888,24 @@
             "name": "The Dungeons (E1M2) Main -> The Dungeons (E1M2) Yellow",
             "connected_region": "The Dungeons (E1M2) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Dungeons (E1M2) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Dungeons (E1M2) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Dungeons (E1M2) Main -> The Dungeons (E1M2) Green",
             "connected_region": "The Dungeons (E1M2) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Dungeons (E1M2) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Dungeons (E1M2) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1048,8 +994,12 @@
             "name": "The Dungeons (E1M2) Blue -> The Dungeons (E1M2) Yellow",
             "connected_region": "The Dungeons (E1M2) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Dungeons (E1M2) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Dungeons (E1M2) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1086,8 +1036,12 @@
             "name": "The Dungeons (E1M2) Yellow -> The Dungeons (E1M2) Blue",
             "connected_region": "The Dungeons (E1M2) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Dungeons (E1M2) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Dungeons (E1M2) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1244,24 +1198,36 @@
             "name": "The Gatehouse (E1M3) Main -> The Gatehouse (E1M3) Yellow",
             "connected_region": "The Gatehouse (E1M3) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Gatehouse (E1M3) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Gatehouse (E1M3) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Gatehouse (E1M3) Main -> The Gatehouse (E1M3) Sea",
             "connected_region": "The Gatehouse (E1M3) Sea",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Gatehouse (E1M3) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Gatehouse (E1M3) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Gatehouse (E1M3) Main -> The Gatehouse (E1M3) Green",
             "connected_region": "The Gatehouse (E1M3) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Gatehouse (E1M3) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Gatehouse (E1M3) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1485,8 +1451,12 @@
             "name": "The Gatehouse (E1M3) Green -> The Gatehouse (E1M3) Main",
             "connected_region": "The Gatehouse (E1M3) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Gatehouse (E1M3) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Gatehouse (E1M3) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1545,8 +1515,12 @@
             "name": "The Guard Tower (E1M4) Main -> The Guard Tower (E1M4) Yellow",
             "connected_region": "The Guard Tower (E1M4) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Guard Tower (E1M4) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Guard Tower (E1M4) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1695,8 +1669,12 @@
             "name": "The Guard Tower (E1M4) Yellow -> The Guard Tower (E1M4) Green",
             "connected_region": "The Guard Tower (E1M4) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Guard Tower (E1M4) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Guard Tower (E1M4) - Green key",
+                "count": 1
+              }
             }
           },
           {
@@ -1763,8 +1741,12 @@
             "name": "The Guard Tower (E1M4) Green -> The Guard Tower (E1M4) Yellow",
             "connected_region": "The Guard Tower (E1M4) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Guard Tower (E1M4) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Guard Tower (E1M4) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1793,8 +1775,12 @@
             "name": "The Citadel (E1M5) Main -> The Citadel (E1M5) Yellow",
             "connected_region": "The Citadel (E1M5) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Citadel (E1M5) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Citadel (E1M5) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1868,8 +1854,12 @@
             "name": "The Citadel (E1M5) Blue -> The Citadel (E1M5) Green",
             "connected_region": "The Citadel (E1M5) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Citadel (E1M5) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Citadel (E1M5) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1944,8 +1934,12 @@
             "name": "The Citadel (E1M5) Yellow -> The Citadel (E1M5) Green",
             "connected_region": "The Citadel (E1M5) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Citadel (E1M5) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Citadel (E1M5) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2005,8 +1999,12 @@
             "name": "The Citadel (E1M5) Green -> The Citadel (E1M5) Blue",
             "connected_region": "The Citadel (E1M5) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Citadel (E1M5) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Citadel (E1M5) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2185,8 +2183,12 @@
             "name": "The Cathedral (E1M6) Main -> The Cathedral (E1M6) Yellow",
             "connected_region": "The Cathedral (E1M6) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cathedral (E1M6) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cathedral (E1M6) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2245,8 +2247,12 @@
             "name": "The Cathedral (E1M6) Yellow -> The Cathedral (E1M6) Green",
             "connected_region": "The Cathedral (E1M6) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cathedral (E1M6) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cathedral (E1M6) - Green key",
+                "count": 1
+              }
             }
           },
           {
@@ -2584,16 +2590,24 @@
             "name": "The Crypts (E1M7) Main -> The Crypts (E1M7) Yellow",
             "connected_region": "The Crypts (E1M7) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crypts (E1M7) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crypts (E1M7) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Crypts (E1M7) Main -> The Crypts (E1M7) Green",
             "connected_region": "The Crypts (E1M7) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crypts (E1M7) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crypts (E1M7) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2728,16 +2742,24 @@
             "name": "The Crypts (E1M7) Yellow -> The Crypts (E1M7) Green",
             "connected_region": "The Crypts (E1M7) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crypts (E1M7) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crypts (E1M7) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Crypts (E1M7) Yellow -> The Crypts (E1M7) Blue",
             "connected_region": "The Crypts (E1M7) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crypts (E1M7) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crypts (E1M7) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2879,8 +2901,12 @@
             "name": "The Crypts (E1M7) Green -> The Crypts (E1M7) Main",
             "connected_region": "The Crypts (E1M7) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crypts (E1M7) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crypts (E1M7) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3155,24 +3181,36 @@
             "name": "The Graveyard (E1M9) Main -> The Graveyard (E1M9) Yellow",
             "connected_region": "The Graveyard (E1M9) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Graveyard (E1M9) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Graveyard (E1M9) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Graveyard (E1M9) Main -> The Graveyard (E1M9) Green",
             "connected_region": "The Graveyard (E1M9) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Graveyard (E1M9) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Graveyard (E1M9) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Graveyard (E1M9) Main -> The Graveyard (E1M9) Blue",
             "connected_region": "The Graveyard (E1M9) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Graveyard (E1M9) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Graveyard (E1M9) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3321,8 +3359,12 @@
             "name": "The Graveyard (E1M9) Yellow -> The Graveyard (E1M9) Main",
             "connected_region": "The Graveyard (E1M9) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Graveyard (E1M9) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Graveyard (E1M9) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3366,8 +3408,12 @@
             "name": "The Graveyard (E1M9) Green -> The Graveyard (E1M9) Main",
             "connected_region": "The Graveyard (E1M9) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Graveyard (E1M9) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Graveyard (E1M9) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3471,8 +3517,12 @@
             "name": "The Crater (E2M1) Main -> The Crater (E2M1) Yellow",
             "connected_region": "The Crater (E2M1) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crater (E2M1) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crater (E2M1) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3569,8 +3619,12 @@
             "name": "The Crater (E2M1) Yellow -> The Crater (E2M1) Green",
             "connected_region": "The Crater (E2M1) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crater (E2M1) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crater (E2M1) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3659,8 +3713,12 @@
             "name": "The Crater (E2M1) Green -> The Crater (E2M1) Yellow",
             "connected_region": "The Crater (E2M1) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Crater (E2M1) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Crater (E2M1) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3689,8 +3747,12 @@
             "name": "The Lava Pits (E2M2) Main -> The Lava Pits (E2M2) Yellow",
             "connected_region": "The Lava Pits (E2M2) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Lava Pits (E2M2) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Lava Pits (E2M2) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3779,16 +3841,24 @@
             "name": "The Lava Pits (E2M2) Yellow -> The Lava Pits (E2M2) Green",
             "connected_region": "The Lava Pits (E2M2) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Lava Pits (E2M2) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Lava Pits (E2M2) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Lava Pits (E2M2) Yellow -> The Lava Pits (E2M2) Main",
             "connected_region": "The Lava Pits (E2M2) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Lava Pits (E2M2) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Lava Pits (E2M2) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -3945,8 +4015,12 @@
             "name": "The Lava Pits (E2M2) Green -> The Lava Pits (E2M2) Yellow",
             "connected_region": "The Lava Pits (E2M2) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Lava Pits (E2M2) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Lava Pits (E2M2) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4020,24 +4094,36 @@
             "name": "The River of Fire (E2M3) Main -> The River of Fire (E2M3) Yellow",
             "connected_region": "The River of Fire (E2M3) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The River of Fire (E2M3) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The River of Fire (E2M3) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The River of Fire (E2M3) Main -> The River of Fire (E2M3) Blue",
             "connected_region": "The River of Fire (E2M3) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The River of Fire (E2M3) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The River of Fire (E2M3) - Blue key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The River of Fire (E2M3) Main -> The River of Fire (E2M3) Green",
             "connected_region": "The River of Fire (E2M3) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The River of Fire (E2M3) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The River of Fire (E2M3) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4156,8 +4242,12 @@
             "name": "The River of Fire (E2M3) Blue -> The River of Fire (E2M3) Main",
             "connected_region": "The River of Fire (E2M3) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The River of Fire (E2M3) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The River of Fire (E2M3) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4231,8 +4321,12 @@
             "name": "The River of Fire (E2M3) Yellow -> The River of Fire (E2M3) Main",
             "connected_region": "The River of Fire (E2M3) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The River of Fire (E2M3) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The River of Fire (E2M3) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4276,8 +4370,12 @@
             "name": "The River of Fire (E2M3) Green -> The River of Fire (E2M3) Main",
             "connected_region": "The River of Fire (E2M3) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The River of Fire (E2M3) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The River of Fire (E2M3) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4351,16 +4449,24 @@
             "name": "The Ice Grotto (E2M4) Main -> The Ice Grotto (E2M4) Green",
             "connected_region": "The Ice Grotto (E2M4) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Ice Grotto (E2M4) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Ice Grotto (E2M4) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Ice Grotto (E2M4) Main -> The Ice Grotto (E2M4) Yellow",
             "connected_region": "The Ice Grotto (E2M4) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Ice Grotto (E2M4) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Ice Grotto (E2M4) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4479,8 +4585,12 @@
             "name": "The Ice Grotto (E2M4) Blue -> The Ice Grotto (E2M4) Green",
             "connected_region": "The Ice Grotto (E2M4) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Ice Grotto (E2M4) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Ice Grotto (E2M4) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4532,17 +4642,14 @@
             "name": "The Ice Grotto (E2M4) Yellow -> The Ice Grotto (E2M4) Magenta",
             "connected_region": "The Ice Grotto (E2M4) Magenta",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "The Ice Grotto (E2M4) - Blue key",
-                    "The Ice Grotto (E2M4) - Green key"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "The Ice Grotto (E2M4) - Blue key",
+                  "The Ice Grotto (E2M4) - Green key"
+                ]
+              }
             }
           }
         ],
@@ -4609,8 +4716,12 @@
             "name": "The Ice Grotto (E2M4) Green -> The Ice Grotto (E2M4) Blue",
             "connected_region": "The Ice Grotto (E2M4) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Ice Grotto (E2M4) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Ice Grotto (E2M4) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4789,8 +4900,12 @@
             "name": "The Catacombs (E2M5) Main -> The Catacombs (E2M5) Yellow",
             "connected_region": "The Catacombs (E2M5) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (E2M5) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (E2M5) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4879,8 +4994,12 @@
             "name": "The Catacombs (E2M5) Blue -> The Catacombs (E2M5) Green",
             "connected_region": "The Catacombs (E2M5) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (E2M5) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (E2M5) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4909,8 +5028,12 @@
             "name": "The Catacombs (E2M5) Yellow -> The Catacombs (E2M5) Green",
             "connected_region": "The Catacombs (E2M5) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (E2M5) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (E2M5) - Green key",
+                "count": 1
+              }
             }
           },
           {
@@ -5097,8 +5220,12 @@
             "name": "The Catacombs (E2M5) Green -> The Catacombs (E2M5) Blue",
             "connected_region": "The Catacombs (E2M5) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Catacombs (E2M5) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Catacombs (E2M5) - Blue key",
+                "count": 1
+              }
             }
           },
           {
@@ -5188,24 +5315,36 @@
             "name": "The Labyrinth (E2M6) Main -> The Labyrinth (E2M6) Blue",
             "connected_region": "The Labyrinth (E2M6) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Labyrinth (E2M6) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Labyrinth (E2M6) - Blue key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Labyrinth (E2M6) Main -> The Labyrinth (E2M6) Yellow",
             "connected_region": "The Labyrinth (E2M6) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Labyrinth (E2M6) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Labyrinth (E2M6) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Labyrinth (E2M6) Main -> The Labyrinth (E2M6) Green",
             "connected_region": "The Labyrinth (E2M6) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Labyrinth (E2M6) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Labyrinth (E2M6) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5294,8 +5433,12 @@
             "name": "The Labyrinth (E2M6) Blue -> The Labyrinth (E2M6) Main",
             "connected_region": "The Labyrinth (E2M6) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Labyrinth (E2M6) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Labyrinth (E2M6) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5594,16 +5737,24 @@
             "name": "The Great Hall (E2M7) Main -> The Great Hall (E2M7) Yellow",
             "connected_region": "The Great Hall (E2M7) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Great Hall (E2M7) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Great Hall (E2M7) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Great Hall (E2M7) Main -> The Great Hall (E2M7) Green",
             "connected_region": "The Great Hall (E2M7) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Great Hall (E2M7) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Great Hall (E2M7) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5782,8 +5933,12 @@
             "name": "The Great Hall (E2M7) Blue -> The Great Hall (E2M7) Yellow",
             "connected_region": "The Great Hall (E2M7) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Great Hall (E2M7) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Great Hall (E2M7) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5827,16 +5982,24 @@
             "name": "The Great Hall (E2M7) Yellow -> The Great Hall (E2M7) Blue",
             "connected_region": "The Great Hall (E2M7) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Great Hall (E2M7) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Great Hall (E2M7) - Blue key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Great Hall (E2M7) Yellow -> The Great Hall (E2M7) Main",
             "connected_region": "The Great Hall (E2M7) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Great Hall (E2M7) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Great Hall (E2M7) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6171,24 +6334,36 @@
             "name": "The Glacier (E2M9) Main -> The Glacier (E2M9) Yellow",
             "connected_region": "The Glacier (E2M9) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Glacier (E2M9) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Glacier (E2M9) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Glacier (E2M9) Main -> The Glacier (E2M9) Blue",
             "connected_region": "The Glacier (E2M9) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Glacier (E2M9) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Glacier (E2M9) - Blue key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Glacier (E2M9) Main -> The Glacier (E2M9) Green",
             "connected_region": "The Glacier (E2M9) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Glacier (E2M9) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Glacier (E2M9) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6352,8 +6527,12 @@
             "name": "The Glacier (E2M9) Blue -> The Glacier (E2M9) Main",
             "connected_region": "The Glacier (E2M9) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Glacier (E2M9) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Glacier (E2M9) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6427,8 +6606,12 @@
             "name": "The Glacier (E2M9) Yellow -> The Glacier (E2M9) Main",
             "connected_region": "The Glacier (E2M9) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Glacier (E2M9) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Glacier (E2M9) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6622,16 +6805,24 @@
             "name": "The Storehouse (E3M1) Main -> The Storehouse (E3M1) Yellow",
             "connected_region": "The Storehouse (E3M1) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Storehouse (E3M1) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Storehouse (E3M1) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Storehouse (E3M1) Main -> The Storehouse (E3M1) Green",
             "connected_region": "The Storehouse (E3M1) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Storehouse (E3M1) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Storehouse (E3M1) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6750,8 +6941,12 @@
             "name": "The Storehouse (E3M1) Yellow -> The Storehouse (E3M1) Main",
             "connected_region": "The Storehouse (E3M1) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Storehouse (E3M1) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Storehouse (E3M1) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6780,8 +6975,12 @@
             "name": "The Storehouse (E3M1) Green -> The Storehouse (E3M1) Main",
             "connected_region": "The Storehouse (E3M1) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Storehouse (E3M1) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Storehouse (E3M1) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6870,8 +7069,12 @@
             "name": "The Cesspool (E3M2) Main -> The Cesspool (E3M2) Yellow",
             "connected_region": "The Cesspool (E3M2) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cesspool (E3M2) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cesspool (E3M2) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6975,8 +7178,12 @@
             "name": "The Cesspool (E3M2) Blue -> The Cesspool (E3M2) Green",
             "connected_region": "The Cesspool (E3M2) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cesspool (E3M2) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cesspool (E3M2) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7028,8 +7235,12 @@
             "name": "The Cesspool (E3M2) Yellow -> The Cesspool (E3M2) Green",
             "connected_region": "The Cesspool (E3M2) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cesspool (E3M2) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cesspool (E3M2) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7178,8 +7389,12 @@
             "name": "The Cesspool (E3M2) Green -> The Cesspool (E3M2) Blue",
             "connected_region": "The Cesspool (E3M2) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cesspool (E3M2) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cesspool (E3M2) - Blue key",
+                "count": 1
+              }
             }
           },
           {
@@ -7194,8 +7409,12 @@
             "name": "The Cesspool (E3M2) Green -> The Cesspool (E3M2) Yellow",
             "connected_region": "The Cesspool (E3M2) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Cesspool (E3M2) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Cesspool (E3M2) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7344,16 +7563,24 @@
             "name": "The Confluence (E3M3) Main -> The Confluence (E3M3) Green",
             "connected_region": "The Confluence (E3M3) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Confluence (E3M3) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Confluence (E3M3) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Confluence (E3M3) Main -> The Confluence (E3M3) Yellow",
             "connected_region": "The Confluence (E3M3) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Confluence (E3M3) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Confluence (E3M3) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7412,8 +7639,12 @@
             "name": "The Confluence (E3M3) Blue -> The Confluence (E3M3) Green",
             "connected_region": "The Confluence (E3M3) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Confluence (E3M3) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Confluence (E3M3) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7652,16 +7883,24 @@
             "name": "The Confluence (E3M3) Green -> The Confluence (E3M3) Main",
             "connected_region": "The Confluence (E3M3) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Confluence (E3M3) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Confluence (E3M3) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Confluence (E3M3) Green -> The Confluence (E3M3) Blue",
             "connected_region": "The Confluence (E3M3) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Confluence (E3M3) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Confluence (E3M3) - Blue key",
+                "count": 1
+              }
             }
           },
           {
@@ -7848,16 +8087,24 @@
             "name": "The Azure Fortress (E3M4) Main -> The Azure Fortress (E3M4) Green",
             "connected_region": "The Azure Fortress (E3M4) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Azure Fortress (E3M4) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Azure Fortress (E3M4) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Azure Fortress (E3M4) Main -> The Azure Fortress (E3M4) Yellow",
             "connected_region": "The Azure Fortress (E3M4) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Azure Fortress (E3M4) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Azure Fortress (E3M4) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -8321,16 +8568,24 @@
             "name": "The Ophidian Lair (E3M5) Main -> The Ophidian Lair (E3M5) Yellow",
             "connected_region": "The Ophidian Lair (E3M5) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Ophidian Lair (E3M5) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Ophidian Lair (E3M5) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Ophidian Lair (E3M5) Main -> The Ophidian Lair (E3M5) Green",
             "connected_region": "The Ophidian Lair (E3M5) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Ophidian Lair (E3M5) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Ophidian Lair (E3M5) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -8659,8 +8914,12 @@
             "name": "The Halls of Fear (E3M6) Main -> The Halls of Fear (E3M6) Yellow",
             "connected_region": "The Halls of Fear (E3M6) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Halls of Fear (E3M6) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Halls of Fear (E3M6) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -8764,8 +9023,12 @@
             "name": "The Halls of Fear (E3M6) Blue -> The Halls of Fear (E3M6) Yellow",
             "connected_region": "The Halls of Fear (E3M6) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Halls of Fear (E3M6) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Halls of Fear (E3M6) - Blue key",
+                "count": 1
+              }
             }
           },
           {
@@ -8877,8 +9140,12 @@
             "name": "The Halls of Fear (E3M6) Yellow -> The Halls of Fear (E3M6) Blue",
             "connected_region": "The Halls of Fear (E3M6) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Halls of Fear (E3M6) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Halls of Fear (E3M6) - Blue key",
+                "count": 1
+              }
             }
           },
           {
@@ -8893,8 +9160,12 @@
             "name": "The Halls of Fear (E3M6) Yellow -> The Halls of Fear (E3M6) Green",
             "connected_region": "The Halls of Fear (E3M6) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Halls of Fear (E3M6) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Halls of Fear (E3M6) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9172,8 +9443,12 @@
             "name": "The Chasm (E3M7) Main -> The Chasm (E3M7) Yellow",
             "connected_region": "The Chasm (E3M7) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (E3M7) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (E3M7) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9328,24 +9603,36 @@
             "name": "The Chasm (E3M7) Yellow -> The Chasm (E3M7) Main",
             "connected_region": "The Chasm (E3M7) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (E3M7) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (E3M7) - Yellow key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Chasm (E3M7) Yellow -> The Chasm (E3M7) Green",
             "connected_region": "The Chasm (E3M7) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (E3M7) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (E3M7) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Chasm (E3M7) Yellow -> The Chasm (E3M7) Blue",
             "connected_region": "The Chasm (E3M7) Blue",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (E3M7) - Blue key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (E3M7) - Blue key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9404,8 +9691,12 @@
             "name": "The Chasm (E3M7) Green -> The Chasm (E3M7) Yellow",
             "connected_region": "The Chasm (E3M7) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Chasm (E3M7) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Chasm (E3M7) - Green key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9770,8 +10061,12 @@
             "name": "The Aquifer (E3M9) Main -> The Aquifer (E3M9) Yellow",
             "connected_region": "The Aquifer (E3M9) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Aquifer (E3M9) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Aquifer (E3M9) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9866,16 +10161,24 @@
             "name": "The Aquifer (E3M9) Yellow -> The Aquifer (E3M9) Green",
             "connected_region": "The Aquifer (E3M9) Green",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Aquifer (E3M9) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Aquifer (E3M9) - Green key",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Aquifer (E3M9) Yellow -> The Aquifer (E3M9) Main",
             "connected_region": "The Aquifer (E3M9) Main",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Aquifer (E3M9) - Yellow key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Aquifer (E3M9) - Yellow key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9964,8 +10267,12 @@
             "name": "The Aquifer (E3M9) Green -> The Aquifer (E3M9) Yellow",
             "connected_region": "The Aquifer (E3M9) Yellow",
             "access_rule": {
-              "type": "item_check",
-              "item": "The Aquifer (E3M9) - Green key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "The Aquifer (E3M9) - Green key",
+                "count": 1
+              }
             }
           },
           {
@@ -13657,6 +13964,512 @@
       "Torch": 15
     }
   },
+  "canonical_placements": {
+    "1": {
+      "The Docks (E1M1) - Yellow key": "Silver Shield",
+      "The Docks (E1M1) - Silver Shield": "Dragon Claw",
+      "The Docks (E1M1) - Gauntlets of the Necromancer": "Enchanted Shield",
+      "The Docks (E1M1) - Ethereal Crossbow": "Quiver of Ethereal Arrows",
+      "The Docks (E1M1) - Tome of Power": "Crystal Geode",
+      "The Docks (E1M1) - Exit": "The Docks (E1M1) - Complete",
+      "The Docks (E1M1) - Bag of Holding": "Inferno Orb",
+      "The Dungeons (E1M2) - Yellow key": "Energy Orb",
+      "The Dungeons (E1M2) - Silver Shield": "The Guard Tower (E1M4) - Green key",
+      "The Dungeons (E1M2) - Torch": "The Ophidian Lair (E3M5) - Green key",
+      "The Dungeons (E1M2) - Tome of Power": "Energy Orb",
+      "The Dungeons (E1M2) - Ethereal Crossbow": "The Aquifer (E3M9) - Green key",
+      "The Dungeons (E1M2) - Exit": "The Dungeons (E1M2) - Complete",
+      "The Dungeons (E1M2) - Dragon Claw": "Bag of Holding",
+      "The Dungeons (E1M2) - Green key": "The Citadel (E1M5)",
+      "The Dungeons (E1M2) - Map Scroll": "Energy Orb",
+      "The Dungeons (E1M2) - Shadowsphere": "Quiver of Ethereal Arrows",
+      "The Dungeons (E1M2) - Gauntlets of the Necromancer": "Quiver of Ethereal Arrows",
+      "The Dungeons (E1M2) - Silver Shield 2": "Morph Ovum",
+      "The Dungeons (E1M2) - Bag of Holding": "Ring of Invincibility",
+      "The Dungeons (E1M2) - Blue key": "The Graveyard (E1M9) - Yellow key",
+      "The Gatehouse (E1M3) - Yellow key": "Tome of Power",
+      "The Gatehouse (E1M3) - Dragon Claw": "Quiver of Ethereal Arrows",
+      "The Gatehouse (E1M3) - Silver Shield": "Hellstaff",
+      "The Gatehouse (E1M3) - Ethereal Crossbow": "The River of Fire (E2M3) - Blue key",
+      "The Gatehouse (E1M3) - Torch": "Tome of Power",
+      "The Gatehouse (E1M3) - Shadowsphere": "Tome of Power",
+      "The Gatehouse (E1M3) - Tome of Power 2": "Crystal Geode",
+      "The Gatehouse (E1M3) - Tome of Power 3": "Inferno Orb",
+      "The Gatehouse (E1M3) - Green key": "Inferno Orb",
+      "The Gatehouse (E1M3) - Bag of Holding": "Shadowsphere",
+      "The Gatehouse (E1M3) - Gauntlets of the Necromancer": "Silver Shield",
+      "The Gatehouse (E1M3) - Ring of Invincibility": "Crystal Geode",
+      "The Gatehouse (E1M3) - Morph Ovum": "Quiver of Ethereal Arrows",
+      "The Gatehouse (E1M3) - Exit": "The Gatehouse (E1M3) - Complete",
+      "The Gatehouse (E1M3) - Tome of Power": "Silver Shield",
+      "The Guard Tower (E1M4) - Gauntlets of the Necromancer": "Timebomb of the Ancients",
+      "The Guard Tower (E1M4) - Dragon Claw": "Timebomb of the Ancients",
+      "The Guard Tower (E1M4) - Ethereal Crossbow": "Quiver of Ethereal Arrows",
+      "The Guard Tower (E1M4) - Yellow key": "Mystic Urn",
+      "The Guard Tower (E1M4) - Map Scroll": "The Halls of Fear (E3M6)",
+      "The Guard Tower (E1M4) - Tome of Power": "Timebomb of the Ancients",
+      "The Guard Tower (E1M4) - Silver Shield": "Timebomb of the Ancients",
+      "The Guard Tower (E1M4) - Torch": "Tome of Power",
+      "The Guard Tower (E1M4) - Tome of Power 3": "Torch",
+      "The Guard Tower (E1M4) - Shadowsphere": "Inferno Orb",
+      "The Guard Tower (E1M4) - Green key": "Torch",
+      "The Guard Tower (E1M4) - Tome of Power 2": "Quiver of Ethereal Arrows",
+      "The Guard Tower (E1M4) - Exit": "The Guard Tower (E1M4) - Complete",
+      "The Citadel (E1M5) - Yellow key": "Morph Ovum",
+      "The Citadel (E1M5) - Gauntlets of the Necromancer": "The Catacombs (E2M5) - Blue key",
+      "The Citadel (E1M5) - Shadowsphere": "Timebomb of the Ancients",
+      "The Citadel (E1M5) - Torch": "Crystal Geode",
+      "The Citadel (E1M5) - Tome of Power 2": "Silver Shield",
+      "The Citadel (E1M5) - Silver Shield 2": "The Halls of Fear (E3M6) - Map Scroll",
+      "The Citadel (E1M5) - Exit": "The Citadel (E1M5) - Complete",
+      "The Citadel (E1M5) - Green key": "Inferno Orb",
+      "The Citadel (E1M5) - Ethereal Crossbow": "Crystal Geode",
+      "The Citadel (E1M5) - Blue key": "Torch",
+      "The Citadel (E1M5) - Dragon Claw": "Greater Runes",
+      "The Citadel (E1M5) - Ring of Invincibility": "Energy Orb",
+      "The Citadel (E1M5) - Bag of Holding": "Chaos Device",
+      "The Citadel (E1M5) - Tome of Power 3": "Tome of Power",
+      "The Citadel (E1M5) - Morph Ovum": "Timebomb of the Ancients",
+      "The Citadel (E1M5) - Torch 2": "Energy Orb",
+      "The Citadel (E1M5) - Tome of Power 4": "The Graveyard (E1M9) - Green key",
+      "The Citadel (E1M5) - Tome of Power 5": "Crystal Geode",
+      "The Citadel (E1M5) - Tome of Power": "Crystal Geode",
+      "The Cathedral (E1M6) - Yellow key": "The Confluence (E3M3)",
+      "The Cathedral (E1M6) - Gauntlets of the Necromancer": "Tome of Power",
+      "The Cathedral (E1M6) - Tome of Power 3": "Quartz Flask",
+      "The Cathedral (E1M6) - Ethereal Crossbow": "Ring of Invincibility",
+      "The Cathedral (E1M6) - Dragon Claw": "Tome of Power",
+      "The Cathedral (E1M6) - Tome of Power": "The Labyrinth (E2M6) - Yellow key",
+      "The Cathedral (E1M6) - Shadowsphere": "Energy Orb",
+      "The Cathedral (E1M6) - Green key": "The River of Fire (E2M3) - Green key",
+      "The Cathedral (E1M6) - Silver Shield": "The Cesspool (E3M2) - Blue key",
+      "The Cathedral (E1M6) - Bag of Holding": "Tome of Power",
+      "The Cathedral (E1M6) - Ring of Invincibility": "Quiver of Ethereal Arrows",
+      "The Cathedral (E1M6) - Torch": "Quartz Flask",
+      "The Cathedral (E1M6) - Tome of Power 2": "Enchanted Shield",
+      "The Cathedral (E1M6) - Morph Ovum": "Tome of Power",
+      "The Cathedral (E1M6) - Map Scroll": "Tome of Power",
+      "The Cathedral (E1M6) - Ring of Invincibility 2": "The Cesspool (E3M2) - Yellow key",
+      "The Cathedral (E1M6) - Silver Shield 2": "Timebomb of the Ancients",
+      "The Cathedral (E1M6) - Bag of Holding 2": "Silver Shield",
+      "The Cathedral (E1M6) - Exit": "The Cathedral (E1M6) - Complete",
+      "The Cathedral (E1M6) - Silver Shield 3": "Silver Shield",
+      "The Cathedral (E1M6) - Bag of Holding 3": "The Dungeons (E1M2)",
+      "The Crypts (E1M7) - Yellow key": "Silver Shield",
+      "The Crypts (E1M7) - Gauntlets of the Necromancer": "Timebomb of the Ancients",
+      "The Crypts (E1M7) - Bag of Holding": "Pile of Mace Spheres",
+      "The Crypts (E1M7) - Torch 2": "Tome of Power",
+      "The Crypts (E1M7) - Map Scroll": "Greater Runes",
+      "The Crypts (E1M7) - Exit": "The Crypts (E1M7) - Complete",
+      "The Crypts (E1M7) - Ethereal Crossbow": "Timebomb of the Ancients",
+      "The Crypts (E1M7) - Green key": "Silver Shield",
+      "The Crypts (E1M7) - Morph Ovum": "Tome of Power",
+      "The Crypts (E1M7) - Dragon Claw": "Tome of Power",
+      "The Crypts (E1M7) - Tome of Power": "The Storehouse (E3M1) - Map Scroll",
+      "The Crypts (E1M7) - Ring of Invincibility": "Quiver of Ethereal Arrows",
+      "The Crypts (E1M7) - Tome of Power 2": "The Chasm (E3M7) - Map Scroll",
+      "The Crypts (E1M7) - Shadowsphere": "Tome of Power",
+      "The Crypts (E1M7) - Blue key": "Morph Ovum",
+      "The Crypts (E1M7) - Silver Shield": "The Lava Pits (E2M2) - Yellow key",
+      "The Crypts (E1M7) - Torch": "Enchanted Shield",
+      "The Crypts (E1M7) - Silver Shield 2": "The Great Hall (E2M7)",
+      "Hell's Maw (E1M8) - Ethereal Crossbow": "Silver Shield",
+      "Hell's Maw (E1M8) - Dragon Claw": "The Great Hall (E2M7) - Green key",
+      "Hell's Maw (E1M8) - Tome of Power": "The Guard Tower (E1M4)",
+      "Hell's Maw (E1M8) - Gauntlets of the Necromancer": "Crystal Geode",
+      "Hell's Maw (E1M8) - Tome of Power 2": "The Cesspool (E3M2) - Map Scroll",
+      "Hell's Maw (E1M8) - Silver Shield": "Tome of Power",
+      "Hell's Maw (E1M8) - Shadowsphere": "Inferno Orb",
+      "Hell's Maw (E1M8) - Ring of Invincibility": "The Halls of Fear (E3M6) - Yellow key",
+      "Hell's Maw (E1M8) - Bag of Holding": "The Storehouse (E3M1) - Yellow key",
+      "Hell's Maw (E1M8) - Bag of Holding 2": "Inferno Orb",
+      "Hell's Maw (E1M8) - Ring of Invincibility 3": "The Portals of Chaos (E2M8) - Map Scroll",
+      "Hell's Maw (E1M8) - Morph Ovum": "Hell's Maw (E1M8) - Map Scroll",
+      "Hell's Maw (E1M8) - Exit": "Hell's Maw (E1M8) - Complete",
+      "The Graveyard (E1M9) - Yellow key": "Mystic Urn",
+      "The Graveyard (E1M9) - Bag of Holding": "Energy Orb",
+      "The Graveyard (E1M9) - Silver Shield": "The Cathedral (E1M6) - Yellow key",
+      "The Graveyard (E1M9) - Tome of Power": "Greater Runes",
+      "The Graveyard (E1M9) - Morph Ovum": "Enchanted Shield",
+      "The Graveyard (E1M9) - Dragon Claw 2": "Pile of Mace Spheres",
+      "The Graveyard (E1M9) - Map Scroll": "Enchanted Shield",
+      "The Graveyard (E1M9) - Exit": "The Graveyard (E1M9) - Complete",
+      "The Graveyard (E1M9) - Green key": "The Crater (E2M1) - Green key",
+      "The Graveyard (E1M9) - Dragon Claw": "Enchanted Shield",
+      "The Graveyard (E1M9) - Blue key": "Energy Orb",
+      "The Graveyard (E1M9) - Ethereal Crossbow": "Timebomb of the Ancients",
+      "The Graveyard (E1M9) - Shadowsphere": "Greater Runes",
+      "The Graveyard (E1M9) - Ring of Invincibility": "Pile of Mace Spheres",
+      "The Graveyard (E1M9) - Torch": "Timebomb of the Ancients",
+      "The Graveyard (E1M9) - Tome of Power 2": "Inferno Orb",
+      "The Crater (E2M1) - Yellow key": "Timebomb of the Ancients",
+      "The Crater (E2M1) - Ethereal Crossbow": "Crystal Geode",
+      "The Crater (E2M1) - Tome of Power": "The Labyrinth (E2M6) - Map Scroll",
+      "The Crater (E2M1) - Silver Shield": "Pile of Mace Spheres",
+      "The Crater (E2M1) - Torch": "Enchanted Shield",
+      "The Crater (E2M1) - Green key": "Morph Ovum",
+      "The Crater (E2M1) - Dragon Claw": "The Gatehouse (E1M3)",
+      "The Crater (E2M1) - Bag of Holding": "Silver Shield",
+      "The Crater (E2M1) - Shadowsphere": "Inferno Orb",
+      "The Crater (E2M1) - Mystic Urn": "The River of Fire (E2M3)",
+      "The Crater (E2M1) - Exit": "The Crater (E2M1) - Complete",
+      "The Lava Pits (E2M2) - Yellow key": "Timebomb of the Ancients",
+      "The Lava Pits (E2M2) - Ethereal Crossbow": "Silver Shield",
+      "The Lava Pits (E2M2) - Shadowsphere": "The Ophidian Lair (E3M5) - Yellow key",
+      "The Lava Pits (E2M2) - Tome of Power 2": "Pile of Mace Spheres",
+      "The Lava Pits (E2M2) - Bag of Holding 2": "Timebomb of the Ancients",
+      "The Lava Pits (E2M2) - Ring of Invincibility": "The Chasm (E3M7) - Blue key",
+      "The Lava Pits (E2M2) - Dragon Claw": "Pile of Mace Spheres",
+      "The Lava Pits (E2M2) - Hellstaff": "Torch",
+      "The Lava Pits (E2M2) - Tome of Power": "Quartz Flask",
+      "The Lava Pits (E2M2) - Silver Shield": "Energy Orb",
+      "The Lava Pits (E2M2) - Gauntlets of the Necromancer": "The Confluence (E3M3) - Yellow key",
+      "The Lava Pits (E2M2) - Map Scroll": "The Great Hall (E2M7) - Yellow key",
+      "The Lava Pits (E2M2) - Chaos Device": "Silver Shield",
+      "The Lava Pits (E2M2) - Morph Ovum": "Quartz Flask",
+      "The Lava Pits (E2M2) - Bag of Holding": "The Great Hall (E2M7) - Blue key",
+      "The Lava Pits (E2M2) - Enchanted Shield": "The Aquifer (E3M9) - Yellow key",
+      "The Lava Pits (E2M2) - Mystic Urn": "Pile of Mace Spheres",
+      "The Lava Pits (E2M2) - Exit": "The Lava Pits (E2M2) - Complete",
+      "The River of Fire (E2M3) - Yellow key": "The Great Hall (E2M7) - Map Scroll",
+      "The River of Fire (E2M3) - Gauntlets of the Necromancer": "The Azure Fortress (E3M4)",
+      "The River of Fire (E2M3) - Ethereal Crossbow": "Silver Shield",
+      "The River of Fire (E2M3) - Dragon Claw": "Enchanted Shield",
+      "The River of Fire (E2M3) - Tome of Power": "The Aquifer (E3M9) - Blue key",
+      "The River of Fire (E2M3) - Ring of Invincibility": "Greater Runes",
+      "The River of Fire (E2M3) - Silver Shield": "The Glacier (E2M9)",
+      "The River of Fire (E2M3) - Hellstaff": "Firemace",
+      "The River of Fire (E2M3) - Enchanted Shield": "Timebomb of the Ancients",
+      "The River of Fire (E2M3) - Chaos Device": "The Dungeons (E1M2) - Map Scroll",
+      "The River of Fire (E2M3) - Exit": "The River of Fire (E2M3) - Complete",
+      "The River of Fire (E2M3) - Green key": "The Ice Grotto (E2M4) - Blue key",
+      "The River of Fire (E2M3) - Morph Ovum": "Inferno Orb",
+      "The River of Fire (E2M3) - Blue key": "Greater Runes",
+      "The River of Fire (E2M3) - Phoenix Rod": "Energy Orb",
+      "The River of Fire (E2M3) - Tome of Power 2": "Pile of Mace Spheres",
+      "The River of Fire (E2M3) - Firemace": "Timebomb of the Ancients",
+      "The Ice Grotto (E2M4) - Yellow key": "Morph Ovum",
+      "The Ice Grotto (E2M4) - Ethereal Crossbow": "The Confluence (E3M3) - Green key",
+      "The Ice Grotto (E2M4) - Bag of Holding": "Morph Ovum",
+      "The Ice Grotto (E2M4) - Silver Shield": "Quartz Flask",
+      "The Ice Grotto (E2M4) - Tome of Power 2": "The Crypts (E1M7) - Green key",
+      "The Ice Grotto (E2M4) - Morph Ovum": "Silver Shield",
+      "The Ice Grotto (E2M4) - Shadowsphere 2": "The Lava Pits (E2M2) - Map Scroll",
+      "The Ice Grotto (E2M4) - Hellstaff": "Silver Shield",
+      "The Ice Grotto (E2M4) - Exit": "The Ice Grotto (E2M4) - Complete",
+      "The Ice Grotto (E2M4) - Green key": "Morph Ovum",
+      "The Ice Grotto (E2M4) - Phoenix Rod": "The Lava Pits (E2M2) - Green key",
+      "The Ice Grotto (E2M4) - Tome of Power 3": "Tome of Power",
+      "The Ice Grotto (E2M4) - Blue key": "Crystal Geode",
+      "The Ice Grotto (E2M4) - Dragon Claw": "Hell's Maw (E1M8)",
+      "The Ice Grotto (E2M4) - Torch": "Energy Orb",
+      "The Ice Grotto (E2M4) - Shadowsphere": "The Crypts (E1M7)",
+      "The Ice Grotto (E2M4) - Chaos Device": "Quiver of Ethereal Arrows",
+      "The Ice Grotto (E2M4) - Tome of Power": "Inferno Orb",
+      "The Ice Grotto (E2M4) - Bag of Holding 2": "Inferno Orb",
+      "The Ice Grotto (E2M4) - Map Scroll": "Tome of Power",
+      "The Ice Grotto (E2M4) - Enchanted Shield": "Crystal Geode",
+      "The Ice Grotto (E2M4) - Mystic Urn": "Timebomb of the Ancients",
+      "The Catacombs (E2M5) - Yellow key": "Torch",
+      "The Catacombs (E2M5) - Gauntlets of the Necromancer": "Tome of Power",
+      "The Catacombs (E2M5) - Dragon Claw": "Energy Orb",
+      "The Catacombs (E2M5) - Bag of Holding": "Quiver of Ethereal Arrows",
+      "The Catacombs (E2M5) - Torch": "The Graveyard (E1M9) - Blue key",
+      "The Catacombs (E2M5) - Exit": "The Catacombs (E2M5) - Complete",
+      "The Catacombs (E2M5) - Hellstaff": "Greater Runes",
+      "The Catacombs (E2M5) - Ethereal Crossbow": "The Cesspool (E3M2) - Green key",
+      "The Catacombs (E2M5) - Silver Shield": "Tome of Power",
+      "The Catacombs (E2M5) - Shadowsphere": "The Glacier (E2M9) - Blue key",
+      "The Catacombs (E2M5) - Ring of Invincibility": "Quiver of Ethereal Arrows",
+      "The Catacombs (E2M5) - Tome of Power": "Timebomb of the Ancients",
+      "The Catacombs (E2M5) - Green key": "Energy Orb",
+      "The Catacombs (E2M5) - Chaos Device": "The Chasm (E3M7) - Green key",
+      "The Catacombs (E2M5) - Tome of Power 2": "Energy Orb",
+      "The Catacombs (E2M5) - Mystic Urn": "Tome of Power",
+      "The Catacombs (E2M5) - Tome of Power 3": "Timebomb of the Ancients",
+      "The Catacombs (E2M5) - Blue key": "The Citadel (E1M5) - Yellow key",
+      "The Catacombs (E2M5) - Map Scroll": "Tome of Power",
+      "The Catacombs (E2M5) - Morph Ovum": "Tome of Power",
+      "The Catacombs (E2M5) - Enchanted Shield": "Tome of Power",
+      "The Labyrinth (E2M6) - Yellow key": "D'Sparil's Keep (E3M8) - Map Scroll",
+      "The Labyrinth (E2M6) - Gauntlets of the Necromancer": "Morph Ovum",
+      "The Labyrinth (E2M6) - Ethereal Crossbow": "Silver Shield",
+      "The Labyrinth (E2M6) - Morph Ovum": "Timebomb of the Ancients",
+      "The Labyrinth (E2M6) - Firemace": "Inferno Orb",
+      "The Labyrinth (E2M6) - Ring of Invincibility": "Greater Runes",
+      "The Labyrinth (E2M6) - Phoenix Rod 2": "Silver Shield",
+      "The Labyrinth (E2M6) - Firemace 4": "Timebomb of the Ancients",
+      "The Labyrinth (E2M6) - Exit": "The Labyrinth (E2M6) - Complete",
+      "The Labyrinth (E2M6) - Green key": "Greater Runes",
+      "The Labyrinth (E2M6) - Dragon Claw": "Torch",
+      "The Labyrinth (E2M6) - Bag of Holding": "Greater Runes",
+      "The Labyrinth (E2M6) - Shadowsphere": "Enchanted Shield",
+      "The Labyrinth (E2M6) - Chaos Device": "The Confluence (E3M3) - Blue key",
+      "The Labyrinth (E2M6) - Firemace 3": "Crystal Geode",
+      "The Labyrinth (E2M6) - Blue key": "Timebomb of the Ancients",
+      "The Labyrinth (E2M6) - Hellstaff": "Timebomb of the Ancients",
+      "The Labyrinth (E2M6) - Phoenix Rod": "Greater Runes",
+      "The Labyrinth (E2M6) - Tome of Power": "Mystic Urn",
+      "The Labyrinth (E2M6) - Map Scroll": "Quartz Flask",
+      "The Labyrinth (E2M6) - Enchanted Shield": "The Chasm (E3M7) - Yellow key",
+      "The Labyrinth (E2M6) - Tome of Power 2": "Tome of Power",
+      "The Great Hall (E2M7) - Yellow key": "Tome of Power",
+      "The Great Hall (E2M7) - Morph Ovum": "Silver Shield",
+      "The Great Hall (E2M7) - Shadowsphere": "Enchanted Shield",
+      "The Great Hall (E2M7) - Torch": "Inferno Orb",
+      "The Great Hall (E2M7) - Bag of Holding": "Silver Shield",
+      "The Great Hall (E2M7) - Silver Shield": "The Gatehouse (E1M3) - Green key",
+      "The Great Hall (E2M7) - Enchanted Shield": "Shadowsphere",
+      "The Great Hall (E2M7) - Ethereal Crossbow": "Pile of Mace Spheres",
+      "The Great Hall (E2M7) - Gauntlets of the Necromancer": "Tome of Power",
+      "The Great Hall (E2M7) - Phoenix Rod": "Tome of Power",
+      "The Great Hall (E2M7) - Tome of Power 2": "Greater Runes",
+      "The Great Hall (E2M7) - Mystic Urn": "Pile of Mace Spheres",
+      "The Great Hall (E2M7) - Exit": "The Great Hall (E2M7) - Complete",
+      "The Great Hall (E2M7) - Green key": "Timebomb of the Ancients",
+      "The Great Hall (E2M7) - Ring of Invincibility": "Quiver of Ethereal Arrows",
+      "The Great Hall (E2M7) - Tome of Power": "Inferno Orb",
+      "The Great Hall (E2M7) - Chaos Device": "Inferno Orb",
+      "The Great Hall (E2M7) - Map Scroll": "Crystal Geode",
+      "The Great Hall (E2M7) - Dragon Claw": "Quiver of Ethereal Arrows",
+      "The Great Hall (E2M7) - Hellstaff": "Inferno Orb",
+      "The Great Hall (E2M7) - Blue key": "Torch",
+      "The Portals of Chaos (E2M8) - Ethereal Crossbow": "Enchanted Shield",
+      "The Portals of Chaos (E2M8) - Dragon Claw": "The Chasm (E3M7)",
+      "The Portals of Chaos (E2M8) - Gauntlets of the Necromancer": "Crystal Geode",
+      "The Portals of Chaos (E2M8) - Hellstaff": "Timebomb of the Ancients",
+      "The Portals of Chaos (E2M8) - Phoenix Rod": "Tome of Power",
+      "The Portals of Chaos (E2M8) - Tome of Power": "Quiver of Ethereal Arrows",
+      "The Portals of Chaos (E2M8) - Silver Shield": "Tome of Power",
+      "The Portals of Chaos (E2M8) - Enchanted Shield": "Timebomb of the Ancients",
+      "The Portals of Chaos (E2M8) - Chaos Device": "Timebomb of the Ancients",
+      "The Portals of Chaos (E2M8) - Ring of Invincibility": "The Aquifer (E3M9) - Map Scroll",
+      "The Portals of Chaos (E2M8) - Morph Ovum": "Torch",
+      "The Portals of Chaos (E2M8) - Exit": "The Portals of Chaos (E2M8) - Complete",
+      "The Glacier (E2M9) - Yellow key": "Quiver of Ethereal Arrows",
+      "The Glacier (E2M9) - Ethereal Crossbow": "The Graveyard (E1M9)",
+      "The Glacier (E2M9) - Bag of Holding": "Quartz Flask",
+      "The Glacier (E2M9) - Tome of Power": "The Crater (E2M1) - Map Scroll",
+      "The Glacier (E2M9) - Shadowsphere": "Greater Runes",
+      "The Glacier (E2M9) - Silver Shield": "Timebomb of the Ancients",
+      "The Glacier (E2M9) - Dragon Claw 2": "Pile of Mace Spheres",
+      "The Glacier (E2M9) - Morph Ovum": "Quartz Flask",
+      "The Glacier (E2M9) - Firemace": "Inferno Orb",
+      "The Glacier (E2M9) - Firemace 4": "Tome of Power",
+      "The Glacier (E2M9) - Mystic Urn": "Torch",
+      "The Glacier (E2M9) - Map Scroll": "Quiver of Ethereal Arrows",
+      "The Glacier (E2M9) - Firemace 3": "Inferno Orb",
+      "The Glacier (E2M9) - Exit": "The Glacier (E2M9) - Complete",
+      "The Glacier (E2M9) - Green key": "Pile of Mace Spheres",
+      "The Glacier (E2M9) - Dragon Claw": "Tome of Power",
+      "The Glacier (E2M9) - Chaos Device": "The Halls of Fear (E3M6) - Blue key",
+      "The Glacier (E2M9) - Firemace 2": "Quiver of Ethereal Arrows",
+      "The Glacier (E2M9) - Blue key": "Tome of Power",
+      "The Glacier (E2M9) - Phoenix Rod": "Enchanted Shield",
+      "The Glacier (E2M9) - Hellstaff": "Greater Runes",
+      "The Glacier (E2M9) - Ring of Invincibility": "The Azure Fortress (E3M4) - Map Scroll",
+      "The Glacier (E2M9) - Enchanted Shield": "Tome of Power",
+      "The Glacier (E2M9) - Mystic Urn 2": "Mystic Urn",
+      "The Glacier (E2M9) - Torch": "Quartz Flask",
+      "The Storehouse (E3M1) - Yellow key": "Inferno Orb",
+      "The Storehouse (E3M1) - Bag of Holding": "Tome of Power",
+      "The Storehouse (E3M1) - Shadowsphere": "Quartz Flask",
+      "The Storehouse (E3M1) - Silver Shield": "The Storehouse (E3M1) - Green key",
+      "The Storehouse (E3M1) - Chaos Device": "Silver Shield",
+      "The Storehouse (E3M1) - Dragon Claw": "Silver Shield",
+      "The Storehouse (E3M1) - Gauntlets of the Necromancer": "Ethereal Crossbow",
+      "The Storehouse (E3M1) - Green key": "Silver Shield",
+      "The Storehouse (E3M1) - Ring of Invincibility": "The Cesspool (E3M2)",
+      "The Storehouse (E3M1) - Map Scroll": "Energy Orb",
+      "The Storehouse (E3M1) - Tome of Power": "Quiver of Ethereal Arrows",
+      "The Storehouse (E3M1) - Hellstaff": "The Crater (E2M1) - Yellow key",
+      "The Storehouse (E3M1) - Exit": "The Storehouse (E3M1) - Complete",
+      "The Cesspool (E3M2) - Yellow key": "Gauntlets of the Necromancer",
+      "The Cesspool (E3M2) - Ethereal Crossbow": "Timebomb of the Ancients",
+      "The Cesspool (E3M2) - Silver Shield 2": "Timebomb of the Ancients",
+      "The Cesspool (E3M2) - Morph Ovum": "The Ice Grotto (E2M4) - Green key",
+      "The Cesspool (E3M2) - Mystic Urn": "The Crypts (E1M7) - Map Scroll",
+      "The Cesspool (E3M2) - Tome of Power": "The River of Fire (E2M3) - Yellow key",
+      "The Cesspool (E3M2) - Firemace 3": "The Labyrinth (E2M6)",
+      "The Cesspool (E3M2) - Exit": "The Cesspool (E3M2) - Complete",
+      "The Cesspool (E3M2) - Green key": "The Portals of Chaos (E2M8)",
+      "The Cesspool (E3M2) - Dragon Claw": "The Ophidian Lair (E3M5) - Map Scroll",
+      "The Cesspool (E3M2) - Hellstaff": "Crystal Geode",
+      "The Cesspool (E3M2) - Bag of Holding": "Greater Runes",
+      "The Cesspool (E3M2) - Shadowsphere": "Tome of Power",
+      "The Cesspool (E3M2) - Tome of Power 3": "Inferno Orb",
+      "The Cesspool (E3M2) - Torch": "The Glacier (E2M9) - Yellow key",
+      "The Cesspool (E3M2) - Firemace 2": "Pile of Mace Spheres",
+      "The Cesspool (E3M2) - Firemace 5": "The Ophidian Lair (E3M5)",
+      "The Cesspool (E3M2) - Ring of Invincibility": "Greater Runes",
+      "The Cesspool (E3M2) - Gauntlets of the Necromancer": "Quartz Flask",
+      "The Cesspool (E3M2) - Phoenix Rod": "Silver Shield",
+      "The Cesspool (E3M2) - Morph Ovum 2": "Quiver of Ethereal Arrows",
+      "The Cesspool (E3M2) - Enchanted Shield": "Timebomb of the Ancients",
+      "The Cesspool (E3M2) - Map Scroll": "Energy Orb",
+      "The Cesspool (E3M2) - Chaos Device": "The Docks (E1M1) - Yellow key",
+      "The Cesspool (E3M2) - Tome of Power 2": "Crystal Geode",
+      "The Cesspool (E3M2) - Bag of Holding 2": "Pile of Mace Spheres",
+      "The Confluence (E3M3) - Yellow key": "Tome of Power",
+      "The Confluence (E3M3) - Shadowsphere": "Ring of Invincibility",
+      "The Confluence (E3M3) - Silver Shield": "The Glacier (E2M9) - Map Scroll",
+      "The Confluence (E3M3) - Hellstaff": "Shadowsphere",
+      "The Confluence (E3M3) - Hellstaff 2": "Pile of Mace Spheres",
+      "The Confluence (E3M3) - Gauntlets of the Necromancer": "Timebomb of the Ancients",
+      "The Confluence (E3M3) - Tome of Power 3": "Tome of Power",
+      "The Confluence (E3M3) - Tome of Power 4": "Quartz Flask",
+      "The Confluence (E3M3) - Mystic Urn 2": "Timebomb of the Ancients",
+      "The Confluence (E3M3) - Map Scroll": "The Dungeons (E1M2) - Blue key",
+      "The Confluence (E3M3) - Phoenix Rod": "Quiver of Ethereal Arrows",
+      "The Confluence (E3M3) - Enchanted Shield": "The Citadel (E1M5) - Map Scroll",
+      "The Confluence (E3M3) - Firemace 4": "Silver Shield",
+      "The Confluence (E3M3) - Firemace 5": "Pile of Mace Spheres",
+      "The Confluence (E3M3) - Exit": "The Confluence (E3M3) - Complete",
+      "The Confluence (E3M3) - Green key": "Quiver of Ethereal Arrows",
+      "The Confluence (E3M3) - Ethereal Crossbow": "Tome of Power",
+      "The Confluence (E3M3) - Blue key": "Crystal Geode",
+      "The Confluence (E3M3) - Dragon Claw": "Crystal Geode",
+      "The Confluence (E3M3) - Mystic Urn": "The Catacombs (E2M5) - Green key",
+      "The Confluence (E3M3) - Tome of Power 2": "Greater Runes",
+      "The Confluence (E3M3) - Tome of Power 5": "Phoenix Rod",
+      "The Confluence (E3M3) - Bag of Holding": "Quiver of Ethereal Arrows",
+      "The Confluence (E3M3) - Morph Ovum": "Crystal Geode",
+      "The Confluence (E3M3) - Silver Shield 2": "Tome of Power",
+      "The Confluence (E3M3) - Chaos Device": "The Dungeons (E1M2) - Yellow key",
+      "The Confluence (E3M3) - Torch": "Quiver of Ethereal Arrows",
+      "The Confluence (E3M3) - Firemace": "Greater Runes",
+      "The Azure Fortress (E3M4) - Yellow key": "Greater Runes",
+      "The Azure Fortress (E3M4) - Dragon Claw": "Enchanted Shield",
+      "The Azure Fortress (E3M4) - Ring of Invincibility": "The Gatehouse (E1M3) - Yellow key",
+      "The Azure Fortress (E3M4) - Ethereal Crossbow": "Quartz Flask",
+      "The Azure Fortress (E3M4) - Gauntlets of the Necromancer": "The Halls of Fear (E3M6) - Green key",
+      "The Azure Fortress (E3M4) - Bag of Holding": "Morph Ovum",
+      "The Azure Fortress (E3M4) - Morph Ovum": "Quartz Flask",
+      "The Azure Fortress (E3M4) - Mystic Urn": "Mystic Urn",
+      "The Azure Fortress (E3M4) - Shadowsphere": "Pile of Mace Spheres",
+      "The Azure Fortress (E3M4) - Silver Shield": "Timebomb of the Ancients",
+      "The Azure Fortress (E3M4) - Torch": "The Cathedral (E1M6)",
+      "The Azure Fortress (E3M4) - Tome of Power 2": "The Lava Pits (E2M2)",
+      "The Azure Fortress (E3M4) - Tome of Power 3": "Tome of Power",
+      "The Azure Fortress (E3M4) - Green key": "The Guard Tower (E1M4) - Yellow key",
+      "The Azure Fortress (E3M4) - Hellstaff": "The Ice Grotto (E2M4) - Map Scroll",
+      "The Azure Fortress (E3M4) - Chaos Device": "Pile of Mace Spheres",
+      "The Azure Fortress (E3M4) - Torch 3": "Enchanted Shield",
+      "The Azure Fortress (E3M4) - Enchanted Shield 2": "Energy Orb",
+      "The Azure Fortress (E3M4) - Morph Ovum 2": "Quartz Flask",
+      "The Azure Fortress (E3M4) - Phoenix Rod": "The Crypts (E1M7) - Yellow key",
+      "The Azure Fortress (E3M4) - Bag of Holding 2": "Inferno Orb",
+      "The Azure Fortress (E3M4) - Silver Shield 2": "Timebomb of the Ancients",
+      "The Azure Fortress (E3M4) - Enchanted Shield": "Timebomb of the Ancients",
+      "The Azure Fortress (E3M4) - Map Scroll": "The Catacombs (E2M5)",
+      "The Azure Fortress (E3M4) - Tome of Power": "Enchanted Shield",
+      "The Azure Fortress (E3M4) - Torch 2": "Inferno Orb",
+      "The Azure Fortress (E3M4) - Mystic Urn 2": "Torch",
+      "The Azure Fortress (E3M4) - Exit": "The Azure Fortress (E3M4) - Complete",
+      "The Ophidian Lair (E3M5) - Yellow key": "Timebomb of the Ancients",
+      "The Ophidian Lair (E3M5) - Hellstaff": "Timebomb of the Ancients",
+      "The Ophidian Lair (E3M5) - Ethereal Crossbow": "Torch",
+      "The Ophidian Lair (E3M5) - Ring of Invincibility": "Greater Runes",
+      "The Ophidian Lair (E3M5) - Silver Shield": "The Graveyard (E1M9) - Map Scroll",
+      "The Ophidian Lair (E3M5) - Enchanted Shield": "Quartz Flask",
+      "The Ophidian Lair (E3M5) - Torch": "The Dungeons (E1M2) - Green key",
+      "The Ophidian Lair (E3M5) - Tome of Power 2": "The Cathedral (E1M6) - Green key",
+      "The Ophidian Lair (E3M5) - Green key": "The Aquifer (E3M9)",
+      "The Ophidian Lair (E3M5) - Dragon Claw": "Timebomb of the Ancients",
+      "The Ophidian Lair (E3M5) - Gauntlets of the Necromancer": "Quartz Flask",
+      "The Ophidian Lair (E3M5) - Bag of Holding": "Timebomb of the Ancients",
+      "The Ophidian Lair (E3M5) - Morph Ovum": "The Ice Grotto (E2M4)",
+      "The Ophidian Lair (E3M5) - Shadowsphere": "Torch",
+      "The Ophidian Lair (E3M5) - Chaos Device": "Greater Runes",
+      "The Ophidian Lair (E3M5) - Mystic Urn": "Quartz Flask",
+      "The Ophidian Lair (E3M5) - Silver Shield 2": "Greater Runes",
+      "The Ophidian Lair (E3M5) - Map Scroll": "Tome of Power",
+      "The Ophidian Lair (E3M5) - Exit": "The Ophidian Lair (E3M5) - Complete",
+      "The Halls of Fear (E3M6) - Yellow key": "The Confluence (E3M3) - Map Scroll",
+      "The Halls of Fear (E3M6) - Ethereal Crossbow": "Timebomb of the Ancients",
+      "The Halls of Fear (E3M6) - Dragon Claw": "Quiver of Ethereal Arrows",
+      "The Halls of Fear (E3M6) - Tome of Power 3": "Torch",
+      "The Halls of Fear (E3M6) - Hellstaff 2": "Pile of Mace Spheres",
+      "The Halls of Fear (E3M6) - Firemace 4": "Inferno Orb",
+      "The Halls of Fear (E3M6) - Bag of Holding": "Silver Shield",
+      "The Halls of Fear (E3M6) - Bag of Holding 2": "The Citadel (E1M5) - Green key",
+      "The Halls of Fear (E3M6) - Map Scroll": "Chaos Device",
+      "The Halls of Fear (E3M6) - Bag of Holding 3": "The River of Fire (E2M3) - Map Scroll",
+      "The Halls of Fear (E3M6) - Firemace": "D'Sparil's Keep (E3M8)",
+      "The Halls of Fear (E3M6) - Exit": "The Halls of Fear (E3M6) - Complete",
+      "The Halls of Fear (E3M6) - Green key": "Quiver of Ethereal Arrows",
+      "The Halls of Fear (E3M6) - Gauntlets of the Necromancer": "Pile of Mace Spheres",
+      "The Halls of Fear (E3M6) - Morph Ovum": "The Azure Fortress (E3M4) - Green key",
+      "The Halls of Fear (E3M6) - Mystic Urn": "Tome of Power",
+      "The Halls of Fear (E3M6) - Silver Shield": "Tome of Power",
+      "The Halls of Fear (E3M6) - Blue key": "Tome of Power",
+      "The Halls of Fear (E3M6) - Hellstaff": "Pile of Mace Spheres",
+      "The Halls of Fear (E3M6) - Chaos Device": "Quartz Flask",
+      "The Halls of Fear (E3M6) - Shadowsphere": "Greater Runes",
+      "The Halls of Fear (E3M6) - Tome of Power 2": "Inferno Orb",
+      "The Halls of Fear (E3M6) - Firemace 2": "The Labyrinth (E2M6) - Green key",
+      "The Halls of Fear (E3M6) - Phoenix Rod": "Inferno Orb",
+      "The Halls of Fear (E3M6) - Enchanted Shield": "Tome of Power",
+      "The Halls of Fear (E3M6) - Tome of Power": "Timebomb of the Ancients",
+      "The Chasm (E3M7) - Yellow key": "Quiver of Ethereal Arrows",
+      "The Chasm (E3M7) - Ethereal Crossbow": "The Crypts (E1M7) - Blue key",
+      "The Chasm (E3M7) - Dragon Claw": "Quiver of Ethereal Arrows",
+      "The Chasm (E3M7) - Bag of Holding": "Quiver of Ethereal Arrows",
+      "The Chasm (E3M7) - Silver Shield": "Timebomb of the Ancients",
+      "The Chasm (E3M7) - Tome of Power": "The Cathedral (E1M6) - Map Scroll",
+      "The Chasm (E3M7) - Shadowsphere 2": "Quartz Flask",
+      "The Chasm (E3M7) - Bag of Holding 2": "Pile of Mace Spheres",
+      "The Chasm (E3M7) - Exit": "The Chasm (E3M7) - Complete",
+      "The Chasm (E3M7) - Green key": "Crystal Geode",
+      "The Chasm (E3M7) - Hellstaff": "The Azure Fortress (E3M4) - Yellow key",
+      "The Chasm (E3M7) - Morph Ovum": "Silver Shield",
+      "The Chasm (E3M7) - Blue key": "Greater Runes",
+      "The Chasm (E3M7) - Gauntlets of the Necromancer": "Timebomb of the Ancients",
+      "The Chasm (E3M7) - Phoenix Rod": "Quiver of Ethereal Arrows",
+      "The Chasm (E3M7) - Ring of Invincibility": "Timebomb of the Ancients",
+      "The Chasm (E3M7) - Mystic Urn": "Tome of Power",
+      "The Chasm (E3M7) - Enchanted Shield": "The Docks (E1M1) - Map Scroll",
+      "The Chasm (E3M7) - Map Scroll": "The Glacier (E2M9) - Green key",
+      "The Chasm (E3M7) - Chaos Device": "Silver Shield",
+      "The Chasm (E3M7) - Tome of Power 2": "The Labyrinth (E2M6) - Blue key",
+      "The Chasm (E3M7) - Tome of Power 3": "Greater Runes",
+      "The Chasm (E3M7) - Torch 2": "Inferno Orb",
+      "D'Sparil's Keep (E3M8) - Phoenix Rod": "The Catacombs (E2M5) - Map Scroll",
+      "D'Sparil's Keep (E3M8) - Dragon Claw": "The Citadel (E1M5) - Blue key",
+      "D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer": "The Ice Grotto (E2M4) - Yellow key",
+      "D'Sparil's Keep (E3M8) - Hellstaff": "Greater Runes",
+      "D'Sparil's Keep (E3M8) - Bag of Holding": "Timebomb of the Ancients",
+      "D'Sparil's Keep (E3M8) - Mystic Urn": "Inferno Orb",
+      "D'Sparil's Keep (E3M8) - Ring of Invincibility": "Pile of Mace Spheres",
+      "D'Sparil's Keep (E3M8) - Shadowsphere": "Torch",
+      "D'Sparil's Keep (E3M8) - Silver Shield": "Greater Runes",
+      "D'Sparil's Keep (E3M8) - Enchanted Shield": "Pile of Mace Spheres",
+      "D'Sparil's Keep (E3M8) - Tome of Power": "Pile of Mace Spheres",
+      "D'Sparil's Keep (E3M8) - Exit": "D'Sparil's Keep (E3M8) - Complete",
+      "The Aquifer (E3M9) - Ethereal Crossbow": "Greater Runes",
+      "The Aquifer (E3M9) - Silver Shield": "Torch",
+      "The Aquifer (E3M9) - Tome of Power": "Silver Shield",
+      "The Aquifer (E3M9) - Torch": "Mystic Urn",
+      "The Aquifer (E3M9) - Exit": "The Aquifer (E3M9) - Complete",
+      "The Aquifer (E3M9) - Green key": "Silver Shield",
+      "The Aquifer (E3M9) - Phoenix Rod": "Timebomb of the Ancients",
+      "The Aquifer (E3M9) - Ring of Invincibility": "The Gatehouse (E1M3) - Map Scroll",
+      "The Aquifer (E3M9) - Bag of Holding": "The Guard Tower (E1M4) - Map Scroll",
+      "The Aquifer (E3M9) - Chaos Device": "Greater Runes",
+      "The Aquifer (E3M9) - Blue key": "Greater Runes",
+      "The Aquifer (E3M9) - Dragon Claw": "Silver Shield",
+      "The Aquifer (E3M9) - Hellstaff": "The Catacombs (E2M5) - Yellow key",
+      "The Aquifer (E3M9) - Gauntlets of the Necromancer": "Chaos Device",
+      "The Aquifer (E3M9) - Mystic Urn": "Inferno Orb",
+      "The Aquifer (E3M9) - Morph Ovum": "Tome of Power",
+      "The Aquifer (E3M9) - Enchanted Shield": "Tome of Power",
+      "The Aquifer (E3M9) - Tome of Power 2": "Quartz Flask",
+      "The Aquifer (E3M9) - Shadowsphere": "Inferno Orb",
+      "The Aquifer (E3M9) - Firemace": "Quartz Flask",
+      "The Aquifer (E3M9) - Firemace 2": "Pile of Mace Spheres",
+      "The Aquifer (E3M9) - Firemace 3": "Timebomb of the Ancients"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -13671,7 +14484,22 @@
     "1": {
       "game": "Heretic WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
+      "world_directory": "heretic_worldgen"
     }
   },
   "game_info": {
@@ -13679,6 +14507,49 @@
       "name": "Heretic WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "dirt",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Daivuk"
+          ]
+        }
+      ],
+      "world_description": "Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.",
+      "slot_data": {
+        "goal": 0,
+        "difficulty": 2,
+        "random_monsters": 1,
+        "random_pickups": 1,
+        "random_music": 0,
+        "allow_death_logic": 0,
+        "pro": 0,
+        "death_link": 0,
+        "reset_level_on_death": 1,
+        "check_sanity": 0,
+        "episode1": 1,
+        "episode2": 1,
+        "episode3": 1,
+        "episode4": 0,
+        "episode5": 0,
+        "ammo1start": 100,
+        "ammo2start": 50,
+        "ammo3start": 200,
+        "ammo4start": 200,
+        "ammo5start": 20,
+        "ammo6start": 150,
+        "ammo1add": 100,
+        "ammo2add": 50,
+        "ammo3add": 200,
+        "ammo4add": 200,
+        "ammo5add": 20,
+        "ammo6add": 150
       }
     }
   },

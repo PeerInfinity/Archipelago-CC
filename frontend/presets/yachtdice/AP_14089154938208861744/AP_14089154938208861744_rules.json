@@ -5888,6 +5888,7 @@
       "game": "Yacht Dice",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "add_sphere_items_upfront": true,
       "options": {
         "accessibility": 0,
         "add_bonus_points": 2,
@@ -5920,7 +5921,7 @@
         "weight_of_step_score_multiplier": 0,
         "which_story": -1
       },
-      "add_sphere_items_upfront": true
+      "world_directory": "yachtdice"
     }
   },
   "game_info": {

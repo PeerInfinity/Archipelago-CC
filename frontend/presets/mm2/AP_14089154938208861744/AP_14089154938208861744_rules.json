@@ -1641,7 +1641,8 @@
         "strict_weakness": 0,
         "wily_5_requirement": 8,
         "yoku_jumps": 0
-      }
+      },
+      "world_directory": "mm2"
     }
   },
   "game_info": {

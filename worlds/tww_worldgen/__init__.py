@@ -47,7 +47,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Progressive Bow": 3,
     "Progressive Magic Meter": 2,
     "Progressive Shield": 2,
-    "Progressive Sword": 4,
+    "Progressive Sword": 3,
     "Silver Rupee": 8,
     "Skull Hammer": 1,
     "Song of Passing": 1,

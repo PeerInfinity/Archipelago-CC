@@ -211,8 +211,6 @@ Playthrough:
   Ripple Field 2 - Bakasa: Heart Star
 }
 5: {
-  Level 3 Boss - Purified: Level 3 Boss Purified
-  Sand Canyon - Boss (Pon & Con) Purified: Heart Star
   Sand Canyon 1 - Animal 1: Rick Spawn
   Sand Canyon 1 - Animal 2: Pitch Spawn
   Sand Canyon 1 - Enemy 2 (Galbo): Burning Ability
@@ -292,10 +290,11 @@ Playthrough:
 }
 6: {
   Level 3 Boss - Defeated: Level 3 Boss Defeated
+  Level 3 Boss - Purified: Level 3 Boss Purified
   Ripple Field 4 - Toad & Little Toad: Heart Star
+  Sand Canyon - Boss (Pon & Con) Purified: Heart Star
 }
 7: {
-  Cloudy Park - Boss (Ado) Purified: Heart Star
   Cloudy Park 1 - Animal 1: Rick Spawn
   Cloudy Park 1 - Animal 2: Nago Spawn
   Cloudy Park 1 - Animal 3: Coo Spawn
@@ -361,16 +360,16 @@ Playthrough:
   Cloudy Park 6 - Enemy 9 (Bukiset (Burning)): Burning Ability
   Cloudy Park 6 - HB-007: Heart Star
   Cloudy Park 6 - Stage Completion: Cloudy Park - Stage Completion
-  Level 4 Boss - Purified: Level 4 Boss Purified
 }
 8: {
+  Cloudy Park - Boss (Ado) Purified: Heart Star
   Cloudy Park 1 - Hibanamodoki: Pitch
   Cloudy Park 4 - Mikarin & Kagami Mocchi: Heart Star
   Cloudy Park 5 - Pick: Heart Star
   Level 4 Boss - Defeated: Level 4 Boss Defeated
+  Level 4 Boss - Purified: Level 4 Boss Purified
 }
 9: {
-  Iceberg - Boss (Dedede) Purified: Ice
   Iceberg 1 - Animal 1: Pitch Spawn
   Iceberg 1 - Animal 2: Rick Spawn
   Iceberg 1 - Enemy 10 (Wappa): Ice Ability
@@ -455,9 +454,12 @@ Playthrough:
   Iceberg 6 - Miniboss 5 (Boboo): Burning Ability
   Iceberg 6 - Miniboss 6 (Captain Stitch): Needle Ability
   Iceberg 6 - Stage Completion: Iceberg - Stage Completion
-  Level 5 Boss - Purified: Level 5 Boss Purified
 }
 10: {
-  Hyper Zone - Zero: Love-Love Rod
+  Iceberg - Boss (Dedede) Purified: Ice
   Level 5 Boss - Defeated: Level 5 Boss Defeated
+  Level 5 Boss - Purified: Level 5 Boss Purified
+}
+11: {
+  Hyper Zone - Zero: Love-Love Rod
 }

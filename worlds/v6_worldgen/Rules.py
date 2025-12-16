@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has
+from rule_builder import True_, False_, CanReachRegion, Has
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,9 +16,9 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _has_trinket_range(state: "CollectionState", player: int, start, end) -> bool:
+def _has_trinket_range(state: "CollectionState", player: int, start) -> bool:
     for i in range(start):
-        if not (state.has('', player)):
+        if not (state.has(('Trinket ' + str((i + 1)).zfill(2)), player)):
             return False
     return True
 
@@ -51,10 +51,10 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("NPC Trinket", player),
-        ((True_()) & (True_()) & (True_())) | (True_())
+        ((CanReachRegion("Space Station 2")) & (CanReachRegion("The Tower")) & (CanReachRegion("Warp Zone"))) | (CanReachRegion("Laboratory"))
     )
 
     world.set_rule(
         multiworld.get_location("V", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (CanReachRegion("Laboratory")) & (CanReachRegion("Space Station 2")) & (CanReachRegion("The Tower")) & (CanReachRegion("Warp Zone"))
     )

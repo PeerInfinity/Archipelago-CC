@@ -172,9 +172,44 @@
             "name": "NPC Trinket",
             "id": 2515018,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "And",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Space Station 2"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "The Tower"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Warp Zone"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Laboratory"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Trinket 07",
@@ -188,9 +223,38 @@
             "name": "V",
             "id": 2515019,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Laboratory"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Space Station 2"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "The Tower"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Warp Zone"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Trinket 17",
@@ -717,7 +781,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "v6_worldgen"
     }
   },
   "game_info": {

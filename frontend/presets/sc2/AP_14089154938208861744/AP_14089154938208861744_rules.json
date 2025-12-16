@@ -40121,7 +40121,8 @@
       "victory_cache": 0,
       "void_trade_age_limit": 6,
       "void_trade_workers": 0,
-      "war_council_nerfs": 0
+      "war_council_nerfs": 0,
+      "world_directory": "sc2"
     }
   },
   "game_info": {
@@ -41531,25 +41532,19 @@
         }
       },
       "nova_anti_air_weapon": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Blazefire Gunblade (Nova Weapon)"
-              },
-              {
-                "type": "constant",
-                "value": "C20A Canister Rifle (Nova Weapon)"
-              },
-              {
-                "type": "constant",
-                "value": "Plasma Rifle (Nova Weapon)"
-              }
-            ]
+            "type": "item_check",
+            "item": "Blazefire Gunblade (Nova Weapon)"
+          },
+          {
+            "type": "item_check",
+            "item": "C20A Canister Rifle (Nova Weapon)"
+          },
+          {
+            "type": "item_check",
+            "item": "Plasma Rifle (Nova Weapon)"
           }
         ]
       },
@@ -41572,44 +41567,32 @@
         }
       },
       "nova_heal": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Armored Suit Module (Nova Suit Module)"
-              },
-              {
-                "type": "constant",
-                "value": "Stim Infusion (Nova Gadget)"
-              }
-            ]
+            "type": "item_check",
+            "item": "Armored Suit Module (Nova Suit Module)"
+          },
+          {
+            "type": "item_check",
+            "item": "Stim Infusion (Nova Gadget)"
           }
         ]
       },
       "nova_ranged_weapon": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "set",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "C20A Canister Rifle (Nova Weapon)"
-              },
-              {
-                "type": "constant",
-                "value": "Hellfire Shotgun (Nova Weapon)"
-              },
-              {
-                "type": "constant",
-                "value": "Plasma Rifle (Nova Weapon)"
-              }
-            ]
+            "type": "item_check",
+            "item": "C20A Canister Rifle (Nova Weapon)"
+          },
+          {
+            "type": "item_check",
+            "item": "Hellfire Shotgun (Nova Weapon)"
+          },
+          {
+            "type": "item_check",
+            "item": "Plasma Rifle (Nova Weapon)"
           }
         ]
       },
@@ -41842,29 +41825,23 @@
         "type": "or",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
+            "type": "or",
+            "conditions": [
               {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Banshee"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Battlecruiser"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Viking"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wraith"
-                  }
-                ]
+                "type": "item_check",
+                "item": "Banshee"
+              },
+              {
+                "type": "item_check",
+                "item": "Battlecruiser"
+              },
+              {
+                "type": "item_check",
+                "item": "Viking"
+              },
+              {
+                "type": "item_check",
+                "item": "Wraith"
               }
             ]
           },
@@ -41912,21 +41889,15 @@
                     "type": "and",
                     "conditions": [
                       {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
+                        "type": "or",
+                        "conditions": [
                           {
-                            "type": "set",
-                            "elements": [
-                              {
-                                "type": "constant",
-                                "value": "Hercules"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Medivac"
-                              }
-                            ]
+                            "type": "item_check",
+                            "item": "Hercules"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Medivac"
                           }
                         ]
                       },
@@ -41964,40 +41935,28 @@
             "item": "Viking"
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
+            "type": "and",
+            "conditions": [
               {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Advanced Laser Technology (Wraith)"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wraith"
-                  }
-                ]
+                "type": "item_check",
+                "item": "Advanced Laser Technology (Wraith)"
+              },
+              {
+                "type": "item_check",
+                "item": "Wraith"
               }
             ]
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
+            "type": "and",
+            "conditions": [
               {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "ATX Laser Battery (Battlecruiser)"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Battlecruiser"
-                  }
-                ]
+                "type": "item_check",
+                "item": "ATX Laser Battery (Battlecruiser)"
+              },
+              {
+                "type": "item_check",
+                "item": "Battlecruiser"
               }
             ]
           },
@@ -42013,25 +41972,19 @@
                 "attr": "advanced_tactics"
               },
               {
-                "type": "state_method",
-                "method": "has_any",
-                "args": [
+                "type": "or",
+                "conditions": [
                   {
-                    "type": "set",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Battlecruiser"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Valkyrie"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Wraith"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Battlecruiser"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Valkyrie"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Wraith"
                   }
                 ]
               },
@@ -42154,25 +42107,19 @@
         "type": "or",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
+            "type": "or",
+            "conditions": [
               {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Field Response Theta"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Medic"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Medivac"
-                  }
-                ]
+                "type": "item_check",
+                "item": "Field Response Theta"
+              },
+              {
+                "type": "item_check",
+                "item": "Medic"
+              },
+              {
+                "type": "item_check",
+                "item": "Medivac"
               }
             ]
           },
@@ -42188,21 +42135,15 @@
                 "attr": "advanced_tactics"
               },
               {
-                "type": "state_method",
-                "method": "has_all",
-                "args": [
+                "type": "and",
+                "conditions": [
                   {
-                    "type": "set",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Bio Mechanical Repair Drone (Raven)"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Raven"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Bio Mechanical Repair Drone (Raven)"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Raven"
                   }
                 ]
               }
@@ -42667,37 +42608,31 @@
         "type": "or",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
+            "type": "or",
+            "conditions": [
               {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Dominion Trooper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Firebat"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Hellion"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Marauder"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Marine"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Reaper"
-                  }
-                ]
+                "type": "item_check",
+                "item": "Dominion Trooper"
+              },
+              {
+                "type": "item_check",
+                "item": "Firebat"
+              },
+              {
+                "type": "item_check",
+                "item": "Hellion"
+              },
+              {
+                "type": "item_check",
+                "item": "Marauder"
+              },
+              {
+                "type": "item_check",
+                "item": "Marine"
+              },
+              {
+                "type": "item_check",
+                "item": "Reaper"
               }
             ]
           },
@@ -42713,29 +42648,23 @@
                 "attr": "advanced_tactics"
               },
               {
-                "type": "state_method",
-                "method": "has_any",
-                "args": [
+                "type": "or",
+                "conditions": [
                   {
-                    "type": "set",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Banshee"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Diamondback"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Goliath"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Viking"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Banshee"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Diamondback"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Goliath"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Viking"
                   }
                 ]
               }
@@ -43268,21 +43197,15 @@
             "type": "and",
             "conditions": [
               {
-                "type": "state_method",
-                "method": "has_any",
-                "args": [
+                "type": "or",
+                "conditions": [
                   {
-                    "type": "set",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Field Response Theta"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Medic"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Field Response Theta"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Medic"
                   }
                 ]
               },
@@ -43325,21 +43248,15 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
+                    "type": "and",
+                    "conditions": [
                       {
-                        "type": "set",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Bio Mechanical Repair Drone (Raven)"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Raven"
-                          }
-                        ]
+                        "type": "item_check",
+                        "item": "Bio Mechanical Repair Drone (Raven)"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Raven"
                       }
                     ]
                   },

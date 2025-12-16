@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachLocation, CanReachRegion, Compare, Has, HasAll, HelperCall
+from rule_builder import True_, False_, CanReachLocation, CanReachRegion, Compare, Has, HasAll, HelperCall, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -454,7 +454,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes", player),
-        (CanReachRegion("Beach Overworld")) & (CanReachRegion("Deep Undernet")) & (CanReachRegion("Undernet")) & (HasAll())
+        (CanReachRegion("Beach Overworld")) & (CanReachRegion("Deep Undernet")) & (CanReachRegion("Undernet")) & (True_())
     )
 
     world.set_rule(

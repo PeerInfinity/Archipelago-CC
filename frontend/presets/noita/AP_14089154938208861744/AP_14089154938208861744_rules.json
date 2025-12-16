@@ -2967,7 +2967,8 @@
         "start_inventory_from_pool": {},
         "start_location_hints": [],
         "victory_condition": 0
-      }
+      },
+      "world_directory": "noita"
     }
   },
   "game_info": {

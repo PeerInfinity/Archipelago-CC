@@ -4921,7 +4921,8 @@
         "void_item": 16,
         "white_scrap": 32,
         "yellow_scrap": 1
-      }
+      },
+      "world_directory": "ror2"
     }
   },
   "game_info": {

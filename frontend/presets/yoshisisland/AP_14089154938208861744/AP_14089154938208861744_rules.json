@@ -7696,7 +7696,8 @@
         "Tap-Tap The Red Nose's Boss Room"
       ],
       "castle_unlock": 5,
-      "boss_unlock": 0
+      "boss_unlock": 0,
+      "world_directory": "yoshisisland"
     }
   },
   "game_info": {

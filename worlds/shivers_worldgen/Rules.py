@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAll
+from rule_builder import True_, False_, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -21,19 +21,19 @@ def _shiversworldgen_all_skull_dials_set(state: "CollectionState", player: int) 
 
 
 def _shiversworldgen_ash_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE'), player)) or (state.has_all(('Ash Pot Complete', 'Ash Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_beths_body_available(state: "CollectionState", player: int) -> bool:
-    return (_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (True)
+    return (_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (1)
 
 
 def _shiversworldgen_cloth_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE'), player)) or (state.has_all(('Cloth Pot Complete', 'Cloth Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_crystal_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE'), player)) or (state.has_all(('Crystal Pot Complete', 'Crystal Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_first_nine_ixupi_capturable(state: "CollectionState", player: int) -> bool:
@@ -41,31 +41,31 @@ def _shiversworldgen_first_nine_ixupi_capturable(state: "CollectionState", playe
 
 
 def _shiversworldgen_lightning_capturable(state: "CollectionState", player: int) -> bool:
-    return ((_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (True)) and ((state.has_all((), player)) or (state.has_all((), player)))
+    return ((_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (0)) and ((state.has_all(('Lightning Pot Bottom', 'Lightning Pot Bottom DUPE', 'Lightning Pot Top', 'Lightning Pot Top DUPE'), player)) or (state.has_all(('Lightning Pot Complete', 'Lightning Pot Complete DUPE'), player)))
 
 
 def _shiversworldgen_metal_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE'), player)) or (state.has_all(('Metal Pot Complete', 'Metal Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_oil_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE'), player)) or (state.has_all(('Oil Pot Complete', 'Oil Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_sand_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE'), player)) or (state.has_all(('Sand Pot Complete', 'Sand Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_water_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE'), player)) or (state.has_all(('Water Pot Complete', 'Water Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_wax_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Wax Pot Bottom', 'Wax Pot Bottom DUPE', 'Wax Pot Top', 'Wax Pot Top DUPE'), player)) or (state.has_all(('Wax Pot Complete', 'Wax Pot Complete DUPE'), player))
 
 
 def _shiversworldgen_wood_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all((), player)) or (state.has_all((), player))
+    return (state.has_all(('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE'), player)) or (state.has_all(('Wood Pot Complete', 'Wood Pot Complete DUPE'), player))
 
 
 def set_rules(world: "World") -> None:
@@ -111,12 +111,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        HasAll()
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Bedroom Elevator", player),
-        HasAll()
+        True_()
     )
 
     world.set_rule(
@@ -149,16 +149,20 @@ def set_rules(world: "World") -> None:
         Has("Key for Egypt Room")
     )
 
-    multiworld.get_entrance("To Tar River From Lobby", player).access_rule = \
-        lambda state: (_shiversworldgen_oil_capturable(state, player)) and (state.can_reach_region('Tar River', player)) and (state.has('Crawling', player))
+    world.set_rule(
+        multiworld.get_entrance("To Tar River From Lobby", player),
+        (HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})) & (CanReachRegion("Tar River")) & (Has("Crawling"))
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Outside From Lobby", player),
         Has("Key for Front Door")
     )
 
-    multiworld.get_entrance("To Victory", player).access_rule = \
-        lambda state: ((((((((((_shiversworldgen_water_capturable(state, player) + _shiversworldgen_wax_capturable(state, player)) + _shiversworldgen_ash_capturable(state, player)) + _shiversworldgen_oil_capturable(state, player)) + _shiversworldgen_cloth_capturable(state, player)) + _shiversworldgen_wood_capturable(state, player)) + _shiversworldgen_crystal_capturable(state, player)) + _shiversworldgen_sand_capturable(state, player)) + _shiversworldgen_metal_capturable(state, player)) + _shiversworldgen_lightning_capturable(state, player)) >= True.value)
+    world.set_rule(
+        multiworld.get_entrance("To Victory", player),
+        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]}), "+", HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_lightning_capturable, helper_name="lightning_capturable", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]}]}, {'type': 'setting_value', 'setting': 'early_lightning'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Lightning Pot Bottom'}, {'type': 'constant', 'value': 'Lightning Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Lightning Pot Top'}, {'type': 'constant', 'value': 'Lightning Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Lightning Pot Complete'}, {'type': 'constant', 'value': 'Lightning Pot Complete DUPE'}]}]}]}]})), ">=", True_())
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Library", player),
@@ -175,12 +179,14 @@ def set_rules(world: "World") -> None:
         Has("Key for Generator Room")
     )
 
-    multiworld.get_entrance("To Beth's Body From Generator", player).access_rule = \
-        lambda state: (((state.can_reach_region('Theater', player)) and (state.has('Viewed Norse Stone', player)) if True.value else True)) and (_shiversworldgen_beths_body_available(state, player))
+    world.set_rule(
+        multiworld.get_entrance("To Beth's Body From Generator", player),
+        ((CanReachRegion("Theater")) & (Has("Viewed Norse Stone"))) & (HelperCall(helper_func=_shiversworldgen_beths_body_available, helper_name="beths_body_available", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]}]}, {'type': 'setting_value', 'setting': 'early_beth'}]}))
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player),
-        True_()
+        CanReachRegion("Three Floor Elevator")
     )
 
     world.set_rule(
@@ -193,8 +199,10 @@ def set_rules(world: "World") -> None:
         Has("Key for Projector Room")
     )
 
-    multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player).access_rule = \
-        lambda state: (state.can_reach_region('Bedroom', player) if True.value else True)
+    world.set_rule(
+        multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player),
+        CanReachRegion("Bedroom")
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Prehistoric", player),
@@ -218,11 +226,13 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Maze From Maze Staircase", player),
-        True_()
+        CanReachRegion("Projector Room")
     )
 
-    multiworld.get_entrance("To Lobby From Tar River", player).access_rule = \
-        lambda state: (_shiversworldgen_oil_capturable(state, player)) and (state.has('Crawling', player))
+    world.set_rule(
+        multiworld.get_entrance("To Lobby From Tar River", player),
+        (HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})) & (Has("Crawling"))
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Egypt", player),
@@ -231,7 +241,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Burial From Egypt", player),
-        True_()
+        CanReachRegion("Egypt")
     )
 
     world.set_rule(
@@ -251,12 +261,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Gods Room From Shaman", player),
-        True_()
+        CanReachRegion("Clock Tower")
     )
 
     world.set_rule(
         multiworld.get_entrance("To Anansi From Gods Room", player),
-        True_()
+        CanReachRegion("Maintenance Tunnels")
     )
 
     world.set_rule(
@@ -266,7 +276,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Gods Room From Anansi", player),
-        True_()
+        CanReachRegion("Gods Room")
     )
 
     world.set_rule(
@@ -274,8 +284,10 @@ def set_rules(world: "World") -> None:
         Has("Key for Janitor Closet")
     )
 
-    multiworld.get_entrance("To Water Capture From Janitor Closet", player).access_rule = \
-        lambda state: _shiversworldgen_cloth_capturable(state, player)
+    world.set_rule(
+        multiworld.get_entrance("To Water Capture From Janitor Closet", player),
+        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Orrery From UFO", player),
@@ -322,16 +334,20 @@ def set_rules(world: "World") -> None:
         Has("Key for Puzzle Room")
     )
 
-    multiworld.get_entrance("To Guillotine From Torture", player).access_rule = \
-        lambda state: ((state.has('Viewed Egyptian Hieroglyphics Explained', player) if True.value else True)) and (state.has('Viewed Page 17', player))
+    world.set_rule(
+        multiworld.get_entrance("To Guillotine From Torture", player),
+        (Has("Viewed Egyptian Hieroglyphics Explained")) & (Has("Viewed Page 17"))
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Torture", player),
         Has("Key for Puzzle Room")
     )
 
-    multiworld.get_entrance("To Slide Room", player).access_rule = \
-        lambda state: _shiversworldgen_all_skull_dials_set(state, player)
+    world.set_rule(
+        multiworld.get_entrance("To Slide Room", player),
+        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf']}]})
+    )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Slide Room", player),
@@ -340,17 +356,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Puzzle Solved Office Elevator", player),
-        ((True_()) | (True_())) & (Has("Key for Office Elevator"))
+        ((CanReachRegion("Office")) | (CanReachRegion("Underground Lake"))) & (Has("Key for Office Elevator"))
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Three Floor Elevator", player),
-        ((True_()) | (True_())) & (Has("Key for Three Floor Elevator"))
+        ((CanReachRegion("Blue Maze")) | (CanReachRegion("Maintenance Tunnels"))) & (Has("Key for Three Floor Elevator"))
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        HasAll()
+        True_()
     )
 
     world.set_rule(
@@ -360,7 +376,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Slide", player),
-        (True_()) & (Has("Lost Your Head"))
+        (CanReachRegion("Slide Room")) & (Has("Lost Your Head"))
     )
 
     world.set_rule(
@@ -370,7 +386,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Clock Tower Door", player),
-        True_()
+        CanReachRegion("Three Floor Elevator")
     )
 
     world.set_rule(
@@ -378,12 +394,14 @@ def set_rules(world: "World") -> None:
         Has("Set Time")
     )
 
-    multiworld.get_location("Jukebox", player).access_rule = \
-        lambda state: ((state.can_reach_region('Anansi', player) if True.value else True)) and (state.can_reach_region('Clock Tower', player))
+    world.set_rule(
+        multiworld.get_location("Jukebox", player),
+        (CanReachRegion("Anansi")) & (CanReachRegion("Clock Tower"))
+    )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Atlantis", player),
-        True_()
+        CanReachRegion("Office")
     )
 
     world.set_rule(
@@ -391,8 +409,10 @@ def set_rules(world: "World") -> None:
         Has("Viewed Theater Movie")
     )
 
-    multiworld.get_location("Storage: Tar River", player).access_rule = \
-        lambda state: _shiversworldgen_oil_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Storage: Tar River", player),
+        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Columns of RA", player),
@@ -401,12 +421,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Shaman Drums", player),
-        True_()
+        CanReachRegion("Clock Tower")
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Red Door", player),
-        True_()
+        CanReachRegion("Maintenance Tunnels")
     )
 
     world.set_rule(
@@ -419,45 +439,67 @@ def set_rules(world: "World") -> None:
         Has("Set Song")
     )
 
-    multiworld.get_location("Storage: Janitor Closet", player).access_rule = \
-        lambda state: _shiversworldgen_cloth_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Storage: Janitor Closet", player),
+        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})
+    )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved UFO Symbols", player),
-        True_()
+        CanReachRegion("Library")
     )
 
     world.set_rule(
         multiworld.get_location("Storage: UFO", player),
-        True_()
+        CanReachRegion("Library")
     )
 
-    multiworld.get_location("Puzzle Solved Skull Dial Door", player).access_rule = \
-        lambda state: _shiversworldgen_all_skull_dials_set(state, player)
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Skull Dial Door", player),
+        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf']}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Water", player).access_rule = \
-        lambda state: _shiversworldgen_water_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Water", player),
+        HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Wax", player).access_rule = \
-        lambda state: _shiversworldgen_wax_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Wax", player),
+        HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Ash", player).access_rule = \
-        lambda state: _shiversworldgen_ash_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Ash", player),
+        HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Oil", player).access_rule = \
-        lambda state: _shiversworldgen_oil_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Oil", player),
+        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Cloth", player).access_rule = \
-        lambda state: _shiversworldgen_cloth_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Cloth", player),
+        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Wood", player).access_rule = \
-        lambda state: _shiversworldgen_wood_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Wood", player),
+        HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Crystal", player).access_rule = \
-        lambda state: _shiversworldgen_crystal_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Crystal", player),
+        HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Sand", player).access_rule = \
-        lambda state: _shiversworldgen_sand_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Sand", player),
+        HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]})
+    )
 
-    multiworld.get_location("Ixupi Captured Metal", player).access_rule = \
-        lambda state: _shiversworldgen_metal_capturable(state, player)
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Metal", player),
+        HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]})
+    )

@@ -30561,50 +30561,6 @@
   },
   "helpers": {
     "1": {
-      "has_all_magic_lvx": {
-        "params": [
-          "level"
-        ],
-        "body": {
-          "type": "state_method",
-          "method": "has_all_counts",
-          "args": [
-            {
-              "type": "constant",
-              "value": {
-                "Progressive Aero": {
-                  "type": "name",
-                  "name": "level"
-                },
-                "Progressive Blizzard": {
-                  "type": "name",
-                  "name": "level"
-                },
-                "Progressive Cure": {
-                  "type": "name",
-                  "name": "level"
-                },
-                "Progressive Fire": {
-                  "type": "name",
-                  "name": "level"
-                },
-                "Progressive Gravity": {
-                  "type": "name",
-                  "name": "level"
-                },
-                "Progressive Stop": {
-                  "type": "name",
-                  "name": "level"
-                },
-                "Progressive Thunder": {
-                  "type": "name",
-                  "name": "level"
-                }
-              }
-            }
-          ]
-        }
-      },
       "has_x_worlds": {
         "params": [
           "num_of_worlds",

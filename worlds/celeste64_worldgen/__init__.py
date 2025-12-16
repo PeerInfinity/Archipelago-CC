@@ -18,17 +18,13 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Air Dash": 1,
     "Breakable Blocks": 1,
     "Cassettes": 1,
-    "Climb": 1,
     "Coins": 1,
     "Dash Refills": 1,
     "Double Dash Refills": 1,
     "Feathers": 1,
-    "Ground Dash": 1,
     "Raspberry": 2,
-    "Skid Jump": 1,
     "Springs": 1,
     "Strawberry": 20,
     "Traffic Blocks": 1,
@@ -97,7 +93,7 @@ class Celeste64WorldGenWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Strawberry", "Raspberry", "Dash Refills", "Double Dash Refills", "Feathers", "Coins", "Cassettes", "Traffic Blocks", "Springs", "Breakable Blocks", "Ground Dash", "Air Dash", "Skid Jump", "Climb", "Intro Checkpoint", "Granny Checkpoint", "South-East Tower Checkpoint", "Climb Sign Checkpoint", "Freeway Checkpoint", "Freeway Feather Checkpoint", "Feather Maze Checkpoint", "Double Dash House Checkpoint", "Badeline Tower Checkpoint", "Badeline Island Checkpoint"]),
+        "Everything": frozenset(["Strawberry", "Dash Refills", "Double Dash Refills", "Feathers", "Coins", "Cassettes", "Traffic Blocks", "Springs", "Breakable Blocks", "Raspberry", "Ground Dash", "Air Dash", "Skid Jump", "Climb", "Intro Checkpoint", "Granny Checkpoint", "South-East Tower Checkpoint", "Climb Sign Checkpoint", "Freeway Checkpoint", "Freeway Feather Checkpoint", "Feather Maze Checkpoint", "Double Dash House Checkpoint", "Badeline Tower Checkpoint", "Badeline Island Checkpoint"]),
     }
 
     # Canonical item placements - where items belong in the "vanilla" game

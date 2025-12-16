@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAny, HasFromListUnique
+from rule_builder import True_, False_, Arithmetic, Compare, Conditional, CountItem, False_, Has, HasAny, HasFromListUnique, Not, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -29,41 +29,55 @@ def set_rules(world: "World") -> None:
         HasFromListUnique('Tree Coin', 'Space Coin', 'Macro Coin', 'Pumpkin Coin', 'Mario Coin', 'Turtle Coin', count=6)
     )
 
-    multiworld.get_entrance("Tree Zone 1 -> Tree Zone 2", player).access_rule = \
-        lambda state: ((state.count('Tree Zone Progression', player) + (state.count('Tree Zone Progression x2', player) * 2)) >= 1)
+    world.set_rule(
+        multiworld.get_entrance("Tree Zone 1 -> Tree Zone 2", player),
+        Compare(Arithmetic(CountItem("Tree Zone Progression"), "+", Arithmetic(CountItem("Tree Zone Progression x2"), "*", 2)), ">=", 1)
+    )
 
-    multiworld.get_entrance("Tree Zone 2 -> Tree Zone 3", player).access_rule = \
-        lambda state: ((state.count('Tree Zone Progression', player) + (state.count('Tree Zone Progression x2', player) * 2)) >= 2)
+    world.set_rule(
+        multiworld.get_entrance("Tree Zone 2 -> Tree Zone 3", player),
+        Compare(Arithmetic(CountItem("Tree Zone Progression"), "+", Arithmetic(CountItem("Tree Zone Progression x2"), "*", 2)), ">=", 2)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Tree Zone 2 -> Tree Zone Secret Course", player),
         Has("Tree Zone Secret")
     )
 
-    multiworld.get_entrance("Tree Zone 4 -> Tree Zone 5", player).access_rule = \
-        lambda state: ((state.count('Tree Zone Progression', player) + (state.count('Tree Zone Progression x2', player) * 2)) >= 3)
+    world.set_rule(
+        multiworld.get_entrance("Tree Zone 4 -> Tree Zone 5", player),
+        Compare(Arithmetic(CountItem("Tree Zone Progression"), "+", Arithmetic(CountItem("Tree Zone Progression x2"), "*", 2)), ">=", 3)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Space Zone 1 -> Space Zone Secret Course", player),
         Has("Space Zone Secret")
     )
 
-    multiworld.get_entrance("Space Zone 1 -> Space Zone 2", player).access_rule = \
-        lambda state: ((state.count('Space Zone Progression', player) + (state.count('Space Zone Progression x2', player) * 2)) >= 1)
+    world.set_rule(
+        multiworld.get_entrance("Space Zone 1 -> Space Zone 2", player),
+        Compare(Arithmetic(CountItem("Space Zone Progression"), "+", Arithmetic(CountItem("Space Zone Progression x2"), "*", 2)), ">=", 1)
+    )
 
-    multiworld.get_entrance("Macro Zone 1 -> Macro Zone 2", player).access_rule = \
-        lambda state: ((state.count('Macro Zone Progression', player) + (state.count('Macro Zone Progression x2', player) * 2)) >= 1)
+    world.set_rule(
+        multiworld.get_entrance("Macro Zone 1 -> Macro Zone 2", player),
+        Compare(Arithmetic(CountItem("Macro Zone Progression"), "+", Arithmetic(CountItem("Macro Zone Progression x2"), "*", 2)), ">=", 1)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 1 -> Macro Zone Secret Course", player),
         Has("Macro Zone Secret 1")
     )
 
-    multiworld.get_entrance("Macro Zone 2 -> Macro Zone 3", player).access_rule = \
-        lambda state: ((state.count('Macro Zone Progression', player) + (state.count('Macro Zone Progression x2', player) * 2)) >= 2)
+    world.set_rule(
+        multiworld.get_entrance("Macro Zone 2 -> Macro Zone 3", player),
+        Compare(Arithmetic(CountItem("Macro Zone Progression"), "+", Arithmetic(CountItem("Macro Zone Progression x2"), "*", 2)), ">=", 2)
+    )
 
-    multiworld.get_entrance("Macro Zone 3 -> Macro Zone 4", player).access_rule = \
-        lambda state: ((state.count('Macro Zone Progression', player) + (state.count('Macro Zone Progression x2', player) * 2)) >= 3)
+    world.set_rule(
+        multiworld.get_entrance("Macro Zone 3 -> Macro Zone 4", player),
+        Compare(Arithmetic(CountItem("Macro Zone Progression"), "+", Arithmetic(CountItem("Macro Zone Progression x2"), "*", 2)), ">=", 3)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 4 -> Macro Zone Secret Course", player),
@@ -75,39 +89,55 @@ def set_rules(world: "World") -> None:
         Has("Macro Zone Secret 2")
     )
 
-    multiworld.get_entrance("Pumpkin Zone 1 -> Pumpkin Zone 2", player).access_rule = \
-        lambda state: ((state.count('Pumpkin Zone Progression', player) + (state.count('Pumpkin Zone Progression x2', player) * 2)) >= 1)
+    world.set_rule(
+        multiworld.get_entrance("Pumpkin Zone 1 -> Pumpkin Zone 2", player),
+        Compare(Arithmetic(CountItem("Pumpkin Zone Progression"), "+", Arithmetic(CountItem("Pumpkin Zone Progression x2"), "*", 2)), ">=", 1)
+    )
 
-    multiworld.get_entrance("Pumpkin Zone 2 -> Pumpkin Zone 3", player).access_rule = \
-        lambda state: ((state.count('Pumpkin Zone Progression', player) + (state.count('Pumpkin Zone Progression x2', player) * 2)) >= 2)
+    world.set_rule(
+        multiworld.get_entrance("Pumpkin Zone 2 -> Pumpkin Zone 3", player),
+        Compare(Arithmetic(CountItem("Pumpkin Zone Progression"), "+", Arithmetic(CountItem("Pumpkin Zone Progression x2"), "*", 2)), ">=", 2)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 2 -> Pumpkin Zone Secret Course 1", player),
         Has("Pumpkin Zone Secret 1")
     )
 
-    multiworld.get_entrance("Pumpkin Zone 3 -> Pumpkin Zone 4", player).access_rule = \
-        lambda state: ((state.count('Pumpkin Zone Progression', player) + (state.count('Pumpkin Zone Progression x2', player) * 2)) >= 3)
+    world.set_rule(
+        multiworld.get_entrance("Pumpkin Zone 3 -> Pumpkin Zone 4", player),
+        Compare(Arithmetic(CountItem("Pumpkin Zone Progression"), "+", Arithmetic(CountItem("Pumpkin Zone Progression x2"), "*", 2)), ">=", 3)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 3 -> Pumpkin Zone Secret Course 2", player),
         Has("Pumpkin Zone Secret 2")
     )
 
-    multiworld.get_entrance("Mario Zone 1 -> Mario Zone 2", player).access_rule = \
-        lambda state: ((state.count('Mario Zone Progression', player) + (state.count('Mario Zone Progression x2', player) * 2)) >= 1)
+    world.set_rule(
+        multiworld.get_entrance("Mario Zone 1 -> Mario Zone 2", player),
+        Compare(Arithmetic(CountItem("Mario Zone Progression"), "+", Arithmetic(CountItem("Mario Zone Progression x2"), "*", 2)), ">=", 1)
+    )
 
-    multiworld.get_entrance("Mario Zone 2 -> Mario Zone 3", player).access_rule = \
-        lambda state: ((state.count('Mario Zone Progression', player) + (state.count('Mario Zone Progression x2', player) * 2)) >= 2)
+    world.set_rule(
+        multiworld.get_entrance("Mario Zone 2 -> Mario Zone 3", player),
+        Compare(Arithmetic(CountItem("Mario Zone Progression"), "+", Arithmetic(CountItem("Mario Zone Progression x2"), "*", 2)), ">=", 2)
+    )
 
-    multiworld.get_entrance("Mario Zone 3 -> Mario Zone 4", player).access_rule = \
-        lambda state: ((state.count('Mario Zone Progression', player) + (state.count('Mario Zone Progression x2', player) * 2)) >= 3)
+    world.set_rule(
+        multiworld.get_entrance("Mario Zone 3 -> Mario Zone 4", player),
+        Compare(Arithmetic(CountItem("Mario Zone Progression"), "+", Arithmetic(CountItem("Mario Zone Progression x2"), "*", 2)), ">=", 3)
+    )
 
-    multiworld.get_entrance("Turtle Zone 1 -> Turtle Zone 2", player).access_rule = \
-        lambda state: ((state.count('Turtle Zone Progression', player) + (state.count('Turtle Zone Progression x2', player) * 2)) >= 1)
+    world.set_rule(
+        multiworld.get_entrance("Turtle Zone 1 -> Turtle Zone 2", player),
+        Compare(Arithmetic(CountItem("Turtle Zone Progression"), "+", Arithmetic(CountItem("Turtle Zone Progression x2"), "*", 2)), ">=", 1)
+    )
 
-    multiworld.get_entrance("Turtle Zone 2 -> Turtle Zone 3", player).access_rule = \
-        lambda state: ((state.count('Turtle Zone Progression', player) + (state.count('Turtle Zone Progression x2', player) * 2)) >= 2)
+    world.set_rule(
+        multiworld.get_entrance("Turtle Zone 2 -> Turtle Zone 3", player),
+        Compare(Arithmetic(CountItem("Turtle Zone Progression"), "+", Arithmetic(CountItem("Turtle Zone Progression x2"), "*", 2)), ">=", 2)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Zone 2 -> Turtle Zone Secret Course", player),
@@ -158,8 +188,10 @@ def set_rules(world: "World") -> None:
     multiworld.get_location("Space Zone 1 - Secret Exit", player).access_rule = \
         lambda state: (not (True)) and (state.has_any(('Carrot', 'Space Physics'), player))
 
-    multiworld.get_location("Space Zone 2 - Boss", player).access_rule = \
-        lambda state: ((((True if state.has_any(('Carrot', 'Fire Flower', 'Mushroom'), player) else None) if (not (True)) or (state.has('Space Zone 2 Midway Bell', player)) else (True if (state.has_any(('Carrot', 'Fire Flower'), player)) and (state.has('Mushroom', player)) else None))) or (state.has('Space Physics', player)) if state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player) else False)
+    world.set_rule(
+        multiworld.get_location("Space Zone 2 - Boss", player),
+        Conditional(test=HasAny('Pipe Traversal', 'Pipe Traversal - Right'), if_true=(Conditional(test=(Not(True_())) | (Has("Space Zone 2 Midway Bell")), if_true=True_(), if_false=True_())) | (Has("Space Physics")), if_false=False_())
+    )
 
     world.set_rule(
         multiworld.get_location("Space Zone 2 - Midway Bell", player),
