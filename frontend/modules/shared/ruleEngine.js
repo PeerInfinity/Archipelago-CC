@@ -519,6 +519,37 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // No static data available for helper lookup
         }
 
+        // Check for inline body in the rule itself (used by worldgen worlds)
+        // The body field contains the helper's rule definition inline
+        if (rule.body) {
+          const params = rule.params || []; // Parameter names from helper definition
+          const args = rule.args || [];
+          let helperLocalScope = localScope ? { ...localScope } : {};
+
+          // Map arguments to parameter names if available, otherwise use positional naming
+          for (let i = 0; i < args.length; i++) {
+            const argValue = evaluateRule(args[i], context, depth + 1, localScope);
+            if (params[i]) {
+              // Use the actual parameter name from the helper definition
+              helperLocalScope[params[i]] = argValue;
+            } else {
+              // Fallback to positional naming
+              helperLocalScope[`arg${i}`] = argValue;
+            }
+          }
+
+          result = evaluateRule(rule.body, context, depth + 1, helperLocalScope);
+
+          // Unwrap return marker if present
+          if (result && typeof result === 'object' && result.__isReturn) {
+            result = result.value;
+          }
+          if (result !== undefined) {
+            break;
+          }
+          log('debug', `[evaluateRule] Inline body for '${rule.name}' returned undefined, trying fallbacks`);
+        }
+
         // Handle Python built-in functions
         if (rule.name === 'any') {
           // Python's any() returns True if any element is truthy
@@ -4584,7 +4615,28 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     case 'HelperCall': {
       const bodyData = args.body_data;
       if (bodyData) {
-        // Evaluate the body_data which is in CC format
+        // Check if body_data has params wrapper: {params: [...], body: {...}}
+        if (bodyData.params && bodyData.body) {
+          const params = bodyData.params;
+          const helperArgs = args.args || [];
+          let helperLocalScope = localScope ? { ...localScope } : {};
+
+          // Bind arguments to parameter names
+          for (let i = 0; i < helperArgs.length; i++) {
+            const argValue = evaluateRule(helperArgs[i], context, depth + 1, localScope);
+            if (params[i]) {
+              helperLocalScope[params[i]] = argValue;
+            }
+          }
+
+          let result = evaluateRule(bodyData.body, context, depth + 1, helperLocalScope);
+          // Unwrap return marker if present
+          if (result && typeof result === 'object' && result.__isReturn) {
+            result = result.value;
+          }
+          return result;
+        }
+        // No params wrapper - evaluate body_data directly
         return evaluateRule(bodyData, context, depth + 1, localScope);
       }
       // No body_data - try evaluating as a CC helper with the helper name

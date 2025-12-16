@@ -159,6 +159,7 @@ class ExtractedData:
     accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
+    progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -210,8 +211,11 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
 
     # Extract resolved settings for evaluating setting_value nodes in helpers
     # These are the actual values used in the seed, stored at the top level of settings
+    # Also include game_options since many setting_value nodes reference world.options.X.value
     resolved_settings = {k: v for k, v in settings.items()
                         if k not in ('game', 'options', 'world_directory', 'assume_bidirectional_exits', 'use_resolved_items')}
+    # Merge in game options for settings like goal, castle_skip, etc.
+    resolved_settings.update(game_options)
 
     return GameMetadata(
         game_name=game_name,
@@ -462,6 +466,32 @@ def extract_canonical_placements(json_data: Dict[str, Any]) -> Dict[str, str]:
     return dict(canonical_data)
 
 
+def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str]]:
+    """
+    Extract progression mapping from JSON.
+
+    Progression mapping defines how progressive items map to their component items.
+    For example, 'progressive-processing' might map to ['steel-processing', 'oil-processing', ...].
+    When a progressive item is collected, it grants access to the next uncollected component.
+
+    Returns:
+        Dict mapping progressive item name to ordered list of component item names
+    """
+    progression_data = json_data.get('progression_mapping', {}).get('1', {})
+    result: Dict[str, List[str]] = {}
+
+    for prog_name, prog_info in progression_data.items():
+        # prog_info has structure: {'items': [{'name': '...', 'level': N}, ...], 'base_item': '...'}
+        items_list = prog_info.get('items', [])
+        # Sort by level to ensure correct order
+        sorted_items = sorted(items_list, key=lambda x: x.get('level', 0))
+        component_names = [item.get('name') for item in sorted_items if item.get('name')]
+        if component_names:
+            result[prog_name] = component_names
+
+    return result
+
+
 def compute_state_counter_accumulator_rules(
     items: Dict[str, 'ItemData'],
     original_placements: Dict[str, str]
@@ -487,11 +517,13 @@ def compute_state_counter_accumulator_rules(
 
     # Find items that are used in rules but have id=None (event/counter items)
     # and have a name pattern like " coins" or " coins freemium"
-    counter_items = set()
+    # Use a list to preserve input order for deterministic output
+    counter_items = []
     for item_name, item_data in items.items():
         if item_data.item_id is None and item_name.startswith(' '):
             # This looks like a counter item (e.g., " coins")
-            counter_items.add(item_name)
+            if item_name not in counter_items:
+                counter_items.append(item_name)
 
     if not counter_items:
         return accumulator_rules, prog_items_init
@@ -626,6 +658,9 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data)
 
+    # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
+    progression_mapping = extract_progression_mapping(json_data)
+
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
 
@@ -672,4 +707,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         accumulator_rules=accumulator_rules,
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
+        progression_mapping=progression_mapping,
     )

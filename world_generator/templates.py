@@ -19,6 +19,89 @@ def sanitize_class_name(name: str) -> str:
     return re.sub(r'[^a-zA-Z0-9]', '', name)
 
 
+def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> List[str]:
+    """Extract region names from can_reach calls in a rule.
+
+    This finds all state.can_reach("RegionName", "Region") calls
+    that indicate the rule depends on a region's accessibility.
+    Also resolves helper function calls to find can_reach calls in helper bodies.
+
+    Returns dependencies in the order they are encountered (preserves input order).
+
+    Args:
+        rule: The rule dict to analyze
+        helpers: Dictionary of helper name to HelperData for resolving helper calls
+        visited_helpers: Set of already visited helper names to prevent infinite recursion
+    """
+    dependencies = []
+
+    if not isinstance(rule, dict):
+        return dependencies
+
+    if helpers is None:
+        helpers = {}
+    if visited_helpers is None:
+        visited_helpers = set()
+
+    rule_type = rule.get('type', '')
+
+    # Check for state_method can_reach calls
+    if rule_type == 'state_method' and rule.get('method') == 'can_reach':
+        args = rule.get('args', [])
+        if len(args) >= 2:
+            # args[0] should be the target name, args[1] should be the type
+            target_arg = args[0]
+            type_arg = args[1]
+
+            # Get the target name value
+            target_name = None
+            if isinstance(target_arg, dict) and target_arg.get('type') == 'constant':
+                target_name = target_arg.get('value')
+
+            # Get the target type
+            target_type = None
+            if isinstance(type_arg, dict) and type_arg.get('type') == 'constant':
+                target_type = type_arg.get('value')
+
+            # Only include Region dependencies (not Location or Entrance)
+            if target_name and target_type == 'Region':
+                if target_name not in dependencies:
+                    dependencies.append(target_name)
+
+    # Check for helper calls and resolve them
+    if rule_type == 'helper':
+        helper_name = rule.get('name', '')
+        if helper_name and helper_name not in visited_helpers and helper_name in helpers:
+            visited_helpers.add(helper_name)
+            helper_data = helpers[helper_name]
+            if helper_data.body:
+                for dep in _extract_region_dependencies(helper_data.body, helpers, visited_helpers):
+                    if dep not in dependencies:
+                        dependencies.append(dep)
+
+    # Recurse into nested rules
+    for key in ('conditions', 'children', 'if_true', 'if_false', 'test', 'args'):
+        value = rule.get(key)
+        if isinstance(value, list):
+            for item in value:
+                for dep in _extract_region_dependencies(item, helpers, visited_helpers):
+                    if dep not in dependencies:
+                        dependencies.append(dep)
+        elif isinstance(value, dict):
+            for dep in _extract_region_dependencies(value, helpers, visited_helpers):
+                if dep not in dependencies:
+                    dependencies.append(dep)
+
+    # Check helper body field for inline helpers
+    body = rule.get('body')
+    if body:
+        for dep in _extract_region_dependencies(body, helpers, visited_helpers):
+            if dep not in dependencies:
+                dependencies.append(dep)
+
+    return dependencies
+
+
 def _rule_uses_helpers(rule: dict) -> bool:
     """Check if a rule uses any helper function calls."""
     if not isinstance(rule, dict):
@@ -335,8 +418,15 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.body
     }
 
-    rule_builder_generator = RuleCodeGenerator(game_name)
-    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies)
+    # Build helper params dict for proper argument binding
+    helper_params = {
+        name: helper_data.params
+        for name, helper_data in data.helpers.items()
+        if helper_data.params
+    }
+
+    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
+    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params)
 
     helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
     helper_generator.set_known_helpers(set(data.helpers.keys()))
@@ -371,11 +461,18 @@ def generate_rules_py(data: ExtractedData) -> str:
     # Collect all rules
     entrance_rules = []
     location_rules = []
+    indirect_conditions = []  # (entrance_name, region_name) pairs
 
     # Process entrance rules (preserve original order)
     for exit_name, exit_data in data.exits.items():
         if not is_trivial_rule(exit_data.access_rule):
             exit_escaped = exit_name.replace('\\', '\\\\').replace('"', '\\"')
+
+            # Extract region dependencies for indirect condition registration
+            # Pass helpers dict so helper calls can be resolved to find can_reach calls
+            region_deps = _extract_region_dependencies(exit_data.access_rule, data.helpers)
+            for region_name in region_deps:
+                indirect_conditions.append((exit_name, region_name))
 
             if _rule_needs_lambda(exit_data.access_rule):
                 # Use lambda with helper code generator
@@ -425,6 +522,21 @@ def generate_rules_py(data: ExtractedData) -> str:
     if helper_functions:
         helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
 
+    # Build indirect condition registrations
+    indirect_section = ''
+    if indirect_conditions:
+        indirect_lines = []
+        for entrance_name, region_name in indirect_conditions:
+            entrance_escaped = entrance_name.replace('\\', '\\\\').replace('"', '\\"')
+            region_escaped = region_name.replace('\\', '\\\\').replace('"', '\\"')
+            indirect_lines.append(
+                f'    multiworld.register_indirect_condition(\n'
+                f'        world.get_region("{region_escaped}"),\n'
+                f'        multiworld.get_entrance("{entrance_escaped}", player)\n'
+                f'    )'
+            )
+        indirect_section = '\n    # Register indirect conditions for proper sphere calculation\n' + '\n'.join(indirect_lines)
+
     # Build rule sections
     entrance_section = ''
     if entrance_rules:
@@ -434,7 +546,7 @@ def generate_rules_py(data: ExtractedData) -> str:
     if location_rules:
         location_section = '\n    # Location rules\n' + '\n\n'.join(location_rules)
 
-    rules_content = entrance_section + location_section
+    rules_content = entrance_section + indirect_section + location_section
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
@@ -692,6 +804,50 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         prog_items_init_section = ''
 
+    # Generate progression_mapping section (for progressive items like progressive-processing)
+    progression_mapping_section = ''
+    collect_item_section = ''
+    if data.progression_mapping:
+        prog_map_entries = []
+        for prog_name, components in data.progression_mapping.items():
+            prog_escaped = prog_name.replace('\\', '\\\\').replace('"', '\\"')
+            components_list = ', '.join(f'"{c.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for c in components)
+            prog_map_entries.append(f'        "{prog_escaped}": [{components_list}],')
+        prog_map_content = '\n'.join(prog_map_entries)
+
+        progression_mapping_section = f'''
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {{
+{prog_map_content}
+    }}
+'''
+
+        collect_item_section = '''
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
+'''
+
     # Generate canonical_placements class attribute (for exporter to read)
     if canonical_seed1 and canonical_class_attr_content:
         canonical_placements_section = f'''
@@ -901,7 +1057,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{canonical_placements_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -960,7 +1116,7 @@ class {world_class}(RuleWorldMixin, World):
         data = item_table[name]
         return {class_name}Item(name, data.classification, data.id, self.player)
 
-{fill_slot_data_section}'''
+{collect_item_section}{fill_slot_data_section}'''
 
 
 def _classification_to_enum(classification: str) -> str:
