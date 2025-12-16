@@ -88,12 +88,12 @@
               "value": true
             },
             "item": {
-              "name": "Wood Always Available in Pegasus Room",
+              "name": "Key for Projector Room",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Stone Henge",
@@ -103,12 +103,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for Bedroom",
+              "name": "Crawling",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Office Elevator",
@@ -148,12 +148,12 @@
               ]
             },
             "item": {
-              "name": "Cloth Always Available in Burial Room",
+              "name": "Heal",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Three Floor Elevator",
@@ -193,12 +193,12 @@
               ]
             },
             "item": {
-              "name": "Sand Always Available in Greenhouse",
+              "name": "Wood Always Available in Pegasus Room",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Mailbox",
@@ -208,12 +208,12 @@
               "value": true
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Heal",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Orange Symbol",
@@ -238,12 +238,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for Shaman Room",
+              "name": "Crystal Always Available in Lobby",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Green Symbol",
@@ -268,12 +268,12 @@
               "value": true
             },
             "item": {
-              "name": "Crystal Always Available in Ocean",
+              "name": "Easier Lyre",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Brown Symbol",
@@ -283,12 +283,12 @@
               "value": true
             },
             "item": {
-              "name": "Sand Always Available in Ocean",
+              "name": "Oil Pot Top",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Tan Symbol",
@@ -298,12 +298,12 @@
               "value": true
             },
             "item": {
-              "name": "Cloth Pot Bottom",
+              "name": "Ash Pot Bottom",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -374,12 +374,12 @@
               "value": true
             },
             "item": {
-              "name": "Heal",
+              "name": "Key for Workshop",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -404,12 +404,12 @@
               "value": true
             },
             "item": {
-              "name": "Cloth Always Available in Egypt",
+              "name": "Metal Pot Bottom",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Windlenot's Body",
@@ -520,9 +520,14 @@
             "name": "To Bedroom Elevator From Office",
             "connected_region": "Bedroom Elevator",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             }
           },
           {
@@ -543,12 +548,12 @@
               "value": true
             },
             "item": {
-              "name": "Heal",
+              "name": "Wood Always Available in Blue Maze",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Desk Drawer",
@@ -573,12 +578,12 @@
               "value": true
             },
             "item": {
-              "name": "Crawling",
+              "name": "Wood Always Available in Gods Room",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Tape Recorder Heard",
@@ -588,28 +593,33 @@
               "value": true
             },
             "item": {
-              "name": "Key for Janitor Closet",
+              "name": "Easier Lyre",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Bedroom Elevator",
             "id": 27111,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             },
             "item": {
-              "name": "Water Pot Bottom",
+              "name": "Heal",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -642,12 +652,12 @@
               "value": true
             },
             "item": {
-              "name": "Metal Always Available in Bedroom",
+              "name": "Metal Always Available in Prehistoric",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Workshop Drawers",
@@ -672,12 +682,12 @@
               "value": true
             },
             "item": {
-              "name": "Cloth Pot Top",
+              "name": "Easier Lyre",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -688,9 +698,14 @@
             "name": "To Office From Bedroom Elevator",
             "connected_region": "Office",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             }
           },
           {
@@ -737,12 +752,12 @@
               "value": true
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Key for Puzzle Room",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1997,8 +2012,8 @@
                                   ]
                                 },
                                 {
-                                  "type": "setting_value",
-                                  "setting": "early_lightning"
+                                  "type": "constant",
+                                  "value": 0
                                 }
                               ]
                             },
@@ -2082,12 +2097,12 @@
               }
             },
             "item": {
-              "name": "Key for Torture Room",
+              "name": "Key for Shaman Room",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Museum Brochure",
@@ -2097,12 +2112,12 @@
               "value": true
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Metal Always Available in Bedroom",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Slide",
@@ -2224,12 +2239,12 @@
               "value": true
             },
             "item": {
-              "name": "Wax Always Available in Anansi Room",
+              "name": "Heal",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Mythology of the Stars",
@@ -2239,12 +2254,12 @@
               "value": true
             },
             "item": {
-              "name": "Heal",
+              "name": "Wax Always Available in Shaman Room",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Black Book",
@@ -2254,12 +2269,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for Ocean Room",
+              "name": "Key for Bedroom",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Library Cabinet",
@@ -2338,12 +2353,12 @@
               "value": true
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Wax Always Available in Library",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2846,8 +2861,8 @@
                           ]
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "early_beth"
+                          "type": "constant",
+                          "value": 1
                         }
                       ]
                     }
@@ -2888,12 +2903,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for Projector Room",
+              "name": "Wood Always Available in Workshop",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beth's Body",
@@ -2961,12 +2976,12 @@
               "value": true
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Wax Pot Top",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3029,12 +3044,12 @@
               }
             },
             "item": {
-              "name": "Ash Always Available in Office",
+              "name": "Ash Pot Top",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3092,12 +3107,12 @@
               "value": true
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Ash Always Available in Office",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Clock Chains",
@@ -3138,12 +3153,12 @@
               "value": true
             },
             "item": {
-              "name": "Ash Pot Bottom",
+              "name": "Heal",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Clock Tower",
@@ -3172,12 +3187,12 @@
               "value": true
             },
             "item": {
-              "name": "Crystal Always Available in Lobby",
+              "name": "Key for Bedroom Elevator",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Jukebox",
@@ -3242,12 +3257,12 @@
               "value": true
             },
             "item": {
-              "name": "Wax Always Available in Library",
+              "name": "Wax Pot Bottom",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Viewed Theater Movie",
@@ -3447,12 +3462,12 @@
               }
             },
             "item": {
-              "name": "Key for Generator Room",
+              "name": "Sand Always Available in Greenhouse",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Organ",
@@ -3462,12 +3477,12 @@
               "value": true
             },
             "item": {
-              "name": "Oil Pot Top",
+              "name": "Water Always Available in Lobby",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Museum Blueprints",
@@ -3477,12 +3492,12 @@
               "value": true
             },
             "item": {
-              "name": "Wood Always Available in Gods Room",
+              "name": "Easier Lyre",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Ocean",
@@ -3507,12 +3522,12 @@
               "value": true
             },
             "item": {
-              "name": "Water Always Available in Lobby",
+              "name": "Oil Always Available in Prehistoric Room",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3552,12 +3567,12 @@
               }
             },
             "item": {
-              "name": "Key for Puzzle Room",
+              "name": "Easier Lyre",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3829,12 +3844,12 @@
               }
             },
             "item": {
-              "name": "Key for Workshop",
+              "name": "Key for Generator Room",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Burial Door",
@@ -3844,12 +3859,12 @@
               "value": true
             },
             "item": {
-              "name": "Metal Pot Bottom",
+              "name": "Water Pot Bottom",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Egypt",
@@ -3874,12 +3889,12 @@
               "value": true
             },
             "item": {
-              "name": "Heal",
+              "name": "Ash Always Available in Burial Room",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Set Skull Dial: Egypt",
@@ -3953,7 +3968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Merrick's Notebook",
@@ -3963,12 +3978,12 @@
               "value": true
             },
             "item": {
-              "name": "Ash Always Available in Burial Room",
+              "name": "Key for Torture Room",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Chinese Solitaire",
@@ -4050,12 +4065,12 @@
               }
             },
             "item": {
-              "name": "Metal Always Available in Prehistoric",
+              "name": "Heal",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Shaman Hut",
@@ -4126,12 +4141,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for Bedroom Elevator",
+              "name": "Sand Always Available in Ocean",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Red Door",
@@ -4144,12 +4159,12 @@
               }
             },
             "item": {
-              "name": "Easier Lyre",
+              "name": "Cloth Pot Top",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Lyre",
@@ -4205,12 +4220,12 @@
               "value": true
             },
             "item": {
-              "name": "Metal Always Available in Projector Room",
+              "name": "Sand Pot Bottom",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Norse Stone",
@@ -4274,12 +4289,12 @@
               }
             },
             "item": {
-              "name": "Wax Pot Top",
+              "name": "Easier Lyre",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Ancient Astrology",
@@ -4289,12 +4304,12 @@
               "value": true
             },
             "item": {
-              "name": "Wood Always Available in Blue Maze",
+              "name": "Key for Ocean Room",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Skeleton",
@@ -4639,12 +4654,12 @@
               }
             },
             "item": {
-              "name": "Sand Pot Bottom",
+              "name": "Easier Lyre",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: UFO",
@@ -4687,12 +4702,12 @@
               "value": true
             },
             "item": {
-              "name": "Ash Pot Top",
+              "name": "Cloth Always Available in Burial Room",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Orrery",
@@ -4785,12 +4800,12 @@
               "value": true
             },
             "item": {
-              "name": "Wood Always Available in Workshop",
+              "name": "Crystal Pot Top",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4823,12 +4838,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for UFO Room",
+              "name": "Key for Prehistoric Room",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4853,12 +4868,12 @@
               "value": true
             },
             "item": {
-              "name": "Sand Pot Top",
+              "name": "Cloth Pot Bottom",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Riddle: Fortune Teller",
@@ -4868,12 +4883,12 @@
               "value": true
             },
             "item": {
-              "name": "Heal",
+              "name": "Crystal Always Available in Ocean",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Viewed Fortune",
@@ -4938,12 +4953,12 @@
               "value": true
             },
             "item": {
-              "name": "Key for Prehistoric Room",
+              "name": "Wood Pot Top",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Alchemy",
@@ -5018,7 +5033,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Gallows",
@@ -5043,12 +5058,12 @@
               "value": true
             },
             "item": {
-              "name": "Oil Always Available in Prehistoric Room",
+              "name": "Key for Janitor Closet",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5073,12 +5088,12 @@
               "value": true
             },
             "item": {
-              "name": "Wax Always Available in Shaman Room",
+              "name": "Key for UFO Room",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Guillotine",
@@ -5131,12 +5146,12 @@
               "value": true
             },
             "item": {
-              "name": "Wood Pot Top",
+              "name": "Cloth Always Available in Egypt",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Mastermind Information Plaque",
@@ -5146,12 +5161,12 @@
               "value": true
             },
             "item": {
-              "name": "Crystal Pot Top",
+              "name": "Wax Always Available in Anansi Room",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5184,12 +5199,12 @@
               "value": true
             },
             "item": {
-              "name": "Heal",
+              "name": "Metal Always Available in Projector Room",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5279,12 +5294,12 @@
               }
             },
             "item": {
-              "name": "Wax Pot Bottom",
+              "name": "Sand Pot Top",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7384,122 +7399,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "Puzzle Solved Combination Lock": "Key for Office Elevator",
-      "Puzzle Solved Gears": "Wood Always Available in Pegasus Room",
-      "Puzzle Solved Stone Henge": "Key for Bedroom",
-      "Puzzle Solved Office Elevator": "Cloth Always Available in Burial Room",
-      "Puzzle Solved Three Floor Elevator": "Sand Always Available in Greenhouse",
-      "Puzzle Hint Found: Mailbox": "Easier Lyre",
-      "Puzzle Hint Found: Orange Symbol": "Key for Underground Lake",
-      "Puzzle Hint Found: Silver Symbol": "Key for Shaman Room",
-      "Puzzle Hint Found: Green Symbol": "Key for Office",
-      "Puzzle Hint Found: White Symbol": "Crystal Always Available in Ocean",
-      "Puzzle Hint Found: Brown Symbol": "Sand Always Available in Ocean",
-      "Puzzle Hint Found: Tan Symbol": "Cloth Pot Bottom",
-      "Flashback Memory Obtained Windlenot's Ghost": "Heal",
-      "Flashback Memory Obtained Egyptian Hieroglyphics Explained": "Cloth Always Available in Egypt",
-      "Windlenot's Body": "Viewed Egyptian Hieroglyphics Explained",
-      "Flashback Memory Obtained Scrapbook": "Heal",
-      "Storage: Desk Drawer": "Crystal Pot Bottom DUPE",
-      "Puzzle Hint Found: Atlantis Map": "Crawling",
-      "Puzzle Hint Found: Tape Recorder Heard": "Key for Janitor Closet",
-      "Puzzle Solved Bedroom Elevator": "Water Pot Bottom",
-      "Puzzle Solved Workshop Drawers": "Metal Always Available in Bedroom",
-      "Storage: Workshop Drawers": "Metal Pot Bottom DUPE",
-      "Puzzle Hint Found: Basilisk Bone Fragments": "Cloth Pot Top",
-      "Flashback Memory Obtained Professor Windlenot's Diary": "Easier Lyre",
-      "Puzzle Solved Theater Door": "Key for Torture Room",
-      "Flashback Memory Obtained Museum Brochure": "Easier Lyre",
-      "Storage: Slide": "Ash Pot Bottom DUPE",
-      "Storage: Transforming Mask": "Water Pot Top DUPE",
-      "Puzzle Solved Library Statue": "Key for Three Floor Elevator",
-      "Flashback Memory Obtained In Search of the Unexplained": "Key for Egypt Room",
-      "Flashback Memory Obtained South American Pictographs": "Wax Always Available in Anansi Room",
-      "Flashback Memory Obtained Mythology of the Stars": "Heal",
-      "Flashback Memory Obtained Black Book": "Key for Ocean Room",
-      "Storage: Library Cabinet": "Oil Pot Top DUPE",
-      "Storage: Library Statue": "Sand Pot Bottom DUPE",
-      "Flashback Memory Obtained Beth's Address Book": "Easier Lyre",
-      "Final Riddle: Beth's Body Page 17": "Key for Projector Room",
-      "Beth's Body": "Viewed Page 17",
-      "Storage: Theater": "Empty",
-      "Puzzle Hint Found: Beth's Note": "Easier Lyre",
-      "Puzzle Solved Clock Tower Door": "Ash Always Available in Office",
-      "Puzzle Solved Clock Chains": "Easier Lyre",
-      "Clock Chains": "Set Time",
-      "Flashback Memory Obtained Beth's Ghost": "Ash Pot Bottom",
-      "Storage: Clock Tower": "Water Pot Bottom DUPE",
-      "Puzzle Hint Found: Shaman Security Camera": "Crystal Always Available in Lobby",
-      "Jukebox": "Set Song",
-      "Flashback Memory Obtained Theater Movie": "Wax Always Available in Library",
-      "Viewed Theater Movie": "Viewed Theater Movie",
-      "Storage: Eagles Nest": "Wax Pot Top DUPE",
-      "Set Skull Dial: Prehistoric": "Set Skull Dial: Prehistoric",
-      "Storage: Greenhouse": "Cloth Pot Top DUPE",
-      "Puzzle Solved Atlantis": "Key for Generator Room",
-      "Puzzle Solved Organ": "Oil Pot Top",
-      "Flashback Memory Obtained Museum Blueprints": "Wood Always Available in Gods Room",
-      "Storage: Ocean": "Lightning Pot Top DUPE",
-      "Puzzle Hint Found: Sirens Song Heard": "Water Always Available in Lobby",
-      "Puzzle Solved Maze Door": "Key for Puzzle Room",
-      "Storage: Tar River": "Wax Pot Bottom DUPE",
-      "Set Skull Dial: Tar River": "Set Skull Dial: Tar River",
-      "Puzzle Solved Columns of RA": "Key for Workshop",
-      "Puzzle Solved Burial Door": "Metal Pot Bottom",
-      "Storage: Egypt": "Cloth Pot Bottom DUPE",
-      "Puzzle Hint Found: Egyptian Sphinx Heard": "Heal",
-      "Set Skull Dial: Egypt": "Set Skull Dial: Egypt",
-      "Puzzle Solved Chinese Solitaire": "Easier Lyre",
-      "Flashback Memory Obtained Merrick's Notebook": "Ash Always Available in Burial Room",
-      "Storage: Chinese Solitaire": "Sand Pot Top DUPE",
-      "Set Skull Dial: Burial": "Set Skull Dial: Burial",
-      "Puzzle Solved Shaman Drums": "Metal Always Available in Prehistoric",
-      "Storage: Shaman Hut": "Empty",
-      "Puzzle Solved Lyre": "Key for Bedroom Elevator",
-      "Puzzle Solved Red Door": "Easier Lyre",
-      "Storage: Lyre": "Metal Pot Top DUPE",
-      "Set Skull Dial: Gods Room": "Set Skull Dial: Gods Room",
-      "Final Riddle: Norse God Stone Message": "Metal Always Available in Projector Room",
-      "Norse Stone": "Viewed Norse Stone",
-      "Puzzle Solved Anansi Music Box": "Wax Pot Top",
-      "Flashback Memory Obtained Ancient Astrology": "Wood Always Available in Blue Maze",
-      "Storage: Skeleton": "Wood Pot Top DUPE",
-      "Storage: Anansi Music Box": "Empty",
-      "Set Skull Dial: Werewolf": "Set Skull Dial: Werewolf",
-      "Storage: Janitor Closet": "Lightning Pot Bottom DUPE",
-      "Puzzle Solved UFO Symbols": "Sand Pot Bottom",
-      "Storage: UFO": "Wood Pot Bottom DUPE",
-      "Final Riddle: Planets Aligned": "Ash Pot Top",
-      "Orrery": "Aligned Planets",
-      "Puzzle Solved Fortune Teller Door": "Wood Always Available in Workshop",
-      "Puzzle Hint Found: Elevator Writing": "Key for UFO Room",
-      "Flashback Memory Obtained Merrick's Ghost": "Sand Pot Top",
-      "Final Riddle: Fortune Teller": "Heal",
-      "Viewed Fortune": "Viewed Fortune",
-      "Puzzle Solved Alchemy": "Key for Prehistoric Room",
-      "Storage: Alchemy": "Oil Pot Bottom DUPE",
-      "Puzzle Solved Gallows": "Easier Lyre",
-      "Storage: Gallows": "Crystal Pot Top DUPE",
-      "Puzzle Hint Found: Gallows Information Plaque": "Oil Always Available in Prehistoric Room",
-      "Final Riddle: Guillotine Dropped": "Wax Always Available in Shaman Room",
-      "Guillotine": "Lost Your Head",
-      "Puzzle Solved Mastermind": "Wood Pot Top",
-      "Puzzle Hint Found: Mastermind Information Plaque": "Crystal Pot Top",
-      "Puzzle Solved Marble Flipper": "Heal",
-      "Storage: Skull Bridge": "Ash Pot Top DUPE",
-      "Puzzle Solved Skull Dial Door": "Wax Pot Bottom",
-      "Ixupi Captured Water": "Metal Pot Top",
-      "Ixupi Captured Wax": "Key for Library",
-      "Ixupi Captured Ash": "Crystal Pot Bottom",
-      "Ixupi Captured Oil": "Lightning Pot Top",
-      "Ixupi Captured Cloth": "Water Pot Top",
-      "Ixupi Captured Wood": "Key for Greenhouse",
-      "Ixupi Captured Crystal": "Wood Pot Bottom",
-      "Ixupi Captured Sand": "Oil Pot Bottom",
-      "Ixupi Captured Metal": "Lightning Pot Bottom",
-      "Mystery Solved": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -7521,7 +7421,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": 1,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
