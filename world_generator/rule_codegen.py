@@ -388,33 +388,11 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
-        # Try to recognize the pattern: (count * constant) >= value
-        result = self._try_convert_binary_op_compare(left, op, right)
-        if result is not None:
-            return result
-
-        # Check if this comparison involves complex expressions we can't handle
-        # If the left side is a binary_op that we can't simplify, make it always True
-        # This is safer than generating broken code that makes locations inaccessible
-        if isinstance(left, dict) and left.get('type') == 'binary_op':
-            # Check if it involves min/max/complex operations
-            bin_left = left.get('left', {})
-            bin_right = left.get('right', {})
-            if (isinstance(bin_left, dict) and bin_left.get('type') in ('min', 'max') or
-                isinstance(bin_right, dict) and bin_right.get('type') in ('min', 'max')):
-                # Complex comparison we can't handle - make accessible
-                self.required_imports.add('True_')
-                return 'True_()'
-
-        # Use Compare class for other patterns
+        # Use Compare class for all other patterns
+        # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
         self.required_imports.add('Compare')
         left_code = self._convert_compare_operand(left)
         right_code = self._convert_compare_operand(right)
-
-        # Check if we generated True_() for a complex operand - make the whole thing True
-        if 'True_()' in left_code and 'True_()' not in right_code:
-            # The left operand couldn't be converted - make accessible
-            return 'True_()'
 
         return f'Compare({left_code}, "{op}", {right_code})'
 
@@ -441,65 +419,57 @@ class RuleCodeGenerator:
                     return f'CountItem("{item_escaped}")'
 
         if op_type == 'binary_op':
-            # Handle binary operations - return metadata for later processing
-            # See _try_convert_binary_op_compare for the main handler
-            pass
+            return self._convert_binary_op(operand)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
 
-    def _try_convert_binary_op_compare(self, left: Any, op: str, right: Any) -> Optional[str]:
-        """
-        Try to convert a comparison with binary_op to Has().
+    def _convert_binary_op(self, operand: Dict[str, Any]) -> str:
+        """Convert a binary_op to Arithmetic rule."""
+        self.required_imports.add('Arithmetic')
 
-        Pattern: (count * constant) >= value
-        Converts to: Has(item, ceil(value/constant))
+        left = operand.get('left', {})
+        op = operand.get('op', '+')
+        right = operand.get('right', {})
 
-        Returns None if the pattern doesn't match.
-        """
-        import math
+        # Normalize operator names from Python AST
+        op_map = {
+            'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+            'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+        }
+        op = op_map.get(op, op)
 
-        # Check if left is a binary_op and right is a constant
-        if not isinstance(left, dict) or left.get('type') != 'binary_op':
-            return None
-        if not isinstance(right, dict) or right.get('type') != 'constant':
-            return None
+        left_code = self._convert_arithmetic_operand(left)
+        right_code = self._convert_arithmetic_operand(right)
 
-        bin_left = left.get('left', {})
-        bin_op = left.get('op', '')
-        bin_right = left.get('right', {})
-        compare_value = right.get('value', 0)
+        return f'Arithmetic({left_code}, "{op}", {right_code})'
 
-        # Handle count * constant >= value pattern
-        if bin_op in ('*', 'Mult'):
-            # Check if left is count and right is constant
-            if (isinstance(bin_left, dict) and bin_left.get('type') == 'state_method' and
-                bin_left.get('method') == 'count' and
-                isinstance(bin_right, dict) and bin_right.get('type') == 'constant'):
+    def _convert_arithmetic_operand(self, operand: Any) -> str:
+        """Convert an arithmetic operand to Python code."""
+        if not isinstance(operand, dict):
+            return repr(operand)
 
-                count_args = bin_left.get('args', [])
-                if count_args and isinstance(count_args[0], dict) and count_args[0].get('type') == 'constant':
-                    item_name = count_args[0].get('value', '')
-                    multiplier = bin_right.get('value', 1)
+        op_type = operand.get('type', '')
 
-                    if multiplier > 0:
-                        # Calculate the required count
-                        if op == '>=':
-                            required_count = math.ceil(compare_value / multiplier)
-                        elif op == '>':
-                            required_count = math.floor(compare_value / multiplier) + 1
-                        elif op == '==':
-                            # Approximate as >=
-                            required_count = math.ceil(compare_value / multiplier)
-                        else:
-                            return None
+        if op_type == 'constant':
+            return repr(operand.get('value'))
 
-                        # Generate Has() call
-                        self.required_imports.add('Has')
-                        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                        return f'Has("{item_escaped}", {required_count})'
+        if op_type == 'state_method':
+            method = operand.get('method', '')
+            args = operand.get('args', [])
 
-        return None
+            if method == 'count':
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    item_name = args[0].get('value', '')
+                    self.required_imports.add('CountItem')
+                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                    return f'CountItem("{item_escaped}")'
+
+        if op_type == 'binary_op':
+            return self._convert_binary_op(operand)
+
+        # Fall back to converting as a rule
+        return self._convert_rule(operand)
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
