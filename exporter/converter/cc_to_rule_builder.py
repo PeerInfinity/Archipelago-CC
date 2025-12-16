@@ -639,21 +639,26 @@ class CCToRuleBuilder:
 
     def _convert_binary_op(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Convert binary_op rule.
+        Convert binary_op rule to Arithmetic.
 
         CC: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
-        RB: No direct equivalent - preserve as custom rule
+        RB: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
         """
         left = rule.get('left', {})
         op = rule.get('op', '+')
         right = rule.get('right', {})
 
-        self.warnings.append("Binary operation preserved as custom rule")
-        return self._make_custom_rule('BinaryOp', {
+        # Normalize operator names from Python AST
+        op_map = {
+            'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+            'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+        }
+        op = op_map.get(op, op)
+
+        return self._make_rule('Arithmetic', {
             'left': self._convert_rule(left) if isinstance(left, dict) else left,
             'op': op,
             'right': self._convert_rule(right) if isinstance(right, dict) else right,
-            '_original_cc_type': 'binary_op'
         })
 
     def _convert_attribute(self, rule: Dict[str, Any]) -> Dict[str, Any]:
