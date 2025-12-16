@@ -496,7 +496,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                                     'name': 'has_x_worlds',
                                     'args': [
                                         {'type': 'constant', 'value': num_of_worlds},
-                                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                        {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                        {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                                     ]
                                 },
                                 second  # Keep the item_check
@@ -522,7 +524,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                                         'name': 'has_x_worlds',
                                         'args': [
                                             {'type': 'constant', 'value': num_of_worlds},
-                                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                            {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                            {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                                         ]
                                     },
                                     second  # Keep the 'or' conditions as-is
@@ -758,7 +762,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'name': 'has_x_worlds',
                             'args': [
                                 {'type': 'constant', 'value': 3},
-                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                             ]
                         })
                     else:
@@ -875,7 +881,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'name': 'has_x_worlds',
                             'args': [
                                 {'type': 'constant', 'value': 8},
-                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                             ]
                         })
                     else:
@@ -933,7 +941,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'name': 'has_x_worlds',
                             'args': [
                                 {'type': 'constant', 'value': num_worlds},
-                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                                {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                                {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                             ]
                         })
                     else:
@@ -969,7 +979,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                         'name': 'has_x_worlds',
                         'args': [
                             {'type': 'constant', 'value': num_of_worlds},
-                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                            {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                            {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                         ]
                     }
 
@@ -997,7 +1009,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                     'name': 'has_x_worlds',
                     'args': [
                         {'type': 'constant', 'value': 3},
-                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                        {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                        {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                     ]
                 }
 
@@ -1115,7 +1129,9 @@ class KH1GameExportHandler(BaseGameExportHandler):
                 'name': 'has_x_worlds',
                 'args': [
                     {'type': 'constant', 'value': num_of_worlds},
-                    {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                    {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)},
+                    {'type': 'constant', 'value': self.options_cache.get('logic_difficulty', 5)},
+                    {'type': 'constant', 'value': self.options_cache.get('hundred_acre_wood', 0)}
                 ]
             }
 

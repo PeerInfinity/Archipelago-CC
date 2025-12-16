@@ -425,6 +425,14 @@
                     {
                       "type": "constant",
                       "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -480,6 +488,14 @@
                         {
                           "type": "constant",
                           "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "constant",
+                          "value": 5
                         },
                         {
                           "type": "constant",
@@ -559,6 +575,14 @@
                     {
                       "type": "constant",
                       "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -611,6 +635,14 @@
                     {
                       "type": "constant",
                       "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
                     },
                     {
                       "type": "constant",
@@ -671,6 +703,14 @@
                     {
                       "type": "constant",
                       "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -723,6 +763,14 @@
                     {
                       "type": "constant",
                       "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
                     },
                     {
                       "type": "constant",
@@ -783,6 +831,14 @@
                     {
                       "type": "constant",
                       "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -839,6 +895,14 @@
                     {
                       "type": "constant",
                       "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -891,6 +955,14 @@
                     {
                       "type": "constant",
                       "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
                     },
                     {
                       "type": "constant",
@@ -11071,6 +11143,14 @@
                     {
                       "type": "constant",
                       "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -11322,6 +11402,14 @@
                         {
                           "type": "constant",
                           "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "constant",
+                          "value": 5
                         },
                         {
                           "type": "constant",
@@ -29990,7 +30078,8 @@
       "ap_increase": 18,
       "mp_increase": 7,
       "accessory_slot_increase": 1,
-      "item_slot_increase": 3
+      "item_slot_increase": 3,
+      "world_directory": "kh1"
     }
   },
   "game_info": {
