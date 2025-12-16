@@ -11,9 +11,10 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from CC format rules."""
 
-    def __init__(self, game_name: str = "") -> None:
+    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None) -> None:
         self.required_imports: Set[str] = set()
         self.game_name = game_name
+        self.settings = settings or {}  # Resolved settings for evaluating setting_value nodes
         # Sanitize game name for use in Python identifiers
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
@@ -24,10 +25,12 @@ class RuleCodeGenerator:
         """Reset state for a new generation run."""
         self.required_imports = set()
 
-    def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None) -> None:
-        """Set known helpers and optionally their bodies for explain support."""
+    def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
+                     helper_params: Dict[str, List[str]] = None) -> None:
+        """Set known helpers and optionally their bodies and params for explain support."""
         self.known_helpers = helper_names
         self.helper_bodies = helper_bodies or {}
+        self.helper_params = helper_params or {}  # helper_name -> list of param names
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None) -> Dict[str, Any]:
         """
@@ -517,6 +520,24 @@ class RuleCodeGenerator:
             for arg in args:
                 if isinstance(arg, dict) and arg.get('type') == 'constant':
                     arg_strs.append(repr(arg.get('value')))
+                elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
+                    # Resolve setting_value args to their actual values
+                    setting = arg.get('setting', '')
+                    if setting in self.settings:
+                        arg_strs.append(repr(self.settings[setting]))
+                    else:
+                        arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('type') == 'attribute':
+                    # Handle attribute access on setting_value (e.g., world.options.goal.value)
+                    obj = arg.get('object', {})
+                    if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
+                        setting = obj.get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    else:
+                        arg_strs.append('None')
                 else:
                     # For complex args, try to convert
                     arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
@@ -533,9 +554,18 @@ class RuleCodeGenerator:
                 body = self.helper_bodies[helper_name]
                 # Expand any nested helper references to their bodies
                 expanded_body = self._expand_helper_refs(body)
-                # Escape the body repr for Python code
-                body_repr = repr(expanded_body)
-                parts.append(f'body_data={body_repr}')
+
+                # Include params if available so frontend can map args to param names
+                if helper_name in self.helper_params and self.helper_params[helper_name]:
+                    # Wrap body with params info for proper argument binding
+                    body_with_params = {
+                        'params': self.helper_params[helper_name],
+                        'body': expanded_body
+                    }
+                    parts.append(f'body_data={repr(body_with_params)}')
+                else:
+                    # No params - just use the body directly
+                    parts.append(f'body_data={repr(expanded_body)}')
 
             return f'HelperCall({", ".join(parts)})'
 
@@ -1227,8 +1257,17 @@ class HelperCodeGenerator:
 
     def _expr_attribute(self, expr: Dict[str, Any]) -> str:
         """Generate attribute access expression."""
-        obj = self._generate_expression(expr.get('object', {}))
+        obj_expr = expr.get('object', {})
         attr = expr.get('attr', '')
+
+        # Special case: when accessing .value on a setting_value, the setting_value
+        # is already resolved to its actual value, so just return it directly.
+        # This handles cases like world.options.goal.value where we captured the
+        # setting as setting_value and now just need the numeric/boolean value.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
+            return self._generate_expression(obj_expr)
+
+        obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
     def _expr_function_call(self, expr: Dict[str, Any]) -> str:
