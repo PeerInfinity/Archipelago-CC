@@ -73,7 +73,13 @@ class RuleCodeGenerator:
         if rule_type == 'setting_value':
             setting_name = rule.get('setting', '')
             if setting_name in self.settings:
-                return {'type': 'constant', 'value': self.settings[setting_name]}
+                value = self.settings[setting_name]
+                # Handle indexed access into list settings (e.g., required_medallions[0])
+                if 'index' in rule and isinstance(value, list):
+                    index = rule['index']
+                    if 0 <= index < len(value):
+                        value = value[index]
+                return {'type': 'constant', 'value': value}
             # Unknown setting - return as-is (will evaluate to undefined in frontend)
             return rule
 
@@ -1164,6 +1170,11 @@ class HelperCodeGenerator:
         # If the setting was captured during export, use its value
         if setting in self.settings:
             value = self.settings[setting]
+            # Handle indexed access into list settings (e.g., required_medallions[0])
+            if 'index' in expr and isinstance(value, list):
+                index = expr['index']
+                if 0 <= index < len(value):
+                    value = value[index]
             if isinstance(value, bool):
                 return 'True' if value else 'False'
             elif isinstance(value, str):
