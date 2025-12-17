@@ -1137,6 +1137,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         return {}
 '''
 
+    # Generate game-specific helper methods
+    game_helpers_section = _generate_game_helpers(data)
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
@@ -1261,7 +1264,177 @@ class {world_class}(RuleWorldMixin, World):
         data = item_table[name]
         return {class_name}Item(name, data.classification, data.id, self.player)
 
-{collect_item_section}{fill_slot_data_section}'''
+{collect_item_section}{fill_slot_data_section}{game_helpers_section}'''
+
+
+def _generate_game_helpers(data: 'ExtractedData') -> str:
+    """Generate game-specific helper methods for the world class.
+
+    Some games have complex access rules that require helper methods on the world class.
+    This function generates those helpers based on the game name.
+    """
+    game_name = data.metadata.game_name
+
+    # Lingo requires special helper methods for door/entrance/location access
+    # Check for both "Lingo" and "Lingo WorldGen" since game may be renamed
+    if game_name == "Lingo" or game_name.startswith("Lingo"):
+        return '''
+    # ============================================================
+    # WorldGen settings and rule helper methods
+    # ============================================================
+
+    _worldgen_settings_cache: Dict[str, Any] = None
+
+    def _load_worldgen_settings(self) -> Dict[str, Any]:
+        """Load settings from the _worldgen_settings.json file."""
+        if self._worldgen_settings_cache is not None:
+            return self._worldgen_settings_cache
+
+        import json
+        import os
+
+        settings_path = os.path.join(
+            os.path.dirname(__file__),
+            "_worldgen_settings.json"
+        )
+
+        with open(settings_path, 'r') as f:
+            self._worldgen_settings_cache = json.load(f)
+
+        return self._worldgen_settings_cache
+
+    def lingo_can_use_entrance(self, state, target_room: str, door_room: str, door_name: str) -> bool:
+        """Check if an entrance can be used (door can be opened)."""
+        return self._lingo_can_open_door(state, door_room, door_name)
+
+    def _lingo_can_open_door(self, state, room: str, door: str) -> bool:
+        """Check if a door can be opened."""
+        settings = self._load_worldgen_settings()
+        item_by_door = settings.get('item_by_door', {})
+        door_reqs = settings.get('door_reqs', {})
+        progressive_items = settings.get('PROGRESSIVE_ITEMS', [])
+        progressive_doors_by_room = settings.get('PROGRESSIVE_DOORS_BY_ROOM', {})
+
+        # Check if door requires a specific item
+        if room in item_by_door and door in item_by_door[room]:
+            item_name = item_by_door[room][door]
+
+            # Check for progressive items
+            if item_name in progressive_items:
+                if room in progressive_doors_by_room and door in progressive_doors_by_room[room]:
+                    prog_info = progressive_doors_by_room[room][door]
+                    index = prog_info.get('index', 1)
+                    return state.has(item_name, self.player, index)
+
+            return state.has(item_name, self.player)
+
+        # Check door requirements
+        if room in door_reqs and door in door_reqs[room]:
+            return self._lingo_can_satisfy_requirements(state, door_reqs[room][door])
+
+        # No requirements found - door is accessible
+        return True
+
+    def _lingo_can_satisfy_requirements(self, state, access: Dict[str, Any]) -> bool:
+        """Check if access requirements are satisfied."""
+        settings = self._load_worldgen_settings()
+
+        # Check required rooms
+        for req_room in access.get('rooms', []):
+            if not state.can_reach_region(req_room, self.player):
+                return False
+
+        # Check required doors
+        for req_door in access.get('doors', []):
+            door_room = req_door.get('room', '')
+            door_name = req_door.get('door', '')
+            if door_room and door_name:
+                if not self._lingo_can_open_door(state, door_room, door_name):
+                    return False
+
+        # Check required colors (if shuffle_colors is enabled)
+        if settings.get('shuffle_colors', 0):
+            for color in access.get('colors', []):
+                color_item = color.capitalize()
+                if not state.has(color_item, self.player):
+                    return False
+
+        # Check required items
+        for item in access.get('items', []):
+            if not state.has(item, self.player):
+                return False
+
+        # Check progression items
+        for item, index in access.get('progression', {}).items():
+            if not state.has(item, self.player, index):
+                return False
+
+        # Check mastery requirement
+        if access.get('the_master', False):
+            if not self.lingo_can_use_mastery_location(state):
+                return False
+
+        return True
+
+    def lingo_can_use_location(self, state, loc_name: str) -> bool:
+        """Check if a location can be accessed based on its access requirements."""
+        # Load the location access requirements from the worldgen settings
+        settings = self._load_worldgen_settings()
+        location_access = settings.get('location_access', {})
+
+        if loc_name in location_access:
+            return self._lingo_can_satisfy_requirements(state, location_access[loc_name])
+
+        # If no access requirements found, check if it's defined in location_table
+        from .Locations import location_table
+        if loc_name in location_table:
+            loc_data = location_table[loc_name]
+            # Some locations may have access requirements embedded in their data
+            if hasattr(loc_data, 'access') and loc_data.access:
+                return self._lingo_can_satisfy_requirements(state, loc_data.access)
+
+        # Default to accessible if no requirements found
+        return True
+
+    def lingo_can_use_level_2_location(self, state) -> bool:
+        """Check if the level 2 location can be accessed."""
+        settings = self._load_worldgen_settings()
+        level_2_requirement = settings.get('level_2_requirement', 223)
+        counting_panel_reqs = settings.get('counting_panel_reqs', {})
+
+        counted_panels = 0
+        state.update_reachable_regions(self.player)
+
+        for region in state.reachable_regions[self.player]:
+            region_name = region.name
+            if region_name in counting_panel_reqs:
+                for panel_req in counting_panel_reqs[region_name]:
+                    access_req = panel_req[0] if isinstance(panel_req, list) else panel_req.get('access', {})
+                    panel_count = panel_req[1] if isinstance(panel_req, list) else panel_req.get('count', 1)
+                    if self._lingo_can_satisfy_requirements(state, access_req):
+                        counted_panels += panel_count
+
+            if counted_panels >= level_2_requirement - 1:
+                return True
+
+        return False
+
+    def lingo_can_use_mastery_location(self, state) -> bool:
+        """Check if the mastery location can be accessed."""
+        settings = self._load_worldgen_settings()
+        mastery_achievements = settings.get('mastery_achievements', 21)
+        mastery_reqs = settings.get('mastery_reqs', [])
+
+        satisfied_count = 0
+        for access_req in mastery_reqs:
+            if self._lingo_can_satisfy_requirements(state, access_req):
+                satisfied_count += 1
+
+        return satisfied_count >= mastery_achievements
+'''
+
+    # No game-specific helpers needed for other games
+    return ''
 
 
 def _classification_to_enum(classification: str) -> str:
