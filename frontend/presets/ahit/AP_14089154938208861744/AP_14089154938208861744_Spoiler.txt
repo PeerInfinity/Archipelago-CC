@@ -543,8 +543,8 @@ Act Completion (The Subcon Well)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Act Completion (The Twilight Bell)
@@ -1252,8 +1252,8 @@ Subcon Well - Mushroom
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 TIHS Access

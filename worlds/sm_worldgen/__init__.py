@@ -309,6 +309,7 @@ class SuperMetroidWorldGenWorld(RuleWorldMixin, World):
         data = item_table[name]
         return SuperMetroidWorldGenItem(name, data.classification, data.id, self.player)
 
+
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
