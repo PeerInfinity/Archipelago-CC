@@ -669,6 +669,8 @@ class {class_name}(Toggle):
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
     if isinstance(default_value, int):
+        # Handle negative defaults by adjusting range_start
+        range_start = min(0, default_value)
         if default_value <= 10:
             range_end = max(100, default_value * 2)
         elif default_value <= 100:
@@ -680,7 +682,7 @@ class {class_name}(Toggle):
 class {class_name}(Range):
     """Option for {display_name}."""
     display_name = "{display_name}"
-    range_start = 0
+    range_start = {range_start}
     range_end = {range_end}
     default = {default_value}
 '''
