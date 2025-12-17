@@ -27,7 +27,7 @@ item_table: Dict[str, ItemData] = {
     "Ice Spreadshot": ItemData(91630179862864, ItemClassification.progression),
     "Volt Laser": ItemData(91630179862865, ItemClassification.progression),
     "Life Extension": ItemData(91630179862866, ItemClassification.progression),
-    "Clip Extension": ItemData(91630179862867, ItemClassification.useful),
+    "Clip Extension": ItemData(91630179862867, ItemClassification.progression),
     "Faster Reload": ItemData(91630179862868, ItemClassification.progression),
     "Special Extension": ItemData(91630179862869, ItemClassification.useful),
     "Jacket": ItemData(91630179862870, ItemClassification.useful),
