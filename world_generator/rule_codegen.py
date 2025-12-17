@@ -86,6 +86,11 @@ class RuleCodeGenerator:
                 setting_name = obj.get('setting', '')
                 if setting_name in self.settings:
                     return {'type': 'constant', 'value': self.settings[setting_name]}
+            # Also handle self.xxx attribute access (e.g., self.flag_specific_keycards)
+            # These are option-dependent flags from LogicExtensions classes
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                if attr in self.settings:
+                    return {'type': 'constant', 'value': self.settings[attr]}
 
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
@@ -1506,9 +1511,11 @@ class HelperCodeGenerator:
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
 
-        # Special case: self.<option> references (e.g., self.game_logic)
-        # In helper functions exported from original worlds, 'self' refers to a logic class
-        # that has options as attributes. We resolve these to literal values from settings.
+        # Special case: when accessing self.xxx where xxx is a setting (e.g., self.game_logic, flag_specific_keycards),
+        # resolve it to the setting's value. This handles option-dependent logic flags that were
+        # captured from LogicExtensions classes (e.g., TimespinnerLogic). In helper functions
+        # exported from original worlds, 'self' refers to a logic class that has options as attributes.
+        # We resolve these to literal values from settings.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
             if attr in self.settings:
                 value = self.settings[attr]
