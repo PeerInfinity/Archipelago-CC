@@ -2,8 +2,8 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
-    "created": "2025-12-17T00:44:10.830553",
-    "last_updated": "2025-12-17T00:44:10.830558",
+    "created": "2025-12-17T03:35:49.147465",
+    "last_updated": "2025-12-17T03:35:49.147473",
     "script_version": "1.0.0",
     "seed": "1"
   },
@@ -20,7 +20,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit/AP_14089154938208861744",
-          "processing_time_seconds": 4.67,
+          "processing_time_seconds": 4.34,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -29,7 +29,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 15.48,
+          "processing_time_seconds": 16.62,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -44,7 +44,7 @@
         "seed_generation": {
           "error": "raise AttributeError",
           "preset_dir": null,
-          "processing_time_seconds": 2.65,
+          "processing_time_seconds": 2.44,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -59,12 +59,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ahit_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.1,
+          "processing_time_seconds": 0.09,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ahit_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:23.609422"
+      "timestamp": "2025-12-17T03:29:26.741293"
     },
     "A Link to the Past": {
       "errors": {
@@ -78,7 +78,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/alttp/AP_14089154938208861744",
-          "processing_time_seconds": 9.78,
+          "processing_time_seconds": 10.11,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -87,7 +87,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 18.28,
+          "processing_time_seconds": 21.85,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -102,7 +102,7 @@
         "seed_generation": {
           "error": "EOFError: EOF when reading a line",
           "preset_dir": null,
-          "processing_time_seconds": 0.42,
+          "processing_time_seconds": 0.43,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -122,7 +122,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/alttp_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:24.755463"
+      "timestamp": "2025-12-17T03:29:21.679786"
     },
     "A Short Hike": {
       "errors": {
@@ -134,7 +134,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike/AP_14089154938208861744",
-          "processing_time_seconds": 3.39,
+          "processing_time_seconds": 3.01,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -143,7 +143,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 10.89,
+          "processing_time_seconds": 10.71,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -154,7 +154,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.74,
+          "processing_time_seconds": 9.67,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -162,7 +162,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.97,
+          "processing_time_seconds": 2.75,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -171,7 +171,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.72,
+          "processing_time_seconds": 9.67,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -181,12 +181,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shorthike_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.1,
+          "processing_time_seconds": 0.09,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shorthike_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:27.384648"
+      "timestamp": "2025-12-17T03:29:20.794638"
     },
     "APQuest": {
       "errors": {
@@ -200,7 +200,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/apquest/AP_14089154938208861744",
-          "processing_time_seconds": 2.83,
+          "processing_time_seconds": 2.8,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/apquest/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/apquest/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -209,7 +209,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.19,
+          "processing_time_seconds": 7.28,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -220,7 +220,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.21,
+          "processing_time_seconds": 14.16,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -228,7 +228,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/apquest_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.63,
+          "processing_time_seconds": 2.61,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/apquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/apquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -252,7 +252,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/apquest_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:20.657220"
+      "timestamp": "2025-12-17T03:29:25.887486"
     },
     "Adventure": {
       "errors": {
@@ -266,7 +266,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure/AP_14089154938208861744",
-          "processing_time_seconds": 2.99,
+          "processing_time_seconds": 3.33,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -275,7 +275,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.28,
+          "processing_time_seconds": 7.36,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -286,7 +286,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.38,
+          "processing_time_seconds": 14.75,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -294,7 +294,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.8,
+          "processing_time_seconds": 3.19,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -303,7 +303,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.68,
+          "processing_time_seconds": 5.89,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -313,12 +313,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/adventure_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.09,
+          "processing_time_seconds": 0.1,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/adventure_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:21.927963"
+      "timestamp": "2025-12-17T03:29:29.774889"
     },
     "Aquaria": {
       "errors": {
@@ -332,7 +332,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria/AP_14089154938208861744",
-          "processing_time_seconds": 6.65,
+          "processing_time_seconds": 7.84,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -341,7 +341,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 12.19,
+          "processing_time_seconds": 9.42,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -352,7 +352,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.04,
+          "processing_time_seconds": 14.66,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -360,7 +360,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.73,
+          "processing_time_seconds": 3.01,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -369,7 +369,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.5,
+          "processing_time_seconds": 7.85,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -379,12 +379,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/aquaria_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.09,
+          "processing_time_seconds": 0.11,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/aquaria_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:29.854596"
+      "timestamp": "2025-12-17T03:29:25.641655"
     },
     "Bomb Rush Cyberfunk": {
       "errors": {
@@ -398,7 +398,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744",
-          "processing_time_seconds": 9.85,
+          "processing_time_seconds": 10.05,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -407,7 +407,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 22.78,
+          "processing_time_seconds": 22.57,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -433,7 +433,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/bomb_rush_cyberfunk_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:17.132995"
+      "timestamp": "2025-12-17T03:29:25.770669"
     },
     "Bumper Stickers": {
       "errors": {
@@ -447,7 +447,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik/AP_14089154938208861744",
-          "processing_time_seconds": 2.95,
+          "processing_time_seconds": 2.85,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -456,7 +456,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.99,
+          "processing_time_seconds": 11.41,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -467,7 +467,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.33,
+          "processing_time_seconds": 14.51,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -475,7 +475,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.74,
+          "processing_time_seconds": 2.93,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -484,7 +484,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.68,
+          "processing_time_seconds": 8.7,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -499,7 +499,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/bumpstik_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:23.945339"
+      "timestamp": "2025-12-17T03:29:27.230034"
     },
     "Castlevania - Circle of the Moon": {
       "errors": {
@@ -513,7 +513,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm/AP_14089154938208861744",
-          "processing_time_seconds": 3.01,
+          "processing_time_seconds": 3.03,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -522,7 +522,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.67,
+          "processing_time_seconds": 8.63,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -533,7 +533,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.2,
+          "processing_time_seconds": 14.33,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -541,7 +541,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.83,
+          "processing_time_seconds": 2.76,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -550,7 +550,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.63,
+          "processing_time_seconds": 5.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -560,12 +560,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cvcotm_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.09,
+          "processing_time_seconds": 0.1,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cvcotm_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:42.206569"
+      "timestamp": "2025-12-17T03:29:23.627648"
     },
     "Castlevania 64": {
       "errors": {
@@ -577,7 +577,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64/AP_14089154938208861744",
-          "processing_time_seconds": 3.0,
+          "processing_time_seconds": 3.11,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -586,7 +586,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.0,
+          "processing_time_seconds": 9.73,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -597,7 +597,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.62,
+          "processing_time_seconds": 6.66,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -605,7 +605,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.74,
+          "processing_time_seconds": 2.82,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -614,7 +614,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.62,
+          "processing_time_seconds": 6.65,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -624,12 +624,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cv64_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.09,
+          "processing_time_seconds": 0.1,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cv64_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:25.079576"
+      "timestamp": "2025-12-17T03:29:27.301263"
     },
     "Celeste (Open World)": {
       "errors": {
@@ -643,7 +643,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world/AP_14089154938208861744",
-          "processing_time_seconds": 4.05,
+          "processing_time_seconds": 3.77,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -652,7 +652,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 14.79,
+          "processing_time_seconds": 14.57,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -663,7 +663,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.77,
+          "processing_time_seconds": 14.2,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -671,7 +671,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 4.06,
+          "processing_time_seconds": 3.74,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -680,7 +680,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 14.91,
+          "processing_time_seconds": 14.62,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -690,12 +690,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/celeste_open_world_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.1,
+          "processing_time_seconds": 0.09,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/celeste_open_world_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:28.434412"
+      "timestamp": "2025-12-17T03:29:31.226771"
     },
     "Celeste 64": {
       "errors": {
@@ -709,7 +709,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64/AP_14089154938208861744",
-          "processing_time_seconds": 3.04,
+          "processing_time_seconds": 3.14,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -718,7 +718,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.79,
+          "processing_time_seconds": 6.64,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -729,7 +729,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.32,
+          "processing_time_seconds": 14.3,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -737,7 +737,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.7,
+          "processing_time_seconds": 2.84,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -746,7 +746,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.67,
+          "processing_time_seconds": 7.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -761,7 +761,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/celeste64_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:34.718061"
+      "timestamp": "2025-12-17T03:29:31.980905"
     },
     "ChecksFinder": {
       "errors": {
@@ -773,7 +773,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder/AP_14089154938208861744",
-          "processing_time_seconds": 3.02,
+          "processing_time_seconds": 2.74,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -782,7 +782,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.74,
+          "processing_time_seconds": 6.65,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -793,7 +793,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.67,
+          "processing_time_seconds": 6.63,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -801,7 +801,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.77,
+          "processing_time_seconds": 2.78,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -810,7 +810,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.67,
+          "processing_time_seconds": 6.65,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -825,7 +825,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/checksfinder_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:30.891733"
+      "timestamp": "2025-12-17T03:29:23.915337"
     },
     "ChocolateChipCookies": {
       "errors": {
@@ -839,7 +839,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure/AP_14089154938208861744",
-          "processing_time_seconds": 2.64,
+          "processing_time_seconds": 2.6,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -848,7 +848,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.7,
+          "processing_time_seconds": 5.62,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -859,7 +859,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.16,
+          "processing_time_seconds": 14.14,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -867,7 +867,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.66,
+          "processing_time_seconds": 2.62,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -876,7 +876,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.62,
+          "processing_time_seconds": 5.61,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -886,12 +886,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/bakingadventure_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.06,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/bakingadventure_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:23.590610"
+      "timestamp": "2025-12-17T03:29:28.787300"
     },
     "Choo-Choo Charles": {
       "errors": {
@@ -903,7 +903,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles/AP_14089154938208861744",
-          "processing_time_seconds": 2.98,
+          "processing_time_seconds": 3.21,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -912,7 +912,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 10.72,
+          "processing_time_seconds": 10.91,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -923,7 +923,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.72,
+          "processing_time_seconds": 10.89,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -931,7 +931,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.87,
+          "processing_time_seconds": 3.25,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -940,7 +940,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.71,
+          "processing_time_seconds": 10.89,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -950,12 +950,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cccharles_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cccharles_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:25.030086"
+      "timestamp": "2025-12-17T03:29:33.220415"
     },
     "Civilization VI": {
       "errors": {
@@ -969,7 +969,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6/AP_14089154938208861744",
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 3.15,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -978,7 +978,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.51,
+          "processing_time_seconds": 8.85,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -989,7 +989,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 17.31,
+          "processing_time_seconds": 17.92,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -997,7 +997,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.64,
+          "processing_time_seconds": 2.98,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1006,7 +1006,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.56,
+          "processing_time_seconds": 8.83,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1021,7 +1021,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/civ_6_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:36.612118"
+      "timestamp": "2025-12-17T03:29:33.607525"
     },
     "DLCQuest": {
       "errors": {
@@ -1033,7 +1033,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest/AP_14089154938208861744",
-          "processing_time_seconds": 2.66,
+          "processing_time_seconds": 2.72,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1042,7 +1042,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.42,
+          "processing_time_seconds": 5.61,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1053,7 +1053,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.42,
+          "processing_time_seconds": 5.49,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1061,7 +1061,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.49,
+          "processing_time_seconds": 2.59,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1070,7 +1070,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.45,
+          "processing_time_seconds": 5.48,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1085,7 +1085,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/dlcquest_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:27.082018"
+      "timestamp": "2025-12-17T03:29:35.917177"
     },
     "DOOM 1993": {
       "errors": {
@@ -1099,7 +1099,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993/AP_14089154938208861744",
-          "processing_time_seconds": 3.04,
+          "processing_time_seconds": 2.91,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1108,7 +1108,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 12.75,
+          "processing_time_seconds": 12.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1119,7 +1119,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.43,
+          "processing_time_seconds": 14.48,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1127,7 +1127,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.88,
+          "processing_time_seconds": 3.12,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1136,7 +1136,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 12.73,
+          "processing_time_seconds": 12.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1151,7 +1151,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/doom_1993_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:27.008031"
+      "timestamp": "2025-12-17T03:29:30.193552"
     },
     "DOOM II": {
       "errors": {
@@ -1165,7 +1165,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii/AP_14089154938208861744",
-          "processing_time_seconds": 3.1,
+          "processing_time_seconds": 3.08,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1174,7 +1174,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 14.74,
+          "processing_time_seconds": 15.73,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1185,7 +1185,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.4,
+          "processing_time_seconds": 14.43,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1193,7 +1193,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.95,
+          "processing_time_seconds": 2.91,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1202,7 +1202,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 15.74,
+          "processing_time_seconds": 15.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1212,12 +1212,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/doom_ii_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/doom_ii_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:45.334931"
+      "timestamp": "2025-12-17T03:29:26.782857"
     },
     "Dark Souls III": {
       "errors": {
@@ -1231,7 +1231,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744",
-          "processing_time_seconds": 4.74,
+          "processing_time_seconds": 4.78,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1240,7 +1240,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 24.77,
+          "processing_time_seconds": 24.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1251,7 +1251,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 18.42,
+          "processing_time_seconds": 18.44,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1259,7 +1259,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.04,
+          "processing_time_seconds": 3.11,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1268,7 +1268,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 23.74,
+          "processing_time_seconds": 23.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1283,7 +1283,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/dark_souls_3_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:28.214734"
+      "timestamp": "2025-12-17T03:29:30.545675"
     },
     "Donkey Kong Country 3": {
       "errors": {
@@ -1297,7 +1297,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3/AP_14089154938208861744",
-          "processing_time_seconds": 2.96,
+          "processing_time_seconds": 2.81,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1306,7 +1306,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 13.79,
+          "processing_time_seconds": 14.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1317,7 +1317,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 15.71,
+          "processing_time_seconds": 15.15,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1325,7 +1325,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.91,
+          "processing_time_seconds": 2.66,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1334,7 +1334,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 14.69,
+          "processing_time_seconds": 14.5,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1349,7 +1349,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/dkc3_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:32.616290"
+      "timestamp": "2025-12-17T03:29:35.120925"
     },
     "Factorio": {
       "errors": {
@@ -1363,7 +1363,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744",
-          "processing_time_seconds": 3.47,
+          "processing_time_seconds": 3.54,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1372,7 +1372,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.71,
+          "processing_time_seconds": 9.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1383,7 +1383,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.34,
+          "processing_time_seconds": 14.31,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1391,7 +1391,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.78,
+          "processing_time_seconds": 2.85,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1400,7 +1400,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.68,
+          "processing_time_seconds": 9.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1415,7 +1415,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/factorio_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:37.860429"
+      "timestamp": "2025-12-17T03:29:35.227832"
     },
     "Faxanadu": {
       "errors": {
@@ -1429,7 +1429,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu/AP_14089154938208861744",
-          "processing_time_seconds": 3.2,
+          "processing_time_seconds": 2.84,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1438,7 +1438,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.75,
+          "processing_time_seconds": 6.63,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1449,7 +1449,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.38,
+          "processing_time_seconds": 14.27,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1457,7 +1457,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.88,
+          "processing_time_seconds": 2.77,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1466,7 +1466,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.73,
+          "processing_time_seconds": 8.66,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1481,7 +1481,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/faxanadu_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:33.997039"
+      "timestamp": "2025-12-17T03:29:26.729968"
     },
     "Final Fantasy Mystic Quest": {
       "errors": {
@@ -1495,7 +1495,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq/AP_14089154938208861744",
-          "processing_time_seconds": 3.68,
+          "processing_time_seconds": 3.65,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1504,7 +1504,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 10.69,
+          "processing_time_seconds": 10.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1515,7 +1515,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.31,
+          "processing_time_seconds": 14.22,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1523,7 +1523,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.83,
+          "processing_time_seconds": 2.77,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1547,7 +1547,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ffmq_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:26.324052"
+      "timestamp": "2025-12-17T03:29:31.475239"
     },
     "Heretic": {
       "errors": {
@@ -1561,7 +1561,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic/AP_14089154938208861744",
-          "processing_time_seconds": 3.18,
+          "processing_time_seconds": 3.51,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1570,7 +1570,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 14.93,
+          "processing_time_seconds": 15.96,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1581,7 +1581,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.44,
+          "processing_time_seconds": 14.86,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1589,7 +1589,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.0,
+          "processing_time_seconds": 3.34,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1598,7 +1598,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 15.77,
+          "processing_time_seconds": 15.9,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1613,7 +1613,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/heretic_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:28.107850"
+      "timestamp": "2025-12-17T03:29:36.536905"
     },
     "Hylics 2": {
       "errors": {
@@ -1625,7 +1625,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2/AP_14089154938208861744",
-          "processing_time_seconds": 3.57,
+          "processing_time_seconds": 4.09,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1634,7 +1634,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.48,
+          "processing_time_seconds": 6.81,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1645,7 +1645,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.56,
+          "processing_time_seconds": 6.84,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1653,7 +1653,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.72,
+          "processing_time_seconds": 2.89,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1662,7 +1662,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.55,
+          "processing_time_seconds": 6.83,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1672,12 +1672,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/hylics2_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/hylics2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:39.489806"
+      "timestamp": "2025-12-17T03:29:36.844935"
     },
     "Inscryption": {
       "errors": {
@@ -1689,7 +1689,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption/AP_14089154938208861744",
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.64,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1698,7 +1698,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.46,
+          "processing_time_seconds": 6.49,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1709,7 +1709,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.44,
+          "processing_time_seconds": 6.5,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1717,7 +1717,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.45,
+          "processing_time_seconds": 2.51,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1726,7 +1726,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.45,
+          "processing_time_seconds": 6.47,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1741,7 +1741,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/inscryption_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:29.820385"
+      "timestamp": "2025-12-17T03:29:38.712586"
     },
     "Kingdom Hearts": {
       "errors": {
@@ -1755,7 +1755,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744",
-          "processing_time_seconds": 8.72,
+          "processing_time_seconds": 8.69,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1764,7 +1764,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 29.93,
+          "processing_time_seconds": 29.89,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1779,7 +1779,7 @@
         "seed_generation": {
           "error": "raise FillError(",
           "preset_dir": null,
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 2.85,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1794,12 +1794,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kh1_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.11,
+          "processing_time_seconds": 0.12,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kh1_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:48.555012"
+      "timestamp": "2025-12-17T03:29:29.990003"
     },
     "Kingdom Hearts 2": {
       "errors": {
@@ -1813,7 +1813,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744",
-          "processing_time_seconds": 5.27,
+          "processing_time_seconds": 5.17,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1822,7 +1822,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 41.97,
+          "processing_time_seconds": 41.95,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1837,7 +1837,7 @@
         "seed_generation": {
           "error": "KeyError: 1",
           "preset_dir": null,
-          "processing_time_seconds": 2.57,
+          "processing_time_seconds": 2.69,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1857,13 +1857,12 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kh2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:30.152813"
+      "timestamp": "2025-12-17T03:29:33.212309"
     },
     "Kirby's Dream Land 3": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world spoiler test failed: Spoiler test failed",
           "Cross-validation failed: original sphere log incompatible with _worldgen world"
         ]
       },
@@ -1872,7 +1871,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3/AP_14089154938208861744",
-          "processing_time_seconds": 4.46,
+          "processing_time_seconds": 4.55,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1881,7 +1880,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 54.97,
+          "processing_time_seconds": 54.64,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1892,7 +1891,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.48,
+          "processing_time_seconds": 14.44,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1900,18 +1899,18 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.16,
+          "processing_time_seconds": 3.2,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "success": true
         },
         "spoiler_test": {
-          "error": "Spoiler test failed",
-          "pass_fail": "fail",
-          "processing_time_seconds": 17.51,
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 55.92,
           "sphere_reached": 0,
-          "success": false,
+          "success": true,
           "total_spheres": 0
         },
         "test_game_name": "Kirby's Dream Land 3 WorldGen",
@@ -1924,7 +1923,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kdl3_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:33.082343"
+      "timestamp": "2025-12-17T03:29:35.456519"
     },
     "Landstalker - The Treasures of King Nole": {
       "errors": {
@@ -1938,7 +1937,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker/AP_14089154938208861744",
-          "processing_time_seconds": 3.13,
+          "processing_time_seconds": 3.02,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1947,7 +1946,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.69,
+          "processing_time_seconds": 8.6,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1958,7 +1957,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.52,
+          "processing_time_seconds": 14.01,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -1966,7 +1965,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.02,
+          "processing_time_seconds": 2.78,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1975,7 +1974,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 17.88,
+          "processing_time_seconds": 18.6,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1990,7 +1989,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/landstalker_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:35.666582"
+      "timestamp": "2025-12-17T03:29:38.016436"
     },
     "Lingo": {
       "errors": {
@@ -2005,7 +2004,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo/AP_14089154938208861744",
-          "processing_time_seconds": 3.29,
+          "processing_time_seconds": 3.39,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2014,7 +2013,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.65,
+          "processing_time_seconds": 5.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2025,7 +2024,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.67,
+          "processing_time_seconds": 14.57,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -2033,7 +2032,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.11,
+          "processing_time_seconds": 3.05,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2042,7 +2041,7 @@
         "spoiler_test": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 41.9,
+          "processing_time_seconds": 41.01,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -2057,7 +2056,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:41.443004"
+      "timestamp": "2025-12-17T03:29:38.878949"
     },
     "Links Awakening DX": {
       "errors": {
@@ -2071,7 +2070,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ladx/AP_14089154938208861744",
-          "processing_time_seconds": 10.18,
+          "processing_time_seconds": 9.54,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ladx/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ladx/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2080,7 +2079,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 17.87,
+          "processing_time_seconds": 16.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2095,7 +2094,7 @@
         "seed_generation": {
           "error": "raise FillError(",
           "preset_dir": null,
-          "processing_time_seconds": 2.85,
+          "processing_time_seconds": 2.74,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2115,7 +2114,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ladx_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:37.289284"
+      "timestamp": "2025-12-17T03:29:29.664378"
     },
     "Lufia II Ancient Cave": {
       "errors": {
@@ -2127,7 +2126,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac/AP_14089154938208861744",
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.72,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2136,7 +2135,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.64,
+          "processing_time_seconds": 5.63,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2147,7 +2146,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.61,
+          "processing_time_seconds": 5.59,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2155,7 +2154,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.62,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2164,7 +2163,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.62,
+          "processing_time_seconds": 5.6,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2179,7 +2178,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lufia2ac_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:30.130824"
+      "timestamp": "2025-12-17T03:29:35.257345"
     },
     "Mario & Luigi Superstar Saga": {
       "errors": {
@@ -2191,7 +2190,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss/AP_14089154938208861744",
-          "processing_time_seconds": 3.84,
+          "processing_time_seconds": 4.12,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2200,7 +2199,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.73,
+          "processing_time_seconds": 11.01,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2211,7 +2210,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.79,
+          "processing_time_seconds": 8.92,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2219,7 +2218,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.14,
+          "processing_time_seconds": 3.39,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2228,7 +2227,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.73,
+          "processing_time_seconds": 8.91,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2243,7 +2242,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mlss_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:31.399306"
+      "timestamp": "2025-12-17T03:29:40.155424"
     },
     "MathProof2p2e4": {
       "errors": {
@@ -2257,7 +2256,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure/AP_14089154938208861744",
-          "processing_time_seconds": 2.65,
+          "processing_time_seconds": 3.03,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2266,7 +2265,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.51,
+          "processing_time_seconds": 5.76,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2277,7 +2276,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.15,
+          "processing_time_seconds": 14.55,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -2285,7 +2284,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.71,
+          "processing_time_seconds": 3.02,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2294,7 +2293,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.57,
+          "processing_time_seconds": 5.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2304,12 +2303,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mathadventure_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.06,
+          "processing_time_seconds": 0.07,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mathadventure_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:43.130819"
+      "timestamp": "2025-12-17T03:29:41.018220"
     },
     "Mega Man 2": {
       "errors": {
@@ -2321,7 +2320,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mm2/AP_14089154938208861744",
-          "processing_time_seconds": 2.56,
+          "processing_time_seconds": 2.61,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mm2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mm2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2330,7 +2329,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.44,
+          "processing_time_seconds": 6.48,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2341,7 +2340,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.46,
+          "processing_time_seconds": 6.5,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2349,7 +2348,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mm2_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.45,
+          "processing_time_seconds": 2.56,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mm2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mm2_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2358,7 +2357,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.44,
+          "processing_time_seconds": 6.47,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2373,7 +2372,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mm2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:32.504270"
+      "timestamp": "2025-12-17T03:29:41.429350"
     },
     "MegaMan Battle Network 3": {
       "errors": {
@@ -2387,7 +2386,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3/AP_14089154938208861744",
-          "processing_time_seconds": 3.09,
+          "processing_time_seconds": 3.06,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2396,7 +2395,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.67,
+          "processing_time_seconds": 8.71,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2407,7 +2406,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 17.5,
+          "processing_time_seconds": 17.57,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -2415,7 +2414,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.84,
+          "processing_time_seconds": 2.98,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2424,7 +2423,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.71,
+          "processing_time_seconds": 7.74,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2434,12 +2433,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mmbn3_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.08,
+          "processing_time_seconds": 0.07,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mmbn3_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:35.606282"
+      "timestamp": "2025-12-17T03:29:38.571954"
     },
     "Meritous": {
       "errors": {
@@ -2453,7 +2452,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous/AP_14089154938208861744",
-          "processing_time_seconds": 3.03,
+          "processing_time_seconds": 2.97,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2462,7 +2461,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.64,
+          "processing_time_seconds": 5.65,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2473,7 +2472,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.25,
+          "processing_time_seconds": 14.31,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -2481,7 +2480,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.74,
+          "processing_time_seconds": 2.73,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2490,7 +2489,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.64,
+          "processing_time_seconds": 5.67,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2505,7 +2504,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/meritous_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:57.431130"
+      "timestamp": "2025-12-17T03:29:38.836648"
     },
     "Metamath": {
       "errors": {
@@ -2517,7 +2516,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744",
-          "processing_time_seconds": 9.83,
+          "processing_time_seconds": 9.79,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2526,7 +2525,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.64,
+          "processing_time_seconds": 5.66,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2537,7 +2536,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.6,
+          "processing_time_seconds": 5.62,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2545,7 +2544,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.75,
+          "processing_time_seconds": 2.69,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2554,7 +2553,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.66,
+          "processing_time_seconds": 5.64,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2569,7 +2568,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/metamath_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:37.655396"
+      "timestamp": "2025-12-17T03:29:40.121084"
     },
     "Muse Dash": {
       "errors": {
@@ -2583,7 +2582,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/musedash/AP_14089154938208861744",
-          "processing_time_seconds": 2.97,
+          "processing_time_seconds": 2.79,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/musedash/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/musedash/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2592,7 +2591,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.69,
+          "processing_time_seconds": 7.47,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2607,7 +2606,7 @@
         "seed_generation": {
           "error": "raise FillError(f\"No more spots to place {len(unplaced_items)} items. Remaining locations are invalid.\\n\"",
           "preset_dir": null,
-          "processing_time_seconds": 2.56,
+          "processing_time_seconds": 2.48,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2627,7 +2626,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/musedash_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:38.889768"
+      "timestamp": "2025-12-17T03:29:41.118020"
     },
     "Noita": {
       "errors": {
@@ -2639,7 +2638,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita/AP_14089154938208861744",
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 2.82,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2659,7 +2658,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.73,
+          "processing_time_seconds": 5.64,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2667,7 +2666,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.95,
+          "processing_time_seconds": 2.8,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2676,7 +2675,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.68,
+          "processing_time_seconds": 5.66,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2691,7 +2690,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/noita_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:44.844202"
+      "timestamp": "2025-12-17T03:29:42.377737"
     },
     "Old School Runescape": {
       "errors": {
@@ -2703,7 +2702,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs/AP_14089154938208861744",
-          "processing_time_seconds": 4.77,
+          "processing_time_seconds": 4.33,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2723,7 +2722,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.73,
+          "processing_time_seconds": 8.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2731,7 +2730,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.12,
+          "processing_time_seconds": 2.84,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2740,7 +2739,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.7,
+          "processing_time_seconds": 8.71,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2755,13 +2754,12 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/osrs_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:47.618352"
+      "timestamp": "2025-12-17T03:29:39.351439"
     },
     "Overcooked! 2": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world spoiler test failed: Spoiler test failed",
           "Cross-validation failed: original sphere log incompatible with _worldgen world"
         ]
       },
@@ -2779,7 +2777,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 21.73,
+          "processing_time_seconds": 20.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2790,7 +2788,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.22,
+          "processing_time_seconds": 14.41,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -2798,18 +2796,18 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.77,
+          "processing_time_seconds": 2.76,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "success": true
         },
         "spoiler_test": {
-          "error": "Spoiler test failed",
-          "pass_fail": "fail",
-          "processing_time_seconds": 14.25,
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 19.74,
           "sphere_reached": 0,
-          "success": false,
+          "success": true,
           "total_spheres": 0
         },
         "test_game_name": "Overcooked! 2 WorldGen",
@@ -2822,13 +2820,14 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/overcooked2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:32.920589"
+      "timestamp": "2025-12-17T03:29:38.084508"
     },
     "Paint": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world generation failed: raise FillError("
+          "Test world spoiler test failed: Spoiler test failed",
+          "Cross-validation failed: original sphere log incompatible with _worldgen world"
         ]
       },
       "game_name": "Paint",
@@ -2836,7 +2835,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint/AP_14089154938208861744",
-          "processing_time_seconds": 2.82,
+          "processing_time_seconds": 3.13,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2845,7 +2844,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.71,
+          "processing_time_seconds": 7.88,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2854,21 +2853,29 @@
       "template": "Paint.yaml",
       "test_world": {
         "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.82,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
         },
         "seed_generation": {
-          "error": "raise FillError(",
-          "preset_dir": null,
-          "processing_time_seconds": 2.66,
-          "rules_path": null,
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint_worldgen/AP_14089154938208861744",
+          "processing_time_seconds": 3.16,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
         },
         "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.83,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
         },
         "test_game_name": "Paint WorldGen",
         "test_template_name": "Paint WorldGen.yaml",
@@ -2880,7 +2887,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/paint_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:35.348495"
+      "timestamp": "2025-12-17T03:29:44.386552"
     },
     "Risk of Rain 2": {
       "errors": {
@@ -2892,7 +2899,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2/AP_14089154938208861744",
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 3.26,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2901,7 +2908,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.49,
+          "processing_time_seconds": 6.82,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2912,7 +2919,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.55,
+          "processing_time_seconds": 6.74,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2920,7 +2927,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.77,
+          "processing_time_seconds": 2.87,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2929,7 +2936,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.55,
+          "processing_time_seconds": 6.72,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2939,18 +2946,18 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ror2_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.06,
+          "processing_time_seconds": 0.07,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ror2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:45.864051"
+      "timestamp": "2025-12-17T03:29:44.154185"
     },
     "Saving Princess": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world generation failed: raise FillError("
+          "Cross-validation failed: original sphere log incompatible with _worldgen world"
         ]
       },
       "game_name": "Saving Princess",
@@ -2958,7 +2965,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess/AP_14089154938208861744",
-          "processing_time_seconds": 2.52,
+          "processing_time_seconds": 2.53,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2967,7 +2974,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.44,
+          "processing_time_seconds": 5.46,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2976,21 +2983,29 @@
       "template": "Saving Princess.yaml",
       "test_world": {
         "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 13.92,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
         },
         "seed_generation": {
-          "error": "raise FillError(",
-          "preset_dir": null,
-          "processing_time_seconds": 2.3,
-          "rules_path": null,
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess_worldgen/AP_14089154938208861744",
+          "processing_time_seconds": 2.54,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
         },
         "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.48,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "test_game_name": "Saving Princess WorldGen",
         "test_template_name": "Saving Princess WorldGen.yaml",
@@ -3002,7 +3017,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/saving_princess_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:35.138336"
+      "timestamp": "2025-12-17T03:29:44.112505"
     },
     "Secret of Evermore": {
       "errors": {
@@ -3017,7 +3032,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe/AP_14089154938208861744",
-          "processing_time_seconds": 4.48,
+          "processing_time_seconds": 4.38,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3026,7 +3041,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.68,
+          "processing_time_seconds": 7.74,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3037,7 +3052,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.32,
+          "processing_time_seconds": 14.5,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3045,7 +3060,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.83,
+          "processing_time_seconds": 2.97,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3054,7 +3069,7 @@
         "spoiler_test": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 44.58,
+          "processing_time_seconds": 45.89,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3069,7 +3084,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/soe_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:38.793757"
+      "timestamp": "2025-12-17T03:29:41.722226"
     },
     "Shivers": {
       "errors": {
@@ -3083,7 +3098,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers/AP_14089154938208861744",
-          "processing_time_seconds": 3.22,
+          "processing_time_seconds": 3.07,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3092,7 +3107,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.71,
+          "processing_time_seconds": 9.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3103,7 +3118,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.35,
+          "processing_time_seconds": 14.31,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3111,7 +3126,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.84,
+          "processing_time_seconds": 2.91,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3120,7 +3135,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.68,
+          "processing_time_seconds": 9.7,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3135,7 +3150,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shivers_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:39:00.539045"
+      "timestamp": "2025-12-17T03:29:41.887021"
     },
     "Sonic Adventure 2 Battle": {
       "errors": {
@@ -3149,7 +3164,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b/AP_14089154938208861744",
-          "processing_time_seconds": 3.15,
+          "processing_time_seconds": 3.25,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3158,7 +3173,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 13.71,
+          "processing_time_seconds": 13.7,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3169,7 +3184,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.43,
+          "processing_time_seconds": 14.41,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3177,7 +3192,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.81,
+          "processing_time_seconds": 2.84,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3201,13 +3216,13 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sa2b_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:47.596537"
+      "timestamp": "2025-12-17T03:29:50.028790"
     },
     "Starcraft 2": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world generation failed: NameError: name 'self' is not defined"
+          "Test world generation failed: raise FillError(f\"No more spots to place {len(unplaced_items)} items. Remaining locations are invalid.\\n\""
         ]
       },
       "game_name": "Starcraft 2",
@@ -3215,7 +3230,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744",
-          "processing_time_seconds": 6.33,
+          "processing_time_seconds": 5.84,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3224,7 +3239,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 37.84,
+          "processing_time_seconds": 33.63,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3237,9 +3252,9 @@
           "success": false
         },
         "seed_generation": {
-          "error": "NameError: name 'self' is not defined",
+          "error": "raise FillError(f\"No more spots to place {len(unplaced_items)} items. Remaining locations are invalid.\\n\"",
           "preset_dir": null,
-          "processing_time_seconds": 2.63,
+          "processing_time_seconds": 2.54,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3259,7 +3274,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sc2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:41.996438"
+      "timestamp": "2025-12-17T03:29:44.031293"
     },
     "Stardew Valley": {
       "errors": {
@@ -3273,7 +3288,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744",
-          "processing_time_seconds": 5.39,
+          "processing_time_seconds": 5.6,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3282,7 +3297,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 77.66,
+          "processing_time_seconds": 77.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3297,7 +3312,7 @@
         "seed_generation": {
           "error": "TypeError: unhashable type: 'list'",
           "preset_dir": null,
-          "processing_time_seconds": 3.33,
+          "processing_time_seconds": 3.38,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3317,7 +3332,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/stardew_valley_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:47.712985"
+      "timestamp": "2025-12-17T03:29:45.303868"
     },
     "Subnautica": {
       "errors": {
@@ -3331,7 +3346,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica/AP_14089154938208861744",
-          "processing_time_seconds": 27.96,
+          "processing_time_seconds": 26.67,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3340,7 +3355,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 14.75,
+          "processing_time_seconds": 14.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3355,7 +3370,7 @@
         "seed_generation": {
           "error": "NameError: name 'math' is not defined. Did you forget to import 'math'?",
           "preset_dir": null,
-          "processing_time_seconds": 2.67,
+          "processing_time_seconds": 2.61,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3375,7 +3390,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/subnautica_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:52.506908"
+      "timestamp": "2025-12-17T03:29:43.790184"
     },
     "Super Mario 64": {
       "errors": {
@@ -3387,7 +3402,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex/AP_14089154938208861744",
-          "processing_time_seconds": 2.78,
+          "processing_time_seconds": 2.83,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3407,7 +3422,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 12.67,
+          "processing_time_seconds": 12.66,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3415,7 +3430,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.73,
+          "processing_time_seconds": 2.79,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3424,7 +3439,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 12.67,
+          "processing_time_seconds": 12.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3439,7 +3454,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm64ex_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:35.895184"
+      "timestamp": "2025-12-17T03:29:41.054881"
     },
     "Super Mario Land 2": {
       "errors": {
@@ -3453,7 +3468,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2/AP_14089154938208861744",
-          "processing_time_seconds": 4.11,
+          "processing_time_seconds": 4.52,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3462,7 +3477,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.75,
+          "processing_time_seconds": 7.92,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3477,7 +3492,7 @@
         "seed_generation": {
           "error": "raise FillError(",
           "preset_dir": null,
-          "processing_time_seconds": 2.6,
+          "processing_time_seconds": 3.01,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3497,7 +3512,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/marioland2_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:38.272205"
+      "timestamp": "2025-12-17T03:29:47.631437"
     },
     "Super Mario World": {
       "errors": {
@@ -3511,7 +3526,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw/AP_14089154938208861744",
-          "processing_time_seconds": 3.76,
+          "processing_time_seconds": 4.44,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3520,7 +3535,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.56,
+          "processing_time_seconds": 6.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3531,7 +3546,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.5,
+          "processing_time_seconds": 14.6,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3539,7 +3554,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.86,
+          "processing_time_seconds": 3.01,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3548,7 +3563,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.58,
+          "processing_time_seconds": 6.78,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3558,18 +3573,17 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/smw_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/smw_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:48.723599"
+      "timestamp": "2025-12-17T03:29:47.528806"
     },
     "Super Metroid": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world spoiler test failed: Spoiler test failed",
           "Cross-validation failed: original sphere log incompatible with _worldgen world"
         ]
       },
@@ -3578,7 +3592,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm/AP_14089154938208861744",
-          "processing_time_seconds": 10.23,
+          "processing_time_seconds": 10.24,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3587,7 +3601,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 10.48,
+          "processing_time_seconds": 10.52,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3598,7 +3612,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.03,
+          "processing_time_seconds": 69.84,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3606,18 +3620,18 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.26,
+          "processing_time_seconds": 2.62,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "success": true
         },
         "spoiler_test": {
-          "error": "Spoiler test failed",
-          "pass_fail": "fail",
-          "processing_time_seconds": 34.78,
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.53,
           "sphere_reached": 0,
-          "success": false,
+          "success": true,
           "total_spheres": 0
         },
         "test_game_name": "Super Metroid WorldGen",
@@ -3630,7 +3644,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:37.747204"
+      "timestamp": "2025-12-17T03:29:46.731387"
     },
     "TOEM original": {
       "errors": {
@@ -3644,7 +3658,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original/AP_14089154938208861744",
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 2.7,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3653,7 +3667,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.7,
+          "processing_time_seconds": 9.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3664,7 +3678,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.28,
+          "processing_time_seconds": 14.46,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3672,7 +3686,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.71,
+          "processing_time_seconds": 3.0,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3681,7 +3695,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.67,
+          "processing_time_seconds": 9.78,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3696,7 +3710,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/toem_original_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:43.367570"
+      "timestamp": "2025-12-17T03:29:46.192926"
     },
     "TOEM rule builder": {
       "errors": {
@@ -3710,7 +3724,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744",
-          "processing_time_seconds": 2.82,
+          "processing_time_seconds": 2.79,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3719,7 +3733,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.71,
+          "processing_time_seconds": 8.63,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3730,7 +3744,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 20.99,
+          "processing_time_seconds": 20.84,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3738,7 +3752,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 2.71,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3762,7 +3776,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/toem_rule_builder_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:39:03.844778"
+      "timestamp": "2025-12-17T03:29:45.044988"
     },
     "Terraria": {
       "errors": {
@@ -3776,7 +3790,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744",
-          "processing_time_seconds": 2.85,
+          "processing_time_seconds": 2.98,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3785,7 +3799,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 19.76,
+          "processing_time_seconds": 20.81,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3815,12 +3829,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/terraria_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/terraria_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:50.866861"
+      "timestamp": "2025-12-17T03:29:53.402038"
     },
     "The Legend of Zelda": {
       "errors": {
@@ -3834,7 +3848,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz/AP_14089154938208861744",
-          "processing_time_seconds": 4.59,
+          "processing_time_seconds": 4.14,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3843,7 +3857,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.72,
+          "processing_time_seconds": 8.48,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3854,7 +3868,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.49,
+          "processing_time_seconds": 14.02,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -3862,7 +3876,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.93,
+          "processing_time_seconds": 2.75,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3871,7 +3885,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 10.71,
+          "processing_time_seconds": 10.52,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3886,7 +3900,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tloz_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:48.495851"
+      "timestamp": "2025-12-17T03:29:50.032169"
     },
     "The Messenger": {
       "errors": {
@@ -3900,7 +3914,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744",
-          "processing_time_seconds": 3.17,
+          "processing_time_seconds": 3.3,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3909,7 +3923,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 12.82,
+          "processing_time_seconds": 12.81,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3935,7 +3949,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/messenger_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:53.301233"
+      "timestamp": "2025-12-17T03:29:51.102265"
     },
     "The Wind Waker": {
       "errors": {
@@ -3949,7 +3963,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww/AP_14089154938208861744",
-          "processing_time_seconds": 18.6,
+          "processing_time_seconds": 16.91,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3958,7 +3972,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.75,
+          "processing_time_seconds": 9.67,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3973,7 +3987,7 @@
         "seed_generation": {
           "error": "KeyError: 3",
           "preset_dir": null,
-          "processing_time_seconds": 2.63,
+          "processing_time_seconds": 2.56,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3988,12 +4002,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tww_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.09,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tww_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:39:20.631927"
+      "timestamp": "2025-12-17T03:30:10.612141"
     },
     "Timespinner": {
       "errors": {
@@ -4007,7 +4021,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner/AP_14089154938208861744",
-          "processing_time_seconds": 3.09,
+          "processing_time_seconds": 3.1,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4016,7 +4030,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.65,
+          "processing_time_seconds": 7.61,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4031,7 +4045,7 @@
         "seed_generation": {
           "error": "NameError: name 'self' is not defined",
           "preset_dir": null,
-          "processing_time_seconds": 2.47,
+          "processing_time_seconds": 2.5,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -4051,7 +4065,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/timespinner_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:38.775137"
+      "timestamp": "2025-12-17T03:29:43.983581"
     },
     "Undertale": {
       "errors": {
@@ -4065,7 +4079,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale/AP_14089154938208861744",
-          "processing_time_seconds": 2.98,
+          "processing_time_seconds": 3.31,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4074,7 +4088,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.69,
+          "processing_time_seconds": 5.85,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4089,7 +4103,7 @@
         "seed_generation": {
           "error": "KeyError: 'Core Exit'",
           "preset_dir": null,
-          "processing_time_seconds": 2.58,
+          "processing_time_seconds": 2.89,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -4104,12 +4118,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/undertale_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.07,
+          "processing_time_seconds": 0.08,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/undertale_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:42.497922"
+      "timestamp": "2025-12-17T03:29:52.269588"
     },
     "VVVVVV": {
       "errors": {
@@ -4121,7 +4135,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6/AP_14089154938208861744",
-          "processing_time_seconds": 2.62,
+          "processing_time_seconds": 3.0,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4130,7 +4144,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.51,
+          "processing_time_seconds": 5.76,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4141,7 +4155,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.53,
+          "processing_time_seconds": 5.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4149,7 +4163,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.78,
+          "processing_time_seconds": 2.95,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4158,7 +4172,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.64,
+          "processing_time_seconds": 5.81,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4168,12 +4182,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/v6_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.06,
+          "processing_time_seconds": 0.07,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/v6_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:52.576583"
+      "timestamp": "2025-12-17T03:29:52.068310"
     },
     "Wargroove": {
       "errors": {
@@ -4185,7 +4199,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove/AP_14089154938208861744",
-          "processing_time_seconds": 2.51,
+          "processing_time_seconds": 2.58,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4194,7 +4208,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.42,
+          "processing_time_seconds": 6.47,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4205,7 +4219,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.43,
+          "processing_time_seconds": 6.45,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4213,7 +4227,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.48,
+          "processing_time_seconds": 2.52,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4222,7 +4236,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.43,
+          "processing_time_seconds": 6.47,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4237,7 +4251,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/wargroove_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:48.077389"
+      "timestamp": "2025-12-17T03:29:57.069429"
     },
     "WebDevJourney": {
       "errors": {
@@ -4251,7 +4265,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744",
-          "processing_time_seconds": 2.82,
+          "processing_time_seconds": 2.72,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4260,7 +4274,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.67,
+          "processing_time_seconds": 8.76,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4271,7 +4285,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.26,
+          "processing_time_seconds": 14.49,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -4279,7 +4293,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 2.77,
+          "processing_time_seconds": 2.95,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4288,7 +4302,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.67,
+          "processing_time_seconds": 8.76,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4303,7 +4317,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/codingadventure_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:46.231125"
+      "timestamp": "2025-12-17T03:29:48.971673"
     },
     "Yacht Dice": {
       "errors": {
@@ -4317,7 +4331,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yachtdice/AP_14089154938208861744",
-          "processing_time_seconds": 3.48,
+          "processing_time_seconds": 3.42,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4341,7 +4355,7 @@
         "seed_generation": {
           "error": "raise FillError(f\"No more spots to place {len(unplaced_items)} items. Remaining locations are invalid.\\n\"",
           "preset_dir": null,
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.56,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -4361,7 +4375,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/yachtdice_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:39:06.764660"
+      "timestamp": "2025-12-17T03:29:47.918746"
     },
     "Yoshi's Island": {
       "errors": {
@@ -4375,7 +4389,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland/AP_14089154938208861744",
-          "processing_time_seconds": 3.45,
+          "processing_time_seconds": 3.66,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4384,7 +4398,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.66,
+          "processing_time_seconds": 9.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4419,13 +4433,12 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/yoshisisland_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:53.807574"
+      "timestamp": "2025-12-17T03:29:56.476920"
     },
     "shapez": {
       "errors": {
         "generation": [],
         "testing": [
-          "Test world spoiler test failed: Spoiler test failed",
           "Cross-validation failed: original sphere log incompatible with _worldgen world"
         ]
       },
@@ -4434,7 +4447,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744",
-          "processing_time_seconds": 4.35,
+          "processing_time_seconds": 3.89,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -4443,7 +4456,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.66,
+          "processing_time_seconds": 6.49,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -4454,7 +4467,7 @@
         "cross_validation": {
           "error": "Spoiler test failed",
           "pass_fail": "fail",
-          "processing_time_seconds": 14.57,
+          "processing_time_seconds": 14.02,
           "sphere_reached": 0,
           "success": false,
           "total_spheres": 0
@@ -4462,18 +4475,18 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez_worldgen/AP_14089154938208861744",
-          "processing_time_seconds": 3.03,
+          "processing_time_seconds": 2.71,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "success": true
         },
         "spoiler_test": {
-          "error": "Spoiler test failed",
-          "pass_fail": "fail",
-          "processing_time_seconds": 14.51,
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.5,
           "sphere_reached": 0,
-          "success": false,
+          "success": true,
           "total_spheres": 0
         },
         "test_game_name": "shapez WorldGen",
@@ -4481,12 +4494,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 0.08,
+          "processing_time_seconds": 0.07,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen"
         }
       },
-      "timestamp": "2025-12-17T00:38:53.191668"
+      "timestamp": "2025-12-17T03:29:54.271374"
     }
   }
 }
