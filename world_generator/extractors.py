@@ -734,11 +734,11 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
 
-    # For games with state counters, we also need to precollect counter items
-    # for generation to work (rules check Has(" coins", X) which needs items in inventory)
+    # For games with state counters, we need to precollect the counter items
+    # for generation to work (rules check Has(" coins", X) which needs items in inventory).
     # The exporter will filter these out from starting_items since the frontend
-    # uses accumulator_rules instead. But we DO need to set prog_items_init to the
-    # same total so the test world's sphere 0 matches the original sphere log.
+    # uses accumulator_rules instead. The prog_items_init stays at 0 (set by
+    # compute_state_counter_accumulator_rules) and the counter accumulates as items are collected.
     if accumulator_rules:
         # Calculate total for each counter from items in original_placements
         for rule in accumulator_rules:
@@ -755,10 +755,11 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
                     except (ValueError, IndexError):
                         pass
             if total > 0:
+                # Add to starting_items for generation (will be filtered by exporter)
                 starting_items[target] = starting_items.get(target, 0) + total
-                # Also update prog_items_init so the frontend test world matches
-                # the original sphere log (which has the precollected total at sphere 0)
-                prog_items_init[target] = total
+                # Note: prog_items_init[target] stays at 0 - it's already set by
+                # compute_state_counter_accumulator_rules. We don't want to initialize
+                # the counter to the total - we want it to accumulate from 0.
 
     # Extract QP items for OSRS-like games that have quest points
     # Pattern: "N QP (Quest Name)" where N is the quest point value
