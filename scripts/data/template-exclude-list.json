@@ -62,8 +62,16 @@
   ],
   "worldgen_test_exclude_list": [
     {
+      "name": "Lingo.yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    },
+    {
       "name": "Raft.yaml",
       "reason": "Temporarily excluded. The WorldGen spoiler test times out at 300 seconds."
+    },
+    {
+      "name": "Secret of Evermore.yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     },
     {
       "name": "The Witness.yaml",
