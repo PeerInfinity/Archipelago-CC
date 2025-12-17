@@ -2,6 +2,7 @@
 
 """Handles preparation and formatting of rule data for export."""
 
+import sys
 import logging
 import json
 import os
@@ -1030,7 +1031,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         repeated analysis of the same rule.
         """
         try:
-            if not rule_func:
+            if rule_func is None:
                 return None
 
             # Create cache key from function identity and context
@@ -1301,7 +1302,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         try:
                             expanded_rule = None
                             entrance_name = getattr(entrance, 'name', None)
-                            if hasattr(entrance, 'access_rule') and entrance.access_rule:
+                            if hasattr(entrance, 'access_rule') and entrance.access_rule is not None:
                                 expanded_rule = safe_expand_rule(
                                     game_handler,
                                     entrance.access_rule,
@@ -1325,9 +1326,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                         # Use old signature
                                         expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
                                 # Also call general postprocess_rule if available
-                                elif expanded_rule and game_handler and hasattr(game_handler, 'postprocess_rule'):
+                                # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
+                                elif (expanded_rule and game_handler and
+                                      hasattr(game_handler, 'postprocess_rule') and
+                                      isinstance(expanded_rule, dict) and
+                                      'rule' not in expanded_rule):
                                     expanded_rule = game_handler.postprocess_rule(expanded_rule)
-                            
+
                             entrance_data = {
                                 'name': entrance_name,
                                 'parent_region': getattr(entrance.parent_region, 'name', None) if hasattr(entrance, 'parent_region') else None,
@@ -1359,7 +1364,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             if game_handler and hasattr(game_handler, 'set_exit_info'):
                                 game_handler.set_exit_info(exit_name, connected_region)
 
-                            if hasattr(exit, 'access_rule') and exit.access_rule:
+                            if hasattr(exit, 'access_rule') and exit.access_rule is not None:
                                 # Check if the game handler can provide an unwrapped version of the lambda
                                 # (e.g., SM unwraps Cache.ldeco decorators to avoid 'ret' variables)
                                 rule_to_analyze = exit.access_rule
@@ -1404,9 +1409,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                             # Use old signature for games that don't need connected_region
                                             expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
                                     # Also call general postprocess_rule if available
-                                    elif expanded_rule and game_handler and hasattr(game_handler, 'postprocess_rule'):
+                                    # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
+                                    elif (expanded_rule and game_handler and
+                                          hasattr(game_handler, 'postprocess_rule') and
+                                          isinstance(expanded_rule, dict) and
+                                          'rule' not in expanded_rule):
                                         expanded_rule = game_handler.postprocess_rule(expanded_rule)
-                            
+
                             exit_data = {
                                 'name': exit_name,
                                 'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
@@ -1422,6 +1431,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 # Process locations
                 if hasattr(region, 'locations'):
+                    location_count = len(region.locations)
+                    logger.debug(f"Processing {location_count} locations in region '{region.name}'")
                     for location in region.locations:
                         try:
                             location_name = getattr(location, 'name', None)
@@ -1431,7 +1442,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             item_rule_result = None
                             
                             # First check if game handler has special handling for this location
-                            if hasattr(location, 'access_rule') and location.access_rule:
+                            logger.debug(f"Location '{location_name}' access_rule type: {type(getattr(location, 'access_rule', None))}")
+                            if hasattr(location, 'access_rule') and location.access_rule is not None:
                                 # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk, Super Metroid)
                                 if hasattr(game_handler, 'set_context'):
                                     game_handler.set_context(location_name)
@@ -1462,10 +1474,15 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     )
                                 
                                 # Post-process the rule if the game handler supports it
-                                if access_rule_result and game_handler and hasattr(game_handler, 'postprocess_rule'):
+                                # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
+                                # Rule Builder rules are already in the correct format for export
+                                if (access_rule_result and game_handler and
+                                    hasattr(game_handler, 'postprocess_rule') and
+                                    isinstance(access_rule_result, dict) and
+                                    'rule' not in access_rule_result):
                                     access_rule_result = game_handler.postprocess_rule(access_rule_result)
                                 
-                            if hasattr(location, 'item_rule') and location.item_rule:
+                            if hasattr(location, 'item_rule') and location.item_rule is not None:
                                 item_rule_result = safe_expand_rule(
                                     game_handler,
                                     location.item_rule,
