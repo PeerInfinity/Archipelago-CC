@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAll, HasAny, HelperCall, True_
+from rule_builder import True_, False_, Has, HasAll, HasAny, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -17,163 +17,163 @@ if TYPE_CHECKING:
 
 # Helper functions
 def _14Boss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Egg Plant', player) if (self.game_logic == 'Easy') else (state.has('Egg Plant', player) if (self.game_logic == 'Normal') else (state.has('Egg Capacity Upgrade', player, 5)) or (state.has('Egg Plant', player))))
+    return (state.has('Egg Plant', player) if ('Easy' == 'Easy') else (state.has('Egg Plant', player) if ('Easy' == 'Normal') else (state.has('Egg Capacity Upgrade', player, 5)) or (state.has('Egg Plant', player))))
 
 
 def _14CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Burt The Bashful's Boss Room", 'Location', player) else None)
 
 
 def _14Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Key', 'Spring Ball'), player) if (self.game_logic == 'Easy') else (state.has_all(('Key', 'Spring Ball'), player) if (self.game_logic == 'Normal') else state.has_all(('Key', 'Spring Ball'), player)))
+    return (state.has_all(('Key', 'Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Key', 'Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Spring Ball'), player)))
 
 
 def _17Game(state: "CollectionState", player: int) -> bool:
-    return (state.has('Key', player) if (self.game_logic == 'Easy') else (state.has('Key', player) if (self.game_logic == 'Normal') else state.has('Key', player)))
+    return (state.has('Key', player) if ('Easy' == 'Easy') else (state.has('Key', player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _18Boss(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _18CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Salvo The Slime's Boss Room", 'Location', player) else None)
 
 
 def _18Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Arrow Wheel', 'Key'), player) if (self.game_logic == 'Easy') else (state.has_all(('Arrow Wheel', 'Key'), player) if (self.game_logic == 'Normal') else state.has_all(('Arrow Wheel', 'Key'), player)))
+    return (state.has_all(('Arrow Wheel', 'Key'), player) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Key'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Key'), player)))
 
 
 def _24Boss(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _24CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Bigger Boo's Boss Room", 'Location', player) else None)
 
 
 def _24Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('! Switch', 'Dashed Stairs', 'Key'), player) if (self.game_logic == 'Easy') else (state.has_all(('! Switch', 'Dashed Stairs'), player) if (self.game_logic == 'Normal') else state.has('! Switch', player)))
+    return (state.has_all(('! Switch', 'Dashed Stairs', 'Key'), player) if ('Easy' == 'Easy') else (state.has_all(('! Switch', 'Dashed Stairs'), player) if ('Easy' == 'Normal') else state.has('! Switch', player)))
 
 
 def _26Game(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Key', 'Large Spring Ball'), player) if (self.game_logic == 'Easy') else (state.has_all(('Key', 'Large Spring Ball'), player) if (self.game_logic == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
+    return (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
 
 
 def _27Game(state: "CollectionState", player: int) -> bool:
-    return (state.has('Key', player) if (self.game_logic == 'Easy') else (state.has('Key', player) if (self.game_logic == 'Normal') else state.has('Key', player)))
+    return (state.has('Key', player) if ('Easy' == 'Easy') else (state.has('Key', player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _28Boss(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _28CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Roger The Ghost's Boss Room", 'Location', player) else None)
 
 
 def _28Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Arrow Wheel', 'Key'), player)) and (state.has('Egg Capacity Upgrade', player)) if (self.game_logic == 'Easy') else (state.has_all(('Arrow Wheel', 'Key'), player) if (self.game_logic == 'Normal') else state.has_all(('Arrow Wheel', 'Key'), player)))
+    return ((state.has_all(('Arrow Wheel', 'Key'), player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Key'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Key'), player)))
 
 
 def _34Boss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Giant Eggs', player) if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (state.has('Giant Eggs', player) if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _34CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Prince Froggy's Boss Room", 'Location', player) else None)
 
 
 def _34Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has('Dashed Platform', player) if (self.game_logic == 'Easy') else ((state.has('Dashed Platform', player)) or (_yoshisislandworldgen_has_midring(state, player)) if (self.game_logic == 'Normal') else True))
+    return (state.has('Dashed Platform', player) if ('Easy' == 'Easy') else ((state.has('Dashed Platform', player)) or (_yoshisislandworldgen_has_midring(state, player)) if ('Easy' == 'Normal') else True))
 
 
 def _38Boss(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _38CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Naval Piranha's Boss Room", 'Location', player) else None)
 
 
 def _38Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Egg Capacity Upgrade', player, 3)) or (_yoshisislandworldgen_combat_item(state, player)) if (self.game_logic == 'Easy') else ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player)) if (self.game_logic == 'Normal') else True))
+    return ((state.has('Egg Capacity Upgrade', player, 3)) or (_yoshisislandworldgen_combat_item(state, player)) if ('Easy' == 'Easy') else ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player)) if ('Easy' == 'Normal') else True))
 
 
 def _44Boss(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _44CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Marching Milde's Boss Room", 'Location', player) else None)
 
 
 def _44Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player)) and ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player))) if (self.game_logic == 'Easy') else (state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player) if (self.game_logic == 'Normal') else state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player)))
+    return ((state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player)) and ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player))) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player)))
 
 
 def _47Game(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Key', 'Large Spring Ball'), player) if (self.game_logic == 'Easy') else (state.has_all(('Key', 'Large Spring Ball'), player) if (self.game_logic == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
+    return (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
 
 
 def _48Boss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Egg Capacity Upgrade', player, 3) if (self.game_logic == 'Easy') else (state.has('Egg Capacity Upgrade', player, 2) if (self.game_logic == 'Normal') else state.has('Egg Capacity Upgrade', player)))
+    return (state.has('Egg Capacity Upgrade', player, 3) if ('Easy' == 'Easy') else (state.has('Egg Capacity Upgrade', player, 2) if ('Easy' == 'Normal') else state.has('Egg Capacity Upgrade', player)))
 
 
 def _48CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Hookbill The Koopa's Boss Room", 'Location', player) else None)
 
 
 def _48Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'), player) if (self.game_logic == 'Easy') else (state.has_all(('Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'), player) if (self.game_logic == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
+    return (state.has_all(('Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'), player) if ('Easy' == 'Easy') else (state.has_all(('Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
 
 
 def _54Boss(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player)) if (self.game_logic == 'Easy') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or ((state.has('Egg Capacity Upgrade', player, 5)) and (_yoshisislandworldgen_has_midring(state, player))) if (self.game_logic == 'Normal') else (state.has('Egg Plant', player)) or ((state.has('Egg Capacity Upgrade', player, 3)) and (_yoshisislandworldgen_has_midring(state, player)))))
+    return ((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player)) if ('Easy' == 'Easy') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or ((state.has('Egg Capacity Upgrade', player, 5)) and (_yoshisislandworldgen_has_midring(state, player))) if ('Easy' == 'Normal') else (state.has('Egg Plant', player)) or ((state.has('Egg Capacity Upgrade', player, 3)) and (_yoshisislandworldgen_has_midring(state, player)))))
 
 
 def _54CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Sluggy The Unshaven's Boss Room", 'Location', player) else None)
 
 
 def _54Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Dashed Platform', 'Dashed Stairs', 'Platform Ghost'), player) if (self.game_logic == 'Easy') else (state.has_all(('Dashed Platform', 'Dashed Stairs', 'Platform Ghost'), player) if (self.game_logic == 'Normal') else state.has_all(('Dashed Stairs', 'Platform Ghost'), player)))
+    return (state.has_all(('Dashed Platform', 'Dashed Stairs', 'Platform Ghost'), player) if ('Easy' == 'Easy') else (state.has_all(('Dashed Platform', 'Dashed Stairs', 'Platform Ghost'), player) if ('Easy' == 'Normal') else state.has_all(('Dashed Stairs', 'Platform Ghost'), player)))
 
 
 def _58Boss(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _58CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Raphael The Raven's Boss Room", 'Location', player) else None)
 
 
 def _58Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Arrow Wheel', 'Large Spring Ball'), player) if (self.game_logic == 'Easy') else (state.has_all(('Arrow Wheel', 'Large Spring Ball'), player) if (self.game_logic == 'Normal') else state.has_all(('Arrow Wheel', 'Large Spring Ball'), player)))
+    return (state.has_all(('Arrow Wheel', 'Large Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Large Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Large Spring Ball'), player)))
 
 
 def _64Boss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Egg Plant', player) if (self.game_logic == 'Easy') else (state.has('Egg Plant', player) if (self.game_logic == 'Normal') else True))
+    return (state.has('Egg Plant', player) if ('Easy' == 'Easy') else (state.has('Egg Plant', player) if ('Easy' == 'Normal') else True))
 
 
 def _64CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach('', "Region", player) else None)
+    return (True if state.can_reach("Tap-Tap The Red Nose's Boss Room", 'Location', player) else None)
 
 
 def _64Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'), player)) and ((state.has('Egg Capacity Upgrade', player, 3)) or (_yoshisislandworldgen_combat_item(state, player))) if (self.game_logic == 'Easy') else ((state.has_all(('Egg Plant', 'Key', 'Large Spring Ball'), player)) and ((state.has('Egg Capacity Upgrade', player, 2)) or (_yoshisislandworldgen_combat_item(state, player))) if (self.game_logic == 'Normal') else (state.has_all(('Egg Plant', 'Key'), player)) and ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player)))))
+    return ((state.has_all(('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'), player)) and ((state.has('Egg Capacity Upgrade', player, 3)) or (_yoshisislandworldgen_combat_item(state, player))) if ('Easy' == 'Easy') else ((state.has_all(('Egg Plant', 'Key', 'Large Spring Ball'), player)) and ((state.has('Egg Capacity Upgrade', player, 2)) or (_yoshisislandworldgen_combat_item(state, player))) if ('Easy' == 'Normal') else (state.has_all(('Egg Plant', 'Key'), player)) and ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player)))))
 
 
 def _68Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Egg Plant', 'Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player)) if (self.game_logic == 'Easy') else ((state.has_all(('Egg Plant', 'Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player)) if (self.game_logic == 'Normal') else (state.has_all(('Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player))))
+    return ((state.has_all(('Egg Plant', 'Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player)) if ('Easy' == 'Easy') else ((state.has_all(('Egg Plant', 'Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player)) if ('Easy' == 'Normal') else (state.has_all(('Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player))))
 
 
 def _68CollectibleRoute(state: "CollectionState", player: int) -> bool:
-    return (True if (self.bowser_door == 0) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (self.bowser_door == 1) else (_yoshisislandworldgen_bowserdoor_2(state, player) if (self.bowser_door == 2) else (True if (self.bowser_door == 3) else (True if (self.bowser_door == 4) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (self.bowser_door == 5) else None))))))
+    return (True if (0 == 0) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (0 == 1) else (_yoshisislandworldgen_bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (0 == 5) else None))))))
 
 
 def _68Route(state: "CollectionState", player: int) -> bool:
-    return (True if (self.bowser_door == 0) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (self.bowser_door == 1) else (_yoshisislandworldgen_bowserdoor_2(state, player) if (self.bowser_door == 2) else (True if (self.bowser_door == 3) else (True if (self.bowser_door == 4) else ((_yoshisislandworldgen_bowserdoor_1(state, player)) and (_yoshisislandworldgen_bowserdoor_2(state, player)) and (_yoshisislandworldgen_bowserdoor_3(state, player)) if (self.bowser_door == 5) else None))))))
+    return (True if (0 == 0) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (0 == 1) else (_yoshisislandworldgen_bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else ((_yoshisislandworldgen_bowserdoor_1(state, player)) and (_yoshisislandworldgen_bowserdoor_2(state, player)) and (_yoshisislandworldgen_bowserdoor_3(state, player)) if (0 == 5) else None))))))
 
 
 def _yoshisislandworldgen_bandit_bonus(state: "CollectionState", player: int) -> bool:
@@ -181,39 +181,39 @@ def _yoshisislandworldgen_bandit_bonus(state: "CollectionState", player: int) ->
 
 
 def _yoshisislandworldgen_bowserdoor_1(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('! Switch', 'Egg Plant'), player)) and (state.has('Egg Capacity Upgrade', player, 2)) if (self.game_logic == 'Easy') else ((state.has('Egg Plant', player)) and (state.has('Egg Capacity Upgrade', player)) if (self.game_logic == 'Normal') else state.has('Egg Plant', player)))
+    return ((state.has_all(('! Switch', 'Egg Plant'), player)) and (state.has('Egg Capacity Upgrade', player, 2)) if ('Easy' == 'Easy') else ((state.has('Egg Plant', player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Normal') else state.has('Egg Plant', player)))
 
 
 def _yoshisislandworldgen_bowserdoor_2(state: "CollectionState", player: int) -> bool:
-    return ((((state.has('Egg Capacity Upgrade', player, 3)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player)) if (self.game_logic == 'Easy') else ((((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player)) if (self.game_logic == 'Normal') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player))))
+    return ((((state.has('Egg Capacity Upgrade', player, 3)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player)) if ('Easy' == 'Easy') else ((((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player)) if ('Easy' == 'Normal') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player))))
 
 
 def _yoshisislandworldgen_bowserdoor_3(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic == 'Easy') else (True if (self.game_logic == 'Normal') else True))
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
 def _yoshisislandworldgen_cansee_clouds(state: "CollectionState", player: int) -> bool:
-    return (True if (self.game_logic != 'Easy') else (_yoshisislandworldgen_default_vis(state, player)) or (state.has('Secret Lens', player)) or (_yoshisislandworldgen_combat_item(state, player)))
+    return (True if ('Easy' != 'Easy') else (_yoshisislandworldgen_default_vis(state, player)) or (state.has('Secret Lens', player)) or (_yoshisislandworldgen_combat_item(state, player)))
 
 
 def _yoshisislandworldgen_castle_access(state: "CollectionState", player: int) -> bool:
-    return state.has('Boss Clear', player, self.castle_unlock)
+    return state.has('Boss Clear', player, 5)
 
 
 def _yoshisislandworldgen_castle_clear(state: "CollectionState", player: int) -> bool:
-    return state.has('Boss Clear', player, self.boss_unlock)
+    return state.has('Boss Clear', player, 0)
 
 
 def _yoshisislandworldgen_combat_item(state: "CollectionState", player: int) -> bool:
-    return (False if not (self.consumable_logic) else (_yoshisislandworldgen_item_bonus(state, player) if (self.game_logic == 'Easy') else (_yoshisislandworldgen_bandit_bonus(state, player)) or (_yoshisislandworldgen_item_bonus(state, player))))
+    return (False if not (True) else (_yoshisislandworldgen_item_bonus(state, player) if ('Easy' == 'Easy') else (_yoshisislandworldgen_bandit_bonus(state, player)) or (_yoshisislandworldgen_item_bonus(state, player))))
 
 
 def _yoshisislandworldgen_default_vis(state: "CollectionState", player: int) -> bool:
-    return (True if self.clouds_always_visible else False)
+    return (True if False else False)
 
 
 def _yoshisislandworldgen_has_midring(state: "CollectionState", player: int) -> bool:
-    return (self.midring_start) or (state.has('Middle Ring', player))
+    return (True) or (state.has('Middle Ring', player))
 
 
 def _yoshisislandworldgen_item_bonus(state: "CollectionState", player: int) -> bool:
@@ -221,7 +221,7 @@ def _yoshisislandworldgen_item_bonus(state: "CollectionState", player: int) -> b
 
 
 def _yoshisislandworldgen_melon_item(state: "CollectionState", player: int) -> bool:
-    return (False if not (self.consumable_logic) else (_yoshisislandworldgen_item_bonus(state, player) if (self.game_logic == 'Easy') else (state.has('Bandit Watermelons', player)) or (_yoshisislandworldgen_item_bonus(state, player))))
+    return (False if not (True) else (_yoshisislandworldgen_item_bonus(state, player) if ('Easy' == 'Easy') else (state.has('Bandit Watermelons', player)) or (_yoshisislandworldgen_item_bonus(state, player))))
 
 
 def set_rules(world: "World") -> None:
@@ -327,17 +327,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Red Coins", player),
-        True_()
+        HasAll('Beanstalk', 'Dashed Stairs')
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Flowers", player),
-        True_()
+        HasAll('Beanstalk', 'Dashed Stairs')
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Stars", player),
-        True_()
+        HasAll('Beanstalk', 'Dashed Stairs', 'Tulip')
     )
 
     world.set_rule(
@@ -347,12 +347,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Red Coins", player),
-        True_()
+        HasAll('Helicopter Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Flowers", player),
-        True_()
+        HasAll('Helicopter Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -382,7 +382,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Key', 'Spring Ball'))
     )
 
     world.set_rule(
@@ -407,7 +407,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Red Coins", player),
-        True_()
+        HasAll('! Switch', 'Flashing Eggs', 'Large Spring Ball', 'Mole Tank Morph')
     )
 
     world.set_rule(
@@ -422,17 +422,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Level Clear", player),
-        True_()
+        HasAll('Beanstalk', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Red Coins", player),
-        True_()
+        HasAll('Beanstalk', 'Chomp Rock', 'Flashing Eggs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'clouds_always_visible'}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (True_())) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]}))
+        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'clouds_always_visible'}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (HasAll('Beanstalk', 'Chomp Rock', 'Spring Ball'))) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]}))
     )
 
     world.set_rule(
@@ -452,7 +452,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & ((True_()) | (Has("Platform Ghost")))
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & ((HasAll('Arrow Wheel', 'Key')) | (Has("Platform Ghost")))
     )
 
     world.set_rule(
@@ -467,12 +467,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Red Coins", player),
-        True_()
+        HasAll('Large Spring Ball', 'Poochy', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Flowers", player),
-        True_()
+        HasAll('Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
@@ -487,22 +487,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Red Coins", player),
-        True_()
+        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Mole Tank Morph', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Flowers", player),
-        True_()
+        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip"))) & (HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Level Clear", player),
-        True_()
+        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
@@ -512,27 +512,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Flowers", player),
-        True_()
+        HasAny('Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Level Clear", player),
-        True_()
+        HasAny('Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Red Coins", player),
-        True_()
+        HasAll('! Switch', 'Dashed Stairs', 'Key')
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Flowers", player),
-        True_()
+        HasAll('! Switch', 'Dashed Stairs', 'Key')
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_())
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('! Switch', 'Dashed Stairs', 'Key'))
     )
 
     world.set_rule(
@@ -552,7 +552,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Flowers", player),
-        True_()
+        HasAll('Chomp Rock', 'Key', 'Train Morph')
     )
 
     world.set_rule(
@@ -567,7 +567,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Flowers", player),
-        True_()
+        HasAll('Egg Launcher', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -587,12 +587,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (True_())) & (Has("Large Spring Ball"))
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (HasAny('Dashed Platform', 'Giant Eggs'))) & (Has("Large Spring Ball"))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Giant Eggs"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Giant Eggs"))) & (HasAll('! Switch', 'Large Spring Ball'))
     )
 
     world.set_rule(
@@ -602,7 +602,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Level Clear", player),
-        True_()
+        HasAll('Car Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -612,17 +612,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Red Coins", player),
-        (True_()) & (Has("Egg Capacity Upgrade"))
+        (HasAll('Arrow Wheel', 'Key')) & (Has("Egg Capacity Upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Flowers", player),
-        (True_()) & (Has("Egg Capacity Upgrade"))
+        (HasAll('Arrow Wheel', 'Key', 'Train Morph')) & (Has("Egg Capacity Upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_()) & (Has("Egg Capacity Upgrade"))
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Arrow Wheel', 'Key')) & (Has("Egg Capacity Upgrade"))
     )
 
     world.set_rule(
@@ -642,12 +642,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Red Coins", player),
-        True_()
+        HasAll('Dashed Stairs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Flowers", player),
-        True_()
+        HasAll('Dashed Stairs', 'Spring Ball')
     )
 
     world.set_rule(
@@ -657,27 +657,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Level Clear", player),
-        True_()
+        HasAll('Dashed Stairs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Red Coins", player),
-        True_()
+        HasAll('Helicopter Morph', 'Submarine Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Flowers", player),
-        True_()
+        HasAll('Helicopter Morph', 'Submarine Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (True_())
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (HasAll('Helicopter Morph', 'Submarine Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Level Clear", player),
-        True_()
+        HasAll('Helicopter Morph', 'Submarine Morph')
     )
 
     world.set_rule(
@@ -717,32 +717,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Red Coins", player),
-        True_()
+        HasAll('Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Flowers", player),
-        True_()
+        HasAll('! Switch', 'Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_())
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Level Clear", player),
-        True_()
+        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Red Coins", player),
-        True_()
+        HasAll('! Switch', 'Beanstalk', 'Large Spring Ball', 'Submarine Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Flowers", player),
-        True_()
+        HasAll('Beanstalk', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -802,17 +802,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Red Coins", player),
-        True_()
+        HasAll('! Switch', 'Egg Launcher', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Flowers", player),
-        True_()
+        HasAll('Egg Launcher', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Stars", player),
-        True_()
+        HasAll('Large Spring Ball', 'Spring Ball')
     )
 
     world.set_rule(
@@ -822,12 +822,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Red Coins", player),
-        True_()
+        HasAll('! Switch', 'Helicopter Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Flowers", player),
-        True_()
+        HasAll('! Switch', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -842,12 +842,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))) & (HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))) & (HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
@@ -867,27 +867,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Red Coins", player),
-        True_()
+        HasAll('Chomp Rock', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Flowers", player),
-        True_()
+        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Stars", player),
-        True_()
+        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))) & (HasAny('Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))) & (HasAny('Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
@@ -927,17 +927,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Red Coins", player),
-        True_()
+        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Flowers", player),
-        True_()
+        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_())
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAny('Dashed Stairs', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
@@ -952,7 +952,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Red Coins", player),
-        True_()
+        HasAll('Dashed Stairs', 'Helicopter Morph')
     )
 
     world.set_rule(
@@ -967,12 +967,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon"))) & (HasAll('Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon"))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon"))) & (HasAll('Dashed Platform', 'Skis', 'Spring Ball'))
     )
 
     world.set_rule(
@@ -982,22 +982,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Level Clear", player),
-        True_()
+        HasAll('Dashed Platform', 'Skis', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Red Coins", player),
-        True_()
+        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Flowers", player),
-        True_()
+        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'clouds_always_visible'}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (Has("Dashed Platform")) & (Has("Dashed Stairs"))) | ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_()))
+        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'clouds_always_visible'}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (Has("Dashed Platform")) & (Has("Dashed Stairs"))) | ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Dashed Stairs', 'Platform Ghost')))
     )
 
     world.set_rule(
@@ -1012,12 +1012,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Red Coins", player),
-        True_()
+        HasAll('! Switch', 'Helicopter Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Flowers", player),
-        True_()
+        HasAll('! Switch', 'Helicopter Morph')
     )
 
     world.set_rule(
@@ -1027,7 +1027,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Level Clear", player),
-        True_()
+        HasAll('! Switch', 'Helicopter Morph')
     )
 
     world.set_rule(
@@ -1052,12 +1052,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Red Coins", player),
-        True_()
+        HasAll('Arrow Wheel', 'Train Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Flowers", player),
-        True_()
+        HasAll('Arrow Wheel', 'Train Morph')
     )
 
     world.set_rule(
@@ -1077,12 +1077,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Red Coins", player),
-        True_()
+        HasAll('Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Flowers", player),
-        True_()
+        HasAll('Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -1092,7 +1092,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Level Clear", player),
-        True_()
+        HasAll('Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -1117,17 +1117,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_())
+        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
@@ -1157,22 +1157,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Red Coins", player),
-        True_()
+        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Flowers", player),
-        True_()
+        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (True_())) | (True_())
+        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'midring_start'}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Chomp Rock', 'Key', 'Large Spring Ball'))) | (HasAll('Chomp Rock', 'Key', 'Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Level Clear", player),
-        True_()
+        HasAll('Chomp Rock', 'Dashed Platform', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -1192,17 +1192,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Red Coins", player),
-        (HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': None}}}}}})) & (True_())
+        (HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': None}}}}}})) & (HasAll('Egg Plant', 'Helicopter Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Flowers", player),
-        (HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': None}}}}}})) & (True_())
+        (HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': None}}}}}})) & (HasAll('Egg Plant', 'Helicopter Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Stars", player),
-        (HelperCall(helper_func=_68Route, helper_name="_68Route", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}}]}, 'if_false': None}}}}}})) & (True_())
+        (HelperCall(helper_func=_68Route, helper_name="_68Route", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'bowser_door'}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'consumable_logic'}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'game_logic'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}}]}, 'if_false': None}}}}}})) & (HasAll('Egg Plant', 'Helicopter Morph'))
     )
 
     world.set_rule(

@@ -15,6 +15,10 @@ class LingoGameExportHandler(GenericGameExportHandler):
     # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Use auto sweep for indirect region dependencies since Lingo's custom Rules.py
+    # sets access_rule directly without registering indirect_connections
+    USE_AUTO_INDIRECT_CONDITIONS = True
+
     # Helper module paths - needed for auto-export to find helper functions
     HELPER_MODULES = ['worlds.lingo.rules']
 

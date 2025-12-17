@@ -1079,6 +1079,17 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         base_id_section = ''
 
+    # Build use_auto_indirect_conditions section
+    # When True, use auto sweep algorithm for region dependencies instead of explicit
+    # This is needed for worlds that set access_rule directly without registering indirect_connections
+    if data.metadata.use_auto_indirect_conditions:
+        use_auto_indirect_conditions_section = '''
+    # Use auto indirect conditions since entrance rules have region dependencies
+    # that aren't registered via RuleBuilder.set_rule()
+    explicit_indirect_conditions: ClassVar[bool] = False'''
+    else:
+        use_auto_indirect_conditions_section = ''
+
     # Build collect_all_items_for_rules section
     # When True, all items are collected into prog_items (not just progression)
     # This allows Has() rules to work with useful/filler items
@@ -1176,7 +1187,7 @@ class {world_class}(RuleWorldMixin, World):
     options: {class_name}Options
 {base_id_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
-    rule_caching_enabled: ClassVar[bool] = False
+    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}
 {collect_all_items_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
