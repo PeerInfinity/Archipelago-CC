@@ -346,7 +346,7 @@ class KH1World(RuleWorldMixin, World):
     through many worlds to find Riku and Kairi.
     """
 
-    game: ClassVar[str] = "Kingdom Hearts"
+    game: ClassVar[str] = "Kingdom Hearts WorldGen"
     web: ClassVar[WebWorld] = KingdomHeartsWeb()
 
     options_dataclass = KingdomHeartsOptions
