@@ -165,6 +165,42 @@ class ExtractedData:
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
+    soe_provides_data: Dict[str, Any] = field(default_factory=dict)  # SOE-specific: items with 'provides' and logic rules
+
+
+def extract_soe_provides_data(json_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Extract SOE-specific item provides data and logic rules.
+
+    This data is needed for implementing the SOE 'has' helper function
+    that checks progress requirements using pyevermizer data.
+
+    Returns:
+        Dict containing:
+        - 'item_provides': {item_name: [{progress_id, count}, ...], ...}
+        - 'logic_rules': [{requires: [...], provides: [...]}, ...]
+    """
+    result = {
+        'item_provides': {},
+        'logic_rules': []
+    }
+
+    # Get items for player 1
+    items_data = json_data.get('items', {}).get('1', {})
+
+    for item_name, item_info in items_data.items():
+        # Skip the special logic rules entry
+        if item_name == '__soe_logic_rules__':
+            rules = item_info.get('rules', [])
+            result['logic_rules'] = rules
+            continue
+
+        # Extract provides data if present
+        provides = item_info.get('provides', [])
+        if provides:
+            result['item_provides'][item_name] = provides
+
+    return result
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -678,6 +714,9 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
     progression_mapping = extract_progression_mapping(json_data)
 
+    # Extract SOE-specific provides data and logic rules
+    soe_provides_data = extract_soe_provides_data(json_data)
+
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
 
@@ -738,4 +777,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
         progression_mapping=progression_mapping,
+        soe_provides_data=soe_provides_data,
     )

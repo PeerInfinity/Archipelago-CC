@@ -696,6 +696,43 @@ class RuleCodeGenerator:
         helper_name = rule.get('name', '')
         args = rule.get('args', [])
 
+        # Special handling for SOE's 'has' helper with progress IDs
+        # The SOE 'has' helper takes (progress_id, count) not (item_name, count)
+        # It's implemented in the frontend as soeLogic.js and uses pyevermizer data
+        if helper_name == 'has' and helper_name not in self.known_helpers:
+            # Check if args are numeric constants (SOE pattern)
+            if len(args) >= 1:
+                first_arg = args[0]
+                if isinstance(first_arg, dict) and first_arg.get('type') == 'constant':
+                    value = first_arg.get('value')
+                    if isinstance(value, int):
+                        # This is SOE's 'has' helper with progress ID
+                        # Generate a HelperCall that the worldgen will implement
+                        self.required_imports.add('HelperCall')
+                        progress_id = value
+                        count = 1
+                        if len(args) >= 2:
+                            second_arg = args[1]
+                            if isinstance(second_arg, dict) and second_arg.get('type') == 'constant':
+                                count = second_arg.get('value', 1)
+
+                        # Generate HelperCall to _soe_has function
+                        func_name = '_soe_has'
+                        # Include comment for debugging
+                        comment = rule.get('comment', '')
+                        # body_data must be a valid CC format rule for frontend evaluation
+                        # This allows the frontend to evaluate the SOE 'has' helper via soeLogic.js
+                        body_data = {
+                            'type': 'helper',
+                            'name': 'has',
+                            'args': [
+                                {'type': 'constant', 'value': progress_id},
+                                {'type': 'constant', 'value': count}
+                            ],
+                            'comment': comment
+                        }
+                        return f'HelperCall(helper_func={func_name}, helper_name="has", args=({progress_id}, {count}), body_data={repr(body_data)})'
+
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
             self.required_imports.add('HelperCall')

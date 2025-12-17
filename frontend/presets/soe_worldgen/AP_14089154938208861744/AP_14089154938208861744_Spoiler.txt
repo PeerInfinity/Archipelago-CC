@@ -16,350 +16,350 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 No
+Randomize Items:                 Yes
 
 
 Locations:
 
-S. Jungle #0: Petal
-S. Jungle #1: 3 Wax
-S. Jungle #4: Atlas Medallion
-FE Village #9: Biscuit
-FE Village Hut #13: Clay
-FE Village Hut #14: 20 Moniez
+S. Jungle #0: 2 Gunpowder
+S. Jungle #1: Petal
+S. Jungle #4: 4 Brimstone
+FE Village #9: Clay
+FE Village Hut #13: Nothing
+FE Village Hut #14: Roots
 FE Village Hut #15: Honey
 FE Village Hut #16: Revive
-FE Village Hut #17: Wax
-FE Village Hut #18: 5 Ash
-FE Village Hut #19: Ash
-FE Village Hut #20: Flash
-FE Village Hut #21: 2 Limestone
-FE Village Hut #22: 2 Call beads
-FE Village Hut #23: 3 Mushroom
+FE Village Hut #17: 30 Moniez
+FE Village Hut #18: 2 Brimstone
+FE Village Hut #19: Honey
+FE Village Hut #20: Grease
+FE Village Hut #21: 2 Meteorite
+FE Village Hut #22: Barrier
+FE Village Hut #23: 2 Clay
 FE Village Hut #24: Wax
 FE Village Hut #25: Ash
-FE Village Hut #26: 3 Feathers
-FE Village Hut #27: 4 Vinegar
-FE Village Hut #28: Knight Basher
+FE Village Hut #26: 4 Ash
+FE Village Hut #27: Acorns
+FE Village Hut #28: Bronze Axe
 FE Village Hut #29: Nectar
-FE Village Hut #30: Biscuit
-FE Village Hut #31: 30 Moniez
-FE Village Hut #32: Herbal Essence
-FE Village Hut #33: Petal
-FE Village Hut #34: Bazooka
-Defend Area #35: 2 Wax
-Defend Area #36: 2 Wax
-Defend Area #37: 5 Ash
-Quick Sand Field #38: Ethanol
-Quick Sand Field #39: Clay
-Quick Sand Field #40: Water
-Quick Sand Field #41: 2 Acorns
-Quick Sand Field #42: 2 Limestone
-Quick Sand Field #43: Nectar
-Quick Sand Field #44: Clay
-Bugmuck #45: Water
-Bugmuck #46: Nectar
-Bugmuck #47: 2 Dry Ice
-Bugmuck #48: Mushroom
+FE Village Hut #30: Water
+FE Village Hut #31: 2 Limestone
+FE Village Hut #32: Wax
+FE Village Hut #33: Roots
+FE Village Hut #34: Call Up
+Defend Area #35: 100 Moniez
+Defend Area #36: 2 Bone
+Defend Area #37: Wax
+Quick Sand Field #38: Reflect
+Quick Sand Field #39: Petal
+Quick Sand Field #40: Biscuit
+Quick Sand Field #41: Water
+Quick Sand Field #42: Biscuit
+Quick Sand Field #43: Ash
+Quick Sand Field #44: 3 Meteorite
+Bugmuck #45: Nectar
+Bugmuck #46: 2 Iron
+Bugmuck #47: Amulet of Annihilation
+Bugmuck #48: Nectar
 Bugmuck #49: 5 Wax
-Bugmuck #50: Progressive vest
-Bugmuck #51: 5 Ash
-Bugmuck #52: Water
-Acid Rain Guy #53: 3 Acorns
+Bugmuck #50: Atlas
+Bugmuck #51: Super Heal
+Bugmuck #52: 4 Ethanol
+Acid Rain Guy #53: 3 Nectar
 Acid Rain Guy #54: 2 Roots
-Jaguar Ring Cave #184: Speed
-Jaguar Ring Cave #185: 4 Ash
-Jaguar Ring Cave #186: Roots
-HB Cave #187: Roots
-HB Cave #188: Biscuit
-HB Cave #189: Hard Ball
-Thraxx: Amulet of Annihilation
-Acid Rain: 4 Clay
-Defend: Oil
-Flash: Fire Power
-Hard Ball: Nothing
+Jaguar Ring Cave #184: Water
+Jaguar Ring Cave #185: Honey
+Jaguar Ring Cave #186: Clay
+HB Cave #187: Force Field
+HB Cave #188: 3 Ash
+HB Cave #189: Aura
+Thraxx: 2 Roots
+Acid Rain: Oil
+Defend: Water
+Flash: Progressive vest
+Hard Ball: Slow Burn
 S. Jungle w/ weapon #2: Nectar
-S. Jungle w/ weapon #3: 3 Clay
+S. Jungle w/ weapon #3: 5 Ash
 S. Jungle w/ weapon #5: Call bead
 Strongheart's Hut #6: 2 Wax
-Strongheart's Hut #7: 5 Wax
+Strongheart's Hut #7: Water
 Strongheart's Hut #8: Petal
-Blimp's Hut #10: Slow Burn
-Blimp's Hut #11: Honey
-Blimp's Hut #12: 4 Wax
-N. Jungle #55: Petal
-N. Jungle #56: Grease
-Volcano Path #59: Honey
-Volcano Path #60: 2 Clay
-Volcano Path #61: Clay
-West of Swamp #62: 3 Brimstone
-West of Swamp #63: Water
-Swamp #64: Progressive helmet
-Swamp #65: 3 Limestone
-Swamp #66: Lightning Storm
-Swamp #67: 8 Ash
-Swamp #68: Regenerate
-Swamp #69: Mud Pepper
-Swamp #70: Acorns
-Volcano Shop #71: Honey
-Volcano Shop #72: 2 Ash
-Arena Holding #95: 2 Wax
-Arena Holding #96: 2 Gunpowder
-Arena Holding #97: Amulet of Annihilation
-Arena Holding #98: 100 Moniez
+Blimp's Hut #10: Clay
+Blimp's Hut #11: Water
+Blimp's Hut #12: Acorns
+N. Jungle #55: 3 Clay
+N. Jungle #56: 2 Bone
+Volcano Path #59: 3 Wax
+Volcano Path #60: Clay
+Volcano Path #61: 3 Brimstone
+West of Swamp #62: 500 Moniez
+West of Swamp #63: 4 Wax
+Swamp #64: 2 Call beads
+Swamp #65: Petal
+Swamp #66: Progressive gloves
+Swamp #67: 4 Water
+Swamp #68: Brimstone
+Swamp #69: Clay
+Swamp #70: Cure
+Volcano Shop #71: Clay
+Volcano Shop #72: Hard Ball
+Arena Holding #95: 2 Limestone
+Arena Holding #96: 4 Vinegar
+Arena Holding #97: Regrowth
+Arena Holding #98: Roots
 Arena Holding #99: Amulet of Annihilation
-Arena Holding #100: Acorns
-Arena Holding #101: Acorns
-Arena Holding #102: Clay
-Blimp's Cave #109: Clay
-Blimp's Cave #110: 2 Bone
-Crustacia Interior #111: 2 Brimstone
-Crustacia Interior #112: 4 Brimstone
-Crustacia Interior #113: 30 Cryo Blast
-Crustacia Interior #114: Clay
-Crustacia Interior #115: Cure
-Crustacia Interior #116: 3 Ash
-Volcano Path Cave #182: 3 Nectar
-Volcano Path Cave #183: Roots
-Ebon Sewers #190: 2 Bone
-Ebon Sewers #191: Aura
-Ebon Sewers #192: 6 Vinegar
+Arena Holding #100: Water
+Arena Holding #101: 2 Wax
+Arena Holding #102: 3 Ash
+Blimp's Cave #109: 6 Vinegar
+Blimp's Cave #110: Nectar
+Crustacia Interior #111: 18 Moniez
+Crustacia Interior #112: Mud Pepper
+Crustacia Interior #113: Wings
+Crustacia Interior #114: Water
+Crustacia Interior #115: 200 Moniez
+Crustacia Interior #116: Mud Pepper
+Volcano Path Cave #182: 4 Iron
+Volcano Path Cave #183: Petal
+Ebon Sewers #190: 3 Water
+Ebon Sewers #191: 2 Wax
+Ebon Sewers #192: Roots
 Ebon Sewers #193: 3 Ethanol
-Ebon Sewers #194: Wax
-Outside Ivor #199: 2 Ethanol
-Outside Ivor #200: 4 Water
-Outside Ivor #201: Wax
-Outside Ivor #202: Roots
-Ivor Houses #203: 6 Ash
-Ivor Houses #204: Nectar
+Ebon Sewers #194: Flash
+Outside Ivor #199: Clay
+Outside Ivor #200: Energy Core
+Outside Ivor #201: 2 Acorns
+Outside Ivor #202: Water
+Ivor Houses #203: 6 Water
+Ivor Houses #204: Amulet of Annihilation
 Ivor Houses #205: 2 Acorns
-Ivor Houses #206: Oil
-Ebon Houses #207: 4 Clay
-Ivor Houses #208: Amulet of Annihilation
-Ebon Houses #209: Water
-Ivor Houses #210: Water
-Ebon Houses #211: 18 Moniez
+Ivor Houses #206: 2 Limestone
+Ebon Houses #207: 3 Acorns
+Ivor Houses #208: Clay
+Ebon Houses #209: Pixie Dust
+Ivor Houses #210: Wax
+Ebon Houses #211: Brimstone
 Ivor Houses #212: Biscuit
-Ebon Houses #213: 3 Wax
+Ebon Houses #213: 20 Moniez
 Ivor Houses #214: Call bead
-Ebon Houses #215: Water
-Ivor Houses #216: 3 Ash
-Ebon Houses #217: Water
+Ebon Houses #215: Stop
+Ivor Houses #216: Regenerate
+Ebon Houses #217: Clay
 Ivor Houses #218: Nectar
-Ebon Houses #219: 4 Feathers
-Ivor Houses #220: 3 Meteorite
-Ebon Houses #221: Mushroom
-Ivor Houses #222: Water
-Ebon Houses #223: Roots
-Ivor Houses #224: Mud Pepper
-Ebon Houses #225: Water
-Ivor Houses #226: Biscuit
-Ebon Houses #227: Double Drain
-Ivor Houses #228: Nectar
-Ebon Houses #229: 3 Water
-Ivor Houses #230: 200 Moniez
-Ebon Houses #231: Pixie Dust
-Ivor Houses #232: 4 Water
-Ebon Houses #233: 2 Limestone
-Ivor Houses #234: Roots
-Ebon Houses #235: 500 Moniez
-Ivor Houses #236: Brimstone
+Ebon Houses #219: 4 Water
+Ivor Houses #220: 3 Mushroom
+Ebon Houses #221: Water
+Ivor Houses #222: Petal
+Ebon Houses #223: 15 Moniez
+Ivor Houses #224: 3 Wax
+Ebon Houses #225: Oil
+Ivor Houses #226: Nectar
+Ebon Houses #227: 2 Call beads
+Ivor Houses #228: 3 Clay
+Ebon Houses #229: Roots
+Ivor Houses #230: Biscuit
+Ebon Houses #231: 2 Ash
+Ivor Houses #232: 2 Ethanol
+Ebon Houses #233: 4 Ash
+Ivor Houses #234: 4 Clay
+Ebon Houses #235: Acorns
+Ivor Houses #236: Escape
 Ebon Houses #237: Call bead
-Ivor Houses #238: 4 Iron
-Ebon Houses #239: Super Heal
-Ivor Houses #240: Call bead
-Ebon Houses #241: Oil
-Ivor Houses #242: Brimstone
-Ebon Houses #243: 3 Dry Ice
-Ivor Houses #244: 4 Ash
-Ebon Houses #245: 4 Ethanol
-Ivor Houses #246: 3 Ethanol
-Ebon Houses #247: Water
+Ivor Houses #238: Speed
+Ebon Houses #239: Mushroom
+Ivor Houses #240: 30 Thunderballs
+Ebon Houses #241: Honey
+Ivor Houses #242: Water
+Ebon Houses #243: 4 Ash
+Ivor Houses #244: Acid Rain
+Ebon Houses #245: 6 Water
+Ivor Houses #246: Wax
+Ebon Houses #247: 3 Water
 Ebon Houses #248: 3 Ethanol
-Naris #249: Gladiator Sword
-Naris #250: 100 Moniez
-Tinker #251: 4 Ash
-Ebon Dining #252: Feather
-Ivor Dining #253: Petal
+Naris #249: 3 Call beads
+Naris #250: Gladiator Sword
+Tinker #251: 2 Dry Ice
+Ebon Dining #252: Ethanol
+Ivor Dining #253: Herbal Essence
 Ivor Dining #254: Petal
-Ivor Upper Floor #261: Mud Pepper
+Ivor Upper Floor #261: 3 Feathers
 Ivor Upper Floor #262: Water
-Ivor Sewers #263: Water
+Ivor Sewers #263: 8 Ash
 Ivor Sewers #264: 6 Ash
-Ivor Sewers #265: Water
-Ivor Sewers #266: 6 Water
+Ivor Sewers #265: Wax
+Ivor Sewers #266: 2 Wax
 Ivor Sewers #267: Call bead
-Ivor Sewers #268: Acid Rain
+Ivor Sewers #268: 4 Brimstone
 Ivor Sewers #269: Diamond Eye
-Ivor Sewers #270: Nectar
-Ebon Storage #271: Force Field
-Ebon Storage #272: Escape
+Ivor Sewers #270: Petal
+Ebon Storage #271: 2 Crystal
+Ebon Storage #272: 3 Dry Ice
 Ebon Storage #273: 3 Bone
 Coleoptera: Wings
-Mammoth Viper: 6 Water
-Cave Raptors: Diamond Eye
-Salabog: Revealer
-Vigor: Bronze Spear
-Bad Boys: 6 Ash
-Timberdrake: 2 Roots
-Verminator: Drain
-Footknight: 3 Honey
+Mammoth Viper: Water
+Cave Raptors: Revealer
+Salabog: Wheel
+Vigor: Progressive vest
+Bad Boys: 4 Water
+Timberdrake: Lance
+Verminator: 3 Ethanol
+Footknight: 6 Ash
 Atlas: Water
-Corrosion: Water
-Crush: 2 Water
-Cure: Honey
-Explosion: Progressive gloves
-Heal: Wax
-Lance: Wax
-Miracle Cure: Water
-One Up: 4 Dry Ice
-Regrowth: Oil
-Revealer: 2 Acorns
-Revive: 2 Call beads
-Slow Burn: Clay
-Sting: Herbal Essence
-Super Heal: Call Up
-Vanilla Gauge #57: 3 Water
-Volcano Path #58: Wings
-Volcano Room1 #73: Water
-Volcano Room1 #74: Explosion
-Volcano Room1 #75: Herbal Essence
-Volcano Room1 #76: 3 Ethanol
-Volcano Room1 #77: 3 Water
-Volcano Room1 #78: Petal
-Volcano Room1 #79: Crusader Sword
-Volcano Room1 #80: Biscuit
-Volcano Room2 #81: Bronze Axe
-Volcano Room2 #82: Atlas
-Volcano Room2 #83: Biscuit
-Volcano Room2 #84: Biscuit
-Volcano Room2 #85: 30 Thunderballs
-Volcano Room2 #86: Water
-Volcano Room2 #87: Wax
-Volcano Room2 #88: 3 Ethanol
-Pipe Maze #89: Defend
-Pipe Maze #90: Wax
-Pipe Maze #91: Atom Smasher
-Pipe Maze #92: 6 Water
-Pipe Maze #93: Biscuit
-Pipe Maze #94: Petal
-W. Crustacia #103: Progressive vest
-W. Crustacia #104: Progressive helmet
-W. Crustacia #105: Petal
+Corrosion: Biscuit
+Crush: Petal
+Cure: 3 Acorns
+Explosion: Progressive helmet
+Heal: 2 Petal
+Lance: 5 Ash
+Miracle Cure: 4 Wax
+One Up: Atlas Medallion
+Regrowth: 4 Dry Ice
+Revealer: Oil
+Revive: Biscuit
+Slow Burn: Wings
+Sting: Roots
+Super Heal: Water
+Vanilla Gauge #57: 3 Mushroom
+Volcano Path #58: Progressive vest
+Volcano Room1 #73: Bronze Spear
+Volcano Room1 #74: Double Drain
+Volcano Room1 #75: 5 Wax
+Volcano Room1 #76: 4 Water
+Volcano Room1 #77: 4 Feathers
+Volcano Room1 #78: Defend
+Volcano Room1 #79: Heal
+Volcano Room1 #80: 3 Limestone
+Volcano Room2 #81: Diamond Eye
+Volcano Room2 #82: Progressive gloves
+Volcano Room2 #83: 6 Water
+Volcano Room2 #84: 3 Brimstone
+Volcano Room2 #85: Bazooka
+Volcano Room2 #86: Drain
+Volcano Room2 #87: 2 Vinegar
+Volcano Room2 #88: Miracle Cure
+Pipe Maze #89: Clay
+Pipe Maze #90: Biscuit
+Pipe Maze #91: Clay
+Pipe Maze #92: Knight Basher
+Pipe Maze #93: 5 Oil
+Pipe Maze #94: Honey
+W. Crustacia #103: Sting
+W. Crustacia #104: 30 Cryo Blast
+W. Crustacia #105: 3 Water
 W. Crustacia #106: Fireball
-E. Crustacia #107: Call bead
-E. Crustacia #108: Laser Lance
-Pyramid bottom #117: 4 Ethanol
-Pyramid bottom #118: 4 Brimstone
-Pyramid bottom #119: 3 Limestone
-Pyramid bottom #120: Clay
-Pyramid bottom #121: 2 Acorns
-Pyramid bottom #122: Atlas Medallion
-Pyramid bottom #123: Progressive helmet
-Pyramid bottom #124: Clay
-Pyramid bottom #125: Wheel
-Pyramid bottom #126: Stop
-Pyramid bottom #127: 5 Oil
-Pyramid bottom #128: Petal
-Pyramid bottom #129: Honey
-Pyramid bottom #130: Water
-Pyramid bottom #131: Horn Spear
-Pyramid bottom #132: Nothing
-Pyramid bottom #133: Lance
-Pyramid bottom #134: Reflect
-Pyramid top #135: Sting
-Pyramid top #136: Pixie Dust
-Pyramid top #137: Gauge
-Pyramid top #138: 4 Wax
-Pyramid top #139: 3 Ethanol
-Pyramid top #140: 5 Iron
-Pyramid top #141: Energize
-Pyramid top #142: Barrier
-Pyramid top #143: 4 Wax
-Pyramid top #144: Call bead
-Pyramid top #145: 3 Mushroom
-Pyramid top #146: Water
-Pyramid top #147: 4 Water
-Pyramid top #148: 3 Water
-Pyramid top #149: 2 Vinegar
-Pyramid top #150: Nectar
-Pyramid top #151: 3 Clay
-Pyramid top #152: 2 Crystal
-Pyramid top #153: 2 Meteorite
-Pyramid top #154: Call bead
-Pyramid top #155: 7 Roots
-Pyramid top #156: 10,000 Gold Coins
-Pyramid top #157: Limestone
-Tiny's hideout #158: 3 Water
-Tiny's hideout #159: Clay
-Tiny's hideout #160: 4 Wax
+E. Crustacia #107: Lightning Storm
+E. Crustacia #108: Atom Smasher
+Pyramid bottom #117: 7 Roots
+Pyramid bottom #118: 2 Water
+Pyramid bottom #119: Herbal Essence
+Pyramid bottom #120: Oil
+Pyramid bottom #121: Wax
+Pyramid bottom #122: 4 Wax
+Pyramid bottom #123: Mud Pepper
+Pyramid bottom #124: Call bead
+Pyramid bottom #125: 2 Iron
+Pyramid bottom #126: Diamond Eye
+Pyramid bottom #127: 3 Limestone
+Pyramid bottom #128: 2 Roots
+Pyramid bottom #129: One Up
+Pyramid bottom #130: Wax
+Pyramid bottom #131: Nectar
+Pyramid bottom #132: Horn Spear
+Pyramid bottom #133: Biscuit
+Pyramid bottom #134: Fire Power
+Pyramid top #135: Herbal Essence
+Pyramid top #136: Progressive gloves
+Pyramid top #137: Petal
+Pyramid top #138: Gauge
+Pyramid top #139: Pixie Dust
+Pyramid top #140: Honey
+Pyramid top #141: Ethanol
+Pyramid top #142: Call bead
+Pyramid top #143: Energize
+Pyramid top #144: 2 Acorns
+Pyramid top #145: Wings
+Pyramid top #146: Clay
+Pyramid top #147: Feather
+Pyramid top #148: Clay
+Pyramid top #149: 4 Crystal
+Pyramid top #150: 5 Ash
+Pyramid top #151: Wax
+Pyramid top #152: Water
+Pyramid top #153: Mud Pepper
+Pyramid top #154: Water
+Pyramid top #155: Call bead
+Pyramid top #156: Herbal Essence
+Pyramid top #157: Water
+Tiny's hideout #158: Crystal
+Tiny's hideout #159: Petal
+Tiny's hideout #160: 2 Honey
 Tiny's hideout #161: Spider Claw
 Tiny's hideout #162: Levitate
-Tiny's hideout #163: Petal
-Tiny's hideout #164: Roots
-Halls Main Room #165: Petal
-Halls Main Room #166: Crystal
-Halls SW #167: Honey
+Tiny's hideout #163: Crusader Sword
+Tiny's hideout #164: 5 Iron
+Halls Main Room #165: 3 Oil
+Halls Main Room #166: 2 Acorns
+Halls SW #167: 2 Water
 Halls SW #168: Call bead
 Halls SW #169: 30 Particle Bombs
-Halls NW #170: Wings
-Halls NW #171: Wax
-Halls NW #172: Clay
-Halls NW #173: Nectar
-Halls NE #174: 15 Moniez
+Halls NW #170: Progressive vest
+Halls NW #171: 3 Vinegar
+Halls NW #172: Water
+Halls NW #173: 3 Vinegar
+Halls NE #174: Biscuit
 Halls NE #175: Wings
-Halls NE #176: Wax
-Halls NE #177: Nectar
+Halls NE #176: Corrosion
+Halls NE #177: 4 Nectar
 Halls Bridge #178: Crush
-Oglin Cave #179: Heal
-Drain Cave #180: 2 Roots
-Drain Cave #181: Roots
+Oglin Cave #179: 4 Water
+Drain Cave #180: Roots
+Drain Cave #181: Water
 Gomi's Tower #195: Wax
-Gomi's Tower #196: 3 Brimstone
-Gomi's Tower #197: 2 Iron
-Gomi's Tower #198: Pixie Dust
-Ivor East #255: Progressive gloves
-Ivor East #256: 3 Vinegar
-Ivor East #257: 3 Vinegar
-Ivor East #258: 3 Call beads
-Ivor East #259: Water
-Ivor East #260: 2 Water
-Prof. Lab #274: Oil
-Greenhouse #275: 6 Water
-Alarm room #276: 10 Crystal
-Reactor room #277: Regrowth
-Storage room #278: Progressive vest
-Storage room #279: Progressive gloves
-Storage room #280: Herbal Essence
-Storage room #281: Diamond Eye
-Storage room #282: 3 Acorns
-Storage room #283: 4 Water
-Storage room #284: Ethanol
-Energy Core #285: One Up
+Gomi's Tower #196: 3 Water
+Gomi's Tower #197: 10 Crystal
+Gomi's Tower #198: Nectar
+Ivor East #255: Progressive helmet
+Ivor East #256: Atlas Medallion
+Ivor East #257: Roots
+Ivor East #258: Progressive helmet
+Ivor East #259: Pixie Dust
+Ivor East #260: Nothing
+Prof. Lab #274: 2 Crystal
+Greenhouse #275: Honey
+Alarm room #276: Nectar
+Reactor room #277: Limestone
+Storage room #278: Explosion
+Storage room #279: Call bead
+Storage room #280: Amulet of Annihilation
+Storage room #281: Water
+Storage room #282: 6 Water
+Storage room #283: Biscuit
+Storage room #284: Oil
+Energy Core #285: Mushroom
 Megataur: Lance (Weapon)
-Rimsala: 2 Honey
-Aquagoth: Water
-Tiny: Energy Core
-Mungola: Call bead
-Sons of Sth.: Wings
-Volcano Viper: Miracle Cure
-Magmar: Biscuit
+Rimsala: Call bead
+Aquagoth: 4 Wax
+Tiny: Laser Lance
+Mungola: Water
+Sons of Sth.: 100 Moniez
+Volcano Viper: 10,000 Gold Coins
+Magmar: 3 Ethanol
 Mad Monk: Call bead
-Barrier: Pixie Dust
-Call Up: 2 Crystal
-Double Drain: Mud Pepper
-Drain: Honey
-Energize: 4 Nectar
-Escape: Corrosion
-Fireball: 4 Water
-Fire Power: 3 Oil
-Force Field: 2 Iron
-Levitate: Nitro
+Barrier: Honey
+Call Up: Nectar
+Double Drain: 3 Water
+Drain: 3 Ethanol
+Energize: Water
+Escape: 4 Clay
+Fireball: Pixie Dust
+Fire Power: Petal
+Force Field: 3 Honey
+Levitate: 4 Ethanol
 Lightning Storm: Call bead
-Nitro: 2 Petal
-Reflect: 4 Crystal
-Speed: Progressive vest
-Stop: Clay
+Nitro: 6 Ash
+Reflect: 3 Ethanol
+Speed: Nitro
+Stop: Wax
 Done: Victory
 
 Playthrough:
@@ -368,23 +368,33 @@ Playthrough:
 
 }
 1: {
-  Cave Raptors: Diamond Eye
-  Done: Victory
-  E. Crustacia #108: Laser Lance
-  FE Village Hut #28: Knight Basher
+  FE Village Hut #28: Bronze Axe
+}
+2: {
+  Cave Raptors: Revealer
   Ivor Sewers #269: Diamond Eye
-  Megataur: Lance (Weapon)
-  Naris #249: Gladiator Sword
-  Pipe Maze #91: Atom Smasher
-  Pyramid bottom #125: Wheel
-  Pyramid bottom #131: Horn Spear
-  Pyramid top #137: Gauge
-  Salabog: Revealer
-  Storage room #281: Diamond Eye
-  Tiny: Energy Core
-  Tiny's hideout #161: Spider Claw
+  Naris #250: Gladiator Sword
+  Outside Ivor #200: Energy Core
+  Salabog: Wheel
+}
+3: {
+  Pyramid bottom #126: Diamond Eye
+  Pyramid bottom #132: Horn Spear
+  Pyramid top #138: Gauge
+}
+4: {
+  Done: Victory
   Tiny's hideout #162: Levitate
-  Vigor: Bronze Spear
-  Volcano Room1 #79: Crusader Sword
-  Volcano Room2 #81: Bronze Axe
+  Tiny's hideout #163: Crusader Sword
+}
+5: {
+  E. Crustacia #108: Atom Smasher
+  Pipe Maze #92: Knight Basher
+  Tiny: Laser Lance
+  Volcano Room1 #73: Bronze Spear
+  Volcano Room2 #81: Diamond Eye
+}
+6: {
+  Megataur: Lance (Weapon)
+  Tiny's hideout #161: Spider Claw
 }
