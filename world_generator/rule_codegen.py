@@ -805,6 +805,7 @@ class HelperCodeGenerator:
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
+        self.uses_math: bool = False  # Track if math functions are used
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -1103,6 +1104,8 @@ class HelperCodeGenerator:
             'setting_value': self._expr_setting_value,
             'prog_item_count': self._expr_prog_item_count,
             'sum_of': self._expr_sum_of,
+            'min': self._expr_min,
+            'max': self._expr_max,
         }
 
         handler = handlers.get(expr_type)
@@ -1329,6 +1332,22 @@ class HelperCodeGenerator:
         if_false_code = self._generate_expression(if_false)
         return f"({if_true} if {test} else {if_false_code})"
 
+    def _expr_min(self, expr: Dict[str, Any]) -> str:
+        """Generate min() call."""
+        args = expr.get('args', [])
+        if not args:
+            return '0'
+        arg_exprs = [self._generate_expression(a) for a in args]
+        return f"min({', '.join(arg_exprs)})"
+
+    def _expr_max(self, expr: Dict[str, Any]) -> str:
+        """Generate max() call."""
+        args = expr.get('args', [])
+        if not args:
+            return '0'
+        arg_exprs = [self._generate_expression(a) for a in args]
+        return f"max({', '.join(arg_exprs)})"
+
     def _expr_helper(self, expr: Dict[str, Any]) -> str:
         """Generate helper function call."""
         name = expr.get('name', '')
@@ -1342,6 +1361,14 @@ class HelperCodeGenerator:
         if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
+
+        # Math functions - require math import
+        if name in ('sqrt', 'floor', 'ceil', 'pow', 'abs'):
+            self.uses_math = True  # Flag that we need math import
+            arg_exprs = [self._generate_expression(a) for a in args]
+            if name == 'abs':
+                return f"abs({', '.join(arg_exprs)})"
+            return f"math.{name}({', '.join(arg_exprs)})"
 
         # Unknown helper - return True as safe fallback
         # This handles helpers that were blacklisted during export (too complex to export)
