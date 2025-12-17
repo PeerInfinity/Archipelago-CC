@@ -3232,7 +3232,7 @@
       "errors": {
         "generation": [],
         "testing": [
-          "Test world generation failed: TypeError: unhashable type: 'list'"
+          "Test world generation failed: FillError - Locations inaccessible due to overly restrictive rules"
         ]
       },
       "game_name": "Stardew Valley",
@@ -3262,9 +3262,9 @@
           "success": false
         },
         "seed_generation": {
-          "error": "TypeError: unhashable type: 'list'",
+          "error": "FillError: Locations inaccessible due to overly restrictive rules",
           "preset_dir": null,
-          "processing_time_seconds": 2.59,
+          "processing_time_seconds": 5.5,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
