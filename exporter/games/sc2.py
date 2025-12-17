@@ -359,11 +359,16 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # 2. SC2Logic instance attributes that map to world settings (should become self.attribute)
         if rule.get('type') == 'attribute':
             obj = rule.get('object', {})
-            if obj.get('type') == 'name' and obj.get('name') == 'logic':
+            obj_name = obj.get('name') if obj.get('type') == 'name' else None
+
+            # Handle both "logic.attr" and "self.attr" patterns
+            # - "logic" appears when accessing the logic object passed to rules
+            # - "self" appears in helper method bodies (methods on SC2Logic class)
+            if obj_name in ('logic', 'self'):
                 attr_name = rule.get('attr')
 
                 # List of known helper method names that might be accessed without parentheses
-                # These should be converted to helper calls, not self attributes
+                # These should be converted to helper calls, not settings
                 known_helpers = {
                     'terran_common_unit', 'terran_early_tech', 'terran_air', 'terran_air_anti_air',
                     'terran_competent_ground_to_air', 'terran_competent_anti_air', 'terran_bio_heal',
@@ -387,7 +392,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 if attr_name in known_helpers:
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
-                    logger.debug(f"[SC2] Converting logic.{attr_name} to helper call (method accessed as attribute)")
+                    logger.debug(f"[SC2] Converting {obj_name}.{attr_name} to helper call (method accessed as attribute)")
 
                     # Register the helper usage for automatic discovery
                     self.register_helper_usage(attr_name)
@@ -401,18 +406,24 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     # Continue expanding the converted rule
                     return super().expand_rule(converted_rule)
                 else:
-                    # This is a settings attribute - convert to self.attribute_name
-                    # The rule engine knows how to resolve self.attribute from settings
-                    logger.debug(f"[SC2] Converting logic.{attr_name} to self.{attr_name} (settings access)")
-
-                    converted_rule = {
-                        'type': 'attribute',
-                        'object': {'type': 'name', 'name': 'self'},
-                        'attr': attr_name
-                    }
-
-                    # Continue expanding
-                    return super().expand_rule(converted_rule)
+                    # This is a settings attribute - resolve to a constant value
+                    # This allows the world generator to use the value without game-specific code
+                    resolved_value = self._resolve_logic_attribute(attr_name)
+                    if resolved_value is not None:
+                        logger.debug(f"[SC2] Resolving {obj_name}.{attr_name} to constant: {resolved_value}")
+                        # Convert sets to lists for JSON serialization
+                        if isinstance(resolved_value, (set, frozenset)):
+                            resolved_value = sorted(list(resolved_value))
+                        return {'type': 'constant', 'value': resolved_value}
+                    else:
+                        # Fallback: keep as self.attribute_name if we can't resolve
+                        logger.debug(f"[SC2] Could not resolve {obj_name}.{attr_name}, keeping as self.{attr_name}")
+                        converted_rule = {
+                            'type': 'attribute',
+                            'object': {'type': 'name', 'name': 'self'},
+                            'attr': attr_name
+                        }
+                        return super().expand_rule(converted_rule)
 
         # Handle compare operations - recursively process left and right operands
         if rule.get('type') == 'compare':
@@ -421,8 +432,189 @@ class SC2GameExportHandler(GenericGameExportHandler):
             if 'right' in rule:
                 rule['right'] = self.expand_rule(rule['right'])
 
+        # Recursively expand nested structures that may contain self.attr patterns
+        # This ensures helper bodies with if_statement, block, etc. get fully expanded
+        rule_type = rule.get('type')
+
+        if rule_type == 'block':
+            if 'statements' in rule:
+                rule['statements'] = [self.expand_rule(stmt) for stmt in rule['statements']]
+
+        elif rule_type == 'if_statement':
+            if 'test' in rule:
+                rule['test'] = self.expand_rule(rule['test'])
+            if 'body' in rule:
+                rule['body'] = [self.expand_rule(stmt) for stmt in rule['body']]
+            if 'orelse' in rule:
+                rule['orelse'] = [self.expand_rule(stmt) for stmt in rule['orelse']]
+
+        elif rule_type == 'assign':
+            if 'value' in rule:
+                rule['value'] = self.expand_rule(rule['value'])
+
+        elif rule_type == 'return':
+            if 'value' in rule:
+                rule['value'] = self.expand_rule(rule['value'])
+
+        elif rule_type in ('and', 'or'):
+            if 'conditions' in rule:
+                rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
+
+        elif rule_type == 'conditional':
+            if 'test' in rule:
+                rule['test'] = self.expand_rule(rule['test'])
+            if 'if_true' in rule:
+                rule['if_true'] = self.expand_rule(rule['if_true'])
+            if 'if_false' in rule:
+                rule['if_false'] = self.expand_rule(rule['if_false'])
+
+        elif rule_type == 'sum_of':
+            if 'element_rule' in rule:
+                rule['element_rule'] = self.expand_rule(rule['element_rule'])
+            if 'iterator_info' in rule:
+                iterator_info = rule['iterator_info']
+                if 'iterator' in iterator_info:
+                    iterator_info['iterator'] = self.expand_rule(iterator_info['iterator'])
+                if 'condition' in iterator_info:
+                    iterator_info['condition'] = self.expand_rule(iterator_info['condition'])
+
+        elif rule_type == 'helper':
+            if 'args' in rule:
+                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+
         # For all other rule types, use the parent class's expand_rule
         return super().expand_rule(rule)
+
+    def _resolve_logic_attribute(self, attr: str) -> Any:
+        """
+        Resolve a SC2Logic attribute to its actual value based on world options.
+
+        This handles attributes from SC2Logic that are computed from world options
+        at runtime. By resolving them at export time, the world generator can use
+        the values without any SC2-specific code.
+
+        Args:
+            attr: The attribute name (e.g., 'advanced_tactics', 'basic_terran_units')
+
+        Returns:
+            The resolved value, or None if the attribute cannot be resolved.
+        """
+        if not self.world or not hasattr(self.world, 'options'):
+            return None
+
+        options = self.world.options
+
+        # Direct option lookups - attributes that map directly to option values
+        direct_options = {
+            'spear_of_adun_presence': 'spear_of_adun_presence',
+            'spear_of_adun_passive_presence': 'spear_of_adun_passive_ability_presence',
+            'kerrigan_presence': 'kerrigan_presence',
+            'logic_level': 'required_tactics',
+            'kerrigan_levels_per_mission_completed': 'kerrigan_levels_per_mission_completed',
+            'kerrigan_levels_per_mission_completed_cap': 'kerrigan_levels_per_mission_completed_cap',
+            'kerrigan_total_level_cap': 'kerrigan_total_level_cap',
+            'grant_story_tech': 'grant_story_tech',
+            'generic_upgrade_missions': 'generic_upgrade_missions',
+            'all_in_map': 'all_in_map',
+            'mission_order': 'mission_order',
+        }
+
+        if attr in direct_options:
+            option_name = direct_options[attr]
+            if hasattr(options, option_name):
+                option = getattr(options, option_name)
+                return option.value if hasattr(option, 'value') else option
+
+        # Computed attributes - derived from other options
+        if attr == 'advanced_tactics':
+            # advanced_tactics = required_tactics != RequiredTactics.option_standard (which is 0)
+            if hasattr(options, 'required_tactics'):
+                return options.required_tactics.value != 0
+            return False
+
+        if attr == 'base_power_rating':
+            # base_power_rating = 2 if advanced_tactics else 0
+            if hasattr(options, 'required_tactics'):
+                advanced_tactics = options.required_tactics.value != 0
+                return 2 if advanced_tactics else 0
+            return 0
+
+        if attr == 'take_over_ai_allies':
+            if hasattr(options, 'take_over_ai_allies'):
+                return bool(options.take_over_ai_allies.value)
+            return False
+
+        if attr == 'kerrigan_unit_available':
+            # Complex computation - use exported setting if available, else True for safety
+            return True
+
+        if attr == 'morphling_enabled':
+            # morphling_enabled = enable_morphling == 1 (option_true)
+            if hasattr(options, 'enable_morphling'):
+                return options.enable_morphling.value == 1
+            return False
+
+        if attr == 'story_levels_granted':
+            # story_levels_granted = grant_story_levels != 0 (disabled)
+            if hasattr(options, 'grant_story_levels'):
+                return options.grant_story_levels.value != 0
+            return False
+
+        if attr == 'war_council_upgrades':
+            # war_council_upgrades = not war_council_nerfs
+            if hasattr(options, 'war_council_nerfs'):
+                return not bool(options.war_council_nerfs.value)
+            return True
+
+        # Boolean attributes that default to True for safety (won't block progression)
+        safe_true_attrs = {
+            'nova_used', 'has_barracks_unit', 'has_factory_unit', 'has_starport_unit',
+            'has_zerg_melee_unit', 'has_zerg_ranged_unit', 'has_zerg_air_unit',
+            'has_protoss_gateway_unit', 'has_protoss_core_unit', 'has_protoss_robo_unit',
+            'has_protoss_stargate_unit'
+        }
+        if attr in safe_true_attrs:
+            return True
+
+        if attr == 'total_mission_count':
+            return 1  # Safe default
+
+        # Unit lists - computed based on required_tactics option
+        required_tactics = 0
+        if hasattr(options, 'required_tactics'):
+            required_tactics = options.required_tactics.value
+
+        if attr == 'basic_terran_units':
+            # Standard units (required_tactics == 0)
+            base_units = {'Marine', 'Marauder', 'Dominion Trooper', 'Goliath', 'Hellion', 'Vulture', 'Warhound'}
+            if required_tactics >= 1:  # Advanced tactics
+                base_units.update({'Reaper', 'Diamondback', 'Viking', 'Siege Tank', 'Banshee'})
+            if required_tactics >= 2:  # No logic
+                base_units.update({'Firebat', 'Medic', 'Medivac', 'Wraith', 'Thor', 'Liberator',
+                                  'Raven', 'Cyclone', 'Widow Mine', 'Ghost', 'Spectre', 'Battlecruiser'})
+            return base_units
+
+        if attr == 'basic_zerg_units':
+            base_units = {'Swarm Queen', 'Roach', 'Hydralisk'}
+            if required_tactics >= 1:
+                base_units.update({'Zergling', 'Infestor', 'Aberration', 'Mutalisk', 'Corruptor'})
+            if required_tactics >= 2:
+                base_units.update({'Swarm Host', 'Ultralisk', 'Brood Lord', 'Viper', 'Ravager',
+                                  'Lurker', 'Impaler', 'Guardian', 'Devourer', 'Brutalisk', 'Leviathan'})
+            return base_units
+
+        if attr == 'basic_protoss_units':
+            base_units = {'Zealot', 'Centurion', 'Sentinel', 'Stalker', 'Instigator', 'Slayer', 'Adept'}
+            if required_tactics >= 1:
+                base_units.update({'Dragoon', 'Sentry', 'High Templar', 'Dark Templar', 'Immortal',
+                                  'Annihilator', 'Vanguard', 'Reaver', 'Phoenix', 'Mirage', 'Corsair'})
+            if required_tactics >= 2:
+                base_units.update({'Archon', 'Colossus', 'Wrathwalker', 'Ascendant', 'Dark Archon',
+                                  'Supplicant', 'Tempest', 'Arbiter', 'Carrier', 'Mothership'})
+            return base_units
+
+        # Attribute not recognized
+        return None
 
     def expand_helper(self, helper_name: str):
         """Expand Starcraft 2-specific helper functions."""
