@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-17 01:25:51
+**Generated:** 2025-12-17 01:41:54
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 23 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 636.4KB
-- **Total Game Logic Code:** 679.4KB
-- **Combined Total:** 1315.9KB
+- **Total Exporter Code:** 579.8KB
+- **Total Game Logic Code:** 674.0KB
+- **Combined Total:** 1253.8KB
 
 ## Test Results
 
@@ -80,7 +80,7 @@ Of the 23 templates passing all 4 tests:
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 140.6KB |
 | Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 83.6KB |
 | Kingdom Hearts 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 33.1KB | 105.3KB | 421.3KB |
-| Kingdom Hearts WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 60.0KB | 5.4KB | 464.3KB |
+| Kingdom Hearts WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 464.3KB |
 | Kirby's Dream Land 3 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 10.9KB | 9.0KB | 504.5KB |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.1KB | ✅ | 213.2KB |
 | Lingo WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 41.2KB | 10.7KB | 350.0KB |
@@ -99,7 +99,7 @@ Of the 23 templates passing all 4 tests:
 | Paint WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.2KB | ✅ | 59.9KB |
 | Raft WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 12.0KB | ✅ | 2322.8KB |
 | Risk of Rain 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 162.8KB |
-| Saving Princess WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 41.6KB |
+| Saving Princess WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 3.4KB | ✅ | 42.6KB |
 | Secret of Evermore WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 13.7KB | 6.9KB | 350.3KB |
 | Shivers WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 251.8KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 239.2KB |

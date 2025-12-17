@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-17 01:25:51
+**Generated:** 2025-12-17 01:41:54
 
 **Source Data Created:** 2025-12-16T01:44:07.757974
 
-**Source Data Last Updated:** 2025-12-17T01:25:50.352683
+**Source Data Last Updated:** 2025-12-17T01:41:53.689078
 
 ## Summary
 
@@ -57,7 +57,7 @@
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
-| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 60.0KB | 5.4KB |
+| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.9KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.1KB | ✅ |
@@ -77,7 +77,7 @@
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.2KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
-| Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
+| Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.4KB | ✅ |
 | Saving Princess WorldGen | ❌ Failed | 4 | 4.2 | 4.2 | 🟡 100.0% | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |

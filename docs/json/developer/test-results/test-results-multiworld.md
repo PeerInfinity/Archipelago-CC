@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-17 01:25:51
+**Generated:** 2025-12-17 01:41:54
 
 ## Summary
 
@@ -57,7 +57,7 @@
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 60.0KB | 5.4KB |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 10.9KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.1KB | ✅ |
@@ -77,7 +77,7 @@
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 7.2KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | 3.4KB | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |

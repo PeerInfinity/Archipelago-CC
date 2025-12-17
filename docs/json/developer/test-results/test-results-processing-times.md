@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-17 01:25:51
+**Generated:** 2025-12-17 01:41:54
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,7 +10,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 368.3s | 921.6s | 1950.1s | 1543.1s |
+| Total | 368.6s | 922.2s | 1950.1s | 1543.1s |
 | Average | 5.0s | 12.5s | 26.7s | 21.1s |
 | Max | 27.3s | 76.7s | 288.6s | 117.4s |
 | Min | 3.0s | 5.5s | 5.6s | 12.4s |
@@ -74,7 +74,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Raft | 3.5s | 9.7s | 16.7s | 38.1s |
 | Risk of Rain 2 | 3.5s | 6.7s | 21.8s | 16.7s |
 | Saving Princess | 3.4s | 5.7s | 6.6s | 12.7s |
-| Saving Princess WorldGen | 6.6s | 9.8s | - | - |
+| Saving Princess WorldGen | 6.8s | 10.4s | - | - |
 | Secret of Evermore | 4.8s | 7.7s | 46.7s | 30.4s |
 | Shivers | 3.7s | 9.7s | 12.7s | 14.7s |
 | Sonic Adventure 2 Battle | 3.4s | 13.6s | 19.7s | 16.5s |

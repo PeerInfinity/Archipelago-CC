@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-16T01:44:07.757974",
-    "last_updated": "2025-12-17T01:25:51.539735",
+    "last_updated": "2025-12-17T01:41:54.881617",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2791,14 +2791,14 @@
       "generation": {
         "error_count": 4,
         "error_type": null,
-        "processing_time_seconds": 6.56,
+        "processing_time_seconds": 6.83,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/saving_princess_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 42551,
+        "size_bytes": 43667,
         "size_mb": 0.04
       },
       "seed": "1",
@@ -2806,7 +2806,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.83,
+        "processing_time_seconds": 10.37,
         "return_code": 0,
         "sphere_reached": 4.2,
         "success": true,
@@ -2814,7 +2814,7 @@
         "warning_count": 0
       },
       "template_filename": "Saving Princess WorldGen.yaml",
-      "timestamp": "2025-12-17T01:25:33.571788",
+      "timestamp": "2025-12-17T01:41:36.040513",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-17 01:25:51
+**Generated:** 2025-12-17 01:41:54
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -43,14 +43,14 @@ Additional test results:
 Of the 73 templates passing all 4 tests:
 
 - **Passing with Generic Exporter:** 29/73 (39.7%)
-- **Passing with Generic Logic:** 64/73 (87.7%)
+- **Passing with Generic Logic:** 65/73 (89.0%)
 - **Passing with Both Generic:** 29/73 (39.7%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 636.4KB
-- **Total Game Logic Code:** 679.4KB
-- **Combined Total:** 1315.9KB
+- **Total Exporter Code:** 579.8KB
+- **Total Game Logic Code:** 674.0KB
+- **Combined Total:** 1253.8KB
 
 ## Test Results
 
@@ -83,7 +83,7 @@ Of the 73 templates passing all 4 tests:
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 411.1KB |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 101.0KB |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 83.0KB |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 60.0KB | 5.4KB | 914.0KB |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 402.4KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 33.1KB | 105.3KB | 1452.7KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.9KB | 9.0KB | 1151.3KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.1KB | ✅ | 242.0KB |
@@ -103,8 +103,8 @@ Of the 73 templates passing all 4 tests:
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.2KB | ✅ | 108.9KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.0KB | ✅ | 198.0KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 130.7KB |
-| Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 30.9KB |
-| Saving Princess WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | 41.6KB |
+| Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.4KB | ✅ | 32.0KB |
+| Saving Princess WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | 42.6KB |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB | 339.4KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 150.5KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 243.3KB |
@@ -143,8 +143,8 @@ Of the 73 templates passing all 4 tests:
 | 6 | Dark Souls III | 1038.1KB |
 | 7 | Final Fantasy Mystic Quest | 1029.8KB |
 | 8 | Super Mario Land 2 | 926.6KB |
-| 9 | Kingdom Hearts | 914.0KB |
-| 10 | Lingo | 720.7KB |
+| 9 | Lingo | 720.7KB |
+| 10 | The Legend of Zelda | 714.0KB |
 
 ## Multi-Template Test Results
 

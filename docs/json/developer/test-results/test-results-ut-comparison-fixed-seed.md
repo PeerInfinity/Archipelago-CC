@@ -4,7 +4,7 @@
 
 **See also:** [Random Seed Results](./test-results-ut-comparison-random-seed.md) - Tests run with random seeds for variety
 
-**Generated:** 2025-12-17 01:25:51
+**Generated:** 2025-12-17 01:41:54
 
 **Source Data Created:** 2025-12-03T23:48:38.842089
 
@@ -59,7 +59,7 @@ Click on a game name to load the JSON frontend and run the UT comparison spoiler
 | [Hylics 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hylics2&ut=true) | ✅ | ✅ | 7.2 | 0 | 0 | 7.2 | 7.2 | ⚫ |
 | [Inscryption](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=inscryption&ut=true) | ✅ | ✅ | 9.2 | 0 | 0 | 9.2 | 9.2 | ⚫ |
 | [Jak and Daxter: The Precursor Legacy](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=jakanddaxter&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
-| [Kingdom Hearts](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kh1&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Kingdom Hearts](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kh1_worldgen&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | [Kingdom Hearts 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kh2&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | [Kirby's Dream Land 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kdl3&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | [Landstalker - The Treasures of King Nole](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=landstalker&ut=true) | ❌ | ✅ | 10.1 | 9 | 9 | 1.3 | 1.3 | ⚫ |
