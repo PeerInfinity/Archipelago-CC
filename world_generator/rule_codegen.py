@@ -164,6 +164,7 @@ class RuleCodeGenerator:
             'compare': self._convert_compare,
             'comparison': self._convert_compare,
             'conditional': self._convert_conditional,
+            'name': self._convert_name,
         }
 
         converter = converters.get(rule_type)
@@ -173,6 +174,34 @@ class RuleCodeGenerator:
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
         return 'True_()'
+
+    def _convert_name(self, rule: Dict[str, Any]) -> str:
+        """Convert a name reference to a constant.
+
+        Names typically reference game settings/options. Since worldgen worlds
+        don't have the original game options, we resolve them to constants.
+        If the name matches a known setting, use its value. Otherwise default
+        to False_() since most setting references are optional feature flags
+        that should be disabled for vanilla worldgen.
+        """
+        name = rule.get('name', '')
+
+        # Check if this name exists in our settings
+        if name in self.settings:
+            value = self.settings[name]
+            if value:
+                self.required_imports.add('True_')
+                return 'True_()'
+            else:
+                self.required_imports.add('False_')
+                return 'False_()'
+
+        # Unknown name - default to False (disables optional features)
+        # This is safe because:
+        # - Not(False) = True, making locations accessible without the feature
+        # - False in an AND makes that branch fail, falling back to alternatives
+        self.required_imports.add('False_')
+        return 'False_()'
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
         """Convert constant true/false rule."""
@@ -1106,6 +1135,7 @@ class HelperCodeGenerator:
             'sum_of': self._expr_sum_of,
             'min': self._expr_min,
             'max': self._expr_max,
+            'block': self._expr_block,
         }
 
         handler = handlers.get(expr_type)
@@ -1348,6 +1378,18 @@ class HelperCodeGenerator:
         arg_exprs = [self._generate_expression(a) for a in args]
         return f"max({', '.join(arg_exprs)})"
 
+    def _expr_block(self, expr: Dict[str, Any]) -> str:
+        """Generate expression from a block of statements.
+
+        Blocks contain multiple statements (assignments, if statements, returns)
+        that would require complex partial evaluation to simplify properly.
+
+        For safety in worldgen where we may not have all the context,
+        we return True for block expressions. This keeps locations accessible
+        by default, which is the safer behavior.
+        """
+        return 'True'
+
     def _expr_helper(self, expr: Dict[str, Any]) -> str:
         """Generate helper function call."""
         name = expr.get('name', '')
@@ -1419,6 +1461,14 @@ class HelperCodeGenerator:
                     return f'state.has_group({repr(group)}, player)'
                 return f'state.has_group({repr(group)}, player, {count})'
 
+        elif method == 'has_group_unique':
+            if len(args) >= 1:
+                group = self._extract_constant(args[0], '')
+                count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
+                if count == 1:
+                    return f'state.has_group_unique({repr(group)}, player)'
+                return f'state.has_group_unique({repr(group)}, player, {count})'
+
         elif method == 'can_reach':
             if len(args) >= 1:
                 region = self._extract_constant(args[0], '')
@@ -1458,6 +1508,13 @@ class HelperCodeGenerator:
         """Generate function call expression."""
         func = expr.get('function', {})
         args = expr.get('args', [])
+
+        # Check if this is a math module function call (e.g., math.sqrt)
+        # and set uses_math flag if so
+        if isinstance(func, dict) and func.get('type') == 'attribute':
+            obj = func.get('object', {})
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
+                self.uses_math = True
 
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
@@ -1580,7 +1637,8 @@ class HelperCodeGenerator:
             "type": "sum_of",
             "iterator_info": {
                 "target": {...},  // tuple of variable names
-                "iterator": {...}  // expression to iterate over
+                "iterator": {...},  // expression to iterate over
+                "condition": {...}  // optional filter condition
             },
             "element_rule": {...}  // expression for each element
         }
@@ -1588,6 +1646,7 @@ class HelperCodeGenerator:
         iterator_info = expr.get('iterator_info', {})
         target = iterator_info.get('target', {})
         iterator = iterator_info.get('iterator', {})
+        condition = iterator_info.get('condition')
         element_rule = expr.get('element_rule', {'type': 'constant', 'value': 0})
 
         # Generate target variable names
@@ -1598,6 +1657,11 @@ class HelperCodeGenerator:
 
         # Generate element rule expression
         element_expr = self._generate_expression(element_rule)
+
+        # Generate condition expression if present
+        if condition:
+            condition_expr = self._generate_expression(condition)
+            return f"sum({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
 
         return f"sum({element_expr} for {target_expr} in {iterator_expr})"
 
