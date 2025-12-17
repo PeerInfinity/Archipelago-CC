@@ -159,7 +159,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h1_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -178,7 +178,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h1_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -223,7 +223,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h1_cost"
                                   }
                                 }
                               ]
@@ -309,7 +309,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h2_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -328,7 +328,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h2_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -373,7 +373,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h2_cost"
                                   }
                                 }
                               ]
@@ -477,7 +477,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h3_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -496,7 +496,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h3_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -541,7 +541,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h3_cost"
                                   }
                                 }
                               ]
@@ -645,7 +645,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h4_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -664,7 +664,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h4_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -709,7 +709,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h4_cost"
                                   }
                                 }
                               ]
@@ -851,7 +851,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h16_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -870,7 +870,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h16_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -915,7 +915,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h16_cost"
                               }
                             }
                           ]
@@ -1538,7 +1538,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h17_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -1557,7 +1557,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h17_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -1602,7 +1602,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h17_cost"
                               }
                             }
                           ]
@@ -1714,7 +1714,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h18_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -1733,7 +1733,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h18_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -1778,7 +1778,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h18_cost"
                               }
                             }
                           ]
@@ -2065,7 +2065,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h19_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -2084,7 +2084,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h19_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -2129,7 +2129,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h19_cost"
                               }
                             }
                           ]
@@ -2489,7 +2489,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h5_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -2508,7 +2508,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h5_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -2553,7 +2553,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h5_cost"
                                   }
                                 }
                               ]
@@ -2659,7 +2659,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h20_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -2678,7 +2678,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h20_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -2723,7 +2723,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h20_cost"
                                   }
                                 }
                               ]
@@ -2906,7 +2906,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h21_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -2925,7 +2925,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h21_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -2970,7 +2970,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h21_cost"
                               }
                             }
                           ]
@@ -3153,7 +3153,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h6_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -3172,7 +3172,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h6_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -3217,7 +3217,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h6_cost"
                                   }
                                 }
                               ]
@@ -3381,7 +3381,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h7_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -3400,7 +3400,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h7_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -3445,7 +3445,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h7_cost"
                                   }
                                 }
                               ]
@@ -3549,7 +3549,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h8_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -3568,7 +3568,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h8_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -3613,7 +3613,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h8_cost"
                                   }
                                 }
                               ]
@@ -4362,7 +4362,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h22_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -4381,7 +4381,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h22_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -4426,7 +4426,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h22_cost"
                                   }
                                 }
                               ]
@@ -4552,7 +4552,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h23_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -4571,7 +4571,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h23_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -4616,7 +4616,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h23_cost"
                                   }
                                 }
                               ]
@@ -4727,7 +4727,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h24_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -4746,7 +4746,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h24_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -4791,7 +4791,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h24_cost"
                                   }
                                 }
                               ]
@@ -5453,7 +5453,7 @@
                                       "statements": [
                                         {
                                           "type": "assign",
-                                          "name": "cost",
+                                          "name": "_h9_cost",
                                           "value": {
                                             "type": "constant",
                                             "value": 0
@@ -5472,7 +5472,7 @@
                                           "body": [
                                             {
                                               "type": "assign",
-                                              "name": "cost",
+                                              "name": "_h9_cost",
                                               "op": "+=",
                                               "value": {
                                                 "type": "subscript",
@@ -5517,7 +5517,7 @@
                                           "type": "return",
                                           "value": {
                                             "type": "name",
-                                            "name": "cost"
+                                            "name": "_h9_cost"
                                           }
                                         }
                                       ]
@@ -5727,7 +5727,7 @@
                                       "statements": [
                                         {
                                           "type": "assign",
-                                          "name": "cost",
+                                          "name": "_h10_cost",
                                           "value": {
                                             "type": "constant",
                                             "value": 0
@@ -5746,7 +5746,7 @@
                                           "body": [
                                             {
                                               "type": "assign",
-                                              "name": "cost",
+                                              "name": "_h10_cost",
                                               "op": "+=",
                                               "value": {
                                                 "type": "subscript",
@@ -5791,7 +5791,7 @@
                                           "type": "return",
                                           "value": {
                                             "type": "name",
-                                            "name": "cost"
+                                            "name": "_h10_cost"
                                           }
                                         }
                                       ]
@@ -6003,7 +6003,7 @@
                                       "statements": [
                                         {
                                           "type": "assign",
-                                          "name": "cost",
+                                          "name": "_h25_cost",
                                           "value": {
                                             "type": "constant",
                                             "value": 0
@@ -6022,7 +6022,7 @@
                                           "body": [
                                             {
                                               "type": "assign",
-                                              "name": "cost",
+                                              "name": "_h25_cost",
                                               "op": "+=",
                                               "value": {
                                                 "type": "subscript",
@@ -6067,7 +6067,7 @@
                                           "type": "return",
                                           "value": {
                                             "type": "name",
-                                            "name": "cost"
+                                            "name": "_h25_cost"
                                           }
                                         }
                                       ]
@@ -6464,7 +6464,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h11_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -6483,7 +6483,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h11_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -6528,7 +6528,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h11_cost"
                                   }
                                 }
                               ]
@@ -6632,7 +6632,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h12_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -6651,7 +6651,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h12_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -6696,7 +6696,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h12_cost"
                                   }
                                 }
                               ]
@@ -6798,7 +6798,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h26_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -6817,7 +6817,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h26_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -6862,7 +6862,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h26_cost"
                               }
                             }
                           ]
@@ -7083,7 +7083,7 @@
                                       "statements": [
                                         {
                                           "type": "assign",
-                                          "name": "cost",
+                                          "name": "_h13_cost",
                                           "value": {
                                             "type": "constant",
                                             "value": 0
@@ -7102,7 +7102,7 @@
                                           "body": [
                                             {
                                               "type": "assign",
-                                              "name": "cost",
+                                              "name": "_h13_cost",
                                               "op": "+=",
                                               "value": {
                                                 "type": "subscript",
@@ -7147,7 +7147,7 @@
                                           "type": "return",
                                           "value": {
                                             "type": "name",
-                                            "name": "cost"
+                                            "name": "_h13_cost"
                                           }
                                         }
                                       ]
@@ -7357,7 +7357,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h14_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -7376,7 +7376,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h14_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -7421,7 +7421,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h14_cost"
                                   }
                                 }
                               ]
@@ -7549,7 +7549,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h15_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -7568,7 +7568,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h15_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -7613,7 +7613,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h15_cost"
                                   }
                                 }
                               ]
@@ -7749,7 +7749,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h27_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -7768,7 +7768,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h27_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -7813,7 +7813,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h27_cost"
                                   }
                                 }
                               ]
@@ -7899,7 +7899,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h28_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -7918,7 +7918,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h28_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -7963,7 +7963,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h28_cost"
                                   }
                                 }
                               ]
@@ -8077,7 +8077,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h29_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -8096,7 +8096,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h29_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -8141,7 +8141,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h29_cost"
                               }
                             }
                           ]
@@ -8372,7 +8372,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h31_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -8391,7 +8391,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h31_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -8436,7 +8436,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h31_cost"
                                   }
                                 }
                               ]
@@ -8621,7 +8621,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h32_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -8640,7 +8640,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h32_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -8685,7 +8685,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h32_cost"
                               }
                             }
                           ]
@@ -9333,7 +9333,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h33_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -9352,7 +9352,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h33_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -9397,7 +9397,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h33_cost"
                               }
                             }
                           ]
@@ -9500,7 +9500,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h34_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -9519,7 +9519,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h34_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -9564,7 +9564,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h34_cost"
                               }
                             }
                           ]
@@ -9833,7 +9833,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h35_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -9852,7 +9852,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h35_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -9897,7 +9897,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h35_cost"
                               }
                             }
                           ]
@@ -10084,7 +10084,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h36_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -10103,7 +10103,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h36_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -10148,7 +10148,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h36_cost"
                               }
                             }
                           ]
@@ -10469,7 +10469,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h37_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -10488,7 +10488,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h37_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -10533,7 +10533,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h37_cost"
                               }
                             }
                           ]
@@ -10630,7 +10630,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h38_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -10649,7 +10649,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h38_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -10694,7 +10694,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h38_cost"
                               }
                             }
                           ]
@@ -10840,7 +10840,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h39_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -10859,7 +10859,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h39_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -10904,7 +10904,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h39_cost"
                                   }
                                 }
                               ]
@@ -11568,7 +11568,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h40_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -11587,7 +11587,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h40_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -11632,7 +11632,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h40_cost"
                               }
                             }
                           ]
@@ -11943,7 +11943,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h41_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -11962,7 +11962,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h41_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -12007,7 +12007,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h41_cost"
                               }
                             }
                           ]
@@ -12119,7 +12119,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h42_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -12138,7 +12138,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h42_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -12183,7 +12183,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h42_cost"
                               }
                             }
                           ]
@@ -12280,7 +12280,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h43_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -12299,7 +12299,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h43_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -12344,7 +12344,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h43_cost"
                               }
                             }
                           ]
@@ -12441,7 +12441,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h44_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -12460,7 +12460,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h44_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -12505,7 +12505,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h44_cost"
                               }
                             }
                           ]
@@ -12602,7 +12602,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h45_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -12621,7 +12621,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h45_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -12666,7 +12666,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h45_cost"
                               }
                             }
                           ]
@@ -12778,7 +12778,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h46_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -12797,7 +12797,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h46_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -12842,7 +12842,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h46_cost"
                               }
                             }
                           ]
@@ -12984,7 +12984,7 @@
                           "statements": [
                             {
                               "type": "assign",
-                              "name": "cost",
+                              "name": "_h47_cost",
                               "value": {
                                 "type": "constant",
                                 "value": 0
@@ -13003,7 +13003,7 @@
                               "body": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h47_cost",
                                   "op": "+=",
                                   "value": {
                                     "type": "subscript",
@@ -13048,7 +13048,7 @@
                               "type": "return",
                               "value": {
                                 "type": "name",
-                                "name": "cost"
+                                "name": "_h47_cost"
                               }
                             }
                           ]
@@ -13478,7 +13478,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h48_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -13497,7 +13497,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h48_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -13542,7 +13542,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h48_cost"
                                   }
                                 }
                               ]
@@ -13628,7 +13628,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h49_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -13647,7 +13647,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h49_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -13692,7 +13692,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h49_cost"
                                   }
                                 }
                               ]
@@ -13904,7 +13904,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h50_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -13923,7 +13923,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h50_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -13968,7 +13968,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h50_cost"
                                   }
                                 }
                               ]
@@ -14079,7 +14079,7 @@
                               "statements": [
                                 {
                                   "type": "assign",
-                                  "name": "cost",
+                                  "name": "_h51_cost",
                                   "value": {
                                     "type": "constant",
                                     "value": 0
@@ -14098,7 +14098,7 @@
                                   "body": [
                                     {
                                       "type": "assign",
-                                      "name": "cost",
+                                      "name": "_h51_cost",
                                       "op": "+=",
                                       "value": {
                                         "type": "subscript",
@@ -14143,7 +14143,7 @@
                                   "type": "return",
                                   "value": {
                                     "type": "name",
-                                    "name": "cost"
+                                    "name": "_h51_cost"
                                   }
                                 }
                               ]
@@ -15274,18 +15274,18 @@
       "chapter_costs": {},
       "hat_info": {
         "hat_yarn_costs": {
-          "0": 6,
-          "1": 6,
-          "2": 6,
+          "0": 8,
+          "1": 4,
+          "2": 8,
           "3": 6,
-          "4": 6
+          "4": 5
         },
         "hat_craft_order": [
-          0,
-          1,
           2,
-          3,
-          4
+          4,
+          1,
+          0,
+          3
         ]
       },
       "relic_groups": {
