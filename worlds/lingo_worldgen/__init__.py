@@ -84,6 +84,9 @@ class LingoWorldGenWorld(RuleWorldMixin, World):
     base_id: ClassVar[int] = 444400
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
+    # Use auto indirect conditions since we set access_rule directly on entrances
+    # rather than using RuleBuilder.set_rule() which would register indirect_connections
+    explicit_indirect_conditions: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
