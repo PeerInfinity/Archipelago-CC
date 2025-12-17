@@ -1,5 +1,53 @@
 # Analyzer Post-Process Improvements Plan
 
+## Implementation Status
+
+| Improvement | Status | Notes |
+|-------------|--------|-------|
+| For loop detection | ✅ IMPLEMENTED | Detects state-dependent for loop bodies |
+| Conditional branch evaluation | ⏳ Partial | Related - for loops now preserved as helpers |
+| F-string multi-pass resolution | 🔲 Pending | |
+| Closure variable capture | 🔲 Pending | Critical for kh1.py has_parasite_cage |
+| Dict subscript resolution | 🔲 Pending | |
+| State method optimization | 🔲 Pending | |
+
+### Implementation Notes (2025-12-17)
+
+**For Loop Detection Enhancement (ast_visitors.py)**
+
+The `has_dynamic_for_loops` function was improved to detect for loops with state-dependent bodies:
+
+```python
+def contains_state_reference(node):
+    """Check if an AST node references 'state' anywhere."""
+    for child in ast.walk(node):
+        if isinstance(child, ast.Name) and child.id == 'state':
+            return True
+    return False
+
+for node in ast.walk(tree):
+    if isinstance(node, ast.For):
+        # Check if the loop body contains state-dependent operations
+        for body_node in node.body:
+            if contains_state_reference(body_node):
+                return True  # Preserve as helper
+```
+
+**Results:**
+- KH1's `has_x_worlds` is now correctly preserved as a helper
+- The function body (with for loop and state.has() calls) is exported to frontend
+- Frontend JavaScript can execute the helper at runtime
+
+**Remaining Issue - Parameter Substitution:**
+- When `has_parasite_cage` is inlined, it references parameter `worlds`
+- `worlds` is passed as `has_x_worlds(state, player, 3, ...)`
+- The analyzer preserves `has_x_worlds` as a helper call
+- BUT: it doesn't substitute the `worlds` parameter with this helper call
+- Result: `{"type": "name", "name": "worlds"}` in the exported rule
+- **This requires closure variable capture / parameter substitution (Phase 2)**
+
+---
+
 ## Overview
 
 This document outlines improvements to the rule analyzer that would reduce or eliminate the need for game-specific `post_process_data()` implementations. These improvements address analyzer limitations identified in the following exporters:
