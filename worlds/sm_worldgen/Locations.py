@@ -49,7 +49,7 @@ location_table: Dict[str, LocationData] = {
     "Reserve Tank, Norfair": LocationData("Reserve Tank, Norfair", "Reserve Tank, Norfair", 82061, False),
     "Speed Booster": LocationData("Speed Booster", "Speed Booster", 82066, False),
     "Wave Beam": LocationData("Wave Beam", "Wave Beam", 82068, False),
-    "Ridley": LocationData("Ridley", "Ridley", 82170, False),
+    "Ridley": LocationData("Ridley", "Ridley", None, True),
     "Energy Tank, Ridley": LocationData("Energy Tank, Ridley", "Energy Tank, Ridley", 82078, False),
     "Screw Attack": LocationData("Screw Attack", "Screw Attack", 82079, False),
     "Energy Tank, Firefleas": LocationData("Energy Tank, Firefleas", "Energy Tank, Firefleas", 82080, False),
