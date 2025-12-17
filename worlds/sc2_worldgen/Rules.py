@@ -46,12 +46,12 @@ def _starcraft2worldgen_nova_ranged_weapon(state: "CollectionState", player: int
 
 def _starcraft2worldgen_soa_power_rating(state: "CollectionState", player: int) -> bool:
     power_rating = 0
-    for _ in {'Time Stop (Spear of Adun)': 4, 'Purifier Beam (Spear of Adun)': 3, 'Solar Bombardment (Spear of Adun)': 3}.items():
+    for item, rating in {'Time Stop (Spear of Adun)': 4, 'Purifier Beam (Spear of Adun)': 3, 'Solar Bombardment (Spear of Adun)': 3}.items():
         if state.has(item, player):
             power_rating += rating
             break
     found_main_weapon = False
-    for _ in {'Solar Lance (Spear of Adun)': 8, 'Deploy Fenix (Spear of Adun)': 7, 'Temporal Field (Spear of Adun)': 6, 'Progressive Proxy Pylon (Spear of Adun)': 5, 'Shield Overcharge (Spear of Adun)': 5, 'Orbital Strike (Spear of Adun)': 4}.items():
+    for item, rating in {'Solar Lance (Spear of Adun)': 8, 'Deploy Fenix (Spear of Adun)': 7, 'Temporal Field (Spear of Adun)': 6, 'Progressive Proxy Pylon (Spear of Adun)': 5, 'Shield Overcharge (Spear of Adun)': 5, 'Orbital Strike (Spear of Adun)': 4}.items():
         count = 1
         count = (2 if (item == 'Progressive Proxy Pylon (Spear of Adun)') else count)
         if state.has(item, player, count):

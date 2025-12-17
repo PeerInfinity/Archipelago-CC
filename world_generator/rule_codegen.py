@@ -1040,8 +1040,12 @@ class HelperCodeGenerator:
         iterable = self._generate_expression(stmt.get('iterable', {'type': 'constant', 'value': []}))
         body = stmt.get('body', [])
 
-        # Handle tuple unpacking in var
-        if isinstance(var, dict) and var.get('type') == 'tuple':
+        # Handle 'vars' array format (used for tuple unpacking like "for item, rating in dict.items()")
+        vars_array = stmt.get('vars')
+        if vars_array and isinstance(vars_array, list):
+            var = ', '.join(vars_array)
+        # Handle tuple unpacking in var (if var is a dict with type 'tuple')
+        elif isinstance(var, dict) and var.get('type') == 'tuple':
             elements = var.get('elements', [])
             var_names = [self._generate_expression(e) for e in elements]
             var = ', '.join(var_names)
@@ -1511,6 +1515,13 @@ class HelperCodeGenerator:
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
 
+        # Special case: when accessing self.multiworld, convert to state.multiworld
+        # In original world code, 'self' refers to the World instance which has a multiworld attribute.
+        # In worldgen standalone functions, we access multiworld via state.multiworld instead.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
+            if attr == 'multiworld':
+                return 'state.multiworld'
+
         # Special case: when accessing self.xxx where xxx is a setting (e.g., self.game_logic, flag_specific_keycards),
         # resolve it to the setting's value. This handles option-dependent logic flags that were
         # captured from LogicExtensions classes (e.g., TimespinnerLogic). In helper functions
@@ -1548,6 +1559,12 @@ class HelperCodeGenerator:
         # The exported helper body may be missing the player argument
         if func_code == 'state.multiworld.get_location' and len(arg_exprs) == 1:
             arg_exprs.append('player')
+
+        # Special handling for .can_reach() method calls - needs state argument
+        # Location and Region objects have can_reach(state) but exported code may call it without args
+        if (isinstance(func, dict) and func.get('type') == 'attribute' and
+                func.get('attr') == 'can_reach' and len(arg_exprs) == 0):
+            arg_exprs.append('state')
 
         return f"{func_code}({', '.join(arg_exprs)})"
 

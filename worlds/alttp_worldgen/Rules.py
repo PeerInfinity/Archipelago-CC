@@ -60,7 +60,7 @@ def _alinktothepastworldgen_can_extend_magic(state: "CollectionState", player: i
 
 def _alinktothepastworldgen_can_get_good_bee(state: "CollectionState", player: int) -> bool:
     cave = True
-    return (state.has_group('Bottles', player)) and (state.has('Bug Catching Net', player)) and ((state.has('Pegasus Boots', player)) or ((_alinktothepastworldgen_has_sword(state, player)) and (state.has('Quake', player)))) and (cave.can_reach()) and (_alinktothepastworldgen_is_not_bunny(state, player, cave))
+    return (state.has_group('Bottles', player)) and (state.has('Bug Catching Net', player)) and ((state.has('Pegasus Boots', player)) or ((_alinktothepastworldgen_has_sword(state, player)) and (state.has('Quake', player)))) and (cave.can_reach(state)) and (_alinktothepastworldgen_is_not_bunny(state, player, cave))
 
 
 def _alinktothepastworldgen_can_hold_arrows(state: "CollectionState", player: int, quantity) -> bool:

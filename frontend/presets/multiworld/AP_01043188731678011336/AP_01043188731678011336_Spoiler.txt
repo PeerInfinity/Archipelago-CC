@@ -2198,7 +2198,8 @@ King Zora (Player2)
 Lake Hylia Island (Player2)
         Links House -> Links House Exit
    =>   Light World -> East Hyrule Teleporter
-   =>   East Dark World -> Dark Lake Hylia Drop (East)
+   =>   East Dark World -> Northeast Dark World Broken Bridge Pass
+   =>   Northeast Dark World -> Dark Lake Hylia Teleporter
    =>   Dark Lake Hylia -> Lake Hylia Island Mirror Spot
    =>   Lake Hylia Island
 Lava Cake Cleared (Player1)
@@ -2835,10 +2836,9 @@ Superbunny Cave - Bottom (Player2)
    =>   Dark Death Mountain (West Bottom) -> Spectacle Rock Mirror Spot
    =>   Spectacle Rock -> Spectacle Rock Drop
    =>   Death Mountain (Top) -> East Death Mountain (Top)
-   =>   East Death Mountain (Top) -> East Death Mountain Drop
-   =>   East Death Mountain (Bottom) -> East Death Mountain Teleporter
-   =>   Dark Death Mountain (East Bottom) -> Superbunny Cave (Bottom)
-   =>   Superbunny Cave (Bottom) -> Superbunny Cave Climb
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Superbunny Cave (Top)
    =>   Superbunny Cave (Top)
 Swamp Palace - Big Chest (Player2)
         Links House -> Links House Exit

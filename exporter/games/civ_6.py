@@ -65,112 +65,64 @@ class Civ6GameExportHandler(GenericGameExportHandler):
 
         return settings
 
-    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """Expand rules with era subscript resolution.
+
+        This resolves era subscripts during the initial export pass, eliminating
+        the need for post_process_data fixes.
         """
-        Post-process exported data to fix era region access rules.
+        if not rule or not isinstance(rule, dict):
+            return rule
 
-        The analyzer incorrectly exports world.era_required_*[era] subscripts as:
-        - subscript with value = list of era names (dict keys)
-        - index = era name string
+        # First apply base class expansion
+        rule = super().expand_rule(rule, _depth)
 
-        This fixes those broken subscripts by:
-        1. Detecting the pattern (subscript with era names list and era name index)
-        2. Replacing with direct constant values from the exported era requirements
-        """
-        if 'regions' not in data:
-            return data
+        # Then resolve era subscripts
+        return self._resolve_subscripts_in_rule(rule)
 
-        for player_id, player_regions in data['regions'].items():
-            for region_name, region in player_regions.items():
-                # Fix exit access rules (era transitions)
-                for exit_data in region.get('exits', []):
-                    exit_name = exit_data.get('name', '')
-                    access_rule = exit_data.get('access_rule')
-
-                    if access_rule and isinstance(access_rule, dict):
-                        fixed_rule = self._fix_era_subscripts(access_rule, player_id)
-                        if fixed_rule is not access_rule:
-                            exit_data['access_rule'] = fixed_rule
-                            logger.debug(f"Fixed era subscript in exit '{exit_name}'")
-
-                # Also check location access rules in case they reference era data
-                for location in region.get('locations', []):
-                    location_name = location.get('name', '')
-                    access_rule = location.get('access_rule')
-
-                    if access_rule and isinstance(access_rule, dict):
-                        fixed_rule = self._fix_era_subscripts(access_rule, player_id)
-                        if fixed_rule != access_rule:
-                            location['access_rule'] = fixed_rule
-                            logger.debug(f"Fixed era subscript in location '{location_name}'")
-
-        return data
-
-    def _fix_era_subscripts(self, rule: Dict[str, Any], player_id: str) -> Dict[str, Any]:
-        """
-        Recursively fix era subscript patterns in rules.
-
-        Detects patterns like:
-        {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [{
-                "type": "subscript",
-                "value": {"type": "constant", "value": ["ERA_ANCIENT", ...]},
-                "index": {"type": "constant", "value": "ERA_ANCIENT"}
-            }]
-        }
-
-        And replaces the subscript with the actual resolved value from era requirements.
-        """
+    def _resolve_subscripts_in_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively resolve era subscripts in a rule."""
         if not isinstance(rule, dict):
             return rule
 
         rule_type = rule.get('type')
 
-        # Handle state_method with has_all or has_all_counts
+        # Resolve subscripts directly
+        if rule_type == 'subscript':
+            resolved = self._try_resolve_subscript(rule)
+            if resolved is not rule:
+                return resolved
+
+        # Handle state_method with has_all or has_all_counts - resolve subscripts in args
         if rule_type == 'state_method':
             method = rule.get('method')
             if method in ('has_all', 'has_all_counts'):
                 args = rule.get('args', [])
-                if args and len(args) > 0:
-                    fixed_args = []
-                    args_changed = False
-                    for arg in args:
-                        fixed_arg = self._resolve_era_subscript(arg, method, player_id)
-                        if fixed_arg is not arg:
-                            args_changed = True
-                        fixed_args.append(fixed_arg)
-
-                    if args_changed:
+                if args:
+                    fixed_args = [self._resolve_subscripts_in_rule(arg) for arg in args]
+                    if fixed_args != args:
                         return {**rule, 'args': fixed_args}
 
         # Recursively process nested structures
         if rule_type in ('and', 'or'):
             conditions = rule.get('conditions', [])
-            fixed_conditions = []
-            any_changed = False
-            for cond in conditions:
-                fixed_cond = self._fix_era_subscripts(cond, player_id)
-                if fixed_cond is not cond:
-                    any_changed = True
-                fixed_conditions.append(fixed_cond)
-            if any_changed:
+            fixed_conditions = [self._resolve_subscripts_in_rule(cond) for cond in conditions]
+            if fixed_conditions != conditions:
                 return {**rule, 'conditions': fixed_conditions}
 
         if rule_type == 'not':
             condition = rule.get('condition')
             if condition:
-                fixed_condition = self._fix_era_subscripts(condition, player_id)
-                if fixed_condition is not condition:
-                    return {**rule, 'condition': fixed_condition}
+                fixed = self._resolve_subscripts_in_rule(condition)
+                if fixed is not condition:
+                    return {**rule, 'condition': fixed}
 
         if rule_type == 'conditional':
-            any_changed = False
             result = dict(rule)
+            any_changed = False
             for key in ('test', 'if_true', 'if_false'):
                 if rule.get(key):
-                    fixed = self._fix_era_subscripts(rule[key], player_id)
+                    fixed = self._resolve_subscripts_in_rule(rule[key])
                     if fixed is not rule[key]:
                         result[key] = fixed
                         any_changed = True
@@ -179,76 +131,61 @@ class Civ6GameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def _resolve_era_subscript(self, arg: Dict[str, Any], method: str, player_id: str) -> Dict[str, Any]:
+    def _try_resolve_subscript(self, subscript: Dict[str, Any]) -> Dict[str, Any]:
+        """Try to resolve a subscript to its constant value.
+
+        Handles era subscripts like world.era_required_non_progressive_items[era].
         """
-        Resolve an era subscript pattern to its actual value.
+        value = subscript.get('value', {})
+        index = subscript.get('index', {})
 
-        For has_all: returns the list of non-progressive items for the era
-        For has_all_counts: returns the dict of progressive item counts for the era
-        """
-        if not isinstance(arg, dict):
-            return arg
-
-        arg_type = arg.get('type')
-        if arg_type != 'subscript':
-            return arg
-
-        value = arg.get('value', {})
-        index = arg.get('index', {})
-
-        # Check if this is the era subscript pattern
+        # Both value and index must be constants to resolve
         if value.get('type') != 'constant' or index.get('type') != 'constant':
-            return arg
+            return subscript
 
         value_data = value.get('value')
-        era_name = index.get('value')
+        index_value = index.get('value')
 
-        # Check if value_data is a list of era names (can be strings or EraType enums)
+        # Handle dict subscript - look up key
+        if isinstance(value_data, dict) and index_value in value_data:
+            return {'type': 'constant', 'value': value_data[index_value]}
+
+        # Handle list subscript - look up index
+        if isinstance(value_data, list) and isinstance(index_value, int):
+            if 0 <= index_value < len(value_data):
+                return {'type': 'constant', 'value': value_data[index_value]}
+
+        # Check if this is an era names list pattern (legacy behavior)
         era_names = ['ERA_ANCIENT', 'ERA_CLASSICAL', 'ERA_MEDIEVAL', 'ERA_RENAISSANCE',
                      'ERA_INDUSTRIAL', 'ERA_MODERN', 'ERA_ATOMIC', 'ERA_INFORMATION', 'ERA_FUTURE']
 
-        if not isinstance(value_data, list):
-            return arg
+        if isinstance(value_data, list):
+            # Convert era items to strings (may be EraType enums or strings)
+            def to_era_string(e):
+                if isinstance(e, str):
+                    return e
+                if hasattr(e, 'value'):  # EraType enum
+                    return e.value
+                return str(e)
 
-        # Convert era items to strings (may be EraType enums or strings)
-        def to_era_string(e):
-            if isinstance(e, str):
-                return e
-            if hasattr(e, 'value'):  # EraType enum
-                return e.value
-            return str(e)
+            value_data_strs = [to_era_string(e) for e in value_data]
+            items_are_era_names = all(e in era_names for e in value_data_strs)
 
-        value_data_strs = [to_era_string(e) for e in value_data]
-        items_are_era_names = all(e in era_names for e in value_data_strs)
+            if items_are_era_names:
+                era_name_str = to_era_string(index_value) if not isinstance(index_value, str) else index_value
 
-        if not items_are_era_names:
-            return arg
+                if era_name_str in era_names:
+                    # This is an era subscript - resolve from captured requirements
+                    # For has_all: non-progressive items
+                    items = self._era_requirements.get('non_progressive', {}).get(era_name_str, [])
+                    if items:
+                        return {'type': 'constant', 'value': items}
+                    # For has_all_counts: progressive counts
+                    counts = self._era_requirements.get('progressive_counts', {}).get(era_name_str, {})
+                    if counts:
+                        return {'type': 'constant', 'value': counts}
 
-        # Convert era_name to string if needed
-        era_name_str = to_era_string(era_name) if not isinstance(era_name, str) else era_name
+        return subscript
 
-        if era_name_str not in era_names:
-            return arg
-
-        # This is an era subscript pattern - resolve it
-        logger.debug(f"Resolving era subscript for {method} with era {era_name_str}")
-
-        if method == 'has_all':
-            # Get non-progressive items for this era
-            items = self._era_requirements.get('non_progressive', {}).get(era_name_str, [])
-            if items:
-                return {'type': 'constant', 'value': items}
-            else:
-                logger.warning(f"No non-progressive items found for era {era_name}")
-                return {'type': 'constant', 'value': []}
-
-        elif method == 'has_all_counts':
-            # Get progressive item counts for this era
-            counts = self._era_requirements.get('progressive_counts', {}).get(era_name_str, {})
-            if counts:
-                return {'type': 'constant', 'value': counts}
-            else:
-                logger.warning(f"No progressive item counts found for era {era_name}")
-                return {'type': 'constant', 'value': {}}
-
-        return arg
+    # NOTE: post_process_data removed - era subscript resolution now happens during
+    # the initial export pass via expand_rule() -> _resolve_subscripts_in_rule()

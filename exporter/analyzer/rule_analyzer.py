@@ -224,6 +224,14 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
                     if var_name in self.closure_vars:
                         param_mapping[param_name] = self.closure_vars[var_name]
                         logging.debug(f"_build_parameter_mapping: Added world object from closure_vars for parameter '{param_name}'")
+                # Case 4: Argument is a rule dict (helper, item_check, state_method, and, or, etc.)
+                # Store the analyzed rule directly so it can be substituted when the parameter is referenced
+                elif arg_result and isinstance(arg_result, dict) and arg_result.get('type') in (
+                    'helper', 'item_check', 'state_method', 'can_reach', 'location_check',
+                    'and', 'or', 'not', 'conditional', 'compare', 'has_all', 'has_any'
+                ):
+                    param_mapping[param_name] = arg_result
+                    logging.debug(f"_build_parameter_mapping: Parameter '{param_name}' -> rule dict of type '{arg_result.get('type')}'")
 
         except Exception as e:
             logging.error(f"Error building parameter mapping: {e}")

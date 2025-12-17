@@ -35,9 +35,14 @@ def read_host_yaml_config(project_root: str) -> Dict:
         return {}
 
 
-def load_template_exclude_list(project_root: str = None, include_reasons: bool = False):
+def load_template_exclude_list(project_root: str = None, include_reasons: bool = False, test_type: str = 'all'):
     """
-    Load the default template exclude list from scripts/data/template-exclude-list.json.
+    Load the template exclude list from scripts/data/template-exclude-list.json.
+
+    The exclude list file contains three arrays:
+    - 'exclude_list': Permanent exclusions that apply to all tests
+    - 'main_test_exclude_list': Games excluded from spoiler-minimal and multiclient tests
+    - 'worldgen_test_exclude_list': Games excluded from world-generator tests
 
     Automatically includes WorldGen versions of each excluded template.
     For example, if "Blasphemous.yaml" is excluded, "Blasphemous WorldGen.yaml"
@@ -47,6 +52,11 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
         project_root: Optional project root path. If not provided, will be inferred.
         include_reasons: If True, returns list of dicts with 'name' and 'reason' keys.
                         If False, returns list of template filenames only.
+        test_type: Which exclude list(s) to load:
+                  - 'all': Combine all exclude lists (permanent + main + worldgen) - default
+                  - 'main': Permanent exclusions + main test exclusions
+                  - 'worldgen': Permanent exclusions + worldgen test exclusions
+                  - 'permanent': Only permanent exclusions (exclude_list)
 
     Returns:
         List[str] if include_reasons=False: List of template filenames to exclude
@@ -82,27 +92,44 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                     result.append(worldgen_name)
         return result
 
+    def normalize_list(lst):
+        """Normalize a list to the new format (list of dicts with 'name' and 'reason')."""
+        if not lst:
+            return []
+        if isinstance(lst[0], dict):
+            return lst
+        else:
+            # Old format: list of strings - convert to new format
+            return [{'name': name, 'reason': ''} for name in lst]
+
     try:
         with open(exclude_list_file, 'r') as f:
             data = json.load(f)
-            exclude_list = data.get('exclude_list', default_exclude_list)
 
-            # Check if the list contains dictionaries (new format) or strings (old format)
-            if exclude_list and isinstance(exclude_list[0], dict):
-                # New format: list of objects with 'name' and 'reason'
-                if include_reasons:
-                    return add_worldgen_variants(exclude_list, with_reasons=True)
-                else:
-                    names = [item['name'] for item in exclude_list]
-                    return add_worldgen_variants(names, with_reasons=False)
+            # Load the permanent exclude list
+            permanent_list = normalize_list(data.get('exclude_list', default_exclude_list))
+
+            # Load the test-type specific lists (may not exist in old format files)
+            main_list = normalize_list(data.get('main_test_exclude_list', []))
+            worldgen_list = normalize_list(data.get('worldgen_test_exclude_list', []))
+
+            # Combine lists based on test_type
+            if test_type == 'permanent':
+                combined_list = permanent_list
+            elif test_type == 'main':
+                combined_list = permanent_list + main_list
+            elif test_type == 'worldgen':
+                combined_list = permanent_list + worldgen_list
+            else:  # 'all' or any other value
+                combined_list = permanent_list + main_list + worldgen_list
+
+            # Return with or without reasons
+            if include_reasons:
+                return add_worldgen_variants(combined_list, with_reasons=True)
             else:
-                # Old format: list of strings
-                if include_reasons:
-                    # Convert to new format with empty reasons
-                    items_with_reasons = [{'name': name, 'reason': ''} for name in exclude_list]
-                    return add_worldgen_variants(items_with_reasons, with_reasons=True)
-                else:
-                    return add_worldgen_variants(exclude_list, with_reasons=False)
+                names = [item['name'] for item in combined_list]
+                return add_worldgen_variants(names, with_reasons=False)
+
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
         # If file doesn't exist or is malformed, return default list
         if include_reasons:

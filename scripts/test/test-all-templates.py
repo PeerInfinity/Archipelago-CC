@@ -117,8 +117,11 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiclien
 
 
 def main():
-    # Load default exclude list
-    default_exclude_list = load_template_exclude_list()
+    # Load default exclude lists
+    # - 'main' for regular template tests (excludes slow main test games)
+    # - 'all' for WorldGen template tests (excludes slow main + worldgen games)
+    default_exclude_list_main = load_template_exclude_list(test_type='main')
+    default_exclude_list_all = load_template_exclude_list(test_type='all')
 
     parser = argparse.ArgumentParser(description='Test all Archipelago template files')
     parser.add_argument(
@@ -136,8 +139,8 @@ def main():
         '--skip-list',
         type=str,
         nargs='*',
-        default=default_exclude_list,
-        help=f'List of template files to skip (default: {" ".join(default_exclude_list)})'
+        default=None,  # Will be set after parsing based on --include-pattern
+        help='List of template files to skip (default: uses exclude list based on test type)'
     )
     parser.add_argument(
         '--include-list',
@@ -440,6 +443,16 @@ def main():
     if args.include_pattern and args.exclude_pattern:
         print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
         sys.exit(1)
+
+    # Set default skip list based on test type if not explicitly provided
+    # Use 'all' exclude list for WorldGen tests (includes main + worldgen exclusions)
+    # Use 'main' exclude list for regular tests
+    if args.skip_list is None:
+        if args.include_pattern and 'WorldGen' in args.include_pattern:
+            args.skip_list = default_exclude_list_all
+            print(f"WorldGen mode detected: using extended exclude list ({len(default_exclude_list_all)} templates)")
+        else:
+            args.skip_list = default_exclude_list_main
 
     # Determine project root early (needed for setup scripts)
     # Script is now at scripts/test/test-all-templates.py, so go up 3 levels to get to project root

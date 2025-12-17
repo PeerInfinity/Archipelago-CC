@@ -32,7 +32,9 @@ export const kh1Logic = {
 
         // Get hundred_acre_wood setting from staticData if available
         const playerId = snapshot?.player?.id || snapshot?.player?.slot || snapshot?.player || staticData?.playerId || DEFAULT_PLAYER_ID;
-        const settings = staticData?.settings?.[playerId] || {};
+        // Normalize playerId to string for settings lookup (JSON keys are strings)
+        const playerIdStr = String(playerId);
+        const settings = staticData?.settings?.[playerIdStr] || {};
         const hundred_acre_wood = settings.hundred_acre_wood !== 0 && settings.hundred_acre_wood !== false;
 
         let worlds_acquired = 0.0;

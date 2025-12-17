@@ -1505,9 +1505,14 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             # Get show_in_spoiler - only include if False (default is True)
                             show_in_spoiler = getattr(location, 'show_in_spoiler', True)
 
+                            # Get location address, handling cases where it might be a list
+                            # (e.g., ALTTP prize locations have multiple ROM addresses)
+                            raw_address = getattr(location, 'address', None)
+                            location_id = raw_address if isinstance(raw_address, int) else None
+
                             location_data = {
                                 'name': location_name,
-                                'id': getattr(location, 'address', None),  # Use actual location address (None for events)
+                                'id': location_id,  # Use actual location address (None for events or non-int addresses)
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
                                 'item': None,

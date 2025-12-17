@@ -581,7 +581,8 @@ Sealed Caves (Sirens): Water hook
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Sealed Caves (Sirens)
    =>   Sealed Caves (Sirens)
 Sealed Caves (Xarion): Jacksquat room
         Menu -> Tutorial
@@ -614,8 +615,8 @@ Varndagroth Towers (Right): Spider Hell
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (upper)
-   =>   Varndagroth tower right (upper) -> Varndagroth tower right (upper) -> Varndagroth tower right (elevator)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Varndagroth tower right (elevator)
    =>   Varndagroth tower right (elevator)
 Varndagroth Towers: Bridge
         Menu -> Tutorial
