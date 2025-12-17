@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     multiworld.get_entrance("Menu -> Space Zone 1", player).access_rule = \
-        lambda state: ((not (True)) and (state.has('Carrot', player))) or (state.has('Hippo Bubble', player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Hippo Zone'), player))) and (state.has('Carrot', player))) or (state.has('Hippo Bubble', player))
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Mario's Castle", player),
@@ -160,7 +160,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Tree Zone 3 - Normal Exit", player).access_rule = \
-        lambda state: not (True)
+        lambda state: not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Tree Zone 3'), player))
 
     world.set_rule(
         multiworld.get_location("Tree Zone 4 - Normal Exit", player),
@@ -178,7 +178,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Hippo Zone - Normal or Secret Exit", player).access_rule = \
-        lambda state: ((not (True)) and (state.has('Carrot', player))) or (state.has_any(('Hippo Bubble', 'Water Physics'), player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Hippo Zone'), player))) and (state.has('Carrot', player))) or (state.has_any(('Hippo Bubble', 'Water Physics'), player))
 
     world.set_rule(
         multiworld.get_location("Space Zone 1 - Normal Exit", player),
@@ -186,7 +186,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Space Zone 1 - Secret Exit", player).access_rule = \
-        lambda state: (not (True)) and (state.has_any(('Carrot', 'Space Physics'), player))
+        lambda state: (not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Space Zone 1'), player))) and (state.has_any(('Carrot', 'Space Physics'), player))
 
     world.set_rule(
         multiworld.get_location("Space Zone 2 - Boss", player),
@@ -214,7 +214,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Macro Zone 2 - Normal Exit", player).access_rule = \
-        lambda state: (not (True)) and ((state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) or (state.has('Macro Zone 2 Midway Bell', player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
+        lambda state: (not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Macro Zone 2'), player))) and ((state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) or (state.has('Macro Zone 2 Midway Bell', player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
 
     world.set_rule(
         multiworld.get_location("Macro Zone 2 - Midway Bell", player),
@@ -237,16 +237,16 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Pumpkin Zone 1 - Normal Exit", player).access_rule = \
-        lambda state: ((not (True)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player))) or (state.has('Pumpkin Zone 1 Midway Bell', player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Pumpkin Zone 1'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player))) or (state.has('Pumpkin Zone 1 Midway Bell', player))
 
     multiworld.get_location("Pumpkin Zone 1 - Midway Bell", player).access_rule = \
-        lambda state: ((not (True)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player))) or (state.has('Pumpkin Zone 1 Midway Bell', player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Pumpkin Zone 1'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player))) or (state.has('Pumpkin Zone 1 Midway Bell', player))
 
     multiworld.get_location("Pumpkin Zone 2 - Normal Exit", player).access_rule = \
-        lambda state: (not (True)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
+        lambda state: (not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Pumpkin Zone 2'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
 
     multiworld.get_location("Pumpkin Zone 2 - Secret Exit", player).access_rule = \
-        lambda state: ((not (True)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))) and (state.has_any(('Fire Flower', 'Mushroom'), player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Pumpkin Zone 2'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))) and (state.has_any(('Fire Flower', 'Mushroom'), player))
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 3 - Secret Exit", player),
@@ -259,7 +259,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Mario Zone 1 - Normal Exit", player).access_rule = \
-        lambda state: ((not (True)) or (state.has_any(('Carrot', 'Fire Flower', 'Mario Zone 1 Midway Bell', 'Mushroom'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Mario Zone 1'), player))) or (state.has_any(('Carrot', 'Fire Flower', 'Mario Zone 1 Midway Bell', 'Mushroom'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player))
 
     world.set_rule(
         multiworld.get_location("Mario Zone 1 - Midway Bell", player),
@@ -275,13 +275,13 @@ def set_rules(world: "World") -> None:
         lambda state: True
 
     multiworld.get_location("Turtle Zone 2 - Normal Exit", player).access_rule = \
-        lambda state: (not (True)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Left'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
+        lambda state: (not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Turtle Zone 2'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Left'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
 
     multiworld.get_location("Turtle Zone 2 - Secret Exit", player).access_rule = \
-        lambda state: (not (True)) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
+        lambda state: (not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Turtle Zone 2'), player))) and (state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)) and (state.has('Water Physics', player))
 
     multiworld.get_location("Turtle Zone 2 - Midway Bell", player).access_rule = \
-        lambda state: ((not (True)) and (state.has('Water Physics', player))) or (state.has('Turtle Zone 2 Midway Bell', player))
+        lambda state: ((not (state.has_any(('Cancel Auto Scroll', 'Cancel Auto Scroll - Turtle Zone 2'), player))) and (state.has('Water Physics', player))) or (state.has('Turtle Zone 2 Midway Bell', player))
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 3 - Boss", player),
