@@ -4686,19 +4686,31 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         if (bodyData.params && bodyData.body) {
           const params = bodyData.params;
           const helperArgs = args.args || [];
+          const defaults = bodyData.defaults || {};
           let helperLocalScope = localScope ? { ...localScope } : {};
 
-          // Bind arguments to parameter names
-          for (let i = 0; i < helperArgs.length; i++) {
-            let argValue = helperArgs[i];
-            // Only evaluate as a rule if it's an object with 'type' or 'rule' key
-            // Plain values (primitives, arrays, plain objects) should be used directly
-            if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
-              argValue = evaluateRule(argValue, context, depth + 1, localScope);
+          // Bind arguments to parameter names, using defaults for missing params
+          for (let i = 0; i < params.length; i++) {
+            const paramName = params[i];
+            let argValue;
+
+            if (i < helperArgs.length) {
+              argValue = helperArgs[i];
+              // Only evaluate as a rule if it's an object with 'type' or 'rule' key
+              // Plain values (primitives, arrays, plain objects) should be used directly
+              if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
+                argValue = evaluateRule(argValue, context, depth + 1, localScope);
+              }
+            } else if (defaults[paramName] !== undefined) {
+              // Use default value from body_data.defaults
+              argValue = defaults[paramName];
+            } else {
+              // No default provided - use 1 as common default for quantity-like params
+              // This matches Python's common default patterns (quantity=1, count=1)
+              argValue = 1;
             }
-            if (params[i]) {
-              helperLocalScope[params[i]] = argValue;
-            }
+
+            helperLocalScope[paramName] = argValue;
           }
 
           let result = evaluateRule(bodyData.body, context, depth + 1, helperLocalScope);
