@@ -482,6 +482,13 @@ class RuleCodeGenerator:
         if op_type == 'constant':
             return repr(operand.get('value'))
 
+        if op_type == 'count_item':
+            # Handle count_item type from rules.json export
+            item_name = operand.get('item', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+
         if op_type == 'state_method':
             method = operand.get('method', '')
             args = operand.get('args', [])
@@ -529,6 +536,13 @@ class RuleCodeGenerator:
 
         if op_type == 'constant':
             return repr(operand.get('value'))
+
+        if op_type == 'count_item':
+            # Handle count_item type from rules.json export
+            item_name = operand.get('item', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
 
         if op_type == 'state_method':
             method = operand.get('method', '')
