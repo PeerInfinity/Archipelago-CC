@@ -73,7 +73,13 @@ class RuleCodeGenerator:
         if rule_type == 'setting_value':
             setting_name = rule.get('setting', '')
             if setting_name in self.settings:
-                return {'type': 'constant', 'value': self.settings[setting_name]}
+                value = self.settings[setting_name]
+                # Handle indexed access into list settings (e.g., required_medallions[0])
+                if 'index' in rule and isinstance(value, list):
+                    index = rule['index']
+                    if 0 <= index < len(value):
+                        value = value[index]
+                return {'type': 'constant', 'value': value}
             # Unknown setting - return as-is (will evaluate to undefined in frontend)
             return rule
 
@@ -541,6 +547,9 @@ class RuleCodeGenerator:
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
 
+        if op_type == 'min':
+            return self._convert_min(operand)
+
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
 
@@ -595,8 +604,28 @@ class RuleCodeGenerator:
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
 
+        if op_type == 'min':
+            return self._convert_min(operand)
+
         # Fall back to converting as a rule
         return self._convert_rule(operand)
+
+    def _convert_min(self, operand: Dict[str, Any]) -> str:
+        """Convert a min() operation to MinValue rule."""
+        self.required_imports.add('MinValue')
+
+        args = operand.get('args', [])
+        if len(args) < 2:
+            # Not enough arguments, return as-is with default
+            return 'MinValue(0, 0)'
+
+        left = args[0]
+        right = args[1]
+
+        left_code = self._convert_arithmetic_operand(left)
+        right_code = self._convert_arithmetic_operand(right)
+
+        return f'MinValue({left_code}, {right_code})'
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
@@ -1164,6 +1193,11 @@ class HelperCodeGenerator:
         # If the setting was captured during export, use its value
         if setting in self.settings:
             value = self.settings[setting]
+            # Handle indexed access into list settings (e.g., required_medallions[0])
+            if 'index' in expr and isinstance(value, list):
+                index = expr['index']
+                if 0 <= index < len(value):
+                    value = value[index]
             if isinstance(value, bool):
                 return 'True' if value else 'False'
             elif isinstance(value, str):

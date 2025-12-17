@@ -555,9 +555,7 @@ Playthrough:
 1: {
   Monstro Chamber 3 Ground Chest: Progressive Glide
   Monstro Chamber 3 Platform Above Chamber 2 Entrance Chest: Postcard
-  Monstro Chamber 5 Atop Barrel Chest: Puppy
   Monstro Chamber 6 Low Chest: Counterattack
-  Monstro Chamber 6 Raised Area Near Chamber 1 Entrance Chest: Orichalcum
   Monstro Defeat Parasite Cage I Goofy Cheer Event: High Jump
   Monstro Mouth Boat Deck Chest: Sonic Blade
   Monstro Mouth Near Ship Chest: Gravity Arts
@@ -570,57 +568,28 @@ Playthrough:
   Traverse Town Defeat Guard Armor Brave Warrior Event: Olympus Coliseum
   Traverse Town Green Room Clock Puzzle Chest: Lucky Emblem
   Traverse Town Item Shop Postcard: Puppy
-  Traverse Town Piano Room Return 10 Puppies: Puppy
-  Traverse Town Piano Room Return 20 Puppies: Blizzard Arts
-  Traverse Town Piano Room Return 30 Puppies: Puppy
-  Traverse Town Piano Room Return 40 Puppies: Postcard
-  Traverse Town Piano Room Return 50 Puppies Reward 1: Pumpkinhead
-  Traverse Town Piano Room Return 50 Puppies Reward 2: Progressive Thunder
-  Traverse Town Piano Room Return 60 Puppies: Puppy
-  Traverse Town Piano Room Return 80 Puppies: Puppy
-  Traverse Town Piano Room Return 99 Puppies Reward 2: Divine Rose
   Traverse Town Red Room Chest: Combo Master
-  Wonderland Lotus Forest Corner Chest: Green Trinity
-  Wonderland Lotus Forest Glide Chest: Postcard
   Wonderland Lotus Forest Red Flowers on the Main Path: Puppy
   Wonderland Lotus Forest Yellow Flowers in Middle Clearing and Through Painting: Orichalcum
   Wonderland Rabbit Hole Defeat Heartless 1 Chest: Air Combo Plus
-  Wonderland Tea Party Garden Above Lotus Forest Entrance 2nd Chest: Phil Cup
-  Wonderland Tea Party Garden Bear and Clock Puzzle Chest: Mythril
-  Wonderland Tea Party Garden Left Gray Chair: Progressive Aero
 }
 2: {
+  Monstro Chamber 5 Atop Barrel Chest: Puppy
+  Monstro Chamber 6 Raised Area Near Chamber 1 Entrance Chest: Orichalcum
   Monstro Mouth High Platform Boat Side Chest: Progressive Glide
-  Neverland Clock Tower 01:00 Door: Lionheart
-  Neverland Clock Tower 02:00 Door: Orichalcum
-  Neverland Clock Tower 04:00 Door: Mythril
-  Neverland Clock Tower 06:00 Door: Progressive Gravity
-  Neverland Clock Tower 07:00 Door: Tinker Bell
-  Neverland Clock Tower 09:00 Door: Mythril
-  Neverland Clock Tower 10:00 Door: Mythril
-  Neverland Clock Tower 12:00 Door: Mythril
-  Neverland Clock Tower Chest: Hollow Bastion
-  Neverland Defeat Anti Sora Raven's Claw Event: Puppy
-  Neverland Defeat Hook Ansem's Report 9: Progressive Stop
   Neverland Hold Flight 1st Chest: Orichalcum
-  Neverland Pirate Ship Crows Nest Chest: Puppy
-  Neverland Seal Keyhole Navi-G Piece Event: Puppy
-  Neverland Seal Keyhole Tinker Bell Event: Puppy
   Traverse Town Geppetto's House Chest: Second Chance
   Traverse Town Geppetto's House Geppetto Reward 2: Mythril
   Traverse Town Geppetto's House Geppetto Reward 3: Progressive Fire
   Traverse Town Geppetto's House Postcard: Three Wishes
   Traverse Town Geppetto's House Talk to Pinocchio: Progressive Thunder
-  Traverse Town Gizmo Shop Postcard 1: Cure Arts
-  Traverse Town Gizmo Shop Postcard 2: Progressive Stop
-  Traverse Town Item Workshop Left Chest: MP Rage
-  Traverse Town Item Workshop Right Chest: Lady Luck
-  Traverse Town Mail Postcard 04 Event: Orichalcum
-  Traverse Town Mail Postcard 05 Event: Progressive Gravity
-  Wonderland Bizarre Room Green Trinity Chest: Hercules Cup
+  Wonderland Lotus Forest Corner Chest: Green Trinity
+  Wonderland Lotus Forest Glide Chest: Postcard
   Wonderland Queen's Castle Hedge Left Red Chest: Puppy
   Wonderland Queen's Castle Hedge Right Blue Chest: Agrabah
-  Wonderland Rabbit Hole Green Trinity Chest: Lucky Emblem
+  Wonderland Tea Party Garden Above Lotus Forest Entrance 2nd Chest: Phil Cup
+  Wonderland Tea Party Garden Bear and Clock Puzzle Chest: Mythril
+  Wonderland Tea Party Garden Left Gray Chair: Progressive Aero
 }
 3: {
   Agrabah Bazaar Across Windows Chest: Mythril
@@ -641,8 +610,31 @@ Playthrough:
   Agrabah Plaza By Storage Chest: Puppy
   Agrabah Plaza Raised Terrace Chest: Puppy
   Agrabah Storage Green Trinity Chest: High Jump
+  Neverland Clock Tower 01:00 Door: Lionheart
+  Neverland Clock Tower 02:00 Door: Orichalcum
+  Neverland Clock Tower 04:00 Door: Mythril
+  Neverland Clock Tower 06:00 Door: Progressive Gravity
+  Neverland Clock Tower 07:00 Door: Tinker Bell
+  Neverland Clock Tower 09:00 Door: Mythril
+  Neverland Clock Tower 10:00 Door: Mythril
+  Neverland Clock Tower 12:00 Door: Mythril
+  Neverland Clock Tower Chest: Hollow Bastion
+  Neverland Defeat Anti Sora Raven's Claw Event: Puppy
+  Neverland Defeat Hook Ansem's Report 9: Progressive Stop
+  Neverland Pirate Ship Crows Nest Chest: Puppy
+  Neverland Seal Keyhole Navi-G Piece Event: Puppy
+  Neverland Seal Keyhole Tinker Bell Event: Puppy
+  Traverse Town Gizmo Shop Postcard 1: Cure Arts
+  Traverse Town Gizmo Shop Postcard 2: Progressive Stop
+  Traverse Town Item Workshop Left Chest: MP Rage
+  Traverse Town Item Workshop Right Chest: Lady Luck
+  Traverse Town Mail Postcard 04 Event: Orichalcum
+  Traverse Town Piano Room Return 10 Puppies: Puppy
+  Wonderland Bizarre Room Green Trinity Chest: Hercules Cup
+  Wonderland Rabbit Hole Green Trinity Chest: Lucky Emblem
+}
+4: {
   Hollow Bastion Base Level Bubble Under the Wall Platform Chest: Postcard
-  Hollow Bastion Castle Gates High Pillar Chest: Orichalcum
   Hollow Bastion Defeat Riku I White Trinity Event: Progressive Cure
   Hollow Bastion Dungeon By Candles Chest: Mythril
   Hollow Bastion Library 1st Floor Turn the Carousel Chest: Dumbo
@@ -654,8 +646,11 @@ Playthrough:
   Hollow Bastion Rising Falls Under Water 1st Chest: Mythril
   Hollow Bastion Waterway Blizzard on Bubble Chest: Lucky Emblem
   Hollow Bastion Waterway Unlock Passage from Base Level Chest: Postcard
+  Traverse Town Piano Room Return 20 Puppies: Blizzard Arts
+  Traverse Town Piano Room Return 30 Puppies: Puppy
+  Traverse Town Piano Room Return 40 Puppies: Postcard
 }
-4: {
+5: {
   Deep Jungle Camp Hi-Potion Experiment: Puppy
   Deep Jungle Camp Replication Experiment: Mythril
   Deep Jungle Cliff Right Cliff Left Chest: Puppy
@@ -677,19 +672,23 @@ Playthrough:
   End of the World World Terminus Neverland Chest: Lucky Emblem
   End of the World World Terminus Olympus Coliseum Chest: Mythril
   End of the World World Terminus Wonderland Chest: Hollow Bastion
-  Final Ansem: Victory
+  Traverse Town Mail Postcard 05 Event: Progressive Gravity
+  Traverse Town Mail Postcard 06 Event: Mythril
+  Traverse Town Mail Postcard 07 Event: High Jump
+  Traverse Town Piano Room Return 50 Puppies Reward 1: Pumpkinhead
+  Traverse Town Piano Room Return 50 Puppies Reward 2: Progressive Thunder
+}
+6: {
+  Agrabah Cave of Wonders Treasure Room Red Trinity: Puppy
+  Hollow Bastion Castle Gates High Pillar Chest: Orichalcum
   Hollow Bastion Entrance Hall Emblem Piece (Chest): Emblem Piece (Chest)
   Hollow Bastion Entrance Hall Emblem Piece (Flame): Emblem Piece (Flame)
   Hollow Bastion Entrance Hall Emblem Piece (Fountain): Emblem Piece (Fountain)
-  Traverse Town Mail Postcard 06 Event: Mythril
-  Traverse Town Mail Postcard 07 Event: High Jump
-}
-5: {
-  Agrabah Cave of Wonders Treasure Room Red Trinity: Puppy
   Hollow Bastion Entrance Hall Emblem Piece (Statue): Emblem Piece (Statue)
   Traverse Town Alleyway Behind Crates Chest: Spellbinder
+  Traverse Town Piano Room Return 60 Puppies: Puppy
 }
-6: {
+7: {
   Hollow Bastion Defeat Dragon Maleficent Fireglow Event: Mythril
   Hollow Bastion Defeat Maleficent Ansem's Report 5: Puppy
   Hollow Bastion Defeat Maleficent Donald Cheer Event: Puppy
@@ -704,11 +703,12 @@ Playthrough:
   Hollow Bastion Speak with Aerith Ansem's Report 4: Orichalcum
   Traverse Town Secret Waterway Navi Gummi Event: Orichalcum
 }
-7: {
+8: {
   Neverland Hold Aero Chest: Postcard
   Neverland Hold Yellow Trinity Left Blue Chest: Orichalcum
+  Traverse Town Piano Room Return 80 Puppies: Puppy
 }
-8: {
+9: {
   Traverse Town Mail Postcard 08 Event: Blue Trinity
   Traverse Town Synth Item 06: Puppy
   Traverse Town Synth Item 07: Puppy
@@ -728,7 +728,7 @@ Playthrough:
   Traverse Town Synth Item 28: Progressive Blizzard
   Traverse Town Synth Item 30: White Trinity
 }
-9: {
+10: {
   Deep Jungle Climbing Trees Save Gorillas: Progressive Fire
   Deep Jungle Defeat Clayton Cure Event: Progressive Aero
   Deep Jungle Tree House Save Gorillas: Postcard
@@ -752,6 +752,8 @@ Playthrough:
   Wonderland Lotus Forest Through the Painting White Trinity Chest: Oblivion
   Wonderland Lotus Forest Yellow Elixir Flower Through Painting: Lucky Emblem
 }
-10: {
+11: {
+  Final Ansem: Victory
   Traverse Town Mail Postcard 10 Event: Progressive Glide
+  Traverse Town Piano Room Return 99 Puppies Reward 2: Divine Rose
 }

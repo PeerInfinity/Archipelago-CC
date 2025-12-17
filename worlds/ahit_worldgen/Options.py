@@ -26,7 +26,7 @@ class Hatitems(Range):
 class Logicdifficulty(Range):
     """Option for Logicdifficulty."""
     display_name = "Logicdifficulty"
-    range_start = 0
+    range_start = -1
     range_end = 100
     default = -1
 

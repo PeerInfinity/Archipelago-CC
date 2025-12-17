@@ -65,6 +65,7 @@ from .rules import (
     CountItem,
     Compare,
     Arithmetic,
+    MinValue,
     Conditional,
     HelperCall,
 )
@@ -111,6 +112,7 @@ __all__ = [
     'CountItem',
     'Compare',
     'Arithmetic',
+    'MinValue',
     'Conditional',
     'HelperCall',
     # CC format support functions
