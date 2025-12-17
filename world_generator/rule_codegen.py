@@ -86,6 +86,11 @@ class RuleCodeGenerator:
                 setting_name = obj.get('setting', '')
                 if setting_name in self.settings:
                     return {'type': 'constant', 'value': self.settings[setting_name]}
+            # Also handle self.xxx attribute access (e.g., self.flag_specific_keycards)
+            # These are option-dependent flags from LogicExtensions classes
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                if attr in self.settings:
+                    return {'type': 'constant', 'value': self.settings[attr]}
 
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
@@ -1500,6 +1505,19 @@ class HelperCodeGenerator:
         # setting as setting_value and now just need the numeric/boolean value.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
+
+        # Special case: when accessing self.xxx where xxx is a setting (like flag_specific_keycards),
+        # resolve it to the setting's value. This handles option-dependent logic flags that were
+        # captured from LogicExtensions classes (e.g., TimespinnerLogic).
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
+            if attr in self.settings:
+                value = self.settings[attr]
+                if isinstance(value, bool):
+                    return 'True' if value else 'False'
+                elif isinstance(value, str):
+                    return repr(value)
+                else:
+                    return str(value)
 
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
