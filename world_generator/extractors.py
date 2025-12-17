@@ -70,6 +70,7 @@ class LocationData:
     locked: bool = False  # True if item was placed via place_locked_item
     progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
     show_in_spoiler: bool = True  # Whether to show in spoiler log
+    access: Optional[Dict[str, Any]] = None  # Game-specific access data (e.g., Lingo AccessRequirements)
 
 
 @dataclass
@@ -329,6 +330,7 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
                 locked=is_locked,
                 progress_type=progress_type,
                 show_in_spoiler=show_in_spoiler,
+                access=loc_info.get('access'),  # Game-specific access data (e.g., Lingo AccessRequirements)
             )
 
             # Track original item placement for seed=1 mode
