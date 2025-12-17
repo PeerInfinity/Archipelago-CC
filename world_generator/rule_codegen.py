@@ -541,6 +541,9 @@ class RuleCodeGenerator:
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
 
+        if op_type == 'min':
+            return self._convert_min(operand)
+
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
 
@@ -595,8 +598,28 @@ class RuleCodeGenerator:
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
 
+        if op_type == 'min':
+            return self._convert_min(operand)
+
         # Fall back to converting as a rule
         return self._convert_rule(operand)
+
+    def _convert_min(self, operand: Dict[str, Any]) -> str:
+        """Convert a min() operation to MinValue rule."""
+        self.required_imports.add('MinValue')
+
+        args = operand.get('args', [])
+        if len(args) < 2:
+            # Not enough arguments, return as-is with default
+            return 'MinValue(0, 0)'
+
+        left = args[0]
+        right = args[1]
+
+        left_code = self._convert_arithmetic_operand(left)
+        right_code = self._convert_arithmetic_operand(right)
+
+        return f'MinValue({left_code}, {right_code})'
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
