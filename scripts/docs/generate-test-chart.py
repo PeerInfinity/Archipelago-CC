@@ -2211,8 +2211,8 @@ def main():
 
     # Generate summary charts (original and WorldGen)
     if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
-        # Load the exclude list with reasons
-        excluded_games = load_template_exclude_list(project_root, include_reasons=True)
+        # Load the exclude list with reasons for main tests
+        excluded_games_main = load_template_exclude_list(project_root, include_reasons=True, test_type='main')
 
         # Get metadata for intermittent failures
         minimal_meta = minimal_results.get('metadata', {}) if 'minimal_results' in locals() else None
@@ -2226,15 +2226,14 @@ def main():
         # Generate original summary with cross-link to worldgen if available
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
         wg_summary_link = './test-results-summary-worldgen.md' if has_wg_summary else None
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link, project_root=project_root)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link, project_root=project_root)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 
     # Generate WorldGen summary chart if we have any worldgen data
     if minimal_wg_data or full_wg_data or mp_wg_data or mw_wg_data:
-        # Load the exclude list with reasons (if not already loaded)
-        if 'excluded_games' not in locals():
-            excluded_games = load_template_exclude_list(project_root, include_reasons=True)
+        # Load the exclude list with reasons for worldgen tests (includes main + worldgen exclusions)
+        excluded_games_worldgen = load_template_exclude_list(project_root, include_reasons=True, test_type='all')
 
         # Get metadata for intermittent failures from worldgen results
         minimal_wg_meta = minimal_wg_results.get('metadata', {}) if 'minimal_wg_results' in locals() else None
@@ -2244,7 +2243,7 @@ def main():
 
         summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
         orig_summary_link = './test-results-summary.md'
-        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link, project_root=project_root)
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link, project_root=project_root)
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
 

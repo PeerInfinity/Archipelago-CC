@@ -226,7 +226,7 @@ Features:
 
 **Location:** `scripts/data/template-exclude-list.json`
 
-Games excluded from testing with reasons:
+Games excluded from testing, organized by test type:
 ```json
 {
   "exclude_list": [
@@ -234,9 +234,19 @@ Games excluded from testing with reasons:
     {"name": "Universal Tracker.yaml", "reason": "Not a game"},
     {"name": "Hollow Knight.yaml", "reason": "The spoiler test currently freezes"},
     {"name": "Zillion.yaml", "reason": "Uses external zilliandomizer tool"}
+  ],
+  "main_test_exclude_list": [
+    {"name": "Pokemon Emerald.yaml", "reason": "Temporarily excluded. Takes too long to process."}
+  ],
+  "worldgen_test_exclude_list": [
+    {"name": "The Witness.yaml", "reason": "Temporarily excluded. WorldGen test takes too long."}
   ]
 }
 ```
+
+- **exclude_list**: Permanent exclusions that apply to all tests
+- **main_test_exclude_list**: Games excluded from spoiler-minimal and multiclient tests
+- **worldgen_test_exclude_list**: Games excluded from world-generator tests
 
 ### World Mapping
 
