@@ -8187,6 +8187,11 @@
         ],
         "locations": []
       },
+      "Shapesanity Colorful East Windmill Mixed": {
+        "name": "Shapesanity Colorful East Windmill Mixed",
+        "exits": [],
+        "locations": []
+      },
       "Shapesanity Colorful Half Mixed": {
         "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
@@ -8194,11 +8199,6 @@
       },
       "Achievements needing a MAM": {
         "name": "Achievements needing a MAM",
-        "exits": [],
-        "locations": []
-      },
-      "Shapesanity Colorful East Windmill Mixed": {
-        "name": "Shapesanity Colorful East Windmill Mixed",
         "exits": [],
         "locations": []
       }

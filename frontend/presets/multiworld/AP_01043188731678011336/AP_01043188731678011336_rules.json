@@ -9979,14 +9979,7 @@
           },
           {
             "name": "Desert Palace - Prize",
-            "id": [
-              73886,
-              343836,
-              343837,
-              1572947,
-              1572984,
-              50943
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -10370,14 +10363,7 @@
           },
           {
             "name": "Eastern Palace - Prize",
-            "id": [
-              73885,
-              343800,
-              343801,
-              1572946,
-              1572988,
-              50942
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -12742,14 +12728,7 @@
           },
           {
             "name": "Tower of Hera - Prize",
-            "id": [
-              73893,
-              343818,
-              343819,
-              1572954,
-              1572986,
-              50950
-            ],
+            "id": null,
             "access_rule": {
               "type": "function_call",
               "function": {
@@ -16217,14 +16196,7 @@
           },
           {
             "name": "Swamp Palace - Prize",
-            "id": [
-              73888,
-              343916,
-              343917,
-              1572949,
-              1572977,
-              50945
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -16644,14 +16616,7 @@
           },
           {
             "name": "Thieves' Town - Prize",
-            "id": [
-              73894,
-              343862,
-              343863,
-              1572955,
-              1572983,
-              50951
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -17296,14 +17261,7 @@
           },
           {
             "name": "Skull Woods - Prize",
-            "id": [
-              73891,
-              343826,
-              343827,
-              1572952,
-              1572987,
-              50948
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -17931,14 +17889,7 @@
           },
           {
             "name": "Ice Palace - Prize",
-            "id": [
-              73892,
-              343898,
-              343899,
-              1572953,
-              1572979,
-              50949
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -18682,14 +18633,7 @@
           },
           {
             "name": "Misery Mire - Prize",
-            "id": [
-              73890,
-              343880,
-              343881,
-              1572951,
-              1572981,
-              50947
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -20062,14 +20006,7 @@
           },
           {
             "name": "Turtle Rock - Prize",
-            "id": [
-              73895,
-              343844,
-              343845,
-              1572956,
-              1572985,
-              50952
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -20763,14 +20700,7 @@
           },
           {
             "name": "Palace of Darkness - Prize",
-            "id": [
-              73889,
-              343808,
-              343809,
-              1572950,
-              1572989,
-              50946
-            ],
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [

@@ -504,49 +504,67 @@
                       ]
                     },
                     {
-                      "type": "or",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "and",
-                          "conditions": [
+                          "type": "set",
+                          "elements": [
                             {
                               "type": "constant",
-                              "value": true
+                              "value": "Bambi"
                             },
                             {
-                              "type": "item_check",
-                              "item": "Progressive Glide"
+                              "type": "constant",
+                              "value": "Dumbo"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Genie"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Mushu"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Simba"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Tinker Bell"
                             }
                           ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": true
                         },
                         {
                           "type": "item_check",
-                          "item": "High Jump"
+                          "item": "Progressive Glide"
                         }
                       ]
                     },
                     {
                       "type": "item_check",
-                      "item": "Monstro"
+                      "item": "High Jump"
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Simba",
-                        "Bambi",
-                        "Genie",
-                        "Dumbo",
-                        "Mushu",
-                        "Tinker Bell"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Monstro"
                 }
               ]
             },
@@ -1344,86 +1362,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
                     {
-                      "type": "helper",
-                      "name": "has_x_worlds",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": 8
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
+                      "type": "constant",
+                      "value": 8
                     },
                     {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "set",
-                          "elements": [
-                            {
-                              "type": "constant",
-                              "value": "Aero Arts"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Blizzard Arts"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Cure Arts"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Fire Arts"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Gravity Arts"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Stop Arts"
-                            },
-                            {
-                              "type": "constant",
-                              "value": "Thunder Arts"
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "state_method",
-                      "method": "has_all_counts",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": {
-                            "Progressive Aero": 1,
-                            "Progressive Blizzard": 1,
-                            "Progressive Cure": 1,
-                            "Progressive Fire": 1,
-                            "Progressive Gravity": 1,
-                            "Progressive Stop": 1,
-                            "Progressive Thunder": 1
-                          }
-                        }
-                      ]
+                      "type": "constant",
+                      "value": 0
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -1432,16 +1388,55 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Fire Arts",
-                        "Blizzard Arts",
-                        "Thunder Arts",
-                        "Cure Arts",
-                        "Gravity Arts",
-                        "Stop Arts",
-                        "Aero Arts"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Aero Arts"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Blizzard Arts"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Cure Arts"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Fire Arts"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Gravity Arts"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Stop Arts"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Thunder Arts"
+                        }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_all_counts",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": {
+                        "Progressive Aero": 1,
+                        "Progressive Blizzard": 1,
+                        "Progressive Cure": 1,
+                        "Progressive Fire": 1,
+                        "Progressive Gravity": 1,
+                        "Progressive Stop": 1,
+                        "Progressive Thunder": 1
+                      }
                     }
                   ]
                 }
@@ -11354,8 +11349,8 @@
                   "value": true
                 },
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "name",
+                  "name": "has_basic_tools"
                 },
                 {
                   "type": "state_method",
@@ -15206,8 +15201,8 @@
                       "value": true
                     },
                     {
-                      "type": "constant",
-                      "value": true
+                      "type": "name",
+                      "name": "has_basic_tools"
                     },
                     {
                       "type": "item_check",
@@ -15472,8 +15467,8 @@
                       "value": true
                     },
                     {
-                      "type": "constant",
-                      "value": true
+                      "type": "name",
+                      "name": "has_basic_tools"
                     },
                     {
                       "type": "state_method",
@@ -26636,9 +26631,37 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_defensive_tools",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_all_counts",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": {
+                            "Dodge Roll": 1,
+                            "Leaf Bracer": 1,
+                            "Progressive Cure": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any_count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": {
+                            "Second Chance": 1,
+                            "MP Rage": 1,
+                            "Progressive Aero": 2
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
@@ -30559,443 +30582,5 @@
       }
     }
   },
-  "helpers": {
-    "1": {
-      "has_x_worlds": {
-        "params": [
-          "num_of_worlds",
-          "keyblades_unlock_chests",
-          "logic_difficulty",
-          "hundred_acre_wood"
-        ],
-        "body": {
-          "type": "if_statement",
-          "test": {
-            "type": "compare",
-            "left": {
-              "type": "name",
-              "name": "logic_difficulty"
-            },
-            "op": ">=",
-            "right": {
-              "type": "constant",
-              "value": 15
-            }
-          },
-          "body": [
-            {
-              "type": "return",
-              "value": {
-                "type": "constant",
-                "value": true
-              }
-            }
-          ],
-          "orelse": [
-            {
-              "type": "assign",
-              "name": "worlds_acquired",
-              "value": {
-                "type": "constant",
-                "value": 0.0
-              }
-            },
-            {
-              "type": "for_range",
-              "count": {
-                "type": "constant",
-                "value": 13
-              },
-              "body": [
-                {
-                  "type": "if_statement",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "subscript",
-                      "value": {
-                        "type": "constant",
-                        "value": [
-                          "Destiny Islands",
-                          "Traverse Town",
-                          "Wonderland",
-                          "Olympus Coliseum",
-                          "Deep Jungle",
-                          "Agrabah",
-                          "Monstro",
-                          "Atlantica",
-                          "Halloween Town",
-                          "Neverland",
-                          "Hollow Bastion",
-                          "End of the World",
-                          "100 Acre Wood"
-                        ]
-                      },
-                      "index": {
-                        "type": "name",
-                        "name": "i"
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": "Traverse Town"
-                    }
-                  },
-                  "body": [
-                    {
-                      "type": "assign",
-                      "name": "worlds_acquired",
-                      "value": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "name",
-                          "name": "worlds_acquired"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "constant",
-                          "value": 0.5
-                        }
-                      }
-                    },
-                    {
-                      "type": "assign",
-                      "name": "worlds_acquired",
-                      "value": {
-                        "type": "conditional",
-                        "test": {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "not",
-                              "condition": {
-                                "type": "name",
-                                "name": "keyblades_unlock_chests"
-                              }
-                            },
-                            {
-                              "type": "item_check",
-                              "item": {
-                                "type": "subscript",
-                                "value": {
-                                  "type": "constant",
-                                  "value": [
-                                    "Oathkeeper",
-                                    "Lionheart",
-                                    "Lady Luck",
-                                    "Olympia",
-                                    "Jungle King",
-                                    "Three Wishes",
-                                    "Wishing Star",
-                                    "Crabclaw",
-                                    "Pumpkinhead",
-                                    "Fairy Harp",
-                                    "Divine Rose",
-                                    "Oblivion",
-                                    "Spellbinder"
-                                  ]
-                                },
-                                "index": {
-                                  "type": "name",
-                                  "name": "i"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "name",
-                            "name": "worlds_acquired"
-                          },
-                          "op": "+",
-                          "right": {
-                            "type": "constant",
-                            "value": 0.5
-                          }
-                        },
-                        "if_false": {
-                          "type": "name",
-                          "name": "worlds_acquired"
-                        }
-                      }
-                    }
-                  ],
-                  "orelse": [
-                    {
-                      "type": "if_statement",
-                      "test": {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "compare",
-                            "left": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "constant",
-                                "value": [
-                                  "Destiny Islands",
-                                  "Traverse Town",
-                                  "Wonderland",
-                                  "Olympus Coliseum",
-                                  "Deep Jungle",
-                                  "Agrabah",
-                                  "Monstro",
-                                  "Atlantica",
-                                  "Halloween Town",
-                                  "Neverland",
-                                  "Hollow Bastion",
-                                  "End of the World",
-                                  "100 Acre Wood"
-                                ]
-                              },
-                              "index": {
-                                "type": "name",
-                                "name": "i"
-                              }
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": "100 Acre Wood"
-                            }
-                          },
-                          {
-                            "type": "name",
-                            "name": "hundred_acre_wood"
-                          }
-                        ]
-                      },
-                      "body": [
-                        {
-                          "type": "if_statement",
-                          "test": {
-                            "type": "item_check",
-                            "item": "Progressive Fire"
-                          },
-                          "body": [
-                            {
-                              "type": "assign",
-                              "name": "worlds_acquired",
-                              "value": {
-                                "type": "binary_op",
-                                "left": {
-                                  "type": "name",
-                                  "name": "worlds_acquired"
-                                },
-                                "op": "+",
-                                "right": {
-                                  "type": "constant",
-                                  "value": 0.5
-                                }
-                              }
-                            },
-                            {
-                              "type": "assign",
-                              "name": "worlds_acquired",
-                              "value": {
-                                "type": "conditional",
-                                "test": {
-                                  "type": "or",
-                                  "conditions": [
-                                    {
-                                      "type": "not",
-                                      "condition": {
-                                        "type": "name",
-                                        "name": "keyblades_unlock_chests"
-                                      }
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": {
-                                        "type": "subscript",
-                                        "value": {
-                                          "type": "constant",
-                                          "value": [
-                                            "Oathkeeper",
-                                            "Lionheart",
-                                            "Lady Luck",
-                                            "Olympia",
-                                            "Jungle King",
-                                            "Three Wishes",
-                                            "Wishing Star",
-                                            "Crabclaw",
-                                            "Pumpkinhead",
-                                            "Fairy Harp",
-                                            "Divine Rose",
-                                            "Oblivion",
-                                            "Spellbinder"
-                                          ]
-                                        },
-                                        "index": {
-                                          "type": "name",
-                                          "name": "i"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                },
-                                "if_true": {
-                                  "type": "binary_op",
-                                  "left": {
-                                    "type": "name",
-                                    "name": "worlds_acquired"
-                                  },
-                                  "op": "+",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": 0.5
-                                  }
-                                },
-                                "if_false": {
-                                  "type": "name",
-                                  "name": "worlds_acquired"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      ],
-                      "orelse": [
-                        {
-                          "type": "if_statement",
-                          "test": {
-                            "type": "item_check",
-                            "item": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "constant",
-                                "value": [
-                                  "Destiny Islands",
-                                  "Traverse Town",
-                                  "Wonderland",
-                                  "Olympus Coliseum",
-                                  "Deep Jungle",
-                                  "Agrabah",
-                                  "Monstro",
-                                  "Atlantica",
-                                  "Halloween Town",
-                                  "Neverland",
-                                  "Hollow Bastion",
-                                  "End of the World",
-                                  "100 Acre Wood"
-                                ]
-                              },
-                              "index": {
-                                "type": "name",
-                                "name": "i"
-                              }
-                            }
-                          },
-                          "body": [
-                            {
-                              "type": "assign",
-                              "name": "worlds_acquired",
-                              "value": {
-                                "type": "binary_op",
-                                "left": {
-                                  "type": "name",
-                                  "name": "worlds_acquired"
-                                },
-                                "op": "+",
-                                "right": {
-                                  "type": "constant",
-                                  "value": 0.5
-                                }
-                              }
-                            },
-                            {
-                              "type": "assign",
-                              "name": "worlds_acquired",
-                              "value": {
-                                "type": "conditional",
-                                "test": {
-                                  "type": "or",
-                                  "conditions": [
-                                    {
-                                      "type": "not",
-                                      "condition": {
-                                        "type": "name",
-                                        "name": "keyblades_unlock_chests"
-                                      }
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": {
-                                        "type": "subscript",
-                                        "value": {
-                                          "type": "constant",
-                                          "value": [
-                                            "Oathkeeper",
-                                            "Lionheart",
-                                            "Lady Luck",
-                                            "Olympia",
-                                            "Jungle King",
-                                            "Three Wishes",
-                                            "Wishing Star",
-                                            "Crabclaw",
-                                            "Pumpkinhead",
-                                            "Fairy Harp",
-                                            "Divine Rose",
-                                            "Oblivion",
-                                            "Spellbinder"
-                                          ]
-                                        },
-                                        "index": {
-                                          "type": "name",
-                                          "name": "i"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                },
-                                "if_true": {
-                                  "type": "binary_op",
-                                  "left": {
-                                    "type": "name",
-                                    "name": "worlds_acquired"
-                                  },
-                                  "op": "+",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": 0.5
-                                  }
-                                },
-                                "if_false": {
-                                  "type": "name",
-                                  "name": "worlds_acquired"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "var": "i"
-            },
-            {
-              "type": "return",
-              "value": {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "worlds_acquired"
-                },
-                "op": ">=",
-                "right": {
-                  "type": "name",
-                  "name": "num_of_worlds"
-                }
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
+  "helpers": {}
 }

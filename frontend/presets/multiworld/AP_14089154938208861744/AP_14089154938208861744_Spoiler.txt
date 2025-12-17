@@ -1496,8 +1496,8 @@ Alpine Skyline - Bird Pass Fork (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Goat Village: Below Hookpoint (Player1)
@@ -1506,8 +1506,8 @@ Alpine Skyline - Goat Village: Below Hookpoint (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Mystifying Time Mesa: Zipline (Player1)
@@ -1621,8 +1621,8 @@ Alpine Skyline - Windy Passage (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Badge Seller - Item 1 (Player1)
@@ -3027,8 +3027,8 @@ TIHS Access (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread
 TOD Access (Player1)
         Menu -> Save File -> Spaceship
