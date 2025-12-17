@@ -29,11 +29,15 @@ class RuleCodeGenerator:
         self._inline_counter = 0
 
     def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
-                     helper_params: Dict[str, List[str]] = None) -> None:
-        """Set known helpers and optionally their bodies and params for explain support."""
+                     helper_params: Dict[str, List[str]] = None,
+                     helper_defaults: Dict[str, Dict[str, Any]] = None,
+                     placements: Dict[str, str] = None) -> None:
+        """Set known helpers and optionally their bodies, params, defaults, and placements for explain support."""
         self.known_helpers = helper_names
         self.helper_bodies = helper_bodies or {}
         self.helper_params = helper_params or {}  # helper_name -> list of param names
+        self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
+        self.placements = placements or {}  # location_name -> item_name
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None) -> Dict[str, Any]:
         """
@@ -80,12 +84,17 @@ class RuleCodeGenerator:
                 if helper_name in self.helper_params:
                     params = self.helper_params[helper_name]
                     args = rule.get('args', [])
-                    if params and args:
+                    defaults = self.helper_defaults.get(helper_name, {})
+                    if params:
                         # Create a mapping from parameter names to argument expressions
+                        # Use provided args first, then fall back to defaults
                         param_to_arg = {}
                         for i, param in enumerate(params):
                             if i < len(args):
                                 param_to_arg[param] = args[i]
+                            elif param in defaults:
+                                # Convert default value to CC format constant
+                                param_to_arg[param] = {'type': 'constant', 'value': defaults[param]}
                         # Substitute parameter references in the expanded body
                         if param_to_arg:
                             expanded_body = self._substitute_names(expanded_body, param_to_arg)
@@ -124,6 +133,51 @@ class RuleCodeGenerator:
                 if attr in self.settings:
                     return {'type': 'constant', 'value': self.settings[attr]}
 
+        # If this is a placement_lookup, resolve it using the known placements
+        # This is critical because worldgen presets don't have item data in locations
+        if rule_type == 'placement_lookup':
+            location_rule = rule.get('location', {})
+            # Evaluate the location name if it's a constant
+            if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+                location_name = location_rule.get('value', '')
+                if location_name and location_name in self.placements:
+                    item_name = self.placements[location_name]
+                    # Return the placement as [item_name, player] tuple (player is always 1 for worldgen)
+                    return {
+                        'type': 'list',
+                        'value': [
+                            {'type': 'constant', 'value': item_name},
+                            {'type': 'constant', 'value': 1}
+                        ]
+                    }
+            # Location not found in placements - return null constant
+            # This allows the conditional to properly branch to if_false
+            return {'type': 'constant', 'value': None}
+
+        # For conditional rules, try to statically evaluate the test after expansion
+        # ONLY if the test is a placement_lookup comparison (to avoid JavaScript array comparison issues)
+        # Be conservative - don't optimize away complex runtime logic
+        if rule_type == 'conditional':
+            expanded_test = self._expand_helper_refs(rule.get('test', {}), visited)
+            expanded_if_true = self._expand_helper_refs(rule.get('if_true', {}), visited)
+            expanded_if_false = self._expand_helper_refs(rule.get('if_false', {}), visited)
+
+            # Only try static evaluation for placement_lookup comparisons
+            # These need to be evaluated statically because JS can't compare arrays by value
+            if self._is_placement_comparison(expanded_test):
+                static_result = self._try_static_eval(expanded_test)
+                if static_result is True:
+                    return expanded_if_true
+                elif static_result is False:
+                    return expanded_if_false
+            # Can't statically evaluate - return the expanded conditional
+            return {
+                'type': 'conditional',
+                'test': expanded_test,
+                'if_true': expanded_if_true,
+                'if_false': expanded_if_false
+            }
+
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
         for key, value in rule.items():
@@ -135,6 +189,105 @@ class RuleCodeGenerator:
                     for item in value
                 ]
         return result
+
+    def _is_placement_comparison(self, rule: Dict[str, Any]) -> bool:
+        """
+        Check if a rule is a comparison involving placement data (list constants).
+
+        Placement lookups get resolved to list constants like [item_name, player].
+        These need static evaluation because JavaScript can't compare arrays by value.
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        if rule.get('type') != 'compare':
+            return False
+
+        left = rule.get('left', {})
+        right = rule.get('right', {})
+
+        # Check if either side is a list constant (from resolved placement_lookup)
+        def is_list_constant(r):
+            return isinstance(r, dict) and r.get('type') == 'list'
+
+        return is_list_constant(left) or is_list_constant(right)
+
+    def _try_static_eval(self, rule: Dict[str, Any]) -> Optional[bool]:
+        """
+        Try to statically evaluate a rule to a boolean value.
+
+        This is used to optimize conditionals at worldgen time when the test
+        can be fully evaluated. Returns True, False, or None if can't evaluate.
+
+        Args:
+            rule: Rule dict to evaluate
+
+        Returns:
+            True, False, or None if the rule can't be statically evaluated
+        """
+        if not isinstance(rule, dict):
+            return None
+
+        rule_type = rule.get('type', '')
+
+        if rule_type == 'constant':
+            value = rule.get('value')
+            if isinstance(value, bool):
+                return value
+            return None
+
+        if rule_type == 'compare':
+            left = self._try_static_value(rule.get('left', {}))
+            right = self._try_static_value(rule.get('right', {}))
+            op = rule.get('op', '==')
+
+            if left is None or right is None:
+                return None
+
+            # Do deep comparison for lists/tuples
+            if op == '==':
+                return self._deep_equals(left, right)
+            elif op == '!=':
+                return not self._deep_equals(left, right)
+
+            return None
+
+        return None
+
+    def _try_static_value(self, rule: Dict[str, Any]) -> Any:
+        """
+        Try to extract a static value from a rule.
+
+        Returns the value or None if not statically evaluable.
+        """
+        if not isinstance(rule, dict):
+            return None
+
+        rule_type = rule.get('type', '')
+
+        if rule_type == 'constant':
+            return rule.get('value')
+
+        if rule_type == 'list':
+            values = []
+            for item in rule.get('value', []):
+                val = self._try_static_value(item)
+                if val is None:
+                    return None
+                values.append(val)
+            return values
+
+        return None
+
+    def _deep_equals(self, a: Any, b: Any) -> bool:
+        """Deep equality comparison that works with lists."""
+        if type(a) != type(b):
+            return False
+        if isinstance(a, list):
+            if len(a) != len(b):
+                return False
+            return all(self._deep_equals(x, y) for x, y in zip(a, b))
+        return a == b
 
     def _substitute_names(self, rule: Dict[str, Any], name_map: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -351,6 +504,7 @@ class RuleCodeGenerator:
             'comparison': self._convert_compare,
             'conditional': self._convert_conditional,
             'name': self._convert_name,
+            'placement_lookup': self._convert_placement_lookup,
         }
 
         converter = converters.get(rule_type)
@@ -963,6 +1117,25 @@ class RuleCodeGenerator:
         self.required_imports.add('True_')
         return 'True_()'
 
+    def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
+        """Convert placement_lookup to resolved placement data.
+
+        Placement lookups check what item is at a specific location.
+        We resolve these at code generation time using the known placements.
+        """
+        location_rule = rule.get('location', {})
+
+        # Get the location name
+        if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+            location_name = location_rule.get('value', '')
+            if location_name and location_name in self.placements:
+                item_name = self.placements[location_name]
+                # Return as a Python list [item_name, player] - player is always 1 for worldgen
+                return f'[{repr(item_name)}, 1]'
+
+        # Location not found - return None which will make comparisons fail correctly
+        return 'None'
+
     def _convert_conditional(self, rule: Dict[str, Any]) -> str:
         """Convert conditional rule to Conditional()."""
         self.required_imports.add('Conditional')
@@ -1047,10 +1220,15 @@ class HelperCodeGenerator:
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
         self.uses_math: bool = False  # Track if math functions are used
+        self.placements: Dict[str, str] = {}  # location_name -> item_name
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
         self.known_helpers = helper_names
+
+    def set_placements(self, placements: Dict[str, str]) -> None:
+        """Set the placement data for resolving placement_lookup rules."""
+        self.placements = placements or {}
 
     def get_function_name(self, helper_name: str) -> str:
         """
@@ -1352,6 +1530,7 @@ class HelperCodeGenerator:
             'min': self._expr_min,
             'max': self._expr_max,
             'block': self._expr_block,
+            'placement_lookup': self._expr_placement_lookup,
         }
 
         handler = handlers.get(expr_type)
@@ -1382,6 +1561,25 @@ class HelperCodeGenerator:
         # If not found in settings, default to False for safety
         # This prevents inaccessible regions from being created with always-True rules
         return 'False'
+
+    def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
+        """Resolve a placement_lookup to the actual item at that location.
+
+        Placement lookups check what item is at a specific location.
+        We resolve these at code generation time using the known placements.
+        """
+        location_rule = expr.get('location', {})
+
+        # Get the location name
+        if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+            location_name = location_rule.get('value', '')
+            if location_name and location_name in self.placements:
+                item_name = self.placements[location_name]
+                # Return as a Python list [item_name, player] - player is always 1 for worldgen
+                return f'[{repr(item_name)}, 1]'
+
+        # Location not found - return None which will make comparisons fail correctly
+        return 'None'
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""

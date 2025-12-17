@@ -445,11 +445,19 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.params
     }
 
+    # Build helper defaults dict for default parameter values
+    helper_defaults = {
+        name: helper_data.defaults
+        for name, helper_data in data.helpers.items()
+        if helper_data.defaults
+    }
+
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
-    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params)
+    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
     helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
     helper_generator.set_known_helpers(set(data.helpers.keys()))
+    helper_generator.set_placements(data.original_placements)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
