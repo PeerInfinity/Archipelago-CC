@@ -1106,6 +1106,7 @@ class HelperCodeGenerator:
             'sum_of': self._expr_sum_of,
             'min': self._expr_min,
             'max': self._expr_max,
+            'block': self._expr_block,
         }
 
         handler = handlers.get(expr_type)
@@ -1347,6 +1348,18 @@ class HelperCodeGenerator:
             return '0'
         arg_exprs = [self._generate_expression(a) for a in args]
         return f"max({', '.join(arg_exprs)})"
+
+    def _expr_block(self, expr: Dict[str, Any]) -> str:
+        """Generate expression from a block of statements.
+
+        Blocks contain multiple statements (assignments, if statements, returns)
+        that would require complex partial evaluation to simplify properly.
+
+        For safety in worldgen where we may not have all the context,
+        we return True for block expressions. This keeps locations accessible
+        by default, which is the safer behavior.
+        """
+        return 'True'
 
     def _expr_helper(self, expr: Dict[str, Any]) -> str:
         """Generate helper function call."""
