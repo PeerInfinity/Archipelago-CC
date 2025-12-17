@@ -4729,9 +4729,11 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       }
     }
 
-    // Count: get the count of an item (used as operand in Compare/Arithmetic)
+    // Count/CountItem: get the count of an item (used as operand in Compare/Arithmetic)
     // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
-    case 'Count': {
+    // Rule Builder: {"rule": "CountItem", "args": {"item_name": "Key"}}
+    case 'Count':
+    case 'CountItem': {
       const itemName = args.item_name;
       if (!itemName) {
         log('warn', '[evaluateRuleBuilderRule] Count rule missing item_name');

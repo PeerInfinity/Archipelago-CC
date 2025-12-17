@@ -144,6 +144,17 @@ class WorldGenerator:
             '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
         }
 
+        # Export settings for game-specific export handlers
+        # This allows worldgen exports to reproduce the same settings as the source
+        with open(self.json_path, 'r') as f:
+            source_json = json.load(f)
+        source_settings = source_json.get('settings', {}).get('1', {})
+        if source_settings:
+            settings_path = output_dir / '_worldgen_settings.json'
+            if not dry_run:
+                settings_path.write_text(json.dumps(source_settings, indent=2))
+                logger.info(f"Wrote settings to {settings_path}")
+
         for filename, content in files.items():
             file_path = output_dir / filename
 

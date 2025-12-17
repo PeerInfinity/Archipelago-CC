@@ -407,9 +407,13 @@ class LADXGameExportHandler(GenericGameExportHandler):
             }
         ]
 
-        # Initialize RUPEES accumulator to 0
-        game_info['prog_items_init'] = {
-            'RUPEES': 0
-        }
+        # Initialize RUPEES accumulator - use world's value if set, otherwise 0
+        # WorldGen worlds may precollect RUPEES for rule evaluation
+        if hasattr(world, 'prog_items_init') and world.prog_items_init:
+            game_info['prog_items_init'] = dict(world.prog_items_init)
+        else:
+            game_info['prog_items_init'] = {
+                'RUPEES': 0
+            }
 
         return game_info

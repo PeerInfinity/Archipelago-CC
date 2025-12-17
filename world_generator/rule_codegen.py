@@ -36,15 +36,16 @@ class RuleCodeGenerator:
         """
         Recursively expand helper references in a rule body.
 
-        This ensures body_data is self-contained and doesn't reference other helpers,
-        which allows the frontend to evaluate rules without needing helper lookups.
+        This ensures body_data is self-contained and doesn't reference other helpers
+        or setting values, which allows the frontend to evaluate rules without needing
+        helper or settings lookups.
 
         Args:
             rule: Rule dict in CC format
             visited: Set of helper names already visited (for cycle detection)
 
         Returns:
-            Rule dict with helper references expanded to their bodies
+            Rule dict with helper references and setting_value references expanded
         """
         if visited is None:
             visited = set()
@@ -66,6 +67,25 @@ class RuleCodeGenerator:
                 return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
             # Unknown helper - return as-is
             return rule
+
+        # If this is a setting_value reference, resolve it to a constant
+        # This is critical because worldgen worlds don't have the original game options
+        if rule_type == 'setting_value':
+            setting_name = rule.get('setting', '')
+            if setting_name in self.settings:
+                return {'type': 'constant', 'value': self.settings[setting_name]}
+            # Unknown setting - return as-is (will evaluate to undefined in frontend)
+            return rule
+
+        # If this is an attribute access on a setting_value (e.g., world.options.goal.value),
+        # resolve it to a constant
+        if rule_type == 'attribute':
+            obj = rule.get('object', {})
+            attr = rule.get('attr', '')
+            if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
+                setting_name = obj.get('setting', '')
+                if setting_name in self.settings:
+                    return {'type': 'constant', 'value': self.settings[setting_name]}
 
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
@@ -462,6 +482,13 @@ class RuleCodeGenerator:
         if op_type == 'constant':
             return repr(operand.get('value'))
 
+        if op_type == 'count_item':
+            # Handle count_item type from rules.json export
+            item_name = operand.get('item', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+
         if op_type == 'state_method':
             method = operand.get('method', '')
             args = operand.get('args', [])
@@ -509,6 +536,13 @@ class RuleCodeGenerator:
 
         if op_type == 'constant':
             return repr(operand.get('value'))
+
+        if op_type == 'count_item':
+            # Handle count_item type from rules.json export
+            item_name = operand.get('item', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
 
         if op_type == 'state_method':
             method = operand.get('method', '')
@@ -830,7 +864,14 @@ class HelperCodeGenerator:
             else:
                 sig_params.append(param)
 
-        signature = f"def {func_name}({', '.join(sig_params)}) -> bool:"
+        # Determine return type based on body structure
+        return_type = "bool"
+        if isinstance(body, dict):
+            body_type = body.get('type', '')
+            if body_type in ('sum_of', 'count_item', 'binary_op', 'binop', 'negate'):
+                return_type = "int"
+
+        signature = f"def {func_name}({', '.join(sig_params)}) -> {return_type}:"
 
         # Generate function body
         body_code = self._generate_body(body)
@@ -1061,6 +1102,7 @@ class HelperCodeGenerator:
             'group_count': self._expr_group_count,
             'setting_value': self._expr_setting_value,
             'prog_item_count': self._expr_prog_item_count,
+            'sum_of': self._expr_sum_of,
         }
 
         handler = handlers.get(expr_type)
@@ -1503,6 +1545,34 @@ class HelperCodeGenerator:
         key = expr.get('key', '')
         key_escaped = key.replace('\\', '\\\\').replace("'", "\\'")
         return f"state.prog_items[player].get('{key_escaped}', 0)"
+
+    def _expr_sum_of(self, expr: Dict[str, Any]) -> str:
+        """Generate sum() expression from sum_of CC format.
+
+        CC export format: {
+            "type": "sum_of",
+            "iterator_info": {
+                "target": {...},  // tuple of variable names
+                "iterator": {...}  // expression to iterate over
+            },
+            "element_rule": {...}  // expression for each element
+        }
+        """
+        iterator_info = expr.get('iterator_info', {})
+        target = iterator_info.get('target', {})
+        iterator = iterator_info.get('iterator', {})
+        element_rule = expr.get('element_rule', {'type': 'constant', 'value': 0})
+
+        # Generate target variable names
+        target_expr = self._generate_expression(target)
+
+        # Generate iterator expression
+        iterator_expr = self._generate_expression(iterator)
+
+        # Generate element rule expression
+        element_expr = self._generate_expression(element_rule)
+
+        return f"sum({element_expr} for {target_expr} in {iterator_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
         """Extract constant value from a potential constant wrapper."""

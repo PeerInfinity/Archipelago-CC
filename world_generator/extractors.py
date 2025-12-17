@@ -44,6 +44,7 @@ class GameMetadata:
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
+    collect_all_items_for_rules: bool = False  # When True, Has() rules check all items, not just progression
 
 
 @dataclass
@@ -70,6 +71,7 @@ class LocationData:
     locked: bool = False  # True if item was placed via place_locked_item
     progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
     show_in_spoiler: bool = True  # Whether to show in spoiler log
+    access: Optional[Dict[str, Any]] = None  # Game-specific access data (e.g., Lingo AccessRequirements)
 
 
 @dataclass
@@ -230,6 +232,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         slot_data_fields=slot_data_fields,
         game_options=game_options,
         resolved_settings=resolved_settings,
+        collect_all_items_for_rules=settings.get('collect_all_items_for_rules', False),
     )
 
 
@@ -329,6 +332,7 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
                 locked=is_locked,
                 progress_type=progress_type,
                 show_in_spoiler=show_in_spoiler,
+                access=loc_info.get('access'),  # Game-specific access data (e.g., Lingo AccessRequirements)
             )
 
             # Track original item placement for seed=1 mode
@@ -689,6 +693,19 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
                 # Also update prog_items_init so the frontend test world matches
                 # the original sphere log (which has the precollected total at sphere 0)
                 prog_items_init[target] = total
+
+    # Extract QP items for OSRS-like games that have quest points
+    # Pattern: "N QP (Quest Name)" where N is the quest point value
+    import re
+    qp_pattern = re.compile(r'^(\d+)\s*QP\s*\((.+)\)$')
+    qp_items = {}
+    for item_name in items.keys():
+        match = qp_pattern.match(item_name)
+        if match:
+            qp_value = int(match.group(1))
+            qp_items[item_name] = qp_value
+    if qp_items:
+        metadata.resolved_settings['qp_items'] = qp_items
 
     return ExtractedData(
         metadata=metadata,

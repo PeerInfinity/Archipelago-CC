@@ -1354,6 +1354,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             if game_handler and hasattr(game_handler, 'set_exit_context'):
                                 game_handler.set_exit_context(exit_name)
 
+                            # Set full exit info for handlers that need connected_region (e.g., Lingo worldgen)
+                            connected_region = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
+                            if game_handler and hasattr(game_handler, 'set_exit_info'):
+                                game_handler.set_exit_info(exit_name, connected_region)
+
                             if hasattr(exit, 'access_rule') and exit.access_rule:
                                 # Check if the game handler can provide an unwrapped version of the lambda
                                 # (e.g., SM unwraps Cache.ldeco decorators to avoid 'ret' variables)
@@ -1485,7 +1490,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                             location_data = {
                                 'name': location_name,
-                                'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
+                                'id': getattr(location, 'address', None),  # Use actual location address (None for events)
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
                                 'item': None,
