@@ -485,8 +485,18 @@ def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str
     result: Dict[str, List[str]] = {}
 
     for prog_name, prog_info in progression_data.items():
+        # Skip additive type mappings - they use a different format and are handled
+        # separately by compute_state_counter_accumulator_rules
+        if prog_info.get('type') == 'additive':
+            continue
+
         # prog_info has structure: {'items': [{'name': '...', 'level': N}, ...], 'base_item': '...'}
         items_list = prog_info.get('items', [])
+
+        # Ensure items_list is actually a list (not a dict from additive mappings)
+        if not isinstance(items_list, list):
+            continue
+
         # Sort by level to ensure correct order
         sorted_items = sorted(items_list, key=lambda x: x.get('level', 0))
         component_names = [item.get('name') for item in sorted_items if item.get('name')]
