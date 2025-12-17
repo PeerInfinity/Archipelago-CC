@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "game_name": "Overcooked! 2 WorldGen",
+  "game_name": "Overcooked\\! 2 WorldGen",
   "game_directory": "overcooked2_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
@@ -41,64 +41,239 @@
             "name": "Overworld -> 1-2",
             "connected_region": "1-2",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "1-1 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "1-1 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-3",
             "connected_region": "1-3",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "1-2 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 7
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "1-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-4",
             "connected_region": "1-4",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "1-3 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 16
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "1-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-5",
             "connected_region": "1-5",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "1-4 Level Complete",
-                  "Yellow Ramp"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 28
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "1-4 Level Complete",
+                      "Yellow Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-6",
             "connected_region": "1-6",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "1-5 Level Complete",
-                  "Yellow Ramp"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 44
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "1-5 Level Complete",
+                      "Yellow Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
@@ -116,6 +291,35 @@
               "rule": "And",
               "options": [],
               "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 2
+                  }
+                },
                 {
                   "rule": "Or",
                   "options": [],
@@ -159,6 +363,35 @@
               "options": [],
               "children": [
                 {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 9
+                  }
+                },
+                {
                   "rule": "Or",
                   "options": [],
                   "children": [
@@ -197,36 +430,141 @@
             "name": "Overworld -> 2-4",
             "connected_region": "2-4",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "2-3 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 18
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "2-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-5",
             "connected_region": "2-5",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "2-4 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 31
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "2-4 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-6",
             "connected_region": "2-6",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "2-5 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 47
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "2-5 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -245,68 +583,243 @@
             "name": "Overworld -> 3-2",
             "connected_region": "3-2",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "3-1 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "3-1 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-3",
             "connected_region": "3-3",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "3-2 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 10
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "3-2 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-4",
             "connected_region": "3-4",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "3-3 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 20
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "3-3 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-5",
             "connected_region": "3-5",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "3-4 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 33
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "3-4 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-6",
             "connected_region": "3-6",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "3-5 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 50
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "3-5 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -321,69 +834,268 @@
             "name": "Overworld -> 4-2",
             "connected_region": "4-2",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "4-1 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "4-1 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-3",
             "connected_region": "4-3",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "4-2 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 11
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "4-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-4",
             "connected_region": "4-4",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "4-3 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 22
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "4-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-5",
             "connected_region": "4-5",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "4-4 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 36
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "4-4 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-6",
             "connected_region": "4-6",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "4-5 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 53
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "4-5 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-1",
             "connected_region": "5-1",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Compare",
               "options": [],
-              "args": {}
+              "args": {
+                "left": {
+                  "rule": "Arithmetic",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "options": [],
+                      "args": {
+                        "item_name": "Star"
+                      }
+                    },
+                    "op": "+",
+                    "right": {
+                      "rule": "CountItem",
+                      "options": [],
+                      "args": {
+                        "item_name": "Bonus Star"
+                      }
+                    }
+                  }
+                },
+                "op": ">=",
+                "right": 1
+              }
             }
           },
           {
@@ -393,6 +1105,35 @@
               "rule": "And",
               "options": [],
               "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 5
+                  }
+                },
                 {
                   "rule": "Or",
                   "options": [],
@@ -432,99 +1173,344 @@
             "name": "Overworld -> 5-3",
             "connected_region": "5-3",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "5-2 Level Complete",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 13
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "5-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-4",
             "connected_region": "5-4",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "5-3 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 24
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "5-3 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-5",
             "connected_region": "5-5",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "5-4 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 38
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "5-4 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-6",
             "connected_region": "5-6",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "5-5 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 56
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "5-5 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-1",
             "connected_region": "6-1",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Pink Ramp",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 1
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Pink Ramp",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-2",
             "connected_region": "6-2",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-1 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 6
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-3",
             "connected_region": "6-3",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-2 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 15
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-2 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
@@ -534,6 +1520,35 @@
               "rule": "And",
               "options": [],
               "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 26
+                  }
+                },
                 {
                   "rule": "Or",
                   "options": [],
@@ -573,34 +1588,104 @@
             "name": "Overworld -> 6-5",
             "connected_region": "6-5",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-1 Level Complete",
-                  "Red Ramp",
-                  "6-4 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 41
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete",
+                      "Red Ramp",
+                      "6-4 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-6",
             "connected_region": "6-6",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-1 Level Complete",
-                  "Red Ramp",
-                  "6-5 Level Complete"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 60
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete",
+                      "Red Ramp",
+                      "6-5 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
@@ -734,12 +1819,12 @@
               "args": {}
             },
             "item": {
-              "name": "Progressive Dash",
+              "name": "Fire Extinguisher",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "1-1 Level Completed",
@@ -829,12 +1914,12 @@
               "args": {}
             },
             "item": {
-              "name": "Coin Purse",
+              "name": "Bonus Star",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "1-2 Level Completed",
@@ -929,7 +2014,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "1-3 Level Completed",
@@ -1019,12 +2104,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-8",
+              "name": "Larger Tip Jar",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "1-4 Level Completed",
@@ -1114,12 +2199,12 @@
               "args": {}
             },
             "item": {
-              "name": "Progressive Throw/Catch",
+              "name": "Emote Wheel",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "1-5 Level Completed",
@@ -1209,12 +2294,12 @@
               "args": {}
             },
             "item": {
-              "name": "Faster Condiment/Drink Switch",
+              "name": "Control Stick Batteries",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "1-6 Level Completed",
@@ -1304,12 +2389,12 @@
               "args": {}
             },
             "item": {
-              "name": "Fire Extinguisher",
+              "name": "Faster Respawn Time",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "2-1 Level Completed",
@@ -1399,12 +2484,12 @@
               "args": {}
             },
             "item": {
-              "name": "Emote Wheel",
+              "name": "Bonus Star",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "2-2 Level Completed",
@@ -1494,12 +2579,12 @@
               "args": {}
             },
             "item": {
-              "name": "Sharp Knife",
+              "name": "Calmer Unbread",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "2-3 Level Completed",
@@ -1589,12 +2674,12 @@
               "args": {}
             },
             "item": {
-              "name": "Wok Wheels",
+              "name": "Green Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "2-4 Level Completed",
@@ -1684,12 +2769,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-3",
+              "name": "Progressive Dash",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "2-5 Level Completed",
@@ -1779,12 +2864,12 @@
               "args": {}
             },
             "item": {
-              "name": "Yellow Ramp",
+              "name": "Kevin-8",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "2-6 Level Completed",
@@ -1874,12 +2959,12 @@
               "args": {}
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Kevin-2",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "3-1 Level Completed",
@@ -1969,12 +3054,12 @@
               "args": {}
             },
             "item": {
-              "name": "Progressive Throw/Catch",
+              "name": "Order Lookahead",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "3-2 Level Completed",
@@ -2064,12 +3149,12 @@
               "args": {}
             },
             "item": {
-              "name": "Dish Scrubber",
+              "name": "Yellow Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "3-3 Level Completed",
@@ -2159,12 +3244,12 @@
               "args": {}
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Pink Ramp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "3-4 Level Completed",
@@ -2254,12 +3339,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-7",
+              "name": "Order Lookahead",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "3-5 Level Completed",
@@ -2354,7 +3439,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "3-6 Level Completed",
@@ -2444,12 +3529,12 @@
               "args": {}
             },
             "item": {
-              "name": "Green Ramp",
+              "name": "Dish Scrubber",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "4-1 Level Completed",
@@ -2539,12 +3624,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-1",
+              "name": "Blue Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "4-2 Level Completed",
@@ -2634,12 +3719,12 @@
               "args": {}
             },
             "item": {
-              "name": "Spare Plate",
+              "name": "Clean Dishes",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "4-3 Level Completed",
@@ -2729,12 +3814,12 @@
               "args": {}
             },
             "item": {
-              "name": "Order Lookahead",
+              "name": "Sharp Knife",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "4-4 Level Completed",
@@ -2824,12 +3909,12 @@
               "args": {}
             },
             "item": {
-              "name": "Purple Ramp",
+              "name": "Kevin-3",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "4-5 Level Completed",
@@ -2919,12 +4004,12 @@
               "args": {}
             },
             "item": {
-              "name": "Faster Respawn Time",
+              "name": "Red Ramp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "4-6 Level Completed",
@@ -3014,12 +4099,12 @@
               "args": {}
             },
             "item": {
-              "name": "Dark Green Ramp",
+              "name": "Bonus Star",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "5-1 Level Completed",
@@ -3109,12 +4194,12 @@
               "args": {}
             },
             "item": {
-              "name": "Control Stick Batteries",
+              "name": "Spare Plate",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "5-2 Level Completed",
@@ -3204,12 +4289,12 @@
               "args": {}
             },
             "item": {
-              "name": "Blue Ramp",
+              "name": "Kevin-4",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "5-3 Level Completed",
@@ -3299,12 +4384,12 @@
               "args": {}
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Faster Condiment/Drink Switch",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "5-4 Level Completed",
@@ -3394,12 +4479,12 @@
               "args": {}
             },
             "item": {
-              "name": "Red Ramp",
+              "name": "Guest Patience",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "5-5 Level Completed",
@@ -3489,12 +4574,12 @@
               "args": {}
             },
             "item": {
-              "name": "Calmer Unbread",
+              "name": "Wok Wheels",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "5-6 Level Completed",
@@ -3584,12 +4669,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-2",
+              "name": "Bonus Star",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "6-1 Level Completed",
@@ -3679,12 +4764,12 @@
               "args": {}
             },
             "item": {
-              "name": "Burn Leniency",
+              "name": "Bonus Star",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "6-2 Level Completed",
@@ -3774,12 +4859,12 @@
               "args": {}
             },
             "item": {
-              "name": "Order Lookahead",
+              "name": "Progressive Throw/Catch",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "6-3 Level Completed",
@@ -3837,12 +4922,12 @@
               "args": {}
             },
             "item": {
-              "name": "Guest Patience",
+              "name": "Kevin-1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "6-4 Level Completed",
@@ -3932,12 +5017,12 @@
               "args": {}
             },
             "item": {
-              "name": "Clean Dishes",
+              "name": "Progressive Dash",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "6-5 Level Completed",
@@ -4106,12 +5191,12 @@
               "args": {}
             },
             "item": {
-              "name": "Pink Ramp",
+              "name": "Bonus Star",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-1 Level Completed",
@@ -4201,12 +5286,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-6",
+              "name": "Purple Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-2 Level Completed",
@@ -4296,12 +5381,12 @@
               "args": {}
             },
             "item": {
-              "name": "Larger Tip Jar",
+              "name": "Progressive Throw/Catch",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-3 Level Completed",
@@ -4391,12 +5476,12 @@
               "args": {}
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Kevin-6",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-4 Level Completed",
@@ -4454,12 +5539,12 @@
               "args": {}
             },
             "item": {
-              "name": "Kevin-4",
+              "name": "Burn Leniency",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-5 Level Completed",
@@ -4549,12 +5634,12 @@
               "args": {}
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Coin Purse",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-6 Level Completed",
@@ -4644,12 +5729,12 @@
               "args": {}
             },
             "item": {
-              "name": "Progressive Dash",
+              "name": "Dark Green Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-7 Level Completed",
@@ -4739,12 +5824,12 @@
               "args": {}
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Kevin-7",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kevin-8 Level Completed",
@@ -5957,223 +7042,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "1-1 Completed": "Progressive Dash",
-      "1-1 Level Completed": "1-1 Level Complete",
-      "1-1 (1-Star)": "Star",
-      "1-1 (2-Star)": "Star",
-      "1-1 (3-Star)": "Star",
-      "1-2 Completed": "Coin Purse",
-      "1-2 Level Completed": "1-2 Level Complete",
-      "1-2 (1-Star)": "Star",
-      "1-2 (2-Star)": "Star",
-      "1-2 (3-Star)": "Star",
-      "1-3 Completed": "Larger Tip Jar",
-      "1-3 Level Completed": "1-3 Level Complete",
-      "1-3 (1-Star)": "Star",
-      "1-3 (2-Star)": "Star",
-      "1-3 (3-Star)": "Star",
-      "1-4 Completed": "Kevin-8",
-      "1-4 Level Completed": "1-4 Level Complete",
-      "1-4 (1-Star)": "Star",
-      "1-4 (2-Star)": "Star",
-      "1-4 (3-Star)": "Star",
-      "1-5 Completed": "Progressive Throw/Catch",
-      "1-5 Level Completed": "1-5 Level Complete",
-      "1-5 (1-Star)": "Star",
-      "1-5 (2-Star)": "Star",
-      "1-5 (3-Star)": "Star",
-      "1-6 Completed": "Faster Condiment/Drink Switch",
-      "1-6 Level Completed": "1-6 Level Complete",
-      "1-6 (1-Star)": "Star",
-      "1-6 (2-Star)": "Star",
-      "1-6 (3-Star)": "Star",
-      "2-1 Completed": "Fire Extinguisher",
-      "2-1 Level Completed": "2-1 Level Complete",
-      "2-1 (1-Star)": "Star",
-      "2-1 (2-Star)": "Star",
-      "2-1 (3-Star)": "Star",
-      "2-2 Completed": "Emote Wheel",
-      "2-2 Level Completed": "2-2 Level Complete",
-      "2-2 (1-Star)": "Star",
-      "2-2 (2-Star)": "Star",
-      "2-2 (3-Star)": "Star",
-      "2-3 Completed": "Sharp Knife",
-      "2-3 Level Completed": "2-3 Level Complete",
-      "2-3 (1-Star)": "Star",
-      "2-3 (2-Star)": "Star",
-      "2-3 (3-Star)": "Star",
-      "2-4 Completed": "Wok Wheels",
-      "2-4 Level Completed": "2-4 Level Complete",
-      "2-4 (1-Star)": "Star",
-      "2-4 (2-Star)": "Star",
-      "2-4 (3-Star)": "Star",
-      "2-5 Completed": "Kevin-3",
-      "2-5 Level Completed": "2-5 Level Complete",
-      "2-5 (1-Star)": "Star",
-      "2-5 (2-Star)": "Star",
-      "2-5 (3-Star)": "Star",
-      "2-6 Completed": "Yellow Ramp",
-      "2-6 Level Completed": "2-6 Level Complete",
-      "2-6 (1-Star)": "Star",
-      "2-6 (2-Star)": "Star",
-      "2-6 (3-Star)": "Star",
-      "3-1 Completed": "Bonus Star",
-      "3-1 Level Completed": "3-1 Level Complete",
-      "3-1 (1-Star)": "Star",
-      "3-1 (2-Star)": "Star",
-      "3-1 (3-Star)": "Star",
-      "3-2 Completed": "Progressive Throw/Catch",
-      "3-2 Level Completed": "3-2 Level Complete",
-      "3-2 (1-Star)": "Star",
-      "3-2 (2-Star)": "Star",
-      "3-2 (3-Star)": "Star",
-      "3-3 Completed": "Dish Scrubber",
-      "3-3 Level Completed": "3-3 Level Complete",
-      "3-3 (1-Star)": "Star",
-      "3-3 (2-Star)": "Star",
-      "3-3 (3-Star)": "Star",
-      "3-4 Completed": "Bonus Star",
-      "3-4 Level Completed": "3-4 Level Complete",
-      "3-4 (1-Star)": "Star",
-      "3-4 (2-Star)": "Star",
-      "3-4 (3-Star)": "Star",
-      "3-5 Completed": "Kevin-7",
-      "3-5 Level Completed": "3-5 Level Complete",
-      "3-5 (1-Star)": "Star",
-      "3-5 (2-Star)": "Star",
-      "3-5 (3-Star)": "Star",
-      "3-6 Completed": "Kevin-5",
-      "3-6 Level Completed": "3-6 Level Complete",
-      "3-6 (1-Star)": "Star",
-      "3-6 (2-Star)": "Star",
-      "3-6 (3-Star)": "Star",
-      "4-1 Completed": "Green Ramp",
-      "4-1 Level Completed": "4-1 Level Complete",
-      "4-1 (1-Star)": "Star",
-      "4-1 (2-Star)": "Star",
-      "4-1 (3-Star)": "Star",
-      "4-2 Completed": "Kevin-1",
-      "4-2 Level Completed": "4-2 Level Complete",
-      "4-2 (1-Star)": "Star",
-      "4-2 (2-Star)": "Star",
-      "4-2 (3-Star)": "Star",
-      "4-3 Completed": "Spare Plate",
-      "4-3 Level Completed": "4-3 Level Complete",
-      "4-3 (1-Star)": "Star",
-      "4-3 (2-Star)": "Star",
-      "4-3 (3-Star)": "Star",
-      "4-4 Completed": "Order Lookahead",
-      "4-4 Level Completed": "4-4 Level Complete",
-      "4-4 (1-Star)": "Star",
-      "4-4 (2-Star)": "Star",
-      "4-4 (3-Star)": "Star",
-      "4-5 Completed": "Purple Ramp",
-      "4-5 Level Completed": "4-5 Level Complete",
-      "4-5 (1-Star)": "Star",
-      "4-5 (2-Star)": "Star",
-      "4-5 (3-Star)": "Star",
-      "4-6 Completed": "Faster Respawn Time",
-      "4-6 Level Completed": "4-6 Level Complete",
-      "4-6 (1-Star)": "Star",
-      "4-6 (2-Star)": "Star",
-      "4-6 (3-Star)": "Star",
-      "5-1 Completed": "Dark Green Ramp",
-      "5-1 Level Completed": "5-1 Level Complete",
-      "5-1 (1-Star)": "Star",
-      "5-1 (2-Star)": "Star",
-      "5-1 (3-Star)": "Star",
-      "5-2 Completed": "Control Stick Batteries",
-      "5-2 Level Completed": "5-2 Level Complete",
-      "5-2 (1-Star)": "Star",
-      "5-2 (2-Star)": "Star",
-      "5-2 (3-Star)": "Star",
-      "5-3 Completed": "Blue Ramp",
-      "5-3 Level Completed": "5-3 Level Complete",
-      "5-3 (1-Star)": "Star",
-      "5-3 (2-Star)": "Star",
-      "5-3 (3-Star)": "Star",
-      "5-4 Completed": "Bonus Star",
-      "5-4 Level Completed": "5-4 Level Complete",
-      "5-4 (1-Star)": "Star",
-      "5-4 (2-Star)": "Star",
-      "5-4 (3-Star)": "Star",
-      "5-5 Completed": "Red Ramp",
-      "5-5 Level Completed": "5-5 Level Complete",
-      "5-5 (1-Star)": "Star",
-      "5-5 (2-Star)": "Star",
-      "5-5 (3-Star)": "Star",
-      "5-6 Completed": "Calmer Unbread",
-      "5-6 Level Completed": "5-6 Level Complete",
-      "5-6 (1-Star)": "Star",
-      "5-6 (2-Star)": "Star",
-      "5-6 (3-Star)": "Star",
-      "6-1 Completed": "Kevin-2",
-      "6-1 Level Completed": "6-1 Level Complete",
-      "6-1 (1-Star)": "Star",
-      "6-1 (2-Star)": "Star",
-      "6-1 (3-Star)": "Star",
-      "6-2 Completed": "Burn Leniency",
-      "6-2 Level Completed": "6-2 Level Complete",
-      "6-2 (1-Star)": "Star",
-      "6-2 (2-Star)": "Star",
-      "6-2 (3-Star)": "Star",
-      "6-3 Completed": "Order Lookahead",
-      "6-3 Level Completed": "6-3 Level Complete",
-      "6-3 (1-Star)": "Star",
-      "6-4 Completed": "Guest Patience",
-      "6-4 Level Completed": "6-4 Level Complete",
-      "6-4 (1-Star)": "Star",
-      "6-4 (2-Star)": "Star",
-      "6-4 (3-Star)": "Star",
-      "6-5 Completed": "Clean Dishes",
-      "6-5 Level Completed": "6-5 Level Complete",
-      "6-5 (1-Star)": "Star",
-      "6-5 (2-Star)": "Star",
-      "6-5 (3-Star)": "Star",
-      "6-6 Completed": "Victory",
-      "6-6 (1-Star)": "Star",
-      "6-6 (2-Star)": "Star",
-      "6-6 (3-Star)": "Star",
-      "Kevin-1 Completed": "Pink Ramp",
-      "Kevin-1 Level Completed": "Kevin-1 Level Complete",
-      "Kevin-1 (1-Star)": "Star",
-      "Kevin-1 (2-Star)": "Star",
-      "Kevin-1 (3-Star)": "Star",
-      "Kevin-2 Completed": "Kevin-6",
-      "Kevin-2 Level Completed": "Kevin-2 Level Complete",
-      "Kevin-2 (1-Star)": "Star",
-      "Kevin-2 (2-Star)": "Star",
-      "Kevin-2 (3-Star)": "Star",
-      "Kevin-3 Completed": "Larger Tip Jar",
-      "Kevin-3 Level Completed": "Kevin-3 Level Complete",
-      "Kevin-3 (1-Star)": "Star",
-      "Kevin-3 (2-Star)": "Star",
-      "Kevin-3 (3-Star)": "Star",
-      "Kevin-4 Completed": "Bonus Star",
-      "Kevin-4 Level Completed": "Kevin-4 Level Complete",
-      "Kevin-4 (1-Star)": "Star",
-      "Kevin-5 Completed": "Kevin-4",
-      "Kevin-5 Level Completed": "Kevin-5 Level Complete",
-      "Kevin-5 (1-Star)": "Star",
-      "Kevin-5 (2-Star)": "Star",
-      "Kevin-5 (3-Star)": "Star",
-      "Kevin-6 Completed": "Bonus Star",
-      "Kevin-6 Level Completed": "Kevin-6 Level Complete",
-      "Kevin-6 (1-Star)": "Star",
-      "Kevin-6 (2-Star)": "Star",
-      "Kevin-6 (3-Star)": "Star",
-      "Kevin-7 Completed": "Progressive Dash",
-      "Kevin-7 Level Completed": "Kevin-7 Level Complete",
-      "Kevin-7 (1-Star)": "Star",
-      "Kevin-7 (2-Star)": "Star",
-      "Kevin-7 (3-Star)": "Star",
-      "Kevin-8 Completed": "Bonus Star",
-      "Kevin-8 Level Completed": "Kevin-8 Level Complete",
-      "Kevin-8 (1-Star)": "Star",
-      "Kevin-8 (2-Star)": "Star",
-      "Kevin-8 (3-Star)": "Star"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -6183,7 +7052,7 @@
   },
   "settings": {
     "1": {
-      "game": "Overcooked! 2 WorldGen",
+      "game": "Overcooked\\! 2 WorldGen",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
@@ -6195,16 +7064,18 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": 1,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "ramp_tricks": false,
+      "world_directory": "overcooked2_worldgen"
     }
   },
   "game_info": {
     "1": {
-      "name": "Overcooked! 2 WorldGen",
+      "name": "Overcooked\\! 2 WorldGen",
       "rule_format": {
         "version": "1.0"
       },
@@ -6884,6 +7755,2578 @@
           "OneStar": 0.12249999999999998
         },
         "AlwaysServeOldestOrder": true
+      },
+      "level_logic": {
+        "*": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.15
+              ],
+              [
+                "Clean Dishes",
+                0.1
+              ],
+              [
+                "Dish Scrubber",
+                0.25
+              ],
+              [
+                "Guest Patience",
+                0.1
+              ],
+              [
+                "Larger Tip Jar",
+                0.2
+              ],
+              [
+                "Order Lookahead",
+                0.15
+              ],
+              [
+                "Progressive Dash",
+                0.35
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.4
+              ],
+              [
+                "Sharp Knife",
+                0.3
+              ],
+              [
+                "Spare Plate",
+                0.2
+              ]
+            ]
+          ],
+          [
+            [
+              "Progressive Dash",
+              "Spare Plate",
+              "Larger Tip Jar",
+              "Progressive Throw/Catch"
+            ],
+            [
+              [
+                "Burn Leniency",
+                0.25
+              ],
+              [
+                "Clean Dishes",
+                0.5
+              ],
+              [
+                "Dish Scrubber",
+                1.0
+              ],
+              [
+                "Guest Patience",
+                0.25
+              ],
+              [
+                "Sharp Knife",
+                1.0
+              ]
+            ]
+          ]
+        ],
+        "Story 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 1-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 2-1": [
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 2-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 2-3": [
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 2-4": [
+          [
+            {},
+            [
+              [
+                "Progressive Dash",
+                1.0
+              ],
+              [
+                "Progressive Throw/Catch",
+                1.0
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Fire Extinguisher"
+            ],
+            []
+          ]
+        ],
+        "Story 2-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 2-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 3-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 3-2": [
+          [
+            {},
+            [
+              [
+                "Dish Scrubber",
+                0.25
+              ],
+              [
+                "Larger Tip Jar",
+                0.25
+              ],
+              [
+                "Progressive Dash",
+                0.5
+              ],
+              [
+                "Progressive Throw/Catch",
+                1.0
+              ],
+              [
+                "Sharp Knife",
+                0.5
+              ]
+            ]
+          ],
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 3-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 3-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 3-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 3-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 4-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 4-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 4-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 4-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 4-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 4-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 5-1": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 5-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Fire Extinguisher"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 5-3": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 5-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 5-5": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 5-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 6-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Fire Extinguisher"
+            ],
+            {}
+          ]
+        ],
+        "Story 6-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 6-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 6-4": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 6-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story 6-6": [
+          [
+            [
+              "Progressive Dash",
+              "Progressive Throw/Catch",
+              "Spare Plate"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-4": [
+          [
+            [
+              "Fire Extinguisher"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-7": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Story K-8": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 1-3": [
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 2-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Bellows"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 2-2": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            [
+              "Bellows"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 2-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 2-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 3-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Bellows"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 3-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 3-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf 3-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Bellows"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Surf K-1": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            [
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 1-1": [
+          [
+            [
+              "Wood"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 1-2": [
+          [
+            [
+              "Wood"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Lightweight Backpack"
+            ],
+            {}
+          ]
+        ],
+        "Campfire 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 2-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 2-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Lightweight Backpack"
+            ],
+            {}
+          ]
+        ],
+        "Campfire 2-3": [
+          [
+            [
+              "Wood"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Lightweight Backpack"
+            ],
+            {}
+          ]
+        ],
+        "Campfire 2-4": [
+          [
+            [
+              "Wood"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 3-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Lightweight Backpack"
+            ],
+            {}
+          ]
+        ],
+        "Campfire 3-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 3-3": [
+          [
+            [
+              "Wood"
+            ],
+            {}
+          ],
+          [
+            [
+              "Lightweight Backpack"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire 3-4": [
+          [
+            [
+              "Wood"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire K-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire K-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Campfire K-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "Carnival 2-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 2-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "Carnival 2-3": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 2-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "Carnival 3-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival 3-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "Carnival 3-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "Carnival 3-4": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "Carnival K-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival K-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Carnival K-3": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Coal Bucket"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Coal Bucket"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 2-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 2-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 2-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Coal Bucket"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 3-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 3-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde 3-3": [
+          [
+            {},
+            [
+              [
+                "Coal Bucket",
+                0.5
+              ],
+              [
+                "Progressive Dash",
+                0.5
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.5
+              ]
+            ]
+          ],
+          [
+            [
+              "Coal Bucket",
+              "Progressive Throw/Catch"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde K-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde K-2": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde K-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-1": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-2": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-3": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-4": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-5": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-6": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-7": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Horde H-8": [
+          [
+            [
+              "Calmer Unbread",
+              "Coin Purse"
+            ],
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Christmas 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Christmas 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Christmas 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Christmas 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Christmas 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Wok Wheels"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Wok Wheels"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-6": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Chinese 1-7": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Wok Wheels"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Winter 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Winter H-2": [
+          [
+            {},
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Winter 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Winter H-4": [
+          [
+            [
+              "Calmer Unbread",
+              "Coin Purse"
+            ],
+            [
+              [
+                "Burn Leniency",
+                0.1
+              ],
+              [
+                "Calmer Unbread",
+                0.35
+              ],
+              [
+                "Clean Dishes",
+                0.025
+              ],
+              [
+                "Coin Purse",
+                0.7
+              ],
+              [
+                "Dish Scrubber",
+                0.125
+              ],
+              [
+                "Progressive Dash",
+                0.2
+              ],
+              [
+                "Progressive Throw/Catch",
+                0.15
+              ],
+              [
+                "Sharp Knife",
+                0.15
+              ],
+              [
+                "Spare Plate",
+                0.075
+              ]
+            ]
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Winter 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Spring 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Wok Wheels"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Spring 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Spring 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Wok Wheels"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Spring 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Spring 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "SOBO 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "SOBO 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "SOBO 1-3": [
+          [
+            [
+              "Control Stick Batteries"
+            ],
+            {}
+          ],
+          [
+            [
+              "Fire Extinguisher"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "SOBO 1-4": [
+          [
+            [
+              "Fire Extinguisher"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch"
+            ],
+            {}
+          ]
+        ],
+        "SOBO 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            [
+              "Faster Condiment/Drink Switch",
+              "Fire Extinguisher"
+            ],
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Moon 1-1": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Moon 1-2": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Moon 1-3": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Moon 1-4": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ],
+        "Moon 1-5": [
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ],
+          [
+            {},
+            {}
+          ]
+        ]
       }
     }
   },
