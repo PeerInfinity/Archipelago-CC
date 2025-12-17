@@ -4,10 +4,11 @@ This document categorizes the different types of content that appear in custom g
 
 ## Processing Status
 
-### Processed Exporters (33)
+### Processed Exporters (60)
 - ahit.py
 - alttp.py
 - aquaria.py
+- blasphemous.py
 - bomb_rush_cyberfunk.py
 - celeste64.py
 - celeste_open_world.py
@@ -17,7 +18,9 @@ This document categorizes the different types of content that appear in custom g
 - dlcquest.py
 - factorio.py
 - ffmq.py
+- hk.py
 - inscryption.py
+- jakanddaxter.py
 - kdl3.py
 - kh1.py
 - kh2.py
@@ -29,39 +32,32 @@ This document categorizes the different types of content that appear in custom g
 - mlss.py
 - mm2.py
 - mmbn3.py
-- sm.py
-- stardew_valley.py
-- subnautica.py
-- tloz.py
-
-### Unprocessed Exporters (10)
 - musedash.py
+- oot.py
 - osrs.py
 - overcooked2.py
 - paint.py
-- saving_princess.py
-- sc2.py
-- sm64ex.py
-- soe.py
-- terraria.py
-- timespinner.py
-- tww.py
-- v6.py
-- wargroove.py
-- yachtdice.py
-- yoshisisland.py
-
-### Excluded Exporters (per template-exclude-list.json)
-- blasphemous.py
-- hk.py (Hollow Knight)
-- jakanddaxter.py
-- oot.py (Ocarina of Time)
 - pokemon_emerald.py
 - pokemon_rb.py
 - raft.py
+- saving_princess.py
+- sc2.py
+- sm.py
+- sm64ex.py
 - smz3.py
+- soe.py
+- stardew_valley.py
+- subnautica.py
+- terraria.py
+- timespinner.py
+- tloz.py
 - tunic.py
+- tww.py
+- v6.py
+- wargroove.py
 - witness.py
+- yachtdice.py
+- yoshisisland.py
 - yugioh06.py
 - zillion.py
 
@@ -85,6 +81,8 @@ Controls whether helpers discovered during rule analysis are automatically expor
 - **Default**: True (in GenericGameExportHandler)
 - **Exporters setting to False**:
   - inscryption.py: Class methods can't be auto-exported
+  - pokemon_emerald.py: Uses manual HM helper conversion
+  - yugioh06.py: Helpers implemented in JavaScript
 
 #### AUTO_PRESERVE_LARGE_HELPERS
 Controls automatic preservation of large helper functions.
@@ -95,6 +93,7 @@ Controls automatic preservation of large helper functions.
   - cvcotm.py
   - dark_souls_3.py
   - ffmq.py
+  - jakanddaxter.py
   - kdl3.py
   - kh1.py
   - landstalker.py
@@ -103,7 +102,9 @@ Controls automatic preservation of large helper functions.
   - mlss.py
   - mm2.py
   - mmbn3.py
+  - pokemon_emerald.py
   - tloz.py
+  - yugioh06.py
 
 #### HELPER_MODULES
 List of module paths containing helper functions to search.
@@ -115,6 +116,7 @@ List of module paths containing helper functions to search.
   - kh2.py: `['worlds.kh2.Rules']`
   - lingo.py: `['worlds.lingo.rules']`
   - mlss.py: `['worlds.mlss.StateLogic']`
+  - raft.py: `['worlds.raft.Rules']`
 
 #### HELPERS_TO_PRESERVE
 Set of helper names that should be preserved as callable functions (not inlined).
@@ -124,6 +126,7 @@ Set of helper names that should be preserved as callable functions (not inlined)
   - kdl3.py: `{'can_assemble_rob', 'can_fix_angel_wings'}`
   - kh1.py: `{'has_x_worlds'}`
   - marioland2.py: `set()` (empty - all helpers exported to rules.json)
+  - yugioh06.py: `{'yugioh06_difficulty', 'only_light', 'only_dark', ...}` (26 deck-building helpers)
 
 #### HELPERS_TO_EXPORT_BLACKLIST
 Set of helper names that should NOT be exported (too complex for frontend).
@@ -152,14 +155,19 @@ Whether to use resolved item names (True) or original item names (False).
 - **Exporters setting to True**:
   - dlcquest.py
   - factorio.py
+  - jakanddaxter.py
   - ladx.py
   - landstalker.py
+  - raft.py
 
 #### ADD_SPHERE_ITEMS_UPFRONT
 Whether to add sphere items at start vs incrementally.
 - **Default**: False (in GenericGameExportHandler)
 - **Exporters setting to True**:
   - dlcquest.py: Needed for coin-based access rules
+  - jakanddaxter.py: Needed for orb tracking
+  - raft.py: Needed for resolved progressive items
+  - witness.py: Needed for laser activation checks
 
 #### USE_AUTO_INDIRECT_CONDITIONS
 Whether to automatically detect indirect conditions in rules.
@@ -197,6 +205,24 @@ Threshold for preserving Has rules as helpers (custom Stardew Valley attribute).
 - **Exporters using**:
   - stardew_valley.py: `HAS_RULE_HELPER_THRESHOLD = 1`
 
+#### ITEM_CHECK_RULES
+Static dict mapping item names to their access rule structures.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - raft.py: Maps 40+ items (Plank, MetalIngot, etc.) to helper-based rules
+
+#### LASER_ACTIVATION_TO_REGION
+Dict mapping laser activation keys to region names.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - witness.py: Maps laser IDs to regions for activation detection
+
+#### HM_TO_HELPER
+Dict mapping HM item names to helper function names.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - pokemon_emerald.py: Maps HM01-HM08 to can_cut, can_surf, etc.
+
 ---
 
 ### 2. Rule Processing Methods
@@ -213,11 +239,14 @@ Transform rule structures, often to inline or simplify complex patterns.
   - factorio.py: Simplifies `technology.name` attribute access
   - ffmq.py: Binary op string concatenation, item_groups subscript resolution
   - inscryption.py: Expands pseudo-items (Camera_And_Meat, All_Epitaph_Pieces, etc.)
+  - jakanddaxter.py: Handles can_reach_orbs_level, can_reach_orbs_global, world.can_trade, capability rules
   - kdl3.py: Name remapping, f_string conversion, setting_value conversion
   - kh1.py: Options resolution, self.method conversion, has_all_counts fixes
   - landstalker.py: has_all with set() simplification, all_of iterator resolution
   - marioland2.py: Options resolution, self.options.* pattern handling
   - messenger.py: Handles `inferred_*` item patterns and `items_helper.CAN_*` capabilities
+  - pokemon_emerald.py: Converts hm_rules["HM_NAME"]() to helper calls
+  - pokemon_rb.py: Validates helper names against known_helpers set
   - subnautica.py: Handles `location.can_reach()` patterns for Aurora Drive Room
   - tloz.py: f_string resolution, can_reach pattern handling for Boss Status
 
@@ -229,12 +258,15 @@ Transform helper function definitions.
   - kh1.py: Maps of KH1 helpers to simplified rules
   - kh2.py: Complex expansion for form abilities, party requirements, visit locks
   - subnautica.py: Expands SwimRule property accesses (base_depth, consider_items)
+  - zillion.py: Returns None (Zillion doesn't use helper functions)
 
 #### postprocess_rule(rule)
 Post-process rules after initial analysis.
 - **Base implementation**: Returns rule unchanged
 - **Exporters overriding**:
   - dark_souls_3.py: Transforms _can_get/_can_go_to to location_check/can_reach
+  - smz3.py: Handles items.AttributeName, self.AttributeName, SMLogic, RewardType, ItemType, CanBeatBoss, CanAcquire, regressive accessibility simplification
+  - witness.py: Complex post-processing with laser activation handling, pattern detection/simplification
 
 #### postprocess_entrance_rule(rule, entrance_name)
 Post-process entrance/exit rules specifically.
@@ -255,12 +287,16 @@ Handle complex exit/entrance rule extraction.
 - **Base implementation**: Returns None
 - **Exporters overriding**:
   - ladx.py: Extracts LADXR condition objects from entrance.condition attribute
+  - witness.py: Extracts complex exit rules with pattern detection
 
 #### override_rule_analysis(rule_func, rule_target_name)
 Completely override rule analysis for specific patterns.
 - **Base implementation**: Returns None
 - **Exporters overriding**:
   - celeste_open_world.py: Examines closure variables for data-driven patterns (connection.possible_access, only_access, only_item)
+  - pokemon_rb.py: Handles complex string manipulation patterns (split/slice)
+  - raft.py: Resolves regionChecks pattern to region-specific access rules
+  - smz3.py: Handles SMZ3 loc.Available() and entrance rules via TotalSMZ3 extraction
   - stardew_valley.py: Detects and serializes StardewRule objects
 
 #### should_preserve_as_helper(helper_name, helper_def, size)
@@ -282,8 +318,12 @@ Export item classification and properties.
   - ahit.py: Custom item_table import and classification mapping
   - alttp.py: Adds dungeon items, crystals, keys with special handling
   - dlcquest.py: Custom handling for coin items and events
+  - jakanddaxter.py: Adds pseudo-items for orb tracking
   - kh1.py: item_name_to_id with classification, event item scanning
   - marioland2.py: Event item scanning for vanilla golden coins
+  - pokemon_emerald.py: Handles event item conversion at runtime
+  - pokemon_rb.py: Handles event items from runtime placement
+  - smz3.py: Marks card items and progressive items as advancement
   - stardew_valley.py: Adds virtual event items (Received Progression Percent)
 
 #### get_item_max_counts(world)
@@ -298,6 +338,8 @@ Map item names to their progression identifiers.
 - **Exporters overriding**:
   - bomb_rush_cyberfunk.py: Additive mapping for REP items (8 REP = 8, etc.)
   - messenger.py: Maps Time Shard variants to 'Time Shard'
+  - raft.py: Progressive item mapping from progressives.json
+  - smz3.py: Progressive item mappings for ALTTP content
 
 #### get_itempool_counts(world)
 Export counts of items in the item pool.
@@ -316,6 +358,9 @@ Export game settings and options.
   - kh1.py: Extensive KH1 options cache
   - lingo.py: Door shuffle data, mastery requirements, panel data
   - marioland2.py: required_golden_coins, auto_scroll_levels, sprite_data
+  - pokemon_emerald.py: Includes hm_requirements
+  - pokemon_rb.py: Extensive option list, use_multipass_timer
+  - smz3.py: allow_regressive_accessibility_mismatches, count_non_advancement_items, reward_regions
 
 #### get_game_info(world)
 Export general game information.
@@ -324,8 +369,11 @@ Export general game information.
   - ahit.py: chapter_costs, hat_info, relic_groups
   - dlcquest.py: accumulator_rules, prog_items_init for coins
   - factorio.py: `required_technologies` list
+  - jakanddaxter.py: accumulator_rules for Tradeable Orbs, prog_items_init
   - ladx.py: `accumulator_rules` for RUPEES and `prog_items_init`
   - lingo.py: panels_by_color, sunwarp configuration
+  - pokemon_emerald.py: Exports hm_requirements
+  - pokemon_rb.py: extra_badges, local_poke_data, poke_data
   - stardew_valley.py: total_progression_items
 
 #### get_helper_definitions(world)
@@ -349,6 +397,7 @@ Add custom attributes to region data.
 - **Exporters overriding**:
   - alttp.py: Adds hint_text, is_light_world, is_dark_world, dungeon info
   - aquaria.py: Adds dynamically_added for post-sphere-calc regions
+  - jakanddaxter.py: Adds orb_count
 
 #### get_location_attributes(location)
 Add custom attributes to location data.
@@ -357,11 +406,12 @@ Add custom attributes to location data.
   - alttp.py: Adds dungeon, item_rule, always_allow, hint info
   - lingo.py: Adds AccessRequirements (doors_to_open, colors_required, etc.)
 
-#### get_custom_location_access_rule(location)
+#### get_custom_location_access_rule(location, world)
 Override the standard access rule for specific locations.
 - **Base implementation**: Returns None
 - **Exporters overriding**:
   - lingo.py: Returns rule based on location's AccessRequirements
+  - zillion.py: Reads requirements from zilliandomizer location objects (gun, jump, floppy, red, char)
 
 ---
 
@@ -391,7 +441,8 @@ Called after all data export, before serialization.
 #### post_process_location_data(location_data, location)
 Post-process individual location data.
 - **Base implementation**: Returns data unchanged
-- **Exporters overriding**: (none found in processed exporters)
+- **Exporters overriding**:
+  - smz3.py: Fixes advancement flags
 
 #### postprocess_regions(multiworld, player)
 Fix or add missing regions.
@@ -411,6 +462,7 @@ Set the current location context for rule expansion.
 - **Base implementation**: Does nothing
 - **Exporters overriding**:
   - tloz.py: Tracks current location for Boss Status rule resolution
+  - witness.py: Stores current location name for pattern detection
 
 #### set_exit_context(exit_name)
 Set context for exit/entrance analysis.
@@ -441,7 +493,8 @@ Loading rule mappings from Python data structures.
 
 #### JSON Data Loading
 Loading rules or data from JSON files.
-- **Exporters using**: (none found in processed exporters - but common in excluded games)
+- **Exporters using**:
+  - raft.py: Loads locations.json and progressives.json for region/item mappings
 
 #### build_rule_string_map(world)
 Build mapping of rule strings to parsed rules.
@@ -457,6 +510,7 @@ Patterns for mapping internal item names to export names.
 #### Direct Mapping Dicts
 Hardcoded mappings from internal to export names.
 - **Exporters using**:
+  - jakanddaxter.py: `item_id_to_name` mapping in __init__
   - ladx.py: `_map_ladxr_item_name()` with extensive mapping dict
 
 #### Module-Based Resolution
@@ -507,6 +561,24 @@ Resolve f-string AST nodes to constant strings.
   - kdl3.py: Handles level_names_inverse subscript expressions
   - tloz.py: Wraps result in constant node
 
+#### recalculate_collection_state_if_needed(state, location, rules_json)
+Custom collection state management for complex item interactions.
+- **Default**: Not defined in base
+- **Exporters overriding**:
+  - jakanddaxter.py: Manages Reachable Orbs pseudo-item based on accessible regions
+
+#### _register_helpers_from_rule(rule)
+Register helper functions referenced in a rule structure.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - raft.py: Ensures helpers in ITEM_CHECK_RULES are exported
+
+#### _get_region_access_rule(region)
+Get access rule for a region from static mapping.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - raft.py: Maps region names to helper-based access rules
+
 ---
 
 ### 10. Special Pattern Handling
@@ -527,12 +599,15 @@ Converting game-specific condition objects to rule structures.
 Rules for accumulating item values (e.g., currency).
 - **Exporters using**:
   - dlcquest.py: Accumulator rules for coins
+  - jakanddaxter.py: Accumulator rules for Tradeable Orbs
   - ladx.py: Accumulator rules for RUPEES from rupee items
 
 #### Custom Rule System Serialization
 Serializing game-specific rule objects (not lambdas).
 - **Exporters using**:
+  - smz3.py: Handles TotalSMZ3 objects via override_rule_analysis
   - stardew_valley.py: `_serialize_stardew_rule()` for StardewRule objects (Received, Reach, And, Or, Count, Has, etc.)
+  - zillion.py: Reads from zilliandomizer Req objects (gun, jump, floppy, red, char)
 
 #### Entrance Caching
 Caching entrance -> connected_region mappings.
@@ -544,6 +619,21 @@ Additional methods for extracting game-specific data.
 - **Exporters using**:
   - ahit.py: `get_chapter_costs()`, `get_hat_costs()`, `get_relic_groups()`
 
+#### Known Helpers Set
+Set of helper names that are valid for a game (validation purposes).
+- **Exporters using**:
+  - pokemon_rb.py: `known_helpers` set with 16 valid helper names
+
+#### Pattern Detection and Simplification
+Complex methods for detecting and simplifying rule patterns.
+- **Exporters using**:
+  - witness.py: Multiple pattern detection methods (`_is_all_of_comprehension_with_only_bound_methods`, `_is_region_reachability_pattern`, etc.) and corresponding simplification methods
+
+#### Base Class Selection
+Using BaseGameExportHandler directly instead of GenericGameExportHandler.
+- **Exporters using**:
+  - pokemon_rb.py: Extends BaseGameExportHandler for more control
+
 ---
 
 ## Factoring Opportunities
@@ -551,28 +641,32 @@ Additional methods for extracting game-specific data.
 Based on this analysis, potential candidates for factoring into base/generic:
 
 ### High Priority
-1. **AUTO_PRESERVE_LARGE_HELPERS = False** - Most exporters disable this; should likely be the default
+1. **AUTO_PRESERVE_LARGE_HELPERS = False** - 17 exporters disable this; should likely be the default
 2. **Options resolution patterns** - kh1.py, marioland2.py, and others all resolve options.* to constants
 3. **f_string resolution** - kdl3.py and tloz.py both need f_string handling
-4. **Item name mapping patterns** - ladx.py, kh2.py have similar mapping approaches
+4. **Item name mapping patterns** - ladx.py, kh2.py, jakanddaxter.py have similar mapping approaches
 5. **Condition object conversion** - The AND/OR/COUNT pattern in ladx.py could be generalized
+6. **USE_RESOLVED_ITEMS + ADD_SPHERE_ITEMS_UPFRONT** - Often used together (6 exporters); could be a single config
 
 ### Medium Priority
-1. **Accumulator rules** - dlcquest.py and ladx.py both use this pattern for currency
+1. **Accumulator rules** - dlcquest.py, jakanddaxter.py, and ladx.py use this pattern for currency/orbs
 2. **postprocess_regions()** - aquaria.py and cvcotm.py both add missing regions
 3. **prepare_closure_vars()** - landstalker.py, kh2.py, mm2.py all enhance closure vars
 4. **post_process_data()** - Many exporters need to fix analyzer output issues
+5. **JSON data loading** - raft.py pattern could be abstracted for other games
 
 ### Lower Priority
-1. **Custom rule system support** - stardew_valley.py's StardewRule serialization is game-specific but could be templated
+1. **Custom rule system support** - stardew_valley.py, smz3.py, zillion.py all serialize custom rule objects
 2. **Logic mapping loading** - celeste64.py's pattern could be abstracted for other games
 3. **Entrance caching** - ahit.py's pattern could be useful for other games with entrance shuffling
+4. **Pattern detection/simplification** - witness.py's complex patterns could be templated
 
 ---
 
 ## Notes
 
-- This document should be updated as more exporters are processed
+- All game exporters have been processed (including previously excluded games)
 - Content types may be added/refined as new patterns are discovered
 - The goal is to identify common patterns that could reduce code duplication
-- Most exporters set AUTO_PRESERVE_LARGE_HELPERS = False, suggesting this should be reconsidered as a default
+- 17 exporters set AUTO_PRESERVE_LARGE_HELPERS = False, strongly suggesting this should be reconsidered as a default
+- 6 exporters use both USE_RESOLVED_ITEMS and ADD_SPHERE_ITEMS_UPFRONT, suggesting these could be combined
