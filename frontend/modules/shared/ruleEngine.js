@@ -4573,6 +4573,36 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return hasUndefined ? undefined : false;
     }
 
+    // Conditional: ternary rule (test ? if_true : if_false)
+    // Rule Builder: {"rule": "Conditional", "args": {"test": {...}, "if_true": {...}, "if_false": {...}}}
+    case 'Conditional': {
+      const testRule = args.test;
+      const ifTrueRule = args.if_true;
+      const ifFalseRule = args.if_false;
+
+      if (!testRule) {
+        log('warn', '[evaluateRuleBuilderRule] Conditional rule missing test');
+        return undefined;
+      }
+
+      const testResult = evaluateRule(testRule, context, depth + 1, localScope);
+
+      if (testResult === undefined) {
+        // If test is unknown, outcome is unknown
+        return undefined;
+      } else if (testResult) {
+        // Test is truthy - evaluate if_true branch
+        return ifTrueRule
+          ? evaluateRule(ifTrueRule, context, depth + 1, localScope)
+          : true;
+      } else {
+        // Test is falsy - evaluate if_false branch
+        return ifFalseRule
+          ? evaluateRule(ifFalseRule, context, depth + 1, localScope)
+          : false;
+      }
+    }
+
     // Wrapper rules: Not (inverts child)
     case 'Not': {
       if (!child) {
