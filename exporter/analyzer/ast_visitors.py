@@ -397,15 +397,30 @@ class ASTVisitorMixin:
                     # Recursive analysis logic for lambda default parameters (only if not preserving as helper)
                     if not should_preserve:
                         try:
-                            # Helper function to check if a function contains for loops over dynamic data
+                            # Helper function to check if a function contains for loops that can't be evaluated at export time
                             def has_dynamic_for_loops_resolved(func):
-                                """Check if a function's body contains for loops over non-constant iterables."""
+                                """Check if a function's body contains for loops that require runtime state."""
                                 try:
                                     import inspect
                                     source = inspect.getsource(func)
                                     tree = ast.parse(source)
+
+                                    def contains_state_reference(node):
+                                        """Check if an AST node references 'state' anywhere."""
+                                        for child in ast.walk(node):
+                                            if isinstance(child, ast.Name) and child.id == 'state':
+                                                return True
+                                        return False
+
                                     for n in ast.walk(tree):
                                         if isinstance(n, ast.For):
+                                            # Check if the loop body contains state-dependent operations
+                                            # These loops can't be evaluated at export time
+                                            for body_node in n.body:
+                                                if contains_state_reference(body_node):
+                                                    logging.debug(f"Function has for loop with state-dependent body")
+                                                    return True
+
                                             # Check if iterator is a method call like .keys(), .values(), .items()
                                             if isinstance(n.iter, ast.Call):
                                                 if isinstance(n.iter.func, ast.Attribute):
@@ -516,15 +531,30 @@ class ASTVisitorMixin:
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
-                     # Helper function to check if a function contains for loops over dynamic data
+                     # Helper function to check if a function contains for loops that can't be evaluated at export time
                      def has_dynamic_for_loops(func):
-                         """Check if a function's body contains for loops over non-constant iterables."""
+                         """Check if a function's body contains for loops that require runtime state."""
                          try:
                              import inspect
                              source = inspect.getsource(func)
                              tree = ast.parse(source)
+
+                             def contains_state_reference(node):
+                                 """Check if an AST node references 'state' anywhere."""
+                                 for child in ast.walk(node):
+                                     if isinstance(child, ast.Name) and child.id == 'state':
+                                         return True
+                                 return False
+
                              for node in ast.walk(tree):
                                  if isinstance(node, ast.For):
+                                     # Check if the loop body contains state-dependent operations
+                                     # These loops can't be evaluated at export time
+                                     for body_node in node.body:
+                                         if contains_state_reference(body_node):
+                                             logging.debug(f"Function has for loop with state-dependent body")
+                                             return True
+
                                      # Check if iterator is a method call like .keys(), .values(), .items()
                                      if isinstance(node.iter, ast.Call):
                                          if isinstance(node.iter.func, ast.Attribute):
@@ -2051,6 +2081,15 @@ class ASTVisitorMixin:
                 if value is None:
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to None")
                     return {'type': 'constant', 'value': None}
+                # Handle rule dicts (helper, item_check, state_method, etc.)
+                # These come from parameter mapping when arguments are analyzed rules
+                elif isinstance(value, dict) and value.get('type') in (
+                    'helper', 'item_check', 'state_method', 'can_reach', 'location_check',
+                    'and', 'or', 'not', 'conditional', 'compare', 'has_all', 'has_any',
+                    'constant', 'name', 'attribute', 'subscript', 'setting_value'
+                ):
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to rule dict of type '{value.get('type')}'")
+                    return value  # Return the rule dict directly
                 # Handle simple values (numbers, strings, bools)
                 elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")

@@ -1,5 +1,5 @@
 {
-  "comment": "Default list of template files to exclude from testing and prompt generation. To modify the default exclude list, edit the 'exclude_list' array below. This list is loaded by scripts/test/test-all-templates.py and CC/scripts/prompt-all-templates.py",
+  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. This file is loaded by scripts/lib/test_utils.py.",
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
@@ -32,38 +32,42 @@
     {
       "name": "Zillion.yaml",
       "reason": "Uses the external zilliandomizer tool for its logic, which is not compatible with this system."
-    },
+    }
+  ],
+  "main_test_exclude_list": [
     {
       "name": "Jak and Daxter The Precursor Legacy.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
+      "reason": "Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test."
     },
     {
       "name": "Pokemon Emerald.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
+      "reason": "Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test."
     },
     {
       "name": "Pokemon Red and Blue.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
-    },
-    {
-      "name": "Raft.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
+      "reason": "Temporarily excluded. It takes too long to process. 61 seconds for the multiclient test."
     },
     {
       "name": "SMZ3.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
-    },
-    {
-      "name": "The Witness.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
+      "reason": "Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items."
     },
     {
       "name": "TUNIC.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
+      "reason": "Temporarily excluded. There is a recursion issue in the exporter that makes it never stop writing to the output file."
     },
     {
       "name": "Yu-Gi-Oh! 2006.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process."
+      "reason": "Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test."
+    }
+  ],
+  "worldgen_test_exclude_list": [
+    {
+      "name": "Raft.yaml",
+      "reason": "Temporarily excluded. The WorldGen spoiler test times out at 300 seconds."
+    },
+    {
+      "name": "The Witness.yaml",
+      "reason": "Temporarily excluded. The WorldGen spoiler test takes 261 seconds."
     }
   ]
 }

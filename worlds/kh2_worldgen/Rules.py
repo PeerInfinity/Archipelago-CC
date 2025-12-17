@@ -37,7 +37,7 @@ def _kingdomhearts2worldgen_dc_unlocked(state: "CollectionState", player: int, A
 
 
 def _kingdomhearts2worldgen_final_form_region_access(state: "CollectionState", player: int) -> bool:
-    return (self.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('Roxas Event Location').can_reach()) or (self.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('(TT3) Underground Concourse Mythril Gem').can_reach()) or (self.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1').can_reach())
+    return (state.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('Roxas Event Location', player).can_reach(state)) or (state.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('(TT3) Underground Concourse Mythril Gem', player).can_reach(state)) or (state.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1', player).can_reach(state))
 
 
 def _kingdomhearts2worldgen_get_ansem_riku_rules(state: "CollectionState", player: int) -> bool:

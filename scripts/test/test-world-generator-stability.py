@@ -637,8 +637,8 @@ def save_results(results: Dict, output_file: str) -> None:
 
 
 def main():
-    # Load default exclude list
-    default_exclude_list = load_template_exclude_list()
+    # Load default exclude list for worldgen tests (includes main + worldgen exclusions)
+    default_exclude_list = load_template_exclude_list(test_type='all')
     # Convert to WorldGen template names
     worldgen_exclude_list = [t.replace('.yaml', ' WorldGen.yaml') for t in default_exclude_list]
 

@@ -213,32 +213,5 @@ class KDL3GameExportHandler(GenericGameExportHandler):
             logger.debug(f"Non-attribute value in subscript: {value_node}")
             return None
     
-    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-process the exported data to resolve f-strings in rules."""
-        if 'regions' in data:
-            data['regions'] = self._process_regions(data['regions'])
-        return data
-
-    def _process_regions(self, regions: Dict[str, Any]) -> Dict[str, Any]:
-        """Process all regions and their locations/entrances/exits."""
-        for player_id, player_regions in regions.items():
-            for region_name, region_data in player_regions.items():
-                # Process locations
-                if 'locations' in region_data:
-                    for location in region_data['locations']:
-                        if 'access_rule' in location:
-                            location['access_rule'] = self.expand_rule(location['access_rule'])
-
-                # Process entrances
-                if 'entrances' in region_data:
-                    for entrance in region_data['entrances']:
-                        if 'access_rule' in entrance:
-                            entrance['access_rule'] = self.expand_rule(entrance['access_rule'])
-
-                # Process exits
-                if 'exits' in region_data:
-                    for exit_data in region_data['exits']:
-                        if 'access_rule' in exit_data:
-                            exit_data['access_rule'] = self.expand_rule(exit_data['access_rule'])
-
-        return regions
+    # NOTE: post_process_data removed - f-string resolution now happens during
+    # the initial export pass via safe_expand_rule() -> expand_rule() -> _convert_f_string()

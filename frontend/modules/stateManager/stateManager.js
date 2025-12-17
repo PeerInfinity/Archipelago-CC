@@ -790,6 +790,10 @@ export class StateManager {
     return InventoryModule.has_all_counts(this, itemCounts);
   }
 
+  has_any_count(itemCounts) {
+    return InventoryModule.has_any_count(this, itemCounts);
+  }
+
   has_from_list(items, count) {
     return InventoryModule.has_from_list(this, items, count);
   }

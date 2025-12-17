@@ -646,8 +646,8 @@ def check_phase1_success(phase1_results: Optional[Dict], game_name: str) -> Tupl
 
 
 def main():
-    # Load default exclude list
-    default_exclude_list = load_template_exclude_list()
+    # Load default exclude list for worldgen tests (includes main + worldgen exclusions)
+    default_exclude_list = load_template_exclude_list(test_type='all')
 
     parser = argparse.ArgumentParser(
         description='Test world generator with round-trip validation'
