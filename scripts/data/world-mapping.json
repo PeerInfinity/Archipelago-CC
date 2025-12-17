@@ -541,9 +541,9 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 61470,
+    "exporter_size": 59239,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
-    "game_logic_size": 5572,
+    "game_logic_size": 5705,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "kh1"
@@ -613,7 +613,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 42239,
+    "exporter_size": 42437,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10922,
     "has_custom_exporter": true,
