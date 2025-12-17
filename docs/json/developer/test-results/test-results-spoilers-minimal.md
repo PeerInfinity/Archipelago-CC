@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-17 21:17:56
+**Generated:** 2025-12-17 22:29:24
 
 **Source Data Created:** 2025-12-16T01:44:07.757974
 
-**Source Data Last Updated:** 2025-12-16T01:44:07.757981
+**Source Data Last Updated:** 2025-12-17T22:29:23.437066
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Total Games:** 74
+- **Passed:** 73 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -63,6 +63,7 @@
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.1KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 41.4KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.5KB | ✅ |
+| Links Awakening DX WorldGen | ❌ Failed | 0 | 0 | 15.1 | 🔴 0.0% | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.4KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |

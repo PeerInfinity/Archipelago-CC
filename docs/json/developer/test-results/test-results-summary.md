@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-17 21:17:56
+**Generated:** 2025-12-17 22:29:24
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,7 +18,7 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 73/73 passed (100.0%)
+- **Minimal Test:** 73/74 passed (98.6%)
 - **Full Test:** 73/73 passed (100.0%)
 - **Multiclient Test:** 73/73 passed (100.0%)
 - **Multiworld Test:** 73/73 passed (100.0%)
@@ -32,11 +32,11 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 73/73 (100.0%)
-- **Templates passing 3 tests:** 0/73 (0.0%)
-- **Templates passing 2 tests:** 0/73 (0.0%)
-- **Templates passing 1 test:** 0/73 (0.0%)
-- **Templates passing 0 tests:** 0/73 (0.0%)
+- **Templates passing all 4 tests:** 73/74 (98.6%)
+- **Templates passing 3 tests:** 0/74 (0.0%)
+- **Templates passing 2 tests:** 0/74 (0.0%)
+- **Templates passing 1 test:** 0/74 (0.0%)
+- **Templates passing 0 tests:** 1/74 (1.4%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -89,6 +89,7 @@ Of the 73 templates passing all 4 tests:
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.1KB | ✅ | 242.1KB |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 41.4KB | 10.7KB | 720.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 17.5KB | ✅ | 655.5KB |
+| Links Awakening DX WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | 575.5KB |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 125.2KB |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.4KB | ✅ | 387.9KB |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.9KB |

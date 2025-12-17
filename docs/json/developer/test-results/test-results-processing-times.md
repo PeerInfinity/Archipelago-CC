@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-17 21:17:56
+**Generated:** 2025-12-17 22:29:24
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,17 +10,17 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 361.8s | 911.8s | 1950.1s | 1543.1s |
-| Average | 5.0s | 12.5s | 26.7s | 21.1s |
+| Total | 368.8s | 915.6s | 1950.1s | 1543.1s |
+| Average | 5.0s | 12.4s | 26.7s | 21.1s |
 | Max | 27.3s | 76.7s | 288.6s | 117.4s |
-| Min | 3.0s | 5.5s | 5.6s | 12.4s |
+| Min | 3.0s | 3.8s | 5.6s | 12.4s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
 | Slowest | Subnautica (27.3s) | Stardew Valley (76.7s) | Dark Souls III (288.6s) | Dark Souls III (117.4s) |
-| Fastest | Paint (3.0s) | The Witness (5.5s) | ChocolateChipCookies (5.6s) | ChocolateChipCookies (12.4s) |
+| Fastest | Paint (3.0s) | Links Awakening DX WorldGen (3.8s) | ChocolateChipCookies (5.6s) | ChocolateChipCookies (12.4s) |
 
 ## Individual Game Processing Times
 
@@ -59,6 +59,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Landstalker - The Treasures of King Nole | 3.2s | 8.5s | 26.8s | 18.6s |
 | Lingo | 4.0s | 6.7s | 17.6s | 21.8s |
 | Links Awakening DX | 9.6s | 16.7s | 21.8s | 19.9s |
+| Links Awakening DX WorldGen | 7.0s | 3.8s | - | - |
 | Lufia II Ancient Cave | 3.3s | 5.7s | 7.7s | 12.9s |
 | Mario & Luigi Superstar Saga | 3.8s | 9.5s | 69.9s | 32.4s |
 | MathProof2p2e4 | 3.3s | 5.7s | 5.6s | 12.4s |

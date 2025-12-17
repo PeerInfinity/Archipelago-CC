@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-16T01:44:07.757974",
-    "last_updated": "2025-12-16T01:44:07.757981",
+    "last_updated": "2025-12-17T22:29:24.527746",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1893,6 +1893,53 @@
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
         "world_directory": "lingo"
+      }
+    },
+    "Links Awakening DX WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "ladx_worldgen",
+      "game_name_from_yaml": "Links Awakening DX WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.99,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/ladx_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 589349,
+        "size_mb": 0.56
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 3.84,
+        "return_code": 1,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 15.1,
+        "warning_count": 0
+      },
+      "template_filename": "Links Awakening DX WorldGen.yaml",
+      "timestamp": "2025-12-17T22:29:12.203158",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "ladx_worldgen",
+        "game_name_from_yaml": "Links Awakening DX WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ladx_worldgen"
       }
     },
     "Links Awakening DX.yaml": {
