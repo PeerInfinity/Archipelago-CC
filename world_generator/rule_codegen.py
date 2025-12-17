@@ -5,6 +5,7 @@ This module transforms JSON rule definitions into Python source code
 that uses the Rule Builder pattern.
 """
 
+import copy
 from typing import Any, Dict, List, Set, Tuple, Optional
 
 
@@ -20,10 +21,12 @@ class RuleCodeGenerator:
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> CC format body
+        self._inline_counter: int = 0  # Counter for generating unique variable prefixes
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
+        self._inline_counter = 0
 
     def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
                      helper_params: Dict[str, List[str]] = None) -> None:
@@ -64,7 +67,30 @@ class RuleCodeGenerator:
             if helper_name in self.helper_bodies:
                 # Expand the helper body, marking this helper as visited
                 new_visited = visited | {helper_name}
-                return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
+                expanded_body = self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
+
+                # Rename local variables to avoid collision with outer scope
+                # This is critical when inlining nested helpers that use the same
+                # variable names (e.g., both outer and inner helper use 'depth')
+                self._inline_counter += 1
+                prefix = f"_h{self._inline_counter}_"
+                expanded_body = self._rename_local_variables(expanded_body, prefix)
+
+                # If this helper has parameters, substitute parameter names with argument expressions
+                if helper_name in self.helper_params:
+                    params = self.helper_params[helper_name]
+                    args = rule.get('args', [])
+                    if params and args:
+                        # Create a mapping from parameter names to argument expressions
+                        param_to_arg = {}
+                        for i, param in enumerate(params):
+                            if i < len(args):
+                                param_to_arg[param] = args[i]
+                        # Substitute parameter references in the expanded body
+                        if param_to_arg:
+                            expanded_body = self._substitute_names(expanded_body, param_to_arg)
+
+                return expanded_body
             # Unknown helper - return as-is
             return rule
 
@@ -108,6 +134,155 @@ class RuleCodeGenerator:
                     self._expand_helper_refs(item, visited) if isinstance(item, dict) else item
                     for item in value
                 ]
+        return result
+
+    def _substitute_names(self, rule: Dict[str, Any], name_map: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Substitute name references in a rule with the corresponding expressions.
+
+        This is used when inlining helper functions to replace parameter names
+        with the actual argument expressions.
+
+        Args:
+            rule: Rule dict to process
+            name_map: Mapping from name strings to their replacement expressions
+
+        Returns:
+            Rule dict with name references substituted
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type', '')
+
+        # If this is a name reference and it's in our map, replace it
+        if rule_type == 'name':
+            name = rule.get('name', '')
+            if name in name_map:
+                # Return a deep copy of the replacement to avoid shared references
+                return copy.deepcopy(name_map[name])
+            return rule
+
+        # For other rule types, recursively substitute in nested rules
+        result = dict(rule)
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                result[key] = self._substitute_names(value, name_map)
+            elif isinstance(value, list):
+                result[key] = [
+                    self._substitute_names(item, name_map) if isinstance(item, dict) else item
+                    for item in value
+                ]
+        return result
+
+    def _find_assigned_names(self, rule: Dict[str, Any]) -> Set[str]:
+        """
+        Find all variable names that are assigned in a rule.
+
+        This is used when inlining helpers to identify local variables
+        that need to be renamed to avoid collision with the outer scope.
+
+        Args:
+            rule: Rule dict to scan
+
+        Returns:
+            Set of variable names that are assigned
+        """
+        assigned = set()
+
+        if not isinstance(rule, dict):
+            return assigned
+
+        rule_type = rule.get('type', '')
+
+        # Check for assign statements
+        if rule_type == 'assign':
+            var_name = rule.get('var') or rule.get('name')
+            if var_name:
+                assigned.add(var_name)
+
+        # Recursively scan nested rules
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                assigned.update(self._find_assigned_names(value))
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        assigned.update(self._find_assigned_names(item))
+
+        return assigned
+
+    def _rename_local_variables(self, rule: Dict[str, Any], prefix: str) -> Dict[str, Any]:
+        """
+        Rename all local variables in a rule to avoid collisions when inlining.
+
+        This finds all assigned variable names and renames both the assignments
+        and all references to those variables.
+
+        Args:
+            rule: Rule dict to process
+            prefix: Unique prefix to add to variable names
+
+        Returns:
+            Rule dict with renamed variables
+        """
+        # Find all assigned variable names
+        assigned_names = self._find_assigned_names(rule)
+
+        if not assigned_names:
+            return rule
+
+        # Create rename map
+        rename_map = {name: f"{prefix}{name}" for name in assigned_names}
+
+        # Apply renaming to both assignments and references
+        return self._apply_rename(rule, rename_map)
+
+    def _apply_rename(self, rule: Dict[str, Any], rename_map: Dict[str, str]) -> Dict[str, Any]:
+        """
+        Apply variable renaming to a rule.
+
+        Args:
+            rule: Rule dict to process
+            rename_map: Mapping from old names to new names
+
+        Returns:
+            Rule dict with renamed variables
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type', '')
+        result = dict(rule)
+
+        # Handle assign statements - rename the target variable
+        if rule_type == 'assign':
+            var_name = result.get('var') or result.get('name')
+            if var_name and var_name in rename_map:
+                if 'var' in result:
+                    result['var'] = rename_map[var_name]
+                if 'name' in result:
+                    result['name'] = rename_map[var_name]
+
+        # Handle name references
+        if rule_type == 'name':
+            name = result.get('name', '')
+            if name in rename_map:
+                result['name'] = rename_map[name]
+
+        # Recursively process nested rules
+        for key, value in rule.items():
+            if key in ('var', 'name') and rule_type in ('assign', 'name'):
+                # Already handled above
+                continue
+            if isinstance(value, dict):
+                result[key] = self._apply_rename(value, rename_map)
+            elif isinstance(value, list):
+                result[key] = [
+                    self._apply_rename(item, rename_map) if isinstance(item, dict) else item
+                    for item in value
+                ]
+
         return result
 
     def get_function_name(self, helper_name: str) -> str:

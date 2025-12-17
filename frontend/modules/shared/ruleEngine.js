@@ -2743,9 +2743,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'binary_op': {
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3673,8 +3681,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'compare': {
         // Handle comparison operations: ==, !=, <, <=, >, >=
         // Note: 'compare' is the type from Python analyzer, 'comparison' is the canonical name
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3699,8 +3715,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'binary_op': {
         // Handle binary arithmetic operations: +, -, *, /, //, %
         // Note: 'binary_op' is the type from Python analyzer, 'binop' is the canonical name
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3881,10 +3905,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        // Create a new scope for this block (inheriting from parent scope)
-        // Track if this is a top-level block (localScope was null)
+        // Use parent scope directly for Python-like scoping semantics
+        // In Python, blocks don't create a new scope - variables assigned
+        // in a block are visible in the enclosing function scope.
+        // This is needed for worldgen rules where blocks assign variables
+        // that are referenced later in the same function.
         const isTopLevelBlock = localScope === null;
-        const blockScope = isTopLevelBlock ? {} : { ...localScope };
+        const blockScope = isTopLevelBlock ? {} : localScope;
 
         for (let i = 0; i < rule.statements.length; i++) {
           const stmt = rule.statements[i];
@@ -3923,7 +3950,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        const value = evaluateRule(rule.value, context, depth + 1, localScope);
+        let value = evaluateRule(rule.value, context, depth + 1, localScope);
+
+        // Unwrap return marker if block was used as expression
+        if (value && typeof value === 'object' && value.__isReturn) {
+          value = value.value;
+        }
 
         if (rule.op && rule.op !== '=') {
           // Compound assignment
@@ -4198,7 +4230,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'if_statement': {
         // Execute body or orelse statements based on test condition
-        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+        let testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+
+        // Unwrap return marker if block was used as test expression
+        if (testResult && typeof testResult === 'object' && testResult.__isReturn) {
+          testResult = testResult.value;
+        }
 
         if (testResult === undefined) {
           result = undefined;
