@@ -1076,6 +1076,9 @@ class {world_class}(RuleWorldMixin, World):
 {base_id_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
+    # Use auto indirect conditions since we set access_rule directly on entrances
+    # rather than using RuleBuilder.set_rule() which would register indirect_connections
+    explicit_indirect_conditions: ClassVar[bool] = False
 {collect_all_items_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
