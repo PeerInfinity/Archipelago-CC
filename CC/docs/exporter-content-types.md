@@ -4,18 +4,9 @@ This document categorizes the different types of content that appear in custom g
 
 ## Processing Status
 
-### Processed Exporters (8)
-- alttp.py
-- factorio.py
-- kh2.py
-- ladx.py
-- lingo.py
-- messenger.py
-- sm.py
-- subnautica.py
-
-### Unprocessed Exporters (35)
+### Processed Exporters (33)
 - ahit.py
+- alttp.py
 - aquaria.py
 - bomb_rush_cyberfunk.py
 - celeste64.py
@@ -24,15 +15,26 @@ This document categorizes the different types of content that appear in custom g
 - cvcotm.py
 - dark_souls_3.py
 - dlcquest.py
+- factorio.py
 - ffmq.py
 - inscryption.py
 - kdl3.py
 - kh1.py
+- kh2.py
+- ladx.py
 - landstalker.py
+- lingo.py
 - marioland2.py
+- messenger.py
 - mlss.py
 - mm2.py
 - mmbn3.py
+- sm.py
+- stardew_valley.py
+- subnautica.py
+- tloz.py
+
+### Unprocessed Exporters (10)
 - musedash.py
 - osrs.py
 - overcooked2.py
@@ -41,10 +43,8 @@ This document categorizes the different types of content that appear in custom g
 - sc2.py
 - sm64ex.py
 - soe.py
-- stardew_valley.py
 - terraria.py
 - timespinner.py
-- tloz.py
 - tww.py
 - v6.py
 - wargroove.py
@@ -83,30 +83,55 @@ Boolean/string/list attributes set at class level that control exporter behavior
 #### AUTO_EXPORT_DISCOVERED_HELPERS
 Controls whether helpers discovered during rule analysis are automatically exported.
 - **Default**: True (in GenericGameExportHandler)
-- **Exporters using non-default**: (none found in processed exporters)
+- **Exporters setting to False**:
+  - inscryption.py: Class methods can't be auto-exported
 
 #### AUTO_PRESERVE_LARGE_HELPERS
 Controls automatic preservation of large helper functions.
 - **Default**: True (in GenericGameExportHandler)
 - **Exporters setting to False**:
+  - ahit.py
+  - civ_6.py
+  - cvcotm.py
+  - dark_souls_3.py
+  - ffmq.py
+  - kdl3.py
+  - kh1.py
+  - landstalker.py
+  - marioland2.py
   - messenger.py
+  - mlss.py
+  - mm2.py
+  - mmbn3.py
+  - tloz.py
 
 #### HELPER_MODULES
 List of module paths containing helper functions to search.
 - **Default**: [] (in BaseGameExportHandler)
 - **Exporters using**:
+  - ahit.py: `['worlds.ahit.Rules']`
+  - kdl3.py: `['worlds.kdl3.rules']`
+  - kh1.py: `['worlds.kh1.Rules']`
   - kh2.py: `['worlds.kh2.Rules']`
   - lingo.py: `['worlds.lingo.rules']`
+  - mlss.py: `['worlds.mlss.StateLogic']`
 
 #### HELPERS_TO_PRESERVE
-List of helper names that should be preserved as callable functions.
-- **Default**: [] (in BaseGameExportHandler)
-- **Exporters using**: (none found - most use HELPERS_TO_EXPORT_BLACKLIST instead)
+Set of helper names that should be preserved as callable functions (not inlined).
+- **Default**: set() (in BaseGameExportHandler)
+- **Exporters using**:
+  - ahit.py: `{'can_clear_required_act', 'can_use_hat', 'get_hat_cost', 'has_relic_combo'}`
+  - kdl3.py: `{'can_assemble_rob', 'can_fix_angel_wings'}`
+  - kh1.py: `{'has_x_worlds'}`
+  - marioland2.py: `set()` (empty - all helpers exported to rules.json)
 
 #### HELPERS_TO_EXPORT_BLACKLIST
-List of helper names that should NOT be exported.
-- **Default**: [] (in BaseGameExportHandler)
+Set of helper names that should NOT be exported (too complex for frontend).
+- **Default**: set() (in BaseGameExportHandler)
 - **Exporters using**:
+  - bomb_rush_cyberfunk.py: `{'graffiti_spots', 'build_access_cache', ...}` (uses globals/loops)
+  - kdl3.py: `{'can_assemble_rob', 'can_fix_angel_wings'}` (dynamic function dispatch)
+  - kh1.py: `{'has_emblems', 'has_defensive_tools', ...}` (loops, complex logic)
   - kh2.py: `['kh2_can_reach', 'kh2_list_any_sum', ...]` (extensive list)
   - lingo.py: `['_lingo_can_do_late_blue_sun', ...]`
 
@@ -125,13 +150,16 @@ Dict mapping setting names to computation functions.
 Whether to use resolved item names (True) or original item names (False).
 - **Default**: False (in BaseGameExportHandler)
 - **Exporters setting to True**:
+  - dlcquest.py
   - factorio.py
   - ladx.py
+  - landstalker.py
 
 #### ADD_SPHERE_ITEMS_UPFRONT
 Whether to add sphere items at start vs incrementally.
 - **Default**: False (in GenericGameExportHandler)
-- **Exporters using**: (none found in processed exporters)
+- **Exporters setting to True**:
+  - dlcquest.py: Needed for coin-based access rules
 
 #### USE_AUTO_INDIRECT_CONDITIONS
 Whether to automatically detect indirect conditions in rules.
@@ -145,6 +173,30 @@ Dict mapping self.attr_name to settings names for rule analysis.
 - **Exporters using**:
   - kh2.py: `{'fight_logic': 'FightDifficulty', ...}`
 
+#### NAME_REMAPPING
+Dict mapping parameter names to actual setting names.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - kdl3.py: `{'ow_boss_req': 'ow_boss_requirement'}`
+
+#### SETTINGS_TO_CONVERT
+Set of setting names that should be converted from 'name' type to 'setting_value' type.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - kdl3.py: `{'open_world', 'ow_boss_requirement'}`
+
+#### HELPER_PARAM_MAPPINGS
+Dict mapping helper parameter names to slot_data keys.
+- **Default**: Not defined in base
+- **Exporters using**:
+  - mm2.py: `{'can_defeat_enough_rbms': {'required': 'wily_5_requirement', ...}}`
+
+#### HAS_RULE_HELPER_THRESHOLD
+Threshold for preserving Has rules as helpers (custom Stardew Valley attribute).
+- **Default**: Not defined in base
+- **Exporters using**:
+  - stardew_valley.py: `HAS_RULE_HELPER_THRESHOLD = 1`
+
 ---
 
 ### 2. Rule Processing Methods
@@ -155,26 +207,40 @@ Methods that transform or analyze access rules during export.
 Transform rule structures, often to inline or simplify complex patterns.
 - **Base implementation**: Returns rule unchanged
 - **Exporters overriding**:
-  - messenger.py: Handles `inferred_*` item patterns and `items_helper.CAN_*` capabilities
+  - ahit.py: Resolves can_clear_required_act to can_reach + location_rule_ref
+  - celeste64.py: Inlines location_rule, region_connection_rule, goal_rule from logic mappings
+  - cvcotm.py: Converts self.method_name function calls to helper nodes
   - factorio.py: Simplifies `technology.name` attribute access
+  - ffmq.py: Binary op string concatenation, item_groups subscript resolution
+  - inscryption.py: Expands pseudo-items (Camera_And_Meat, All_Epitaph_Pieces, etc.)
+  - kdl3.py: Name remapping, f_string conversion, setting_value conversion
+  - kh1.py: Options resolution, self.method conversion, has_all_counts fixes
+  - landstalker.py: has_all with set() simplification, all_of iterator resolution
+  - marioland2.py: Options resolution, self.options.* pattern handling
+  - messenger.py: Handles `inferred_*` item patterns and `items_helper.CAN_*` capabilities
   - subnautica.py: Handles `location.can_reach()` patterns for Aurora Drive Room
+  - tloz.py: f_string resolution, can_reach pattern handling for Boss Status
 
 #### expand_helper(helper_def, helper_name)
 Transform helper function definitions.
 - **Base implementation**: Returns helper unchanged
 - **Exporters overriding**:
+  - cvcotm.py: Returns None (preserves helper nodes)
+  - kh1.py: Maps of KH1 helpers to simplified rules
   - kh2.py: Complex expansion for form abilities, party requirements, visit locks
   - subnautica.py: Expands SwimRule property accesses (base_depth, consider_items)
 
 #### postprocess_rule(rule)
 Post-process rules after initial analysis.
 - **Base implementation**: Returns rule unchanged
-- **Exporters overriding**: (none found in processed exporters)
+- **Exporters overriding**:
+  - dark_souls_3.py: Transforms _can_get/_can_go_to to location_check/can_reach
 
 #### postprocess_entrance_rule(rule, entrance_name)
 Post-process entrance/exit rules specifically.
 - **Base implementation**: Returns rule unchanged
 - **Exporters overriding**:
+  - dark_souls_3.py: Delegates to postprocess_rule
   - ladx.py: Handles isinstance pattern for LADXR conditions
 
 #### handle_special_function_call(function_name, args, func)
@@ -182,6 +248,7 @@ Handle game-specific function call patterns.
 - **Base implementation**: Returns None (no handling)
 - **Exporters overriding**:
   - alttp.py: Handles `has_triforce_pieces`, `has_crystals`, `has_medallions`, etc.
+  - celeste64.py: Handles location_rule, region_connection_rule, goal_rule
 
 #### handle_complex_exit_rule(exit_name, access_rule_method)
 Handle complex exit/entrance rule extraction.
@@ -189,10 +256,12 @@ Handle complex exit/entrance rule extraction.
 - **Exporters overriding**:
   - ladx.py: Extracts LADXR condition objects from entrance.condition attribute
 
-#### override_rule_analysis(rule)
+#### override_rule_analysis(rule_func, rule_target_name)
 Completely override rule analysis for specific patterns.
 - **Base implementation**: Returns None
-- **Exporters overriding**: (none found in processed exporters)
+- **Exporters overriding**:
+  - celeste_open_world.py: Examines closure variables for data-driven patterns (connection.possible_access, only_access, only_item)
+  - stardew_valley.py: Detects and serializes StardewRule objects
 
 #### should_preserve_as_helper(helper_name, helper_def, size)
 Decide if a helper should be preserved as a callable.
@@ -210,7 +279,12 @@ Methods that export game-specific data structures.
 Export item classification and properties.
 - **Base implementation**: Exports progression/useful/trap classification
 - **Exporters overriding**:
+  - ahit.py: Custom item_table import and classification mapping
   - alttp.py: Adds dungeon items, crystals, keys with special handling
+  - dlcquest.py: Custom handling for coin items and events
+  - kh1.py: item_name_to_id with classification, event item scanning
+  - marioland2.py: Event item scanning for vanilla golden coins
+  - stardew_valley.py: Adds virtual event items (Received Progression Percent)
 
 #### get_item_max_counts(world)
 Export maximum counts for progressive/stackable items.
@@ -222,6 +296,7 @@ Export maximum counts for progressive/stackable items.
 Map item names to their progression identifiers.
 - **Base implementation**: Returns empty dict
 - **Exporters overriding**:
+  - bomb_rush_cyberfunk.py: Additive mapping for REP items (8 REP = 8, etc.)
   - messenger.py: Maps Time Shard variants to 'Time Shard'
 
 #### get_itempool_counts(world)
@@ -229,25 +304,37 @@ Export counts of items in the item pool.
 - **Base implementation**: Standard counting
 - **Exporters overriding**: (none found in processed exporters)
 
-#### get_settings_data(world)
+#### get_settings_data(world, multiworld, player)
 Export game settings and options.
 - **Base implementation**: Exports option values
 - **Exporters overriding**:
+  - ahit.py: Game-specific settings (HatItems, UmbrellaLogic, etc.)
   - alttp.py: Complex settings with dungeon info, medallion requirements
+  - civ_6.py: Era requirements data
+  - cvcotm.py: Game-specific options (nerf_roc_wing, etc.)
+  - kdl3.py: copy_abilities dictionary, ability_map
+  - kh1.py: Extensive KH1 options cache
   - lingo.py: Door shuffle data, mastery requirements, panel data
+  - marioland2.py: required_golden_coins, auto_scroll_levels, sprite_data
 
 #### get_game_info(world)
 Export general game information.
 - **Base implementation**: Returns basic game info
 - **Exporters overriding**:
-  - factorio.py: Adds `required_technologies` list
-  - ladx.py: Adds `accumulator_rules` for RUPEES and `prog_items_init`
-  - lingo.py: Adds panels_by_color, sunwarp configuration
+  - ahit.py: chapter_costs, hat_info, relic_groups
+  - dlcquest.py: accumulator_rules, prog_items_init for coins
+  - factorio.py: `required_technologies` list
+  - ladx.py: `accumulator_rules` for RUPEES and `prog_items_init`
+  - lingo.py: panels_by_color, sunwarp configuration
+  - stardew_valley.py: total_progression_items
 
 #### get_helper_definitions(world)
 Export helper function definitions.
 - **Base implementation**: Discovers and exports helpers
 - **Exporters overriding**:
+  - cvcotm.py: Manually builds helper rule definitions based on settings
+  - mmbn3.py: Manually exports explore_score helper as conditional rule structure
+  - stardew_valley.py: Exports Has rules as helper definitions
   - subnautica.py: Applies SwimRule expansion to all helpers
 
 ---
@@ -261,6 +348,7 @@ Add custom attributes to region data.
 - **Base implementation**: Returns empty dict
 - **Exporters overriding**:
   - alttp.py: Adds hint_text, is_light_world, is_dark_world, dungeon info
+  - aquaria.py: Adds dynamically_added for post-sphere-calc regions
 
 #### get_location_attributes(location)
 Add custom attributes to location data.
@@ -281,20 +369,36 @@ Override the standard access rule for specific locations.
 
 Methods called before or after main export phases.
 
-#### preprocess_world_data(world)
+#### preprocess_world_data(world, export_data, player)
 Called before main export processing.
 - **Base implementation**: Does nothing
-- **Exporters overriding**: (none found in processed exporters)
+- **Exporters overriding**:
+  - celeste64.py: Loads logic mappings before rule processing
+  - civ_6.py: Captures era requirements data
+  - inscryption.py: Stores world data for rule expansion
+  - kh1.py: Populates options cache
 
-#### post_process_data(data, world)
+#### post_process_data(data)
 Called after all data export, before serialization.
 - **Base implementation**: Returns data unchanged
-- **Exporters overriding**: (none found in processed exporters)
+- **Exporters overriding**:
+  - civ_6.py: Fixes era subscript patterns in rules
+  - cvcotm.py: Fixes region data structure
+  - dlcquest.py: Adds coin items to items dictionary
+  - kdl3.py: Resolves f-strings in rules
+  - kh1.py: Fixes has_all_counts, has_x_worlds, and other broken patterns
 
 #### post_process_location_data(location_data, location)
 Post-process individual location data.
 - **Base implementation**: Returns data unchanged
 - **Exporters overriding**: (none found in processed exporters)
+
+#### postprocess_regions(multiworld, player)
+Fix or add missing regions.
+- **Base implementation**: Does nothing
+- **Exporters overriding**:
+  - aquaria.py: Adds missing regions not in multiworld.regions
+  - cvcotm.py: Adds Menu region if it doesn't exist
 
 ---
 
@@ -302,10 +406,11 @@ Post-process individual location data.
 
 Methods for tracking context during rule analysis.
 
-#### set_context(context_type, context_value)
-Set general analysis context.
+#### set_context(location_name)
+Set the current location context for rule expansion.
 - **Base implementation**: Does nothing
-- **Exporters overriding**: (none found in processed exporters)
+- **Exporters overriding**:
+  - tloz.py: Tracks current location for Boss Status rule resolution
 
 #### set_exit_context(exit_name)
 Set context for exit/entrance analysis.
@@ -327,6 +432,12 @@ Patterns for loading external rule/data files.
 Loading rules from domain-specific language files.
 - **Exporters using**:
   - sm.py: Loads from `VariaRandomizer` DSL files, parses complex access rules
+
+#### Logic Mapping Loading
+Loading rule mappings from Python data structures.
+- **Exporters using**:
+  - celeste64.py: Rules.location_standard_moves_logic, Rules.region_standard_moves_logic
+  - kdl3.py: location_name.level_names_inverse
 
 #### JSON Data Loading
 Loading rules or data from JSON files.
@@ -364,16 +475,37 @@ Replace/normalize item or location names.
 - **Exporters using**:
   - alttp.py: Normalizes item names (e.g., 'Fighter Sword' -> 'Progressive Sword')
 
-#### prepare_closure_vars(captured_vars, helper_name)
+#### prepare_closure_vars(rule_func, closure_vars)
 Prepare captured closure variables for export.
 - **Base implementation**: Returns vars unchanged
 - **Exporters overriding**:
   - kh2.py: Resolves form-specific variables, ability mappings
+  - landstalker.py: Converts Region objects to codes, stores in stack for expansion
+  - mm2.py: Injects module-level data (robot_masters, weapons_to_name)
 
 #### cleanup_settings(settings)
 Clean up exported settings before final output.
 - **Base implementation**: Returns settings unchanged
 - **Exporters overriding**: (none found in processed exporters)
+
+#### should_process_multistatement_if_bodies()
+Enable processing of if-statements with multiple statements.
+- **Default**: False (in base)
+- **Exporters returning True**:
+  - marioland2.py: Complex rule functions need multi-statement handling
+
+#### should_recursively_analyze_closures()
+Enable recursive analysis of closure variable function calls.
+- **Default**: False (in base)
+- **Exporters returning True**:
+  - marioland2.py: Needs closure variables inlined
+
+#### resolve_f_string(f_string_rule)
+Resolve f-string AST nodes to constant strings.
+- **Base implementation**: Attempts string concatenation
+- **Exporters overriding**:
+  - kdl3.py: Handles level_names_inverse subscript expressions
+  - tloz.py: Wraps result in constant node
 
 ---
 
@@ -394,7 +526,23 @@ Converting game-specific condition objects to rule structures.
 #### Accumulator Rules
 Rules for accumulating item values (e.g., currency).
 - **Exporters using**:
+  - dlcquest.py: Accumulator rules for coins
   - ladx.py: Accumulator rules for RUPEES from rupee items
+
+#### Custom Rule System Serialization
+Serializing game-specific rule objects (not lambdas).
+- **Exporters using**:
+  - stardew_valley.py: `_serialize_stardew_rule()` for StardewRule objects (Received, Reach, And, Or, Count, Has, etc.)
+
+#### Entrance Caching
+Caching entrance -> connected_region mappings.
+- **Exporters using**:
+  - ahit.py: `_get_entrance_connected_region()` with cache
+
+#### Custom Game Data Methods
+Additional methods for extracting game-specific data.
+- **Exporters using**:
+  - ahit.py: `get_chapter_costs()`, `get_hat_costs()`, `get_relic_groups()`
 
 ---
 
@@ -403,18 +551,22 @@ Rules for accumulating item values (e.g., currency).
 Based on this analysis, potential candidates for factoring into base/generic:
 
 ### High Priority
-1. **Item name mapping patterns** - Both ladx.py and kh2.py have similar mapping approaches
-2. **Condition object conversion** - The AND/OR/COUNT pattern in ladx.py could be generalized
-3. **Accumulator rules** - The pattern from ladx.py could benefit other games with currency
+1. **AUTO_PRESERVE_LARGE_HELPERS = False** - Most exporters disable this; should likely be the default
+2. **Options resolution patterns** - kh1.py, marioland2.py, and others all resolve options.* to constants
+3. **f_string resolution** - kdl3.py and tloz.py both need f_string handling
+4. **Item name mapping patterns** - ladx.py, kh2.py have similar mapping approaches
+5. **Condition object conversion** - The AND/OR/COUNT pattern in ladx.py could be generalized
 
 ### Medium Priority
-1. **Location dependency patterns** - subnautica.py's location.can_reach() pattern
-2. **SwimRule-style property expansion** - Could be generalized for option classes with computed properties
-3. **DSL parsing infrastructure** - sm.py's approach could be templated
+1. **Accumulator rules** - dlcquest.py and ladx.py both use this pattern for currency
+2. **postprocess_regions()** - aquaria.py and cvcotm.py both add missing regions
+3. **prepare_closure_vars()** - landstalker.py, kh2.py, mm2.py all enhance closure vars
+4. **post_process_data()** - Many exporters need to fix analyzer output issues
 
 ### Lower Priority
-1. **Helper blacklist patterns** - Both kh2.py and lingo.py use similar blacklist approaches
-2. **Form/ability expansion** - kh2.py's complex expansion is very game-specific but the pattern could be abstracted
+1. **Custom rule system support** - stardew_valley.py's StardewRule serialization is game-specific but could be templated
+2. **Logic mapping loading** - celeste64.py's pattern could be abstracted for other games
+3. **Entrance caching** - ahit.py's pattern could be useful for other games with entrance shuffling
 
 ---
 
@@ -423,3 +575,4 @@ Based on this analysis, potential candidates for factoring into base/generic:
 - This document should be updated as more exporters are processed
 - Content types may be added/refined as new patterns are discovered
 - The goal is to identify common patterns that could reduce code duplication
+- Most exporters set AUTO_PRESERVE_LARGE_HELPERS = False, suggesting this should be reconsidered as a default
