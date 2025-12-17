@@ -217,7 +217,6 @@ Playthrough:
   Level 3 Key Drop (Zols Entrance): Bomb
   Level 3 Key Drop (Zols and Keese West): Bomb
   Level 3 Rupee Drop (Zols and Keese East): Bomb
-  Level 5 Boss Status: Boss 5 Defeated
   Level 5 Key Drop (Gibdos North): Book of Magic
   Level 5 Key Drop (Gibdos, Keese, and Pols Voice): Bomb
   Level 5 Key Drop (Keese North): Sword
@@ -244,7 +243,7 @@ Playthrough:
   Level 4 Boss Status: Boss 4 Defeated
   Level 4 Key Drop (Keese Central): Bomb
   Level 4 Map: Bomb
-  Level 5 Triforce: Triforce Fragment
+  Level 5 Boss Status: Boss 5 Defeated
   Level 6 Triforce: Triforce Fragment
   Level 7 Bomb Drop (Digdogger): Bomb
   Level 7 Bomb Drop (Dodongos): Raft
@@ -260,6 +259,7 @@ Playthrough:
 }
 8: {
   Level 4 Triforce: Triforce Fragment
+  Level 5 Triforce: Triforce Fragment
   Level 7 Triforce: Triforce Fragment
   Magical Sword Grave: Bomb
 }

@@ -262,12 +262,25 @@
             "name": "Level 1 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "HasGroup",
+              "rule": "And",
               "options": [],
-              "args": {
-                "group": "weapons",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "weapons",
+                    "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 1 Boss"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Boss 1 Defeated",
@@ -1013,6 +1026,13 @@
                   "args": {
                     "group": "weapons",
                     "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 2 Boss"
                   }
                 },
                 {
@@ -1913,6 +1933,13 @@
                   "args": {
                     "group": "weapons",
                     "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 3 Boss"
                   }
                 },
                 {
@@ -2894,6 +2921,13 @@
                   "args": {
                     "group": "weapons",
                     "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 4 Boss"
                   }
                 },
                 {
@@ -4439,6 +4473,13 @@
                   }
                 },
                 {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 5 Boss"
+                  }
+                },
+                {
                   "rule": "Or",
                   "options": [],
                   "children": [
@@ -5647,6 +5688,13 @@
                   "args": {
                     "group": "weapons",
                     "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 6 Boss"
                   }
                 },
                 {
@@ -7522,6 +7570,13 @@
                   "args": {
                     "group": "weapons",
                     "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 7 Boss"
                   }
                 },
                 {
@@ -9594,6 +9649,13 @@
                   "args": {
                     "group": "weapons",
                     "count": 1
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Level 8 Boss"
                   }
                 },
                 {
@@ -13503,7 +13565,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "tloz_worldgen"
     }
   },
   "game_info": {

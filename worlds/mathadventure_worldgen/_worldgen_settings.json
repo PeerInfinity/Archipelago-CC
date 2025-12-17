@@ -1,0 +1,20 @@
+{
+  "game": "MathProof2p2e4",
+  "assume_bidirectional_exits": false,
+  "use_resolved_items": false,
+  "options": {
+    "accessibility": 0,
+    "exclude_locations": [],
+    "item_links": [],
+    "local_items": [],
+    "non_local_items": [],
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "randomize_items": false,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location_hints": []
+  },
+  "world_directory": "mathadventure"
+}

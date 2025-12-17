@@ -794,7 +794,7 @@
         "locations": [
           {
             "name": "Tree Zone 5 - Boss",
-            "id": 12,
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -1245,7 +1245,7 @@
         "locations": [
           {
             "name": "Space Zone 2 - Boss",
-            "id": 20,
+            "id": null,
             "access_rule": {
               "type": "conditional",
               "test": {
@@ -1962,7 +1962,7 @@
         "locations": [
           {
             "name": "Macro Zone 4 - Boss",
-            "id": 29,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
@@ -2810,7 +2810,7 @@
         "locations": [
           {
             "name": "Pumpkin Zone 4 - Boss",
-            "id": 40,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
@@ -3294,7 +3294,7 @@
         "locations": [
           {
             "name": "Mario Zone 4 - Boss",
-            "id": 50,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",
@@ -4023,7 +4023,7 @@
         "locations": [
           {
             "name": "Turtle Zone 3 - Boss",
-            "id": 57,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "has_any",

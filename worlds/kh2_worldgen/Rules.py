@@ -37,7 +37,7 @@ def _kingdomhearts2worldgen_dc_unlocked(state: "CollectionState", player: int, A
 
 
 def _kingdomhearts2worldgen_final_form_region_access(state: "CollectionState", player: int) -> bool:
-    return (self.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('Roxas Event Location').can_reach()) or (self.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('(TT3) Underground Concourse Mythril Gem').can_reach())
+    return (self.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('Roxas Event Location').can_reach()) or (self.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1').can_reach()) or (self.multiworld.get_location('(TT3) Underground Concourse Mythril Gem').can_reach()) or (self.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1').can_reach())
 
 
 def _kingdomhearts2worldgen_get_ansem_riku_rules(state: "CollectionState", player: int) -> bool:
@@ -372,7 +372,7 @@ def _kingdomhearts2worldgen_hundred_acre_unlocked(state: "CollectionState", play
 
 
 def _kingdomhearts2worldgen_kh2_can_reach(state: "CollectionState", player: int, loc) -> bool:
-    return state.can_reach('', "Region", player)
+    return state.can_reach('', 'location', player)
 
 
 def _kingdomhearts2worldgen_kh2_can_reach_any(state: "CollectionState", player: int, loc_set) -> bool:
@@ -384,7 +384,7 @@ def _kingdomhearts2worldgen_kh2_dict_count(state: "CollectionState", player: int
 
 
 def _kingdomhearts2worldgen_kh2_dict_one_count(state: "CollectionState", player: int, item_name_to_count) -> int:
-    return sum(1 for [item_name, item_amount] in item_name_to_count.items())
+    return sum(1 for [item_name, item_amount] in item_name_to_count.items() if (state.count('', player) >= item_amount))
 
 
 def _kingdomhearts2worldgen_kh2_has_all(state: "CollectionState", player: int, items) -> bool:
@@ -396,7 +396,7 @@ def _kingdomhearts2worldgen_kh2_has_any(state: "CollectionState", player: int, i
 
 
 def _kingdomhearts2worldgen_kh2_list_any_sum(state: "CollectionState", player: int, list_of_item_name_list) -> int:
-    return sum(1 for item_list in list_of_item_name_list)
+    return sum(1 for item_list in list_of_item_name_list if state.has_any((), player))
 
 
 def _kingdomhearts2worldgen_kh2_list_count_sum(state: "CollectionState", player: int, item_name_set) -> int:

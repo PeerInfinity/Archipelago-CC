@@ -520,9 +520,14 @@
             "name": "To Bedroom Elevator From Office",
             "connected_region": "Bedroom Elevator",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             }
           },
           {
@@ -599,9 +604,14 @@
             "name": "Puzzle Solved Bedroom Elevator",
             "id": 27111,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             },
             "item": {
               "name": "Water Pot Bottom",
@@ -688,9 +698,14 @@
             "name": "To Office From Bedroom Elevator",
             "connected_region": "Office",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             }
           },
           {
@@ -1997,8 +2012,8 @@
                                   ]
                                 },
                                 {
-                                  "type": "setting_value",
-                                  "setting": "early_lightning"
+                                  "type": "constant",
+                                  "value": 0
                                 }
                               ]
                             },
@@ -2846,8 +2861,8 @@
                           ]
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "early_beth"
+                          "type": "constant",
+                          "value": 1
                         }
                       ]
                     }
@@ -7514,13 +7529,17 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": 0,
+        "early_beth": 1,
+        "early_lightning": 0,
         "exclude_locations": [],
         "item_links": [],
+        "ixupi_captures_needed": 10,
         "local_items": [],
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "puzzle_hints_required": 1,
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},

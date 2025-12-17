@@ -1,0 +1,33 @@
+{
+  "game": "Bomb Rush Cyberfunk",
+  "assume_bidirectional_exits": false,
+  "use_resolved_items": false,
+  "options": {
+    "accessibility": 0,
+    "damage_multiplier": 1,
+    "death_link": 0,
+    "dont_save_photos": 0,
+    "exclude_locations": [],
+    "extra_rep_required": 0,
+    "item_links": [],
+    "limited_graffiti": 0,
+    "local_items": [],
+    "logic": 0,
+    "non_local_items": [],
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "score_difficulty": 0,
+    "skip_dreams": 0,
+    "skip_intro": 1,
+    "skip_polo_photos": 0,
+    "skip_statue_hands": 0,
+    "small_graffiti_uses": 0,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location_hints": [],
+    "starting_movestyle": 2,
+    "total_rep": 1400
+  },
+  "world_directory": "bomb_rush_cyberfunk"
+}

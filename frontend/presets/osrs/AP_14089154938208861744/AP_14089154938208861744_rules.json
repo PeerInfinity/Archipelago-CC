@@ -689,7 +689,7 @@
           },
           {
             "name": "Points: Cook's Assistant",
-            "id": 458900,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -777,7 +777,7 @@
           },
           {
             "name": "Points: The Restless Ghost",
-            "id": 458902,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -865,7 +865,7 @@
           },
           {
             "name": "Points: Rune Mysteries",
-            "id": 458916,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -953,7 +953,7 @@
           },
           {
             "name": "Points: X Marks the Spot",
-            "id": 458919,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -1090,7 +1090,7 @@
           },
           {
             "name": "Points: Misthalin Mystery",
-            "id": 458917,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -1350,7 +1350,7 @@
           },
           {
             "name": "Points: Sheep Shearer",
-            "id": 458904,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -2097,7 +2097,7 @@
           },
           {
             "name": "Points: Demon Slayer",
-            "id": 458901,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -2204,7 +2204,7 @@
           },
           {
             "name": "Points: Romeo & Juliet",
-            "id": 458903,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -2311,7 +2311,7 @@
           },
           {
             "name": "Points: Shield of Arrav",
-            "id": 458905,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -3609,7 +3609,7 @@
           },
           {
             "name": "Points: Ernest the Chicken",
-            "id": 458906,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -3854,7 +3854,7 @@
           },
           {
             "name": "Points: Doric's Quest",
-            "id": 458910,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -4102,7 +4102,7 @@
           },
           {
             "name": "Points: Black Knights' Fortress",
-            "id": 458911,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -4284,7 +4284,7 @@
           },
           {
             "name": "Points: Below Ice Mountain",
-            "id": 458920,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -4441,7 +4441,7 @@
           },
           {
             "name": "Points: Goblin Diplomacy",
-            "id": 458914,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -4952,7 +4952,7 @@
           },
           {
             "name": "Points: The Knight's Sword",
-            "id": 458913,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -5426,7 +5426,7 @@
           },
           {
             "name": "Points: Pirate's Treasure",
-            "id": 458915,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -5846,7 +5846,7 @@
         "locations": [
           {
             "name": "Quest: Dragon Slayer",
-            "id": 458773,
+            "id": null,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -6255,7 +6255,7 @@
           },
           {
             "name": "Points: Witch's Potion",
-            "id": 458912,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -6343,7 +6343,7 @@
           },
           {
             "name": "Points: The Corsair Curse",
-            "id": 458918,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -7232,7 +7232,7 @@
           },
           {
             "name": "Points: Vampyre Slayer",
-            "id": 458907,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -7357,7 +7357,7 @@
           },
           {
             "name": "Points: Imp Catcher",
-            "id": 458908,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",
@@ -7702,7 +7702,7 @@
           },
           {
             "name": "Points: Prince Ali Rescue",
-            "id": 458909,
+            "id": null,
             "access_rule": {
               "type": "state_method",
               "method": "can_reach",

@@ -6765,6 +6765,7 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": 0,
+        "bosses_required": 7,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],

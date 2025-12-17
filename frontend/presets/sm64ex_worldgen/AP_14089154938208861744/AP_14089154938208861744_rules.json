@@ -154,12 +154,25 @@
             "name": "Toad (Basement)",
             "id": 3626168,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Power Star",
-                "count": 12
-              }
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Basement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 12
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Metal Cap",
@@ -173,12 +186,25 @@
             "name": "Toad (Second Floor)",
             "id": 3626169,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Power Star",
-                "count": 25
-              }
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Second Floor"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 25
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -192,12 +218,25 @@
             "name": "Toad (Third Floor)",
             "id": 3626170,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Power Star",
-                "count": 35
-              }
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Third Floor"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 35
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -211,12 +250,25 @@
             "name": "MIPS 1",
             "id": 3626171,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Power Star",
-                "count": 13
-              }
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Basement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 13
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -230,12 +282,25 @@
             "name": "MIPS 2",
             "id": 3626172,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Power Star",
-                "count": 44
-              }
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Basement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 44
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -445,9 +510,11 @@
             "name": "WF: Fall onto the Caged Island",
             "id": 3626011,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "WF: Tower"
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1171,12 +1238,25 @@
             "name": "Basement -> Bowser in the Fire Sea",
             "connected_region": "Bowser in the Fire Sea",
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Power Star",
-                "count": 26
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "DDD: Board Bowser's Sub"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Star",
+                    "count": 26
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1764,9 +1844,11 @@
             "name": "DDD: Pole-Jumping for Red Coins",
             "id": 3626058,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Bowser in the Fire Sea Key"
+              }
             },
             "item": {
               "name": "Power Star",
@@ -3749,7 +3831,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "sm64ex_worldgen"
     }
   },
   "game_info": {

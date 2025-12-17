@@ -41487,12 +41487,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "item_check",
@@ -41875,12 +41871,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "or",
@@ -41964,12 +41956,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "or",
@@ -42063,12 +42051,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "or",
@@ -42127,12 +42111,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "and",
@@ -42572,12 +42552,8 @@
             {
               "type": "if_statement",
               "test": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               "body": [
                 {
@@ -42640,12 +42616,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "or",
@@ -42975,12 +42947,8 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "advanced_tactics"
+                    "type": "constant",
+                    "value": false
                   },
                   {
                     "type": "or",
@@ -43012,12 +42980,8 @@
             "type": "assign",
             "name": "power_score",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "self"
-              },
-              "attr": "base_power_rating"
+              "type": "constant",
+              "value": 0
             }
           },
           {
@@ -43080,12 +43044,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "spear_of_adun_presence"
+                "type": "constant",
+                "value": 4
               },
               "op": "==",
               "right": {
@@ -43111,12 +43071,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "spear_of_adun_passive_presence"
+                "type": "constant",
+                "value": 4
               },
               "op": "==",
               "right": {
@@ -43237,12 +43193,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "advanced_tactics"
+                "type": "constant",
+                "value": false
               },
               {
                 "type": "or",

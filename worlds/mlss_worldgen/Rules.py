@@ -21,7 +21,7 @@ def _marioluigisuperstarsagaworldgen_beanFruit(state: "CollectionState", player:
 
 
 def _marioluigisuperstarsagaworldgen_birdo_shop(state: "CollectionState", player: int) -> bool:
-    return state.can_reach('Shop Birdo Flag', "Region", player)
+    return state.can_reach('Shop Birdo Flag', 'Region', player)
 
 
 def _marioluigisuperstarsagaworldgen_brooch(state: "CollectionState", player: int) -> bool:
@@ -61,11 +61,11 @@ def _marioluigisuperstarsagaworldgen_fungitown(state: "CollectionState", player:
 
 
 def _marioluigisuperstarsagaworldgen_fungitown_birdo_shop(state: "CollectionState", player: int) -> bool:
-    return state.can_reach('Fungitown Shop Birdo Flag', "Region", player)
+    return state.can_reach('Fungitown Shop Birdo Flag', 'Region', player)
 
 
 def _marioluigisuperstarsagaworldgen_fungitown_shop(state: "CollectionState", player: int) -> bool:
-    return state.can_reach('Shop Enter Fungitown Flag', "Region", player)
+    return state.can_reach('Shop Enter Fungitown Flag', 'Region', player)
 
 
 def _marioluigisuperstarsagaworldgen_hammers(state: "CollectionState", player: int) -> bool:
@@ -85,7 +85,7 @@ def _marioluigisuperstarsagaworldgen_pieces(state: "CollectionState", player: in
 
 
 def _marioluigisuperstarsagaworldgen_piranha_shop(state: "CollectionState", player: int) -> bool:
-    return state.can_reach('Shop Mom Piranha Flag', "Region", player)
+    return state.can_reach('Shop Mom Piranha Flag', 'Region', player)
 
 
 def _marioluigisuperstarsagaworldgen_postJokes(state: "CollectionState", player: int, goal) -> bool:
@@ -101,7 +101,7 @@ def _marioluigisuperstarsagaworldgen_spangle(state: "CollectionState", player: i
 
 
 def _marioluigisuperstarsagaworldgen_star_shop(state: "CollectionState", player: int) -> bool:
-    return state.can_reach('Shop Beanstar Complete Flag', "Region", player)
+    return state.can_reach('Shop Beanstar Complete Flag', 'Region', player)
 
 
 def _marioluigisuperstarsagaworldgen_super(state: "CollectionState", player: int) -> bool:

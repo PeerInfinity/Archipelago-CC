@@ -1405,13 +1405,10 @@ Act Completion (She Came from Outer Space) (Player1)
    =>   She Came from Outer Space
 Act Completion (Time Rift - Bazaar) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
-   =>   Dead Bird Studio -> Battle of the Birds - Act 4: Connection 1
-   =>   The Big Parade -> Battle of the Birds - Finale A: Connection 1
-   =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
-   =>   Welcome to Mafia Town -> Time Rift - Bazaar Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Time Rift - Bazaar Portal - Entrance 6
    =>   Time Rift - Bazaar
 Act Completion (Time Rift - Curly Tail Trail) (Player1)
         Menu -> Save File -> Spaceship
@@ -2700,8 +2697,8 @@ Subcon Forest - Boss Arena Chest (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
    =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 5: Connection 2
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 6: Connection 1
+   =>   Mail Delivery Service -> Mafia Town - Act 5: Connection 1
    =>   Your Contract has Expired -> Subcon Forest Entrance YCHE
    =>   Subcon Forest Boss Arena
 Subcon Forest - Burning Forest Treehouse (Player1)

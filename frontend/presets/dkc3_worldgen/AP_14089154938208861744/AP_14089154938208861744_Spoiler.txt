@@ -17,6 +17,8 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Dk Coins For Gyrocopter:         30
+Krematoa Bonus Coin Cost:        15
 
 
 Locations:
