@@ -25591,112 +25591,32 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "AntiForm": 0,
-        "AtlanticaToggle": 0,
-        "AutoFormLogic": 0,
-        "BountyAmount": 10,
-        "BountyRequired": 7,
-        "BountyStartingHintToggle": 0,
-        "CorSkipToggle": 0,
-        "Cups": 0,
-        "CustomItemPoolQuantity": {
-          "Aerial Dodge": 4,
-          "Anti Form": 1,
-          "Battlefields of War": 2,
-          "Beast's Claw": 2,
-          "Blizzard Element": 3,
-          "Bone Fist": 2,
-          "Chicken Little": 1,
-          "Cure Element": 3,
-          "Disney Castle Key": 2,
-          "Dodge Roll": 4,
-          "Final Form": 1,
-          "Fire Element": 3,
-          "Genie": 1,
-          "Glide": 4,
-          "High Jump": 4,
-          "Ice Cream": 3,
-          "Identity Disk": 2,
-          "Limit Form": 1,
-          "Magnet Element": 3,
-          "Master Form": 1,
-          "Membership Card": 2,
-          "Namine Sketches": 1,
-          "Peter Pan": 1,
-          "Promise Charm": 1,
-          "Proof of Connection": 1,
-          "Proof of Nonexistence": 1,
-          "Proof of Peace": 1,
-          "Proud Fang": 2,
-          "Quick Run": 4,
-          "Reflect Element": 3,
-          "Scimitar": 2,
-          "Skill and Crossbones": 2,
-          "Stitch": 1,
-          "Sword of the Ancestor": 2,
-          "Thunder Element": 3,
-          "Torn Page": 5,
-          "Valor Form": 1,
-          "Way to the Dawn": 2,
-          "Wisdom Form": 1
-        },
-        "DonaldGoofyStatsanity": 1,
-        "FightLogic": 1,
-        "FillerItemsLocal": 1,
-        "FinalFormLogic": 1,
-        "FinalXemnas": 1,
-        "Final_Form_EXP": 3,
-        "Goal": 1,
-        "Keyblade_Maximum": 7,
-        "Keyblade_Minimum": 3,
-        "LevelDepth": 0,
-        "Limit_Form_EXP": 3,
-        "LuckyEmblemsAmount": 40,
-        "LuckyEmblemsRequired": 35,
-        "Master_Form_EXP": 3,
-        "Promise_Charm": 0,
-        "RandomGrowth": 0,
-        "RandomVisitLockingItem": 0,
-        "Schmovement": 1,
-        "Sora_Level_EXP": 5,
-        "SummonLevelLocationToggle": 0,
-        "Summon_EXP": 5,
-        "SuperBosses": 1,
-        "Valor_Form_EXP": 3,
-        "Visitlocking": 2,
-        "WeaponSlotStartHint": 0,
-        "Wisdom_Form_EXP": 3,
-        "accessibility": 0,
-        "exclude_locations": [
-          "(AT) Musical Blizzard Element",
-          "(AT) Musical Orichalcum+",
-          "(AT) Mysterious Abyss",
-          "(AT) Undersea Kingdom Map",
-          "Fatal Crest Goddess of Fate Cup",
-          "Genji Shield Titan Cup",
-          "Hades Cup Trophy Paradox Cups",
-          "Orichalcum+ Goddess of Fate Cup",
-          "Protect Belt Pain and Panic Cup",
-          "Rising Dragon Cerberus Cup",
-          "Serenity Crystal Cerberus Cup",
-          "Serenity Gem Pain and Panic Cup",
-          "Skillful Ring Titan Cup"
-        ],
-        "item_links": [],
-        "local_items": [],
-        "non_local_items": [],
-        "plando_items": [],
-        "priority_locations": [],
-        "progression_balancing": 50,
-        "start_hints": [],
-        "start_inventory": {},
-        "start_location_hints": []
+        "AntiForm": "false",
+        "AtlanticaToggle": "false",
+        "AutoFormLogic": "false",
+        "BountyStartingHintToggle": "false",
+        "CorSkipToggle": "false",
+        "Cups": "no_cups",
+        "DonaldGoofyStatsanity": "true",
+        "FightLogic": "normal",
+        "FillerItemsLocal": "true",
+        "FinalFormLogic": "light_and_darkness",
+        "FinalXemnas": "true",
+        "Goal": "lucky_emblem_hunt",
+        "LevelDepth": "level_50",
+        "Promise_Charm": "false",
+        "Schmovement": "level_1",
+        "SummonLevelLocationToggle": "false",
+        "SuperBosses": "true",
+        "Visitlocking": "first_and_second_visit_locking",
+        "WeaponSlotStartHint": "false",
+        "accessibility": "full"
       },
-      "FightLogic": 1,
-      "AutoFormLogic": 0,
-      "FinalFormLogic": 1,
-      "Promise_Charm": 0,
-      "CorSkipToggle": 0,
+      "FightLogic": "normal",
+      "AutoFormLogic": "false",
+      "FinalFormLogic": "light_and_darkness",
+      "Promise_Charm": "false",
+      "CorSkipToggle": "false",
       "world_directory": "kh2"
     }
   },
@@ -25930,6 +25850,35 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "Roxas Event Location"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
@@ -25959,7 +25908,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "Roxas Event Location"
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -26018,35 +25967,6 @@
                   {
                     "type": "constant",
                     "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            },
-            "args": []
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },

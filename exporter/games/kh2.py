@@ -604,8 +604,12 @@ class KH2GameExportHandler(BaseGameExportHandler):
         for setting_name in kh2_settings:
             if hasattr(world, 'options') and hasattr(world.options, setting_name):
                 option = getattr(world.options, setting_name)
-                # Get the value (could be an integer option or boolean)
-                if hasattr(option, 'value'):
+                # For Choice options like FightLogic, use current_key to get the string
+                # (e.g., "easy", "normal", "hard") since helper dicts use string keys.
+                # For other options, use the raw value.
+                if hasattr(option, 'current_key'):
+                    settings_dict[setting_name] = option.current_key
+                elif hasattr(option, 'value'):
                     settings_dict[setting_name] = option.value
                 else:
                     settings_dict[setting_name] = option

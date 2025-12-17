@@ -656,7 +656,13 @@ class BaseGameExportHandler:
                     option = getattr(world.options, option_name)
                     # Check if it's an Option object with a value attribute
                     if hasattr(option, 'value'):
-                        value = option.value
+                        # For Choice options (which have current_key), use the string key
+                        # since helpers often use dict subscript with string keys like
+                        # 'easy', 'normal', 'hard'. For other options, use raw value.
+                        if hasattr(option, 'current_key'):
+                            value = option.current_key
+                        else:
+                            value = option.value
                         # Only export simple types (int, bool, str, list, dict)
                         if isinstance(value, (int, bool, str, list, dict)):
                             options_dict[option_name] = value
