@@ -369,9 +369,11 @@
             "name": "Arich's Hoard Region",
             "connected_region": "Arich's Hoard Region",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Riverside Race - Flag"
+              }
             }
           }
         ],
@@ -502,9 +504,11 @@
             "name": "Sky-High Secret Region",
             "connected_region": "Sky-High Secret Region",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Bleak's House"
+              }
             }
           }
         ],
@@ -4197,8 +4201,10 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": 0,
+        "dk_coins_for_gyrocopter": 30,
         "exclude_locations": [],
         "item_links": [],
+        "krematoa_bonus_coin_cost": 15,
         "local_items": [],
         "non_local_items": [],
         "plando_items": [],
@@ -4208,7 +4214,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "dkc3_worldgen"
     }
   },
   "game_info": {

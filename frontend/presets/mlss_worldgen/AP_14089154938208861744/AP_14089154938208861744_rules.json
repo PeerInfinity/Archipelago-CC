@@ -23532,6 +23532,7 @@
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
+        "goal": 0,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],

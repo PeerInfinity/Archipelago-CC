@@ -272,7 +272,6 @@ Playthrough:
 
 }
 1: {
-  Adhesive Bandage: Adhesive Bandage
   Aglet: Aglet
   Angler: Angler
   Anklet of the Wind: Anklet of the Wind
@@ -280,9 +279,6 @@ Playthrough:
   Bee Keeper: Bee Keeper
   Bee Wax: Bee Wax
   Bezoar: Bezoar
-  Blindfold: Blindfold
-  Bone: Bone
-  Bug Net: Bug Net
   Cactus: Cactus
   Celestial Magnet: Celestial Magnet
   Clumsy Slime: Clumsy Slime
@@ -290,7 +286,6 @@ Playthrough:
   Copper Shortsword: Copper Shortsword
   Demonite Ore: Demonite Ore
   Depth Meter: Depth Meter
-  Dye Trader: Dye Trader
   Enchanted Sword: Enchanted Sword
   Evil Boss Part: Evil Boss Part
   Evil Powder: Evil Powder
@@ -314,8 +309,6 @@ Playthrough:
   Nerdy Slime: Nerdy Slime
   Obsidian: Obsidian
   Obsidian Rose: Obsidian Rose
-  Painter: Painter
-  Party Girl: Party Girl
   Radar: Radar
   Sandstorm: Sandstorm
   Shark Tooth Necklace: Shark Tooth Necklace
@@ -326,9 +319,7 @@ Playthrough:
   Stylist: Stylist
   Summoning Potion: Summoning Potion
   Surly Slime: Surly Slime
-  Tax Collector: Tax Collector
   Torch God: Post-Eye of Cthulhu
-  Traveling Merchant: Traveling Merchant
   Vehicular Manslaughter: Post-Pirate Invasion
   Vine: Vine
   Wand of Sparking: Wand of Sparking
@@ -338,47 +329,52 @@ Playthrough:
 2: {
   Bee Armor: Bee Armor
   Blade of Grass: Blade of Grass
+  Bug Net: Bug Net
   Cat: Cat
   Completely Awesome: Post-Skeletron
-  Cool Slime: Cool Slime
-  DPS Meter: DPS Meter
   Demolitionist: Demolitionist
   Demonite Bar: Demonite Bar
   Dog: Dog
   Dryad: Dryad
+  Dye Trader: Dye Trader
   Emblem: Emblem
   Evil Pickaxe: Evil Pickaxe
   Fisherman's Pocket Guide: Fisherman's Pocket Guide
   Illegal Gun Parts: Illegal Gun Parts
-  Lifeform Analyzer: Lifeform Analyzer
   Meteorite Bar: Meteorite Bar
   Nurse: Nurse
   Obsidian Armor: Obsidian Armor
   Obsidian Skull: Obsidian Skull
+  Painter: Painter
   Pirate: Pirate
-  Pocket Mirror: Pocket Mirror
   Pumpkin: Pumpkin
   Purification Powder: Purification Powder
   Pwnhammer: Pwnhammer
   Sextant: Sextant
-  Stopwatch: Stopwatch
+  Traveling Merchant: Traveling Merchant
   Weather Radio: Weather Radio
 }
 3: {
   Clothier: Clothier
+  DPS Meter: DPS Meter
   Dungeon: Dungeon
   Evil Sword: Evil Sword
   Hellforge: Hellforge
   Hellstone: Hellstone
+  Lifeform Analyzer: Lifeform Analyzer
   Meteor Hamaxe: Meteor Hamaxe
   Mystic Slime: Mystic Slime
+  Party Girl: Party Girl
   Pumpkin Seeds: Pumpkin Seeds
+  Stopwatch: Stopwatch
   The Frequent Flyer: Post-Goblin Army
 }
 4: {
   Alchemy Table: Alchemy Table
   Bewitching Table: Bewitching Table
+  Bone: Bone
   Cobalt Shield: Cobalt Shield
+  Cool Slime: Cool Slime
   Elder Slime: Elder Slime
   Goblin Tinkerer: Goblin Tinkerer
   Hellstone Bar: Hellstone Bar
@@ -402,19 +398,19 @@ Playthrough:
   Goblin Tech: Goblin Tech
   Lava Waders: Lava Waders
   Mana Flower: Mana Flower
-  Medicated Bandage: Medicated Bandage
   Miner for Fire: Hardmode
   Night's Edge: Night's Edge
   Obsidian Shield: Obsidian Shield
   R.E.K. 3000: R.E.K. 3000
-  Reflective Shades: Reflective Shades
   Spectre Boots: Spectre Boots
 }
 7: {
   Adamantite Bar: Adamantite Bar
   Adamantite Ore: Adamantite Ore
+  Adhesive Bandage: Adhesive Bandage
   Altar: Altar
   Armor Polish: Armor Polish
+  Blindfold: Blindfold
   Bunny: Bunny
   Cobalt Bar: Cobalt Bar
   Cobalt Ore: Cobalt Ore
@@ -431,10 +427,11 @@ Playthrough:
   Nazar: Nazar
   PDA: PDA
   Pirate Invasion: Post-Evil Boss
+  Pocket Mirror: Pocket Mirror
   Soul of Flight: Soul of Flight
-  Soul of Light: Soul of Light
   Soul of Night: Soul of Night
   Spider Fangs: Spider Fangs
+  Tax Collector: Tax Collector
   Titan Glove: Titan Glove
   Trifold Map: Trifold Map
   Truffle: Truffle
@@ -450,13 +447,13 @@ Playthrough:
   Crystal Shard: Crystal Shard
   Frostspark Boots: Frostspark Boots
   Hardmode Anvil: Hardmode Anvil
-  Mechanical Eye: Mechanical Eye
-  Mechanical Skull: Mechanical Skull
-  Mechanical Worm: Mechanical Worm
+  Medicated Bandage: Medicated Bandage
   Pixie Dust: Pixie Dust
   Power Glove: Power Glove
   Queen Slime: Post-Queen Bee
+  Reflective Shades: Reflective Shades
   Rod of Discord: Rod of Discord
+  Soul of Light: Soul of Light
   Sparkle Slime Balloon: Sparkle Slime Balloon
   Spider Armor: Spider Armor
   Tavernkeep: Tavernkeep
@@ -470,15 +467,18 @@ Playthrough:
   Forbidden Armor: Forbidden Armor
   Hardmode Forge: Hardmode Forge
   Holy Water: Holy Water
+  Mechanical Eye: Mechanical Eye
+  Mechanical Skull: Mechanical Skull
+  Mechanical Worm: Mechanical Worm
   Meteor Staff: Meteor Staff
   Mythril Pickaxe: Mythril Pickaxe
-  Skeletron Prime: Post-Skeletron Prime
   Terraspark Boots: Terraspark Boots
-  The Destroyer: Post-The Destroyer
-  The Twins: Post-The Twins
   Witch Doctor: Witch Doctor
 }
 10: {
   Ankh Shield: Ankh Shield
   Pygmy Necklace: Pygmy Necklace
+  Skeletron Prime: Post-Skeletron Prime
+  The Destroyer: Post-The Destroyer
+  The Twins: Post-The Twins
 }

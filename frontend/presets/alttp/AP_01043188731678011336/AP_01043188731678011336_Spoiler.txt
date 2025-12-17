@@ -1158,8 +1158,8 @@ King Zora
    =>   Zoras River
 Lake Hylia Island
         Links House -> Links House Exit
-   =>   Light World -> South Hyrule Teleporter
-   =>   South Dark World -> Dark Lake Hylia Drop (South)
+   =>   Light World -> East Hyrule Teleporter
+   =>   East Dark World -> Dark Lake Hylia Drop (East)
    =>   Dark Lake Hylia -> Lake Hylia Island Mirror Spot
    =>   Lake Hylia Island
 Link's House

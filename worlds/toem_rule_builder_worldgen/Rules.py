@@ -51,12 +51,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Quest - Monster spotting", player),
+        multiworld.get_location("Quest - Ghost helper!", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Quest - Ghost helper!", player),
+        multiworld.get_location("Quest - Monster spotting", player),
         True_()
     )
 

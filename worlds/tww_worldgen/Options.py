@@ -16,8 +16,62 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+class LogicInRequiredBossesMode(Toggle):
+    """Option for Logic In Required Bosses Mode."""
+    display_name = "Logic In Required Bosses Mode"
+    default = False
+
+class LogicInSwordlessMode(Toggle):
+    """Option for Logic In Swordless Mode."""
+    display_name = "Logic In Swordless Mode"
+    default = False
+
+class LogicObscure1(Toggle):
+    """Option for Logic Obscure 1."""
+    display_name = "Logic Obscure 1"
+    default = False
+
+class LogicObscure2(Toggle):
+    """Option for Logic Obscure 2."""
+    display_name = "Logic Obscure 2"
+    default = False
+
+class LogicObscure3(Toggle):
+    """Option for Logic Obscure 3."""
+    display_name = "Logic Obscure 3"
+    default = False
+
+class LogicPrecise1(Toggle):
+    """Option for Logic Precise 1."""
+    display_name = "Logic Precise 1"
+    default = False
+
+class LogicPrecise2(Toggle):
+    """Option for Logic Precise 2."""
+    display_name = "Logic Precise 2"
+    default = False
+
+class LogicPrecise3(Toggle):
+    """Option for Logic Precise 3."""
+    display_name = "Logic Precise 3"
+    default = False
+
+class LogicRematchBossesSkipped(Toggle):
+    """Option for Logic Rematch Bosses Skipped."""
+    display_name = "Logic Rematch Bosses Skipped"
+    default = True
+
 
 @dataclass
 class TheWindWakerWorldGenOptions(PerGameCommonOptions):
     """Options for The Wind Waker WorldGen."""
     randomize_items: RandomizeItems
+    logic_in_required_bosses_mode: LogicInRequiredBossesMode
+    logic_in_swordless_mode: LogicInSwordlessMode
+    logic_obscure_1: LogicObscure1
+    logic_obscure_2: LogicObscure2
+    logic_obscure_3: LogicObscure3
+    logic_precise_1: LogicPrecise1
+    logic_precise_2: LogicPrecise2
+    logic_precise_3: LogicPrecise3
+    logic_rematch_bosses_skipped: LogicRematchBossesSkipped

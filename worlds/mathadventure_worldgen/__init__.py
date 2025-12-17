@@ -75,6 +75,7 @@ class MathProof2p2e4WorldGenWorld(RuleWorldMixin, World):
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
+
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
     }

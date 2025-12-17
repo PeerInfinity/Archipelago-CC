@@ -1,0 +1,30 @@
+{
+  "game": "Noita",
+  "assume_bidirectional_exits": false,
+  "use_resolved_items": false,
+  "options": {
+    "accessibility": 0,
+    "bad_effects": 1,
+    "bosses_as_checks": 0,
+    "death_link": 0,
+    "exclude_locations": [],
+    "extra_orbs": 0,
+    "hidden_chests": 3,
+    "item_links": [],
+    "local_items": [],
+    "non_local_items": [],
+    "orbs_as_checks": 0,
+    "path_option": 1,
+    "pedestal_checks": 6,
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "shop_price": 100,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": [],
+    "victory_condition": 0
+  },
+  "world_directory": "noita"
+}

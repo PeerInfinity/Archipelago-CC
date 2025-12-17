@@ -362,9 +362,12 @@ Beating Crabbius Maximus
    =>   Verse Cave right area -> Verse Cave right area to Verse Cave left area
    =>   Verse Cave left area -> Verse Cave left area to Home Waters
    =>   Home Waters -> Home Waters to Open Waters top left area
-   =>   Open Waters top left area -> Open Waters top left area to Kelp Forest bottom right area
-   =>   Kelp Forest bottom right area -> Kelp Forest bottom right area to Kelp Forest bottom left area
-   =>   Kelp Forest bottom left area -> Kelp Forest bottom left area to Arnassi Ruins cave, transturtle area
+   =>   Open Waters top left area -> Open Waters top left area to Open Waters top right area
+   =>   Open Waters top right area -> Open Waters top right area to The Veil bottom left area
+   =>   The Veil bottom left area -> The Veil bottom left area to The Veil bottom spirit crystal area
+   =>   The Veil bottom spirit crystal area -> The Veil bottom spirit crystal area to The Veil bottom right area
+   =>   The Veil bottom right area -> The Veil bottom right area to The Veil top left area
+   =>   The Veil top left area -> The Veil top left area to Arnassi Ruins cave, transturtle area
    =>   Arnassi Ruins cave, transturtle area -> Arnassi Ruins cave, transturtle area to Arnassi Ruins cave
    =>   Arnassi Ruins cave -> Arnassi Ruins cave to Arnassi Ruins, Crabbius Maximus lair
    =>   Arnassi Ruins, Crabbius Maximus lair

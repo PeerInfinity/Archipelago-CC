@@ -99,32 +99,23 @@
             "name": "Symmetry Island Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
                   "options": [],
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "options": [],
-                      "args": {
-                        "region_name": "Symmetry Island Upper"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Progressive Symmetry",
-                        "count": 2
-                      }
-                    }
-                  ]
+                  "args": {
+                    "region_name": "Symmetry Island Upper"
+                  }
                 },
                 {
-                  "type": "can_reach",
-                  "region": "Symmetry Island Upper"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Symmetry",
+                    "count": 2
+                  }
                 }
               ]
             },
@@ -140,20 +131,11 @@
             "name": "Desert Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "rule": "CanReachRegion",
-                  "options": [],
-                  "args": {
-                    "region_name": "Desert Outside"
-                  }
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Desert Outside"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Desert Outside"
+              }
             },
             "item": {
               "name": "+1 Laser (Unredirected)",
@@ -167,37 +149,28 @@
             "name": "Quarry Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
                   "options": [],
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "options": [],
-                      "args": {
-                        "region_name": "Outside Quarry"
-                      }
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "options": [],
-                      "args": {
-                        "items": {
-                          "Colored Squares": 1,
-                          "Eraser": 1,
-                          "Progressive Dots": 1,
-                          "Progressive Stars": 2,
-                          "Shapers": 1
-                        }
-                      }
-                    }
-                  ]
+                  "args": {
+                    "region_name": "Outside Quarry"
+                  }
                 },
                 {
-                  "type": "can_reach",
-                  "region": "Outside Quarry"
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Colored Squares": 1,
+                      "Eraser": 1,
+                      "Progressive Dots": 1,
+                      "Progressive Stars": 2,
+                      "Shapers": 1
+                    }
+                  }
                 }
               ]
             },
@@ -213,20 +186,11 @@
             "name": "Shadows Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "rule": "CanReachRegion",
-                  "options": [],
-                  "args": {
-                    "region_name": "Shadows Laser Room"
-                  }
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Shadows Laser Room"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Shadows Laser Room"
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -240,112 +204,103 @@
             "name": "Keep Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Keep Tower"
+                  }
+                },
+                {
+                  "rule": "Or",
                   "options": [],
                   "children": [
                     {
-                      "rule": "CanReachRegion",
-                      "options": [],
-                      "args": {
-                        "region_name": "Keep Tower"
-                      }
-                    },
-                    {
-                      "rule": "Or",
+                      "rule": "And",
                       "options": [],
                       "children": [
                         {
-                          "rule": "And",
+                          "rule": "CanReachRegion",
                           "options": [],
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep 2nd Maze"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep 3rd Maze"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep 4th Maze"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep Tower"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep"
-                              }
-                            }
-                          ]
+                          "args": {
+                            "region_name": "Keep 2nd Maze"
+                          }
                         },
                         {
-                          "rule": "And",
+                          "rule": "CanReachRegion",
                           "options": [],
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep 2nd Pressure Plate"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep 3rd Pressure Plate"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep 4th Pressure Plate"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep Tower"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "options": [],
-                              "args": {
-                                "region_name": "Keep"
-                              }
-                            }
-                          ]
+                          "args": {
+                            "region_name": "Keep 3rd Maze"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep 4th Maze"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep Tower"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "And",
+                      "options": [],
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep 2nd Pressure Plate"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep 3rd Pressure Plate"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep 4th Pressure Plate"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep Tower"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Keep"
+                          }
                         }
                       ]
                     }
                   ]
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Keep Tower"
                 }
               ]
             },
@@ -361,32 +316,23 @@
             "name": "Monastery Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
                   "options": [],
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "options": [],
-                      "args": {
-                        "region_name": "Outside Monastery"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Progressive Dots",
-                        "count": 1
-                      }
-                    }
-                  ]
+                  "args": {
+                    "region_name": "Outside Monastery"
+                  }
                 },
                 {
-                  "type": "can_reach",
-                  "region": "Outside Monastery"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Dots",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -402,20 +348,11 @@
             "name": "Town Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "rule": "CanReachRegion",
-                  "options": [],
-                  "args": {
-                    "region_name": "Town Tower Top"
-                  }
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Town Tower Top"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Town Tower Top"
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -429,32 +366,23 @@
             "name": "Jungle Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
                   "options": [],
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "options": [],
-                      "args": {
-                        "region_name": "Jungle"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Sound Dots",
-                        "count": 1
-                      }
-                    }
-                  ]
+                  "args": {
+                    "region_name": "Jungle"
+                  }
                 },
                 {
-                  "type": "can_reach",
-                  "region": "Jungle"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sound Dots",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -470,20 +398,11 @@
             "name": "Bunker Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "rule": "CanReachRegion",
-                  "options": [],
-                  "args": {
-                    "region_name": "Bunker Laser Platform"
-                  }
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Laser Platform"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Bunker Laser Platform"
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -497,20 +416,11 @@
             "name": "Swamp Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "rule": "CanReachRegion",
-                  "options": [],
-                  "args": {
-                    "region_name": "Swamp Laser Area"
-                  }
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Swamp Laser Area"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Swamp Laser Area"
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -524,20 +434,11 @@
             "name": "Treehouse Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "rule": "CanReachRegion",
-                  "options": [],
-                  "args": {
-                    "region_name": "Treehouse Laser Room"
-                  }
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Treehouse Laser Room"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Treehouse Laser Room"
+              }
             },
             "item": {
               "name": "+1 Laser",

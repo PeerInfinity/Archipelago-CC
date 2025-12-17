@@ -8848,6 +8848,16 @@
                   "args": {
                     "region_name": "Undernet"
                   }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Magnum1 A",
+                      "Press"
+                    ]
+                  }
                 }
               ]
             },

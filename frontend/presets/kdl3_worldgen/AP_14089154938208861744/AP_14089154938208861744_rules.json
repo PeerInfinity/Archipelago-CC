@@ -18608,6 +18608,8 @@
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
+        "open_world": 1,
+        "ow_boss_requirement": 3,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,

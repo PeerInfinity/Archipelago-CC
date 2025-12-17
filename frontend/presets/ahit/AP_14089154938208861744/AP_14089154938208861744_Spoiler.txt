@@ -594,9 +594,7 @@ Act Completion (Time Rift - The Twilight Bell)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Time Rift - Bazaar Portal - Entrance 7
+   =>   Barrel Battle -> Time Rift - Bazaar Portal - Entrance 2
    =>   Time Rift - The Twilight Bell
 Act Completion (Time Rift - Village)
         Menu -> Save File -> Spaceship
@@ -887,8 +885,8 @@ HUMT Access
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 5: Connection 2
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
    =>   Heating Up Mafia Town
 Lava Cake Cleared
         Menu -> Save File -> Spaceship

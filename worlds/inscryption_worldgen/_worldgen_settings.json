@@ -1,0 +1,31 @@
+{
+  "game": "Inscryption",
+  "assume_bidirectional_exits": false,
+  "use_resolved_items": false,
+  "options": {
+    "accessibility": 0,
+    "act1_death_link_behaviour": 0,
+    "death_link": 0,
+    "epitaph_pieces_randomization": 0,
+    "exclude_locations": [],
+    "goal": 0,
+    "item_links": [],
+    "local_items": [],
+    "non_local_items": [],
+    "optional_death_card": 2,
+    "painting_checks_balancing": 1,
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "randomize_codes": 0,
+    "randomize_deck": 0,
+    "randomize_sigils": 0,
+    "skip_epilogue": 0,
+    "skip_tutorial": 1,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": []
+  },
+  "world_directory": "inscryption"
+}
