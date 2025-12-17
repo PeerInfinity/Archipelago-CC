@@ -1459,6 +1459,13 @@ class HelperCodeGenerator:
         func = expr.get('function', {})
         args = expr.get('args', [])
 
+        # Check if this is a math module function call (e.g., math.sqrt)
+        # and set uses_math flag if so
+        if isinstance(func, dict) and func.get('type') == 'attribute':
+            obj = func.get('object', {})
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
+                self.uses_math = True
+
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
 
