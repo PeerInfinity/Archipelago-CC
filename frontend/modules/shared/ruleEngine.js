@@ -4764,6 +4764,24 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       }
     }
 
+    // MinValue: returns the minimum of two values (used to cap item contributions)
+    // Rule Builder: {"rule": "MinValue", "args": {"left": ..., "right": ...}}
+    case 'MinValue': {
+      const left = args.left;
+      const right = args.right;
+
+      // Recursively evaluate operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compute
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      return Math.min(leftValue, rightValue);
+    }
+
     // Count/CountItem: get the count of an item (used as operand in Compare/Arithmetic)
     // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
     // Rule Builder: {"rule": "CountItem", "args": {"item_name": "Key"}}

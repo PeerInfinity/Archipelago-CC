@@ -2644,6 +2644,136 @@ class Arithmetic(Rule[TWorld], game="Archipelago"):
 
 
 @dataclasses.dataclass()
+class MinValue(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the minimum of two numeric values/rules.
+
+    Used in arithmetic expressions where a cap is needed.
+    Returns the minimum value via get_value().
+
+    Usage:
+        # Cap item contribution at 9
+        rule = MinValue(CountItem("Orichalcum"), 9)
+
+        # Combined with Arithmetic for complex rules
+        rule = Compare(
+            Arithmetic(MinValue(CountItem("Orichalcum"), 9), "+", MinValue(CountItem("Mythril"), 9)),
+            ">=", 15
+        )
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"min({self.left}, {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the minimum of the two operands."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+            return min(left_val, right_val)
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "min("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": ", "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"min({left_str}, {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
+
+        @override
+        def __str__(self) -> str:
+            return f"min({self.left}, {self.right})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"left": self.left, "right": self.right}
+
+
+@dataclasses.dataclass()
 class Conditional(Rule[TWorld], game="Archipelago"):
     """
     Conditional (ternary) rule: if test then if_true else if_false.
