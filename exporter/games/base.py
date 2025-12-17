@@ -1010,6 +1010,11 @@ class BaseGameExportHandler:
                 # Check if we have a cached definition (from auto-preservation due to size)
                 cached_def = self.get_cached_helper(helper_name)
                 if cached_def is not None:
+                    # Apply game-specific rule expansion to cached definitions
+                    # (e.g., TWW state method replacement, civ_6 subscript resolution)
+                    if hasattr(self, 'expand_rule') and callable(self.expand_rule):
+                        cached_def = self.expand_rule(cached_def)
+
                     # Extract parameter names and defaults from the function (excluding state, player, world, self)
                     params = []
                     defaults = {}

@@ -9,7 +9,7 @@
 | F-string multi-pass resolution | ✅ IMPLEMENTED | expand_rule already called during export - removed redundant post_process_data |
 | Closure variable capture | ✅ IMPLEMENTED | Parameter substitution for rule dict args |
 | Dict subscript resolution | ✅ IMPLEMENTED | Added expand_rule to civ_6 for era subscripts |
-| State method optimization | ✅ IMPLEMENTED | Added expand_rule to tww (kept post_process_data as backup) |
+| State method optimization | ✅ IMPLEMENTED | Added expand_rule to tww; fixed base.py to call expand_rule on cached helpers |
 
 ### Implementation Notes (2025-12-17)
 

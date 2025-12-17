@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-16T01:44:07.757974",
-    "last_updated": "2025-12-17T16:25:07.299491",
+    "last_updated": "2025-12-17T16:42:35.091949",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3697,9 +3697,9 @@
       "game_name_from_filename": "tww",
       "game_name_from_yaml": "The Wind Waker",
       "generation": {
-        "error_count": 0,
+        "error_count": 9,
         "error_type": null,
-        "processing_time_seconds": 41.73,
+        "processing_time_seconds": 38.67,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3714,7 +3714,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.75,
+        "processing_time_seconds": 12.7,
         "return_code": 0,
         "sphere_reached": 18.1,
         "success": true,
@@ -3722,10 +3722,10 @@
         "warning_count": 0
       },
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-12-17T16:24:12.426699",
+      "timestamp": "2025-12-17T16:41:43.328948",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
-        "exporter_size": 7134,
+        "exporter_size": 7766,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "tww",

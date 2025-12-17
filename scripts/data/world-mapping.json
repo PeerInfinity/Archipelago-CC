@@ -1279,7 +1279,7 @@
   },
   "The Wind Waker": {
     "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 7134,
+    "exporter_size": 7766,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
