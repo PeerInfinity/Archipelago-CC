@@ -654,6 +654,26 @@ export function has_all_counts(sm, itemCounts) {
 }
 
 /**
+ * Checks if inventory has ANY item that meets its required count
+ * Python equivalent: state.has_any_count({item: count})
+ *
+ * @param {Object} sm - StateManager instance
+ * @param {Object} itemCounts - Object mapping item names to required counts
+ * @returns {boolean} True if any item meets or exceeds its required count
+ */
+export function has_any_count(sm, itemCounts) {
+  if (typeof itemCounts !== 'object' || itemCounts === null) {
+    return false;
+  }
+  for (const [itemName, requiredCount] of Object.entries(itemCounts)) {
+    if (countItem(sm, itemName) >= requiredCount) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Checks if inventory has at least N items from a list
  * Used by ChecksFinder - counts ALL copies of items from the list
  * Python equivalent: state.has_from_list([items], count)

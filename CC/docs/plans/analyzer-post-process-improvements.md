@@ -5,13 +5,31 @@
 | Improvement | Status | Notes |
 |-------------|--------|-------|
 | For loop detection | ✅ IMPLEMENTED | Detects state-dependent for loop bodies |
-| Conditional branch evaluation | ⏳ Partial | Related - for loops now preserved as helpers |
+| Conditional branch evaluation | ✅ IMPLEMENTED | For loops preserved as helpers; constant test evaluation already in visit_If |
 | F-string multi-pass resolution | ✅ IMPLEMENTED | expand_rule already called during export - removed redundant post_process_data |
 | Closure variable capture | ✅ IMPLEMENTED | Parameter substitution for rule dict args |
 | Dict subscript resolution | ✅ IMPLEMENTED | Added expand_rule to civ_6 for era subscripts |
 | State method optimization | ✅ IMPLEMENTED | Added expand_rule to tww; fixed base.py to call expand_rule on cached helpers |
+| Frontend has_any_count | ✅ IMPLEMENTED | Added missing has_any_count state method to frontend StateManager |
 
 ### Implementation Notes (2025-12-17)
+
+**Conditional Branch Evaluation Investigation**
+
+Investigated the plan's Option A/B/C for conditional evaluation:
+- Option B (constant test evaluation) is already implemented in `visit_If` (lines 3142-3153)
+- Option A (preserve unevaluated branches as helper calls) is handled by the for loop detection
+- The plan's description of "0.0" in if_false branches was outdated - the analyzer now correctly:
+  1. Detects for loops with state-dependent bodies → preserves as helper
+  2. Evaluates constant tests → returns the appropriate branch
+  3. Falls through to create helper nodes when recursive analysis fails
+
+**Frontend has_any_count Support**
+
+KH1's `has_defensive_tools` function uses `state.has_any_count()` which was missing from frontend:
+- Added `has_any_count` to `inventoryManager.js` - returns true if ANY item meets its required count
+- Added `has_any_count` method to `stateManager.js`
+- KH1 now passes all spheres (including Final Ansem which requires has_defensive_tools)
 
 **For Loop Detection Enhancement (ast_visitors.py)**
 
