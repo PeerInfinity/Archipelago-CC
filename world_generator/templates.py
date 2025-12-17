@@ -973,6 +973,14 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         base_id_section = ''
 
+    # Build collect_all_items_for_rules section
+    # When True, all items are collected into prog_items (not just progression)
+    # This allows Has() rules to work with useful/filler items
+    if data.metadata.collect_all_items_for_rules:
+        collect_all_items_section = '\n    collect_all_items_for_rules: ClassVar[bool] = True'
+    else:
+        collect_all_items_section = ''
+
     # Build fill_slot_data content
     # Check if slot_data fields match option names - if so, generate dynamic references
     # NOTE: We only dynamically reference 'randomize_items' since that's the only option
@@ -1063,6 +1071,7 @@ class {world_class}(RuleWorldMixin, World):
 {base_id_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
+{collect_all_items_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.id for name, data in item_table.items() if data.id is not None
