@@ -625,19 +625,16 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
             body = helper_def.get('body', helper_def)
             defaults = helper_def.get('defaults', {})
 
-            # Filter out params that are not actually used in the body
-            # This handles cases where the body was expanded and no longer
-            # references the original parameter (e.g., _has_damaging_item)
-            used_params = [p for p in raw_params if _param_is_used_in_body(p, body)]
-
-            # Also filter defaults to only include used params
-            used_defaults = {k: v for k, v in defaults.items() if k in used_params}
-
+            # Include all declared params in the function signature, even if they're
+            # not used in the body. This is necessary because callers will pass
+            # arguments based on the original helper's params, not on what the
+            # (possibly simplified/expanded) body uses. Unused params will simply
+            # be ignored by the function body.
             helpers[helper_name] = HelperData(
                 name=helper_name,
-                params=used_params,
+                params=raw_params,
                 body=body,
-                defaults=used_defaults
+                defaults=defaults
             )
         else:
             # Simple helper - the entire helper_def is the body
