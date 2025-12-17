@@ -400,9 +400,15 @@ class KH1GameExportHandler(BaseGameExportHandler):
         """
         Post-process the exported data to fix KH1-specific issues.
 
-        This handles cases where the analyzer couldn't fully resolve rules,
-        particularly for has_all_counts which appears with empty args due to
-        variable resolution issues in has_all_magic_lvx.
+        NOTE: The analyzer now preserves has_x_worlds as a helper (ast_visitors.py
+        has_dynamic_for_loops detects state.has() in loop body).
+
+        HOWEVER, this post-processing is still needed because:
+        - When has_parasite_cage is inlined, it references parameter 'worlds'
+        - The analyzer doesn't substitute the parameter with has_x_worlds(...) helper call
+        - This leaves {"type": "name", "name": "worlds"} in the rule
+
+        TODO: Remove this once closure variable capture/parameter substitution is implemented.
         """
         # Fix has_all_counts state_method calls with empty args
         # These come from has_all_magic_lvx(state, player, level) which calls
