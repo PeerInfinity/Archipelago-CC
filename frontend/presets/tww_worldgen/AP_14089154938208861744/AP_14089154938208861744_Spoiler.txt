@@ -141,78 +141,106 @@ Playthrough:
   Progressive Sword
 }
 1: {
-  Bomb Island - Cave: Progressive Bow
-  Cliff Plateau Isles - Highest Isle: Progressive Bow
-  Defeat Ganondorf: Victory
-  Dragon Roost Cavern - Boss Stairs Right Chest: Deku Leaf
   Dragon Roost Cavern - First Room: DRC Small Key
-  Eastern Fairy Island - Great Fairy: Bait Bag
-  Forbidden Woods - Climb to Top Using Boko Baba Bulbs: Progressive Sword
-  Forbidden Woods - Double Mothula Room: Progressive Sword
-  Forbidden Woods - First Room: Skull Hammer
-  Forbidden Woods - Hole in Tree: FW Small Key
-  Forbidden Woods - Inside Hollow Tree's Mouth: Progressive Sword
-  Forsaken Fortress - Chest Inside Lower Jail Cell: Triforce Shard 2
-  Ganon's Tower - Maze Chest: Earth God's Lyric
-  Ice Ring Isle - Cave - Chest: Ballad of Gales
-  Needle Rock Isle - Cave: Boomerang
   Northern Fairy Island - Great Fairy: Triforce Shard 5
   Pawprint Isle - Chuchu Cave - Chest: Grappling Hook
-  Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item: Progressive Shield
   Windfall Island - Jail - Tingle - First Gift: Wind Waker
   Windfall Island - Maggie - Free Item: Triforce Shard 8
 }
 2: {
-  Bird's Peak Rock - Cave: Power Bracelets
   Dragon Roost Cavern - Alcove With Water Jugs: DRC Small Key
-  Dragon Roost Cavern - Big Key Chest: Nayru's Pearl
   Dragon Roost Cavern - Boarded Up Chest: Wind's Requiem
-  Forbidden Woods - Chest in Locked Tree Trunk: Command Melody
-  Forbidden Woods - Morth Pit: FW Big Key
-  Forbidden Woods - Tall Room Before Miniboss: Triforce Shard 3
-  Forbidden Woods - Vine Maze Right Chest: Progressive Shield
-  Forsaken Fortress - Helmaroc King Heart Container: Triforce Shard 6
-  Thorned Fairy Island - Great Fairy: Bombs
   Windfall Island - Tott - Teach Rhythm: Magic Armor
 }
 3: {
   Dragon Roost Cavern - Rat Room Boarded Up Chest: DRC Small Key
-  Earth Temple - Big Key Chest: Progressive Bow
-  Earth Temple - Chest Behind Destructible Walls: Note to Mom
-  Earth Temple - Chest Behind Statues: Farore's Pearl
-  Earth Temple - Chest In Three Blocks Room: ET Small Key
-  Earth Temple - Chest in Third Crypt: Wallet Capacity Upgrade
-  Earth Temple - End of Foggy Room With Floormasters: ET Big Key
-  Earth Temple - Kill All Floormasters in Foggy Room: ET Small Key
-  Earth Temple - Stalfos Crypt Room: Empty Bottle
-  Earth Temple - Transparent Chest In Warp Pot Room: Hookshot
-  Earth Temple - Transparent Chest in First Crypt: ET Small Key
-  Forbidden Woods - Kalle Demos Heart Container: Iron Boots
 }
 4: {
-  Diamond Steppe Island - Warp Maze Cave - Second Chest: Din's Pearl
   Dragon Roost Cavern - Bird's Nest: DRC Small Key
-  Earth Temple - Jalhalla Heart Container: Ghost Ship Chart
-  Earth Temple - Stalfos Miniboss Room: Cabana Deed
-  Wind Temple - Big Key Chest: Triforce Shard 1
+}
+5: {
+  Dragon Roost Cavern - Big Key Chest: Nayru's Pearl
+  Dragon Roost Cavern - Boss Stairs Right Chest: Deku Leaf
+  Dragon Roost Cavern - Miniboss: Progressive Magic Meter
+  Dragon Roost Cavern - Pot Room Chest: DRC Big Key
+}
+6: {
+  Cliff Plateau Isles - Highest Isle: Progressive Bow
+  Forbidden Woods - Double Mothula Room: Progressive Sword
+  Forbidden Woods - First Room: Skull Hammer
+  Forbidden Woods - Hole in Tree: FW Small Key
+  Forbidden Woods - Inside Hollow Tree's Mouth: Progressive Sword
+  Forbidden Woods - Morth Pit: FW Big Key
+  Forbidden Woods - Vine Maze Right Chest: Progressive Shield
+}
+7: {
+  Forbidden Woods - Climb to Top Using Boko Baba Bulbs: Progressive Sword
+  Forbidden Woods - Tall Room Before Miniboss: Triforce Shard 3
+  Thorned Fairy Island - Great Fairy: Bombs
+}
+8: {
+  Bomb Island - Cave: Progressive Bow
+  Eastern Fairy Island - Great Fairy: Bait Bag
+  Forsaken Fortress - Chest Inside Lower Jail Cell: Triforce Shard 2
+  Forsaken Fortress - Helmaroc King Heart Container: Triforce Shard 6
+}
+9: {
+  Bird's Peak Rock - Cave: Power Bracelets
+  Ice Ring Isle - Cave - Chest: Ballad of Gales
+  Needle Rock Isle - Cave: Boomerang
+}
+10: {
+  Forbidden Woods - Chest in Locked Tree Trunk: Command Melody
+  Forbidden Woods - Kalle Demos Heart Container: Iron Boots
+}
+11: {
+  Earth Temple - Transparent Chest In Warp Pot Room: Hookshot
+  Earth Temple - Transparent Chest in First Crypt: ET Small Key
   Wind Temple - Chest Behind Seven Armos: WT Big Key
-  Wind Temple - Chest Behind Stone Head: Triforce Shard 7
   Wind Temple - Chest Between Two Dirt Patches: Delivery Bag
   Wind Temple - Chest In Many Cyclones Room: WT Small Key
   Wind Temple - Chest at Top of Hub Room: WT Small Key
   Wind Temple - Chest in Left Alcove: Triforce Shard 4
-  Wind Temple - Kill All Enemies in Tall Basement Room: Wind God's Aria
   Wind Temple - Spike Wall Room - Destroy All Cracked Floors: Wallet Capacity Upgrade
 }
-5: {
-  Dragon Roost Cavern - Miniboss: Progressive Magic Meter
-  Dragon Roost Cavern - Pot Room Chest: DRC Big Key
+12: {
+  Diamond Steppe Island - Warp Maze Cave - Second Chest: Din's Pearl
+  Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item: Progressive Shield
+  Wind Temple - Chest Behind Stone Head: Triforce Shard 7
+  Wind Temple - Kill All Enemies in Tall Basement Room: Wind God's Aria
+}
+13: {
+  Earth Temple - Chest Behind Destructible Walls: Note to Mom
+  Wind Temple - Big Key Chest: Triforce Shard 1
+  Wind Temple - Molgera Heart Container: Progressive Magic Meter
+}
+14: {
+  Ganon's Tower - Maze Chest: Earth God's Lyric
+}
+15: {
+  Earth Temple - End of Foggy Room With Floormasters: ET Big Key
+  Earth Temple - Kill All Floormasters in Foggy Room: ET Small Key
+}
+16: {
+  Earth Temple - Chest Behind Statues: Farore's Pearl
+  Earth Temple - Chest In Three Blocks Room: ET Small Key
+}
+17: {
+  Earth Temple - Big Key Chest: Progressive Bow
+  Earth Temple - Chest in Third Crypt: Wallet Capacity Upgrade
+  Earth Temple - Jalhalla Heart Container: Ghost Ship Chart
+  Earth Temple - Stalfos Crypt Room: Empty Bottle
+  Earth Temple - Stalfos Miniboss Room: Cabana Deed
+  Tower of the Gods - Skulls Room Chest: TotG Small Key
+}
+18: {
+  Defeat Ganondorf: Victory
   Private Oasis - Cabana Labyrinth - Upper Floor Chest: Empty Bottle
-  Tower of the Gods - Big Key Chest: Empty Bottle
   Tower of the Gods - First Chest Guarded by Armos Knights: TotG Big Key
   Tower of the Gods - Floating Platforms Room: Song of Passing
   Tower of the Gods - Second Chest Guarded by Armos Knights: TotG Small Key
-  Tower of the Gods - Skulls Room Chest: TotG Small Key
   Tower of the Gods - Stone Tablet: Empty Bottle
-  Wind Temple - Molgera Heart Container: Progressive Magic Meter
+}
+19: {
+  Tower of the Gods - Big Key Chest: Empty Bottle
 }

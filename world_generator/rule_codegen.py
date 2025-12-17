@@ -1419,6 +1419,14 @@ class HelperCodeGenerator:
                     return f'state.has_group({repr(group)}, player)'
                 return f'state.has_group({repr(group)}, player, {count})'
 
+        elif method == 'has_group_unique':
+            if len(args) >= 1:
+                group = self._extract_constant(args[0], '')
+                count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
+                if count == 1:
+                    return f'state.has_group_unique({repr(group)}, player)'
+                return f'state.has_group_unique({repr(group)}, player, {count})'
+
         elif method == 'can_reach':
             if len(args) >= 1:
                 region = self._extract_constant(args[0], '')
