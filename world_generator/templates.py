@@ -1023,6 +1023,29 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         canonical_placements_section = ''
 
+    # Generate __init__ method for world_attributes (game-specific instance attributes)
+    init_section = ''
+    if data.world_attributes:
+        init_attrs = []
+        for attr_name, attr_value in data.world_attributes.items():
+            # Format the value appropriately
+            if isinstance(attr_value, dict):
+                # Format dict with integer keys properly (e.g., hat_yarn_costs)
+                dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())
+                init_attrs.append(f'        self.{attr_name} = {{{dict_items}}}')
+            elif isinstance(attr_value, list):
+                init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
+            else:
+                init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
+
+        init_attrs_content = '\n'.join(init_attrs)
+        init_section = f'''
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+{init_attrs_content}
+'''
+
     # Build itempool_counts dictionary
     # When canonical_placements is available, we use the full itempool_counts
     # (items are either in the pool for randomization, or placed canonically for seed=1).
@@ -1187,7 +1210,7 @@ from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
 
 if TYPE_CHECKING:
-    from BaseClasses import CollectionState
+    from BaseClasses import CollectionState, MultiWorld
 
 from .Items import item_table, {class_name}Item
 from .Locations import location_table, {class_name}Location
@@ -1243,7 +1266,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
