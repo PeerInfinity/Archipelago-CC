@@ -1424,8 +1424,133 @@ class HelperCodeGenerator:
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
 
+        # Special case: when accessing attributes on 'self' (logic class instance),
+        # resolve them from settings. This handles SC2Logic attributes like
+        # advanced_tactics, base_power_rating, spear_of_adun_presence, etc.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
+            resolved_value = self._resolve_logic_attribute(attr)
+            if resolved_value is not None:
+                if isinstance(resolved_value, bool):
+                    return 'True' if resolved_value else 'False'
+                elif isinstance(resolved_value, str):
+                    return repr(resolved_value)
+                elif isinstance(resolved_value, (list, set, frozenset)):
+                    # Handle basic_terran_units, basic_zerg_units, etc.
+                    return repr(list(resolved_value) if isinstance(resolved_value, (set, frozenset)) else resolved_value)
+                else:
+                    return str(resolved_value)
+
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
+
+    def _resolve_logic_attribute(self, attr: str) -> Any:
+        """
+        Resolve a logic class attribute (like self.advanced_tactics) to its actual value.
+
+        This handles attributes from game-specific logic classes (like SC2Logic) that
+        are computed from world options at runtime. The resolved value is determined
+        based on the captured settings from the rules.json.
+
+        Returns None if the attribute cannot be resolved.
+        """
+        # Direct setting lookups - attributes that map directly to option values
+        direct_settings = {
+            'spear_of_adun_presence': 'spear_of_adun_presence',
+            'spear_of_adun_passive_presence': 'spear_of_adun_passive_ability_presence',
+            'kerrigan_presence': 'kerrigan_presence',
+            'logic_level': 'required_tactics',
+            'kerrigan_levels_per_mission_completed': 'kerrigan_levels_per_mission_completed',
+            'kerrigan_levels_per_mission_completed_cap': 'kerrigan_levels_per_mission_completed_cap',
+            'kerrigan_total_level_cap': 'kerrigan_total_level_cap',
+            'grant_story_tech': 'grant_story_tech',
+            'generic_upgrade_missions': 'generic_upgrade_missions',
+            'all_in_map': 'all_in_map',
+            'mission_order': 'mission_order',
+        }
+
+        if attr in direct_settings:
+            setting_name = direct_settings[attr]
+            if setting_name in self.settings:
+                return self.settings[setting_name]
+
+        # Computed attributes - derived from other settings
+        if attr == 'advanced_tactics':
+            # advanced_tactics = logic_level != RequiredTactics.option_standard (which is 0)
+            required_tactics = self.settings.get('required_tactics', 0)
+            return required_tactics != 0
+
+        if attr == 'base_power_rating':
+            # base_power_rating = 2 if advanced_tactics else 0
+            required_tactics = self.settings.get('required_tactics', 0)
+            advanced_tactics = required_tactics != 0
+            return 2 if advanced_tactics else 0
+
+        if attr == 'take_over_ai_allies':
+            return bool(self.settings.get('take_over_ai_allies', False))
+
+        if attr == 'kerrigan_unit_available':
+            # Complex computation involving multiple settings - default to True for safety
+            return self.settings.get('kerrigan_unit_available', True)
+
+        if attr == 'morphling_enabled':
+            # morphling_enabled = enable_morphling == 1 (option_true)
+            return self.settings.get('enable_morphling', 0) == 1
+
+        if attr == 'story_levels_granted':
+            # story_levels_granted = grant_story_levels != 0 (disabled)
+            return self.settings.get('grant_story_levels', 0) != 0
+
+        if attr == 'war_council_upgrades':
+            # war_council_upgrades = not war_council_nerfs
+            return not bool(self.settings.get('war_council_nerfs', False))
+
+        # Attributes that might be set externally or have complex computations
+        # Default to safe values that won't block progression
+        if attr in ('nova_used', 'has_barracks_unit', 'has_factory_unit', 'has_starport_unit',
+                    'has_zerg_melee_unit', 'has_zerg_ranged_unit', 'has_zerg_air_unit',
+                    'has_protoss_gateway_unit', 'has_protoss_core_unit', 'has_protoss_robo_unit',
+                    'has_protoss_stargate_unit'):
+            return True
+
+        if attr == 'total_mission_count':
+            return 1  # Safe default
+
+        # Unit lists - computed based on logic_level (required_tactics setting)
+        # These are the sets used by terran_common_unit, zerg_common_unit, protoss_common_unit
+        if attr == 'basic_terran_units':
+            required_tactics = self.settings.get('required_tactics', 0)
+            # Standard units (required_tactics == 0)
+            base_units = {'Marine', 'Marauder', 'Dominion Trooper', 'Goliath', 'Hellion', 'Vulture', 'Warhound'}
+            if required_tactics >= 1:  # Advanced tactics
+                base_units.update({'Reaper', 'Diamondback', 'Viking', 'Siege Tank', 'Banshee'})
+            if required_tactics >= 2:  # No logic
+                base_units.update({'Firebat', 'Medic', 'Medivac', 'Wraith', 'Thor', 'Liberator',
+                                  'Raven', 'Cyclone', 'Widow Mine', 'Ghost', 'Spectre', 'Battlecruiser'})
+            return base_units
+
+        if attr == 'basic_zerg_units':
+            required_tactics = self.settings.get('required_tactics', 0)
+            base_units = {'Swarm Queen', 'Roach', 'Hydralisk'}
+            if required_tactics >= 1:
+                base_units.update({'Zergling', 'Infestor', 'Aberration', 'Mutalisk', 'Corruptor'})
+            if required_tactics >= 2:
+                base_units.update({'Swarm Host', 'Ultralisk', 'Brood Lord', 'Viper', 'Ravager',
+                                  'Lurker', 'Impaler', 'Guardian', 'Devourer', 'Brutalisk', 'Leviathan'})
+            return base_units
+
+        if attr == 'basic_protoss_units':
+            required_tactics = self.settings.get('required_tactics', 0)
+            base_units = {'Zealot', 'Centurion', 'Sentinel', 'Stalker', 'Instigator', 'Slayer', 'Adept'}
+            if required_tactics >= 1:
+                base_units.update({'Dragoon', 'Sentry', 'High Templar', 'Dark Templar', 'Immortal',
+                                  'Annihilator', 'Vanguard', 'Reaver', 'Phoenix', 'Mirage', 'Corsair'})
+            if required_tactics >= 2:
+                base_units.update({'Archon', 'Colossus', 'Wrathwalker', 'Ascendant', 'Dark Archon',
+                                  'Supplicant', 'Tempest', 'Arbiter', 'Carrier', 'Mothership'})
+            return base_units
+
+        # For any unrecognized attribute, return None to fall back to default behavior
+        return None
 
     def _expr_function_call(self, expr: Dict[str, Any]) -> str:
         """Generate function call expression."""
@@ -1585,5 +1710,13 @@ class HelperCodeGenerator:
                 # Extract all elements from the set
                 elements = value.get('elements', [])
                 return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+            # Handle attribute access on self (e.g., self.basic_terran_units)
+            if value.get('type') == 'attribute':
+                obj_expr = value.get('object', {})
+                if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
+                    attr = value.get('attr', '')
+                    resolved = self._resolve_logic_attribute(attr)
+                    if resolved is not None:
+                        return list(resolved) if isinstance(resolved, (set, frozenset)) else resolved
             return default
         return value if value is not None else default
