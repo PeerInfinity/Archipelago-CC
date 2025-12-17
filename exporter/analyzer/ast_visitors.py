@@ -2081,6 +2081,15 @@ class ASTVisitorMixin:
                 if value is None:
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to None")
                     return {'type': 'constant', 'value': None}
+                # Handle rule dicts (helper, item_check, state_method, etc.)
+                # These come from parameter mapping when arguments are analyzed rules
+                elif isinstance(value, dict) and value.get('type') in (
+                    'helper', 'item_check', 'state_method', 'can_reach', 'location_check',
+                    'and', 'or', 'not', 'conditional', 'compare', 'has_all', 'has_any',
+                    'constant', 'name', 'attribute', 'subscript', 'setting_value'
+                ):
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to rule dict of type '{value.get('type')}'")
+                    return value  # Return the rule dict directly
                 # Handle simple values (numbers, strings, bools)
                 elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")

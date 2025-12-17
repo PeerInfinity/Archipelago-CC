@@ -28,6 +28,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
     # Helpers that are too complex to export (have loops/complex logic)
     # These require JavaScript implementations
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
+        'has_x_worlds',         # Has for loops, variable assignments - JS implementation in kh1Logic.js
         'has_emblems',          # Calls has_x_worlds which has loops
         'has_defensive_tools',  # Called without args but definition needs logic_difficulty param
         'has_puppies',          # Has loops over puppy items
@@ -400,54 +401,13 @@ class KH1GameExportHandler(BaseGameExportHandler):
         """
         Post-process the exported data to fix KH1-specific issues.
 
-        NOTE: The analyzer now preserves has_x_worlds as a helper (ast_visitors.py
-        has_dynamic_for_loops detects state.has() in loop body).
+        NOTE: The analyzer now handles most KH1 issues:
+        - has_x_worlds is preserved as a helper (has_dynamic_for_loops detects state.has() in loop)
+        - Parameter substitution now works (rule dicts passed as arguments are substituted)
 
-        HOWEVER, this post-processing is still needed because:
-        - When has_parasite_cage is inlined, it references parameter 'worlds'
-        - The analyzer doesn't substitute the parameter with has_x_worlds(...) helper call
-        - This leaves {"type": "name", "name": "worlds"} in the rule
-
-        TODO: Remove this once closure variable capture/parameter substitution is implemented.
+        TEMPORARILY DISABLED to verify parameter substitution fix works.
         """
-        # Fix has_all_counts state_method calls with empty args
-        # These come from has_all_magic_lvx(state, player, level) which calls
-        # state.has_all_counts({...}, player) with a dict that references 'level'
-        # The analyzer can't resolve 'level' so it outputs empty args
-
-        if 'regions' in data:
-            for player_id, player_regions in data['regions'].items():
-                for region_name, region in player_regions.items():
-                    # Fix location access rules
-                    for location in region.get('locations', []):
-                        location_name = location.get('name', '')
-                        access_rule = location.get('access_rule')
-
-                        if access_rule and isinstance(access_rule, dict):
-                            # Special handling for Level locations in the Levels region
-                            if region_name == 'Levels' and self._is_level_location(location_name):
-                                location['access_rule'] = self._fix_level_location_rule(access_rule, location_name)
-                            # Special handling for locations that require additional checks
-                            elif self._needs_additional_check(location_name):
-                                location['access_rule'] = self._fix_has_all_counts_rule(access_rule, location_name)
-                                location['access_rule'] = self._add_missing_check(location['access_rule'], location_name)
-                            else:
-                                # Fix the access rule normally
-                                location['access_rule'] = self._fix_has_all_counts_rule(access_rule, location_name)
-
-                    # Fix exit access rules
-                    for exit_data in region.get('exits', []):
-                        exit_name = exit_data.get('name', '')
-                        access_rule = exit_data.get('access_rule')
-
-                        if access_rule and isinstance(access_rule, dict):
-                            # Special handling for World Map exits - fix broken has_x_worlds
-                            if region_name == 'World Map' and self._is_world_map_exit(exit_name):
-                                exit_data['access_rule'] = self._fix_world_map_exit_rule(access_rule, exit_name)
-                            else:
-                                # Fix the access rule normally
-                                exit_data['access_rule'] = self._fix_has_all_counts_rule(access_rule, exit_name)
-
+        # Parameter substitution fix should now handle has_parasite_cage correctly
         return data
 
     def _fix_world_map_exit_rule(self, rule: Dict[str, Any], exit_name: str) -> Dict[str, Any]:
