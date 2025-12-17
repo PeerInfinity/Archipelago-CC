@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-16 02:12:57
+**Generated:** 2025-12-17 04:17:09
 
 **Source Data Created:** 2025-12-16T01:44:07.757974
 
-**Source Data Last Updated:** 2025-12-16T01:44:07.757981
+**Source Data Last Updated:** 2025-12-17T04:17:08.443712
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Total Games:** 74
+- **Passed:** 73 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -57,12 +57,13 @@
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
-| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 58.4KB | 5.4KB |
+| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 60.0KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 11.3KB | 9.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.9KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.1KB | ✅ |
-| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 33.7KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.2KB | ✅ |
+| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 41.2KB | 10.7KB |
+| Lingo WorldGen | ❌ Failed | 0 | 3.2 | 5.2 | 🟡 61.5% | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.4KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
@@ -70,30 +71,30 @@
 | MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 3.5KB | ✅ |
 | Meritous | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 0.7KB | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 26.1KB | 5.1KB |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.2KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
-| Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
+| Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.4KB | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 24.1KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 33.2KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 6.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 71.9KB | 114.6KB |
+| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 73.6KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.3KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 5.9KB | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 11.2KB | ✅ |
-| The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 9.2KB | ✅ |
+| The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 6.3KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.0KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |

@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-16 02:12:57
+**Generated:** 2025-12-17 04:17:09
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,8 +10,8 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 361.8s | 911.8s | 1950.1s | 1543.1s |
-| Average | 5.0s | 12.5s | 26.7s | 21.1s |
+| Total | 368.9s | 920.5s | 1950.1s | 1543.1s |
+| Average | 5.0s | 12.4s | 26.7s | 21.1s |
 | Max | 27.3s | 76.7s | 288.6s | 117.4s |
 | Min | 3.0s | 5.5s | 5.6s | 12.4s |
 
@@ -58,6 +58,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Kirby's Dream Land 3 | 5.2s | 54.6s | 77.7s | 26.9s |
 | Landstalker - The Treasures of King Nole | 3.2s | 8.5s | 26.8s | 18.6s |
 | Lingo | 4.0s | 6.7s | 17.6s | 21.8s |
+| Lingo WorldGen | 7.1s | 8.7s | - | - |
 | Links Awakening DX | 9.6s | 16.7s | 21.8s | 19.9s |
 | Lufia II Ancient Cave | 3.3s | 5.7s | 7.7s | 12.9s |
 | Mario & Luigi Superstar Saga | 3.8s | 9.5s | 69.9s | 32.4s |
