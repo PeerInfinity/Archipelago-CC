@@ -1471,8 +1471,10 @@ class HelperCodeGenerator:
 
         elif method == 'can_reach':
             if len(args) >= 1:
-                region = self._extract_constant(args[0], '')
-                return f'state.can_reach({repr(region)}, "Region", player)'
+                target = self._extract_constant(args[0], '')
+                # Second arg specifies reach type: "Region" or "Location"
+                reach_type = self._extract_constant(args[1], 'Region') if len(args) > 1 else 'Region'
+                return f'state.can_reach({repr(target)}, {repr(reach_type)}, player)'
 
         elif method == 'can_reach_location':
             if len(args) >= 1:
@@ -1500,6 +1502,19 @@ class HelperCodeGenerator:
         # setting as setting_value and now just need the numeric/boolean value.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
+
+        # Special case: self.<option> references (e.g., self.game_logic)
+        # In helper functions exported from original worlds, 'self' refers to a logic class
+        # that has options as attributes. We resolve these to literal values from settings.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
+            if attr in self.settings:
+                value = self.settings[attr]
+                if isinstance(value, bool):
+                    return 'True' if value else 'False'
+                elif isinstance(value, str):
+                    return repr(value)
+                else:
+                    return str(value)
 
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
@@ -1666,7 +1681,11 @@ class HelperCodeGenerator:
         return f"sum({element_expr} for {target_expr} in {iterator_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
-        """Extract constant value from a potential constant wrapper."""
+        """Extract constant value from a potential constant wrapper.
+
+        Also handles self.<setting> attribute access and subscript operations
+        on settings (e.g., self.boss_order[0]).
+        """
         if isinstance(value, dict):
             if value.get('type') == 'constant':
                 return value.get('value', default)
@@ -1676,5 +1695,26 @@ class HelperCodeGenerator:
                 # Extract all elements from the set
                 elements = value.get('elements', [])
                 return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+
+            # Handle subscript on settings (e.g., self.boss_order[0])
+            if value.get('type') == 'subscript':
+                base_value = self._extract_constant(value.get('value', {}), None)
+                index = self._extract_constant(value.get('index', {}), None)
+                if base_value is not None and index is not None:
+                    try:
+                        return base_value[index]
+                    except (IndexError, KeyError, TypeError):
+                        pass
+                return default
+
+            # Handle attribute access on self (e.g., self.boss_order)
+            if value.get('type') == 'attribute':
+                obj = value.get('object', {})
+                attr = value.get('attr', '')
+                if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                    if attr in self.settings:
+                        return self.settings[attr]
+                return default
+
             return default
         return value if value is not None else default
