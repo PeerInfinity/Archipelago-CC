@@ -332,17 +332,20 @@ class RuleCodeGenerator:
         method = rule.get('method', '')
         args = rule.get('args', [])
 
-        # Handle can_reach state method - check second arg for type (Region or Location)
+        # Handle can_reach state method - check second arg for type (Region, Location, or Entrance)
         if method in ('can_reach', 'can_reach_region'):
             if args and isinstance(args[0], dict):
                 target = self._extract_constant_value(args[0], '')
-                # Check if second argument specifies "Location" type
+                # Check if second argument specifies "Location" or "Entrance" type
                 reach_type = self._extract_constant_value(args[1], 'Region') if len(args) > 1 else 'Region'
                 if target:
                     target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
                     if reach_type == 'Location':
                         self.required_imports.add('CanReachLocation')
                         return f'CanReachLocation("{target_escaped}")'
+                    elif reach_type == 'Entrance':
+                        self.required_imports.add('CanReachEntrance')
+                        return f'CanReachEntrance("{target_escaped}")'
                     else:
                         self.required_imports.add('CanReachRegion')
                         return f'CanReachRegion("{target_escaped}")'
