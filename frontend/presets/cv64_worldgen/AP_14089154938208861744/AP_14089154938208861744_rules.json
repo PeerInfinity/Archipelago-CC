@@ -3352,9 +3352,14 @@
             "name": "Upper cracked wall",
             "connected_region": "Castle Center: library",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Magical Nitro",
+                  "Mandragora"
+                ]
+              }
             }
           }
         ],

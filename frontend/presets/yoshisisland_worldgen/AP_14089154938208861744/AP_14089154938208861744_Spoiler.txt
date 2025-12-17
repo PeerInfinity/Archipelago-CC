@@ -235,31 +235,21 @@ Playthrough:
 
 }
 1: {
-  Burt The Bashful's Boss Room: Boss Clear
   Hop! Hop! Donut Lifts: Level Clear: Dashed Platform
   Hop! Hop! Donut Lifts: Red Coins: Chomp Rock
   Hop! Hop! Donut Lifts: Stars: World 6 Gate
-  Salvo The Slime's Boss Room: Boss Clear
   The Cave Of Chomp Rock: Stars: Egg Capacity Upgrade
   Touch Fuzzy Get Dizzy: Flowers: Spring Ball
-  Touch Fuzzy Get Dizzy: Gather Coins: Bandit Consumables
 }
 2: {
   Beware The Spinning Logs: Flowers: Tulip
   Burt The Bashful's Fort: Stars: ! Switch
-  King Bowser's Castle: Level Clear: Saved Baby Luigi
-  Tap-Tap The Red Nose's Boss Room: Boss Clear
   The Cave Of Chomp Rock: Flowers: World 4 Gate
-  The Very Loooooong Cave: Flowers: Skis
-  The Very Loooooong Cave: Stars: Fire Melon
 }
 3: {
   Chomp Rock Zone: Level Clear: Watermelon
   Chomp Rock Zone: Stars: Platform Ghost
   Don't Look Back!: Stars: Egg Launcher
-  Hookbill The Koopa's Boss Room: Boss Clear
-  Marching Milde's Boss Room: Boss Clear
-  Ride Like The Wind: Gather Coins: Bandit Consumables
 }
 4: {
   Salvo The Slime's Castle: Red Coins: Large Spring Ball
@@ -271,44 +261,56 @@ Playthrough:
   Watch Out Below!: Stars: Egg Capacity Upgrade
 }
 6: {
-  Burt The Bashful's Fort: Flowers: World 3 Gate
+  Ride Like The Wind: Gather Coins: Bandit Consumables
   The Deep, Underground Maze: Level Clear: Egg Capacity Upgrade
+  Touch Fuzzy Get Dizzy: Gather Coins: Bandit Consumables
 }
 7: {
-  Naval Piranha's Boss Room: Boss Clear
-  Naval Piranha's Castle: Flowers: Dashed Stairs
-  Prince Froggy's Boss Room: Boss Clear
-  Welcome To Monkey World!: Level Clear: World 5 Gate
+  Burt The Bashful's Fort: Flowers: World 3 Gate
+  The Very Loooooong Cave: Flowers: Skis
+  The Very Loooooong Cave: Stars: Fire Melon
 }
 8: {
+  Naval Piranha's Boss Room: Boss Clear
+  Naval Piranha's Castle: Flowers: Dashed Stairs
+  Welcome To Monkey World!: Level Clear: World 5 Gate
+}
+9: {
   Danger - Icy Conditions Ahead: Stars: Arrow Wheel
-  Raphael The Raven's Boss Room: Boss Clear
-  Sluggy The Unshaven's Boss Room: Boss Clear
   Welcome To Cloud World: Red Coins: Car Morph
   Welcome To Cloud World: Stars: Helicopter Morph
 }
-9: {
+10: {
   Goonie Rides!: Flowers: World 2 Gate
   Goonie Rides!: Level Clear: Egg Capacity Upgrade
+  Raphael The Raven's Boss Room: Boss Clear
+  Salvo The Slime's Boss Room: Boss Clear
   Watch Out Below!: Red Coins: Vanishing Arrow Wheel
 }
-10: {
+11: {
   Bigger Boo's Boss Room: Boss Clear
   Bigger Boo's Fort: Level Clear: Egg Plant
   Bigger Boo's Fort: Red Coins: Egg Capacity Upgrade
+  Hookbill The Koopa's Boss Room: Boss Clear
   Hookbill The Koopa's Castle: Flowers: Super Star
   Lakitu's Wall: Gather Coins: Bandit Consumables
   Roger The Ghost's Boss Room: Boss Clear
   The Cave Of the Mystery Maze: Seed Spitting Contest: Bandit Watermelons
   Watch Out For Lakitu: Red Coins: Beanstalk
 }
-11: {
+12: {
+  Burt The Bashful's Boss Room: Boss Clear
   GO! GO! MARIO!!: Flowers: Mole Tank Morph
   King Bowser's Castle: Red Coins: Bucket
   Make Eggs, Throw Eggs: Flowers: Giant Eggs
+  Sluggy The Unshaven's Boss Room: Boss Clear
+  Tap-Tap The Red Nose's Boss Room: Boss Clear
   The Baseball Boys: Stars: Submarine Morph
   The Cave Of The Bandits: Level Clear: Flashing Eggs
 }
-12: {
+13: {
+  King Bowser's Castle: Level Clear: Saved Baby Luigi
+  Marching Milde's Boss Room: Boss Clear
+  Prince Froggy's Boss Room: Boss Clear
   The Cave Of Harry Hedgehog: Red Coins: Poochy
 }

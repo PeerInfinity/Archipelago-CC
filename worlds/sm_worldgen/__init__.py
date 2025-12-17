@@ -91,6 +91,7 @@ class SuperMetroidWorldGenWorld(RuleWorldMixin, World):
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
+
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
     }
@@ -307,6 +308,7 @@ class SuperMetroidWorldGenWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         return SuperMetroidWorldGenItem(name, data.classification, data.id, self.player)
+
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""

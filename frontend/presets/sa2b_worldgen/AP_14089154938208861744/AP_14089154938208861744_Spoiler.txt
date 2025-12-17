@@ -246,12 +246,10 @@ Playthrough:
   Green Forest - Chao Key 2: Emblem
   Green Forest - Chao Key 3: Emblem
   Green Forest - Upgrade: Shadow - Air Shoes
-  Pumpkin Hill - 2: Emblem
   Pumpkin Hill - Chao Key 1: Emblem
   Pumpkin Hill - Chao Key 2: Emblem
   Pumpkin Hill - Chao Key 3: Emblem
   Pumpkin Hill - Upgrade: Emblem
-  Pyramid Cave - 2: Emblem
   Pyramid Cave - Chao Key 1: Emblem
   Pyramid Cave - Upgrade: Emblem
   Sky Rail - 2: Emblem
@@ -283,7 +281,6 @@ Playthrough:
   Iron Gate - Chao Key 1: Emblem
   Iron Gate - Chao Key 3: Emblem
   Iron Gate - Gold Beetle: Shadow - Flame Ring
-  Meteor Herd - 2: Emblem
   Meteor Herd - Chao Key 3: Emblem
   Meteor Herd - Gold Beetle: Emblem
   Radical Highway - 1: Emblem
@@ -306,14 +303,11 @@ Playthrough:
   Cosmic Wall - Chao Key 3: Emblem
   Cosmic Wall - Gold Beetle: Emblem
   Cosmic Wall - Upgrade: Emblem
-  Crazy Gadget - 2: Emblem
   Crazy Gadget - Chao Key 1: Emblem
   Crazy Gadget - Chao Key 2: Emblem
-  Egg Quarters - 2: Emblem
   Egg Quarters - Chao Key 1: Knuckles - Sunglasses
   Egg Quarters - Gold Beetle: Emblem
   Egg Quarters - Upgrade: Knuckles - Hammer Gloves
-  Eternal Engine - 2: Knuckles - Shovel Claws
   Eternal Engine - Chao Key 1: Emblem
   Eternal Engine - Chao Key 3: Emblem
   Eternal Engine - Upgrade: Emblem
@@ -345,6 +339,7 @@ Playthrough:
   Mission Street - Chao Key 2: Emblem
   Mission Street - Chao Key 3: Emblem
   Mission Street - Gold Beetle: Emblem
+  Pyramid Cave - 2: Emblem
   Sand Ocean - Upgrade: Emblem
   Security Hall - Chao Key 1: Emblem
   Security Hall - Chao Key 2: Emblem
@@ -358,14 +353,9 @@ Playthrough:
   Cannon's Core - 1: Emblem
   Cannon's Core - Chao Key 2: Emblem
   Cannon's Core - Gold Beetle: Eggman - Mystic Melody
-  Death Chamber - 1: Emblem
-  Death Chamber - 2: Emblem
   Death Chamber - Chao Key 1: Emblem
   Death Chamber - Chao Key 2: Emblem
-  Death Chamber - Chao Key 3: Tails - Mystic Melody
-  Death Chamber - Gold Beetle: Emblem
   Finalhazard: What Maria Wanted
-  Mad Space - 2: Emblem
   Mad Space - Gold Beetle: Sonic - Mystic Melody
   Metal Harbor - 1: Rouge - Pick Nails
   Metal Harbor - 2: Emblem
@@ -377,7 +367,6 @@ Playthrough:
   Prison Lane - 1: Emblem
   Prison Lane - 2: Emblem
   Prison Lane - Gold Beetle: Emblem
-  Pumpkin Hill - 1: Emblem
   Route 101 - 1: Emblem
   Route 101 - 2: Emblem
   Route 280 - 1: Emblem
@@ -388,22 +377,35 @@ Playthrough:
   White Jungle - Chao Key 1: Emblem
   White Jungle - Chao Key 3: Emblem
   White Jungle - Upgrade: Emblem
-  Wild Canyon - Upgrade: Emblem
 }
 5: {
   City Escape - Upgrade: Emblem
+  Crazy Gadget - 2: Emblem
   Crazy Gadget - Chao Key 3: Emblem
   Dry Lagoon - Gold Beetle: Emblem
   Dry Lagoon - Upgrade: Tails - Bazooka
   Egg Quarters - 1: Emblem
+  Egg Quarters - 2: Emblem
+  Mad Space - 2: Emblem
   Pyramid Cave - Chao Key 3: Emblem
   Security Hall - Chao Key 3: Emblem
 }
 6: {
   Eternal Engine - 1: Emblem
+  Eternal Engine - 2: Knuckles - Shovel Claws
   Eternal Engine - Chao Key 2: Emblem
   Eternal Engine - Gold Beetle: Emblem
   Hidden Base - Upgrade: Emblem
   Prison Lane - Chao Key 1: Emblem
   Prison Lane - Upgrade: Emblem
+}
+7: {
+  Death Chamber - 1: Emblem
+  Death Chamber - 2: Emblem
+  Death Chamber - Chao Key 3: Tails - Mystic Melody
+  Death Chamber - Gold Beetle: Emblem
+  Meteor Herd - 2: Emblem
+  Pumpkin Hill - 1: Emblem
+  Pumpkin Hill - 2: Emblem
+  Wild Canyon - Upgrade: Emblem
 }

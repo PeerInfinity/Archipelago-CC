@@ -613,7 +613,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 42239,
+    "exporter_size": 42437,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10922,
     "has_custom_exporter": true,
@@ -845,7 +845,7 @@
     "has_custom_game_logic": true,
     "world_directory": "overcooked2"
   },
-  "Overcooked\\! 2 WorldGen": {
+  "Overcooked! 2 WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,

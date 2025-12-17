@@ -1,0 +1,165 @@
+{
+  "game": "A Link to the Past",
+  "assume_bidirectional_exits": true,
+  "dark_room_logic": "lamp",
+  "retro_bow": false,
+  "swordless": false,
+  "enemy_shuffle": false,
+  "enemy_health": "default",
+  "enemy_damage": "default",
+  "bombless_start": false,
+  "glitches_required": "no_glitches",
+  "pot_shuffle": "off",
+  "dungeon_counters": "on",
+  "glitch_boots": "on",
+  "accessibility": "locations",
+  "mode": "open",
+  "crystals_needed_for_gt": 7,
+  "crystals_needed_for_ganon": 7,
+  "item_functionality": "hard",
+  "shuffle_capacity_upgrades": "off",
+  "treasure_hunt_required": 0,
+  "can_take_damage": true,
+  "difficulty_requirements": {
+    "progressive_bottle_limit": 4,
+    "boss_heart_container_limit": 10,
+    "heart_piece_limit": 24
+  },
+  "logical_heart_pieces": 24,
+  "logical_heart_containers": 10,
+  "required_medallions": [
+    "Quake",
+    "Ether"
+  ],
+  "misery_mire_medallion": "Quake",
+  "turtle_rock_medallion": "Ether",
+  "shop_items": {
+    "Red Potion": {
+      "unlimited": [
+        "Cave Shop (Dark Death Mountain)",
+        "Dark Lake Hylia Shop",
+        "Dark World Lumberjack Shop",
+        "Village of Outcasts Shop",
+        "Dark World Potion Shop",
+        "Light World Death Mountain Shop",
+        "Kakariko Shop",
+        "Cave Shop (Lake Hylia)",
+        "Potion Shop"
+      ],
+      "limited": [
+        "Cave Shop (Dark Death Mountain)",
+        "Dark Lake Hylia Shop",
+        "Dark World Lumberjack Shop",
+        "Village of Outcasts Shop",
+        "Dark World Potion Shop",
+        "Light World Death Mountain Shop",
+        "Kakariko Shop",
+        "Cave Shop (Lake Hylia)",
+        "Potion Shop"
+      ]
+    },
+    "Small Heart": {
+      "unlimited": [
+        "Cave Shop (Dark Death Mountain)",
+        "Light World Death Mountain Shop",
+        "Kakariko Shop",
+        "Cave Shop (Lake Hylia)"
+      ],
+      "limited": [
+        "Cave Shop (Dark Death Mountain)",
+        "Light World Death Mountain Shop",
+        "Kakariko Shop",
+        "Cave Shop (Lake Hylia)"
+      ]
+    },
+    "Bombs (10)": {
+      "unlimited": [
+        "Cave Shop (Dark Death Mountain)",
+        "Dark Lake Hylia Shop",
+        "Dark World Lumberjack Shop",
+        "Village of Outcasts Shop",
+        "Dark World Potion Shop",
+        "Light World Death Mountain Shop",
+        "Kakariko Shop",
+        "Cave Shop (Lake Hylia)"
+      ],
+      "limited": [
+        "Cave Shop (Dark Death Mountain)",
+        "Dark Lake Hylia Shop",
+        "Dark World Lumberjack Shop",
+        "Village of Outcasts Shop",
+        "Dark World Potion Shop",
+        "Light World Death Mountain Shop",
+        "Kakariko Shop",
+        "Cave Shop (Lake Hylia)"
+      ]
+    },
+    "Red Shield": {
+      "unlimited": [
+        "Red Shield Shop"
+      ],
+      "limited": [
+        "Red Shield Shop"
+      ]
+    },
+    "Bee": {
+      "unlimited": [
+        "Red Shield Shop"
+      ],
+      "limited": [
+        "Red Shield Shop"
+      ]
+    },
+    "Arrows (10)": {
+      "unlimited": [
+        "Red Shield Shop"
+      ],
+      "limited": [
+        "Red Shield Shop"
+      ]
+    },
+    "Blue Shield": {
+      "unlimited": [
+        "Dark Lake Hylia Shop",
+        "Dark World Lumberjack Shop",
+        "Village of Outcasts Shop",
+        "Dark World Potion Shop"
+      ],
+      "limited": [
+        "Dark Lake Hylia Shop",
+        "Dark World Lumberjack Shop",
+        "Village of Outcasts Shop",
+        "Dark World Potion Shop"
+      ]
+    },
+    "Green Potion": {
+      "unlimited": [
+        "Potion Shop"
+      ],
+      "limited": [
+        "Potion Shop"
+      ]
+    },
+    "Blue Potion": {
+      "unlimited": [
+        "Potion Shop"
+      ],
+      "limited": [
+        "Potion Shop"
+      ]
+    },
+    "Bomb Upgrade (+5)": {
+      "unlimited": [],
+      "limited": [
+        "Capacity Upgrade"
+      ]
+    },
+    "Arrow Upgrade (+5)": {
+      "unlimited": [],
+      "limited": [
+        "Capacity Upgrade"
+      ]
+    }
+  },
+  "world_directory": "alttp"
+}

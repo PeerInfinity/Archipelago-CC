@@ -17,6 +17,10 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Early Beth:                      1
+Early Lightning:                 0
+Ixupi Captures Needed:           10
+Puzzle Hints Required:           1
 
 
 Locations:
@@ -137,7 +141,6 @@ Playthrough:
 2: {
   Puzzle Hint Found: Atlantis Map: Crawling
   Puzzle Hint Found: Tape Recorder Heard: Key for Janitor Closet
-  Puzzle Solved Bedroom Elevator: Water Pot Bottom
   Storage: Desk Drawer: Crystal Pot Bottom DUPE
   Storage: Transforming Mask: Water Pot Top DUPE
   Windlenot's Body: Viewed Egyptian Hieroglyphics Explained
@@ -151,7 +154,6 @@ Playthrough:
   Storage: Library Statue: Sand Pot Bottom DUPE
 }
 4: {
-  Clock Chains: Set Time
   Flashback Memory Obtained Beth's Ghost: Ash Pot Bottom
   Flashback Memory Obtained Merrick's Ghost: Sand Pot Top
   Jukebox: Set Song
@@ -175,6 +177,7 @@ Playthrough:
   Viewed Fortune: Viewed Fortune
 }
 5: {
+  Clock Chains: Set Time
   Final Riddle: Planets Aligned: Ash Pot Top
   Ixupi Captured Sand: Oil Pot Bottom
   Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
@@ -182,9 +185,9 @@ Playthrough:
   Puzzle Hint Found: Basilisk Bone Fragments: Cloth Pot Top
   Puzzle Solved Anansi Music Box: Wax Pot Top
   Puzzle Solved Atlantis: Key for Generator Room
+  Puzzle Solved Bedroom Elevator: Water Pot Bottom
   Puzzle Solved Organ: Oil Pot Top
   Set Skull Dial: Prehistoric: Set Skull Dial: Prehistoric
-  Storage: Clock Tower: Water Pot Bottom DUPE
   Storage: Eagles Nest: Wax Pot Top DUPE
   Storage: Ocean: Lightning Pot Top DUPE
   Storage: Workshop Drawers: Metal Pot Bottom DUPE
@@ -192,6 +195,7 @@ Playthrough:
 6: {
   Ixupi Captured Oil: Lightning Pot Top
   Norse Stone: Viewed Norse Stone
+  Storage: Clock Tower: Water Pot Bottom DUPE
 }
 7: {
   Beth's Body: Viewed Page 17

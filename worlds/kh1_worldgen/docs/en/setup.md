@@ -1,4 +1,4 @@
-# Kingdom Hearts Setup Guide
+# Kingdom Hearts WorldGen Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with Kingdom Hearts
+3. Generate a multiworld with Kingdom Hearts WorldGen
 
 ## Joining a Game
 

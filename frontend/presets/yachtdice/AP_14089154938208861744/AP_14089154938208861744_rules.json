@@ -4730,7 +4730,7 @@
           },
           {
             "name": "777 score",
-            "id": 16871245277,
+            "id": null,
             "access_rule": {
               "type": "compare",
               "left": {

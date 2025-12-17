@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Compare, Has, HasAll, HelperCall, True_
+from rule_builder import True_, False_, Compare, Has, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -111,7 +111,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Upper cracked wall", player),
-        True_()
+        HasAll('Magical Nitro', 'Mandragora')
     )
 
     world.set_rule(

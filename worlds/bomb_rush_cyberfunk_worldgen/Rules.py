@@ -288,307 +288,307 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Hideout -> Versum Hill", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 20}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Hideout -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Hideout -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 10}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 20}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Underground Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_oldhead, helper_name="versum_hill_oldhead", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 120}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_oldhead, helper_name="versum_hill_oldhead", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Side Street", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_all_challenges, helper_name="versum_hill_all_challenges", body_data={'type': 'helper', 'name': 'versum_hill_challenge3', 'args': []})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_all_challenges, helper_name="versum_hill_all_challenges", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Basketball Court", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_basketball_court, helper_name="versum_hill_basketball_court", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 90}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_basketball_court, helper_name="versum_hill_basketball_court", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Underground Mall -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 10}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Side Street -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 10}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Basketball Court -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 10}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Basketball Court -> Versum Hill", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 20}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 10}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'is_girl', 'args': []}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 180}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 380}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 3}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Underground", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_underground, helper_name="brink_terminal_oldhead_underground", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 250}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_underground, helper_name="brink_terminal_oldhead_underground", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Dock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_dock, helper_name="brink_terminal_oldhead_dock", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 320}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_dock, helper_name="brink_terminal_oldhead_dock", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Planet Plaza", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza", body_data={'type': 'helper', 'name': 'brink_terminal_all_challenges', 'args': []})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Underground -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'is_girl', 'args': []}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 180}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Dock -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'is_girl', 'args': []}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 180}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Planet Plaza -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'is_girl', 'args': []}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 180}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Planet Plaza -> Brink Terminal - Tower", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_tower, helper_name="brink_terminal_tower", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 280}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_tower, helper_name="brink_terminal_tower", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Tower -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'is_girl', 'args': []}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 180}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Tower -> Brink Terminal - Planet Plaza", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza", body_data={'type': 'helper', 'name': 'brink_terminal_all_challenges', 'args': []})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Mall - Hanging Lights", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling, helper_name="millennium_mall_oldhead_ceiling", args=(0,), body_data={'type': 'or', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 580}]}, {'type': 'helper', 'name': 'millennium_mall_theater', 'args': [{'type': 'name', 'name': 'limit'}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling, helper_name="millennium_mall_oldhead_ceiling", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}]}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Mall - Atrium", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'type': 'helper', 'name': 'millennium_mall_switch', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Hanging Lights -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 380}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 3}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 380}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 3}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall - Race Track", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_race, helper_name="millennium_mall_oldhead_race", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 530}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_race, helper_name="millennium_mall_oldhead_race", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall - Theater", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_theater, helper_name="millennium_mall_theater", args=(0,), body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 491}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 78}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_theater, helper_name="millennium_mall_theater", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Race Track -> Millennium Mall - Atrium", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'type': 'helper', 'name': 'millennium_mall_switch', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Theater -> Millennium Mall - Atrium", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'type': 'helper', 'name': 'millennium_mall_switch', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Theater -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 380}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 3}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Base -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Base -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 620}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Maze", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_oldhead, helper_name="pyramid_island_oldhead", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 780}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_oldhead, helper_name="pyramid_island_oldhead", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Upper Areas", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,), body_data={'type': 'helper', 'name': 'pyramid_island_all_challenges', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Maze -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 620}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 620}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - Top", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_top, helper_name="pyramid_island_top", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_top, helper_name="pyramid_island_top", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 620}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Upper Areas", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,), body_data={'type': 'helper', 'name': 'pyramid_island_all_challenges', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Streets -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Streets -> Mataan - After Smoke Wall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 850}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - After Smoke Wall -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - After Smoke Wall -> Mataan - Deep City", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'type': 'helper', 'name': 'mataan_challenge1', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - After Smoke Wall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 850}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - Red Light District", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_oldhead, helper_name="mataan_oldhead", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 935}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_oldhead, helper_name="mataan_oldhead", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - Lion Statue", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall2, helper_name="mataan_smoke_wall2", args=(0, 0,), body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'mataan_all_challenges', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 960}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall2, helper_name="mataan_smoke_wall2", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Red Light District -> Mataan - Deep City", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'type': 'helper', 'name': 'mataan_challenge1', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Lion Statue -> Mataan - Deep City", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'type': 'helper', 'name': 'mataan_challenge1', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Lion Statue -> Mataan - Skyscrapers", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,), body_data={'type': 'helper', 'name': 'mataan_crew_battle', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Skyscrapers -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
     )
     # Location rules
     world.set_rule(
@@ -983,27 +983,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hideout: BMX garage skateboard", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Unlock phone app", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Vinyl joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Solace joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: BMX gate outfit", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
     )
 
     world.set_rule(
@@ -1018,32 +1018,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Wallrunning challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge1, helper_name="versum_hill_challenge1", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 50}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge1, helper_name="versum_hill_challenge1", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Manual challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge2, helper_name="versum_hill_challenge2", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 58}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge2, helper_name="versum_hill_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Corner challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge3, helper_name="versum_hill_challenge3", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 65}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge3, helper_name="versum_hill_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Glass floor skates", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Frank joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Rave joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rave, helper_name="versum_hill_rave", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'conditional', 'test': {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 90}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 51}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 3}]}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 89}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 51}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 85}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 48}]}]}}}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 26}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 10}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rave, helper_name="versum_hill_rave", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
     )
 
     world.set_rule(
@@ -1053,17 +1053,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Basketball court shortcut CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Rietveld joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rietveld, helper_name="versum_hill_rietveld", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 114}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 67}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rietveld, helper_name="versum_hill_rietveld", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Complete Chapter 1", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_crew_battle, helper_name="versum_hill_crew_battle", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 90}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 98}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 90}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 27}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_crew_battle, helper_name="versum_hill_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}}})
     )
 
     world.set_rule(
@@ -1073,27 +1073,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Upside grind challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge1, helper_name="brink_terminal_challenge1", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 188}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge1, helper_name="brink_terminal_challenge1", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Manual challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge2, helper_name="brink_terminal_challenge2", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 200}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge2, helper_name="brink_terminal_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge3, helper_name="brink_terminal_challenge3", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 220}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge3, helper_name="brink_terminal_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: BMX gate graffiti", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Eclipse joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(3,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(3,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
@@ -1103,72 +1103,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh's skateboard", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 114}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 45}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 67}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 45}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 114}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 45}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 67}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 45}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Rooftop glass CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Complete Chapter 2", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_crew_battle, helper_name="brink_terminal_crew_battle", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 280}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 103}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 280}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 62}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_crew_battle, helper_name="brink_terminal_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Glass cylinder CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Trick challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge1, helper_name="millennium_mall_challenge1", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 434}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge1, helper_name="millennium_mall_challenge1", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Slide challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge2, helper_name="millennium_mall_challenge2", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 442}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge2, helper_name="millennium_mall_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Fish challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge3, helper_name="millennium_mall_challenge3", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 450}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge3, helper_name="millennium_mall_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge4, helper_name="millennium_mall_challenge4", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 458}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge4, helper_name="millennium_mall_challenge4", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Atrium BMX gate BMX", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: DOT.EXE joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Shine joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Complete Chapter 3", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_crew_battle, helper_name="millennium_mall_crew_battle", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 491}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 114}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 107}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 491}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 78}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 80}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_crew_battle, helper_name="millennium_mall_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: BMX gate BMX", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
     )
 
     world.set_rule(
@@ -1193,22 +1193,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge1, helper_name="pyramid_island_challenge1", body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 630}]}, {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge1, helper_name="pyramid_island_challenge1", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Score challenge 2 reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge2, helper_name="pyramid_island_challenge2", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 650}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge2, helper_name="pyramid_island_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Quarter pipe challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge3, helper_name="pyramid_island_challenge3", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 660}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge3, helper_name="pyramid_island_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze outfit", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_skateboard, helper_name="skateboard", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skateboard'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_skateboard, helper_name="skateboard", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skateboard'}}})
     )
 
     world.set_rule(
@@ -1243,17 +1243,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Shortcut glass CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Devil Theory joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,), body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Complete Chapter 4", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_crew_battle, helper_name="pyramid_island_crew_battle", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 730}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 108}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 730}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 97}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_crew_battle, helper_name="pyramid_island_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
@@ -1268,22 +1268,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mataan: Race challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge1, helper_name="mataan_challenge1", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 864}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 108}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]}, {'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 864}]}, {'type': 'helper', 'name': 'graffitiL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 98}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge1, helper_name="mataan_challenge1", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Wallrunning challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge2, helper_name="mataan_challenge2", args=(0, 0,), body_data={'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 880}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 59}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 880}]}, {'type': 'helper', 'name': 'graffitiXL', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 57}]}]}})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge2, helper_name="mataan_challenge2", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge3, helper_name="mataan_challenge3", body_data={'type': 'helper', 'name': 'rep', 'args': [{'type': 'constant', 'value': 920}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge3, helper_name="mataan_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}})
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Coil joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,), body_data={'type': 'helper', 'name': 'mataan_crew_battle', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
     )
 
     world.set_rule(
@@ -1293,5 +1293,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Defeat Faux", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_faux, helper_name="mataan_faux", args=(0, 0,), body_data={'type': 'and', 'conditions': [{'type': 'helper', 'name': 'mataan_deepest', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'name', 'name': 'glitched'}]}, {'type': 'helper', 'name': 'graffitiM', 'args': [{'type': 'name', 'name': 'limit'}, {'type': 'constant', 'value': 122}]}]})
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_faux, helper_name="mataan_faux", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'name', 'name': 'required'}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'name', 'name': 'spots'}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}})
     )

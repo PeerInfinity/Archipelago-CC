@@ -9723,6 +9723,7 @@
       "game": "Muse Dash",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "collect_all_items_for_rules": true,
       "options": {
         "accessibility": 0,
         "additional_song_count": 40,

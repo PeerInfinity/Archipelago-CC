@@ -17633,6 +17633,7 @@
       "game": "Lingo",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "use_auto_indirect_conditions": true,
       "options": {
         "accessibility": 0,
         "death_link": 0,

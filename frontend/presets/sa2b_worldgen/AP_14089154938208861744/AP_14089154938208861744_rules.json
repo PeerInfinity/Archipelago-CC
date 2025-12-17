@@ -49,9 +49,11 @@
             "name": "City Escape - 2",
             "id": 16711712,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "City Escape - 1"
+              }
             },
             "item": {
               "name": "Five Rings",
@@ -171,12 +173,25 @@
             "name": "Metal Harbor - 2",
             "id": 16711715,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Sonic - Light Shoes",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Metal Harbor - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Light Shoes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -294,9 +309,11 @@
             "name": "Green Forest - 2",
             "id": 16711716,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Green Forest - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -410,9 +427,11 @@
             "name": "Pyramid Cave - 2",
             "id": 16711722,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Pyramid Cave - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -544,12 +563,25 @@
             "name": "Crazy Gadget - 2",
             "id": 16711726,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Crazy Gadget - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -689,9 +721,11 @@
             "name": "Final Rush - 2",
             "id": 16711727,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Final Rush - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -809,9 +843,11 @@
             "name": "Prison Lane - 2",
             "id": 16711714,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Prison Lane - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -937,12 +973,25 @@
             "name": "Mission Street - 2",
             "id": 16711718,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Mission Street - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Magnetic Shield",
@@ -1068,9 +1117,11 @@
             "name": "Route 101 - 2",
             "id": 16711720,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Route 101 - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1109,12 +1160,25 @@
             "name": "Hidden Base - 2",
             "id": 16711721,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Hidden Base - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -1233,12 +1297,25 @@
             "name": "Eternal Engine - 2",
             "id": 16711724,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Eternal Engine - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Knuckles - Shovel Claws",
@@ -1372,9 +1449,11 @@
             "name": "Wild Canyon - 2",
             "id": 16711713,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Wild Canyon - 1"
+              }
             },
             "item": {
               "name": "Sonic - Light Shoes",
@@ -1492,9 +1571,11 @@
             "name": "Pumpkin Hill - 2",
             "id": 16711717,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Pumpkin Hill - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1593,9 +1674,11 @@
             "name": "Aquatic Mine - 2",
             "id": 16711719,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Aquatic Mine - 1"
+              }
             },
             "item": {
               "name": "Twenty Rings",
@@ -1711,14 +1794,27 @@
             "name": "Death Chamber - 2",
             "id": 16711723,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "Knuckles - Hammer Gloves",
-                  "Knuckles - Shovel Claws"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Death Chamber - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Knuckles - Hammer Gloves",
+                      "Knuckles - Shovel Claws"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -1854,9 +1950,11 @@
             "name": "Meteor Herd - 2",
             "id": 16711725,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Meteor Herd - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1970,9 +2068,11 @@
             "name": "Radical Highway - 2",
             "id": 16711731,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Radical Highway - 1"
+              }
             },
             "item": {
               "name": "Ten Rings",
@@ -2090,9 +2190,11 @@
             "name": "White Jungle - 2",
             "id": 16711736,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "White Jungle - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2214,9 +2316,11 @@
             "name": "Sky Rail - 2",
             "id": 16711738,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Sky Rail - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2326,9 +2430,11 @@
             "name": "Final Chase - 2",
             "id": 16711741,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Final Chase - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2438,9 +2544,11 @@
             "name": "Iron Gate - 2",
             "id": 16711728,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Iron Gate - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2554,9 +2662,11 @@
             "name": "Sand Ocean - 2",
             "id": 16711730,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Sand Ocean - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2674,12 +2784,25 @@
             "name": "Lost Colony - 2",
             "id": 16711733,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Lost Colony - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -2803,14 +2926,27 @@
             "name": "Weapons Bed - 2",
             "id": 16711734,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Eggman - Large Cannon"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Weapons Bed - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Eggman - Large Cannon"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Shadow - Mystic Melody",
@@ -2921,12 +3057,25 @@
             "name": "Cosmic Wall - 2",
             "id": 16711740,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Cosmic Wall - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -3056,9 +3205,11 @@
             "name": "Dry Lagoon - 2",
             "id": 16711729,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Dry Lagoon - 1"
+              }
             },
             "item": {
               "name": "Rouge - Treasure Scope",
@@ -3183,9 +3334,11 @@
             "name": "Egg Quarters - 2",
             "id": 16711732,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Egg Quarters - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3303,12 +3456,25 @@
             "name": "Security Hall - 2",
             "id": 16711735,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Rouge - Pick Nails",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Security Hall - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Pick Nails",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Magnetic Shield",
@@ -3428,9 +3594,11 @@
             "name": "Route 280 - 2",
             "id": 16711737,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Route 280 - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3471,12 +3639,25 @@
             "name": "Mad Space - 2",
             "id": 16711739,
             "access_rule": {
-              "rule": "Has",
+              "rule": "And",
               "options": [],
-              "args": {
-                "item_name": "Rouge - Iron Boots",
-                "count": 1
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Mad Space - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Iron Boots",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -3582,9 +3763,11 @@
             "name": "Biolizard",
             "connected_region": "Biolizard",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Cannon's Core - 1"
+              }
             }
           }
         ],
@@ -3617,14 +3800,27 @@
             "name": "Cannon's Core - 2",
             "id": 16711742,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "options": [],
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Tails - Booster"
-                ]
-              }
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Cannon's Core - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Tails - Booster"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Shield",
@@ -6743,7 +6939,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "sa2b_worldgen"
     }
   },
   "game_info": {
