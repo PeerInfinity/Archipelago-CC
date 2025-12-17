@@ -68,6 +68,16 @@ class BaseGameExportHandler:
     # Required for games that need items in prog_items before evaluating rules
     ADD_SPHERE_ITEMS_UPFRONT: bool = False
 
+    # When True, Has() rules check all collected items, not just progression items.
+    # Use for games where items marked as 'useful' or 'filler' are used in access rules.
+    # This causes all items to be added to prog_items when collected.
+    COLLECT_ALL_ITEMS_FOR_RULES: bool = False
+
+    # When True, use auto sweep algorithm for indirect region dependencies.
+    # Use for games with custom Rules.py that sets access_rule directly on entrances
+    # without registering indirect_connections via RuleBuilder.set_rule().
+    USE_AUTO_INDIRECT_CONDITIONS: bool = False
+
     # Set of helper function names that should be preserved as helper calls
     # during rule analysis (not inlined/expanded by generic pattern matching)
     # This is used by should_preserve_as_helper() - games can set this instead
@@ -623,6 +633,17 @@ class BaseGameExportHandler:
         # When true, adds items at the start of each sphere before accessibility checks
         if self.ADD_SPHERE_ITEMS_UPFRONT:
             settings_dict['add_sphere_items_upfront'] = True
+
+        # Add collect_all_items_for_rules setting from class attribute
+        # When true, all items are collected into prog_items (not just progression)
+        # This allows Has() rules to check for useful/filler items
+        if self.COLLECT_ALL_ITEMS_FOR_RULES:
+            settings_dict['collect_all_items_for_rules'] = True
+
+        # Add use_auto_indirect_conditions setting from class attribute
+        # When true, use auto sweep for indirect region dependencies
+        if self.USE_AUTO_INDIRECT_CONDITIONS:
+            settings_dict['use_auto_indirect_conditions'] = True
 
         # Export all game-specific options from the world
         # This allows the world generator to recreate fill_slot_data behavior

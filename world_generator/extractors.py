@@ -9,6 +9,8 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
 
+from .constants import INTERNAL_SETTINGS
+
 
 def sanitize_identifier(name: str) -> str:
     """Sanitize a name to be a valid Python identifier.
@@ -44,6 +46,8 @@ class GameMetadata:
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
+    collect_all_items_for_rules: bool = False  # When True, Has() rules check all items, not just progression
+    use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
 
 
 @dataclass
@@ -70,6 +74,7 @@ class LocationData:
     locked: bool = False  # True if item was placed via place_locked_item
     progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
     show_in_spoiler: bool = True  # Whether to show in spoiler log
+    access: Optional[Dict[str, Any]] = None  # Game-specific access data (e.g., Lingo AccessRequirements)
 
 
 @dataclass
@@ -212,8 +217,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     # Extract resolved settings for evaluating setting_value nodes in helpers
     # These are the actual values used in the seed, stored at the top level of settings
     # Also include game_options since many setting_value nodes reference world.options.X.value
-    resolved_settings = {k: v for k, v in settings.items()
-                        if k not in ('game', 'options', 'world_directory', 'assume_bidirectional_exits', 'use_resolved_items')}
+    resolved_settings = {k: v for k, v in settings.items() if k not in INTERNAL_SETTINGS}
     # Merge in game options for settings like goal, castle_skip, etc.
     resolved_settings.update(game_options)
 
@@ -230,6 +234,8 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         slot_data_fields=slot_data_fields,
         game_options=game_options,
         resolved_settings=resolved_settings,
+        collect_all_items_for_rules=settings.get('collect_all_items_for_rules', False),
+        use_auto_indirect_conditions=settings.get('use_auto_indirect_conditions', False),
     )
 
 
@@ -329,6 +335,7 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
                 locked=is_locked,
                 progress_type=progress_type,
                 show_in_spoiler=show_in_spoiler,
+                access=loc_info.get('access'),  # Game-specific access data (e.g., Lingo AccessRequirements)
             )
 
             # Track original item placement for seed=1 mode
@@ -481,8 +488,18 @@ def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str
     result: Dict[str, List[str]] = {}
 
     for prog_name, prog_info in progression_data.items():
+        # Skip additive type mappings - they use a different format and are handled
+        # separately by compute_state_counter_accumulator_rules
+        if prog_info.get('type') == 'additive':
+            continue
+
         # prog_info has structure: {'items': [{'name': '...', 'level': N}, ...], 'base_item': '...'}
         items_list = prog_info.get('items', [])
+
+        # Ensure items_list is actually a list (not a dict from additive mappings)
+        if not isinstance(items_list, list):
+            continue
+
         # Sort by level to ensure correct order
         sorted_items = sorted(items_list, key=lambda x: x.get('level', 0))
         component_names = [item.get('name') for item in sorted_items if item.get('name')]
@@ -689,6 +706,19 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
                 # Also update prog_items_init so the frontend test world matches
                 # the original sphere log (which has the precollected total at sphere 0)
                 prog_items_init[target] = total
+
+    # Extract QP items for OSRS-like games that have quest points
+    # Pattern: "N QP (Quest Name)" where N is the quest point value
+    import re
+    qp_pattern = re.compile(r'^(\d+)\s*QP\s*\((.+)\)$')
+    qp_items = {}
+    for item_name in items.keys():
+        match = qp_pattern.match(item_name)
+        if match:
+            qp_value = int(match.group(1))
+            qp_items[item_name] = qp_value
+    if qp_items:
+        metadata.resolved_settings['qp_items'] = qp_items
 
     return ExtractedData(
         metadata=metadata,

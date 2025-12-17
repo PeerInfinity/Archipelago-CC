@@ -36,15 +36,16 @@ class RuleCodeGenerator:
         """
         Recursively expand helper references in a rule body.
 
-        This ensures body_data is self-contained and doesn't reference other helpers,
-        which allows the frontend to evaluate rules without needing helper lookups.
+        This ensures body_data is self-contained and doesn't reference other helpers
+        or setting values, which allows the frontend to evaluate rules without needing
+        helper or settings lookups.
 
         Args:
             rule: Rule dict in CC format
             visited: Set of helper names already visited (for cycle detection)
 
         Returns:
-            Rule dict with helper references expanded to their bodies
+            Rule dict with helper references and setting_value references expanded
         """
         if visited is None:
             visited = set()
@@ -66,6 +67,30 @@ class RuleCodeGenerator:
                 return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
             # Unknown helper - return as-is
             return rule
+
+        # If this is a setting_value reference, resolve it to a constant
+        # This is critical because worldgen worlds don't have the original game options
+        if rule_type == 'setting_value':
+            setting_name = rule.get('setting', '')
+            if setting_name in self.settings:
+                return {'type': 'constant', 'value': self.settings[setting_name]}
+            # Unknown setting - return as-is (will evaluate to undefined in frontend)
+            return rule
+
+        # If this is an attribute access on a setting_value (e.g., world.options.goal.value),
+        # resolve it to a constant
+        if rule_type == 'attribute':
+            obj = rule.get('object', {})
+            attr = rule.get('attr', '')
+            if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
+                setting_name = obj.get('setting', '')
+                if setting_name in self.settings:
+                    return {'type': 'constant', 'value': self.settings[setting_name]}
+            # Also handle self.xxx attribute access (e.g., self.flag_specific_keycards)
+            # These are option-dependent flags from LogicExtensions classes
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                if attr in self.settings:
+                    return {'type': 'constant', 'value': self.settings[attr]}
 
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
@@ -144,6 +169,7 @@ class RuleCodeGenerator:
             'compare': self._convert_compare,
             'comparison': self._convert_compare,
             'conditional': self._convert_conditional,
+            'name': self._convert_name,
         }
 
         converter = converters.get(rule_type)
@@ -153,6 +179,34 @@ class RuleCodeGenerator:
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
         return 'True_()'
+
+    def _convert_name(self, rule: Dict[str, Any]) -> str:
+        """Convert a name reference to a constant.
+
+        Names typically reference game settings/options. Since worldgen worlds
+        don't have the original game options, we resolve them to constants.
+        If the name matches a known setting, use its value. Otherwise default
+        to False_() since most setting references are optional feature flags
+        that should be disabled for vanilla worldgen.
+        """
+        name = rule.get('name', '')
+
+        # Check if this name exists in our settings
+        if name in self.settings:
+            value = self.settings[name]
+            if value:
+                self.required_imports.add('True_')
+                return 'True_()'
+            else:
+                self.required_imports.add('False_')
+                return 'False_()'
+
+        # Unknown name - default to False (disables optional features)
+        # This is safe because:
+        # - Not(False) = True, making locations accessible without the feature
+        # - False in an AND makes that branch fail, falling back to alternatives
+        self.required_imports.add('False_')
+        return 'False_()'
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
         """Convert constant true/false rule."""
@@ -283,14 +337,23 @@ class RuleCodeGenerator:
         method = rule.get('method', '')
         args = rule.get('args', [])
 
-        # Handle can_reach_region state method
+        # Handle can_reach state method - check second arg for type (Region, Location, or Entrance)
         if method in ('can_reach', 'can_reach_region'):
             if args and isinstance(args[0], dict):
                 target = self._extract_constant_value(args[0], '')
+                # Check if second argument specifies "Location" or "Entrance" type
+                reach_type = self._extract_constant_value(args[1], 'Region') if len(args) > 1 else 'Region'
                 if target:
-                    self.required_imports.add('CanReachRegion')
                     target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
-                    return f'CanReachRegion("{target_escaped}")'
+                    if reach_type == 'Location':
+                        self.required_imports.add('CanReachLocation')
+                        return f'CanReachLocation("{target_escaped}")'
+                    elif reach_type == 'Entrance':
+                        self.required_imports.add('CanReachEntrance')
+                        return f'CanReachEntrance("{target_escaped}")'
+                    else:
+                        self.required_imports.add('CanReachRegion')
+                        return f'CanReachRegion("{target_escaped}")'
             return 'True_()'
 
         # Handle can_reach_location state method
@@ -345,8 +408,25 @@ class RuleCodeGenerator:
             self.required_imports.add('True_')
             return 'True_()'
 
-        # First arg should be a constant with the list
         first_arg = args[0]
+
+        # Handle 'set' type with 'elements' array (CC format)
+        # Example: {"type": "set", "elements": [{"type": "constant", "value": "Item1"}, ...]}
+        if first_arg.get('type') == 'set':
+            elements = first_arg.get('elements', [])
+            items = []
+            for elem in elements:
+                if elem.get('type') == 'constant':
+                    items.append(elem.get('value'))
+            if not items:
+                # Empty item checks are trivially satisfied
+                self.required_imports.add('True_')
+                return 'True_()'
+            # Unpack the items as separate arguments
+            items_repr = ', '.join(repr(item) for item in items)
+            return f'{class_name}({items_repr})'
+
+        # Handle 'constant' type with the list directly
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
             if not items:
@@ -439,6 +519,13 @@ class RuleCodeGenerator:
         if op_type == 'constant':
             return repr(operand.get('value'))
 
+        if op_type == 'count_item':
+            # Handle count_item type from rules.json export
+            item_name = operand.get('item', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+
         if op_type == 'state_method':
             method = operand.get('method', '')
             args = operand.get('args', [])
@@ -486,6 +573,13 @@ class RuleCodeGenerator:
 
         if op_type == 'constant':
             return repr(operand.get('value'))
+
+        if op_type == 'count_item':
+            # Handle count_item type from rules.json export
+            item_name = operand.get('item', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
 
         if op_type == 'state_method':
             method = operand.get('method', '')
@@ -748,6 +842,7 @@ class HelperCodeGenerator:
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
+        self.uses_math: bool = False  # Track if math functions are used
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -807,7 +902,14 @@ class HelperCodeGenerator:
             else:
                 sig_params.append(param)
 
-        signature = f"def {func_name}({', '.join(sig_params)}) -> bool:"
+        # Determine return type based on body structure
+        return_type = "bool"
+        if isinstance(body, dict):
+            body_type = body.get('type', '')
+            if body_type in ('sum_of', 'count_item', 'binary_op', 'binop', 'negate'):
+                return_type = "int"
+
+        signature = f"def {func_name}({', '.join(sig_params)}) -> {return_type}:"
 
         # Generate function body
         body_code = self._generate_body(body)
@@ -1038,6 +1140,10 @@ class HelperCodeGenerator:
             'group_count': self._expr_group_count,
             'setting_value': self._expr_setting_value,
             'prog_item_count': self._expr_prog_item_count,
+            'sum_of': self._expr_sum_of,
+            'min': self._expr_min,
+            'max': self._expr_max,
+            'block': self._expr_block,
         }
 
         handler = handlers.get(expr_type)
@@ -1264,6 +1370,34 @@ class HelperCodeGenerator:
         if_false_code = self._generate_expression(if_false)
         return f"({if_true} if {test} else {if_false_code})"
 
+    def _expr_min(self, expr: Dict[str, Any]) -> str:
+        """Generate min() call."""
+        args = expr.get('args', [])
+        if not args:
+            return '0'
+        arg_exprs = [self._generate_expression(a) for a in args]
+        return f"min({', '.join(arg_exprs)})"
+
+    def _expr_max(self, expr: Dict[str, Any]) -> str:
+        """Generate max() call."""
+        args = expr.get('args', [])
+        if not args:
+            return '0'
+        arg_exprs = [self._generate_expression(a) for a in args]
+        return f"max({', '.join(arg_exprs)})"
+
+    def _expr_block(self, expr: Dict[str, Any]) -> str:
+        """Generate expression from a block of statements.
+
+        Blocks contain multiple statements (assignments, if statements, returns)
+        that would require complex partial evaluation to simplify properly.
+
+        For safety in worldgen where we may not have all the context,
+        we return True for block expressions. This keeps locations accessible
+        by default, which is the safer behavior.
+        """
+        return 'True'
+
     def _expr_helper(self, expr: Dict[str, Any]) -> str:
         """Generate helper function call."""
         name = expr.get('name', '')
@@ -1277,6 +1411,14 @@ class HelperCodeGenerator:
         if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
+
+        # Math functions - require math import
+        if name in ('sqrt', 'floor', 'ceil', 'pow', 'abs'):
+            self.uses_math = True  # Flag that we need math import
+            arg_exprs = [self._generate_expression(a) for a in args]
+            if name == 'abs':
+                return f"abs({', '.join(arg_exprs)})"
+            return f"math.{name}({', '.join(arg_exprs)})"
 
         # Unknown helper - return True as safe fallback
         # This handles helpers that were blacklisted during export (too complex to export)
@@ -1327,10 +1469,20 @@ class HelperCodeGenerator:
                     return f'state.has_group({repr(group)}, player)'
                 return f'state.has_group({repr(group)}, player, {count})'
 
+        elif method == 'has_group_unique':
+            if len(args) >= 1:
+                group = self._extract_constant(args[0], '')
+                count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
+                if count == 1:
+                    return f'state.has_group_unique({repr(group)}, player)'
+                return f'state.has_group_unique({repr(group)}, player, {count})'
+
         elif method == 'can_reach':
             if len(args) >= 1:
-                region = self._extract_constant(args[0], '')
-                return f'state.can_reach({repr(region)}, "Region", player)'
+                target = self._extract_constant(args[0], '')
+                # Second arg specifies reach type: "Region" or "Location"
+                reach_type = self._extract_constant(args[1], 'Region') if len(args) > 1 else 'Region'
+                return f'state.can_reach({repr(target)}, {repr(reach_type)}, player)'
 
         elif method == 'can_reach_location':
             if len(args) >= 1:
@@ -1359,6 +1511,21 @@ class HelperCodeGenerator:
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
 
+        # Special case: when accessing self.xxx where xxx is a setting (e.g., self.game_logic, flag_specific_keycards),
+        # resolve it to the setting's value. This handles option-dependent logic flags that were
+        # captured from LogicExtensions classes (e.g., TimespinnerLogic). In helper functions
+        # exported from original worlds, 'self' refers to a logic class that has options as attributes.
+        # We resolve these to literal values from settings.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'self':
+            if attr in self.settings:
+                value = self.settings[attr]
+                if isinstance(value, bool):
+                    return 'True' if value else 'False'
+                elif isinstance(value, str):
+                    return repr(value)
+                else:
+                    return str(value)
+
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
@@ -1366,6 +1533,13 @@ class HelperCodeGenerator:
         """Generate function call expression."""
         func = expr.get('function', {})
         args = expr.get('args', [])
+
+        # Check if this is a math module function call (e.g., math.sqrt)
+        # and set uses_math flag if so
+        if isinstance(func, dict) and func.get('type') == 'attribute':
+            obj = func.get('object', {})
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
+                self.uses_math = True
 
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
@@ -1481,8 +1655,47 @@ class HelperCodeGenerator:
         key_escaped = key.replace('\\', '\\\\').replace("'", "\\'")
         return f"state.prog_items[player].get('{key_escaped}', 0)"
 
+    def _expr_sum_of(self, expr: Dict[str, Any]) -> str:
+        """Generate sum() expression from sum_of CC format.
+
+        CC export format: {
+            "type": "sum_of",
+            "iterator_info": {
+                "target": {...},  // tuple of variable names
+                "iterator": {...},  // expression to iterate over
+                "condition": {...}  // optional filter condition
+            },
+            "element_rule": {...}  // expression for each element
+        }
+        """
+        iterator_info = expr.get('iterator_info', {})
+        target = iterator_info.get('target', {})
+        iterator = iterator_info.get('iterator', {})
+        condition = iterator_info.get('condition')
+        element_rule = expr.get('element_rule', {'type': 'constant', 'value': 0})
+
+        # Generate target variable names
+        target_expr = self._generate_expression(target)
+
+        # Generate iterator expression
+        iterator_expr = self._generate_expression(iterator)
+
+        # Generate element rule expression
+        element_expr = self._generate_expression(element_rule)
+
+        # Generate condition expression if present
+        if condition:
+            condition_expr = self._generate_expression(condition)
+            return f"sum({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
+
+        return f"sum({element_expr} for {target_expr} in {iterator_expr})"
+
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
-        """Extract constant value from a potential constant wrapper."""
+        """Extract constant value from a potential constant wrapper.
+
+        Also handles self.<setting> attribute access and subscript operations
+        on settings (e.g., self.boss_order[0]).
+        """
         if isinstance(value, dict):
             if value.get('type') == 'constant':
                 return value.get('value', default)
@@ -1492,5 +1705,26 @@ class HelperCodeGenerator:
                 # Extract all elements from the set
                 elements = value.get('elements', [])
                 return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+
+            # Handle subscript on settings (e.g., self.boss_order[0])
+            if value.get('type') == 'subscript':
+                base_value = self._extract_constant(value.get('value', {}), None)
+                index = self._extract_constant(value.get('index', {}), None)
+                if base_value is not None and index is not None:
+                    try:
+                        return base_value[index]
+                    except (IndexError, KeyError, TypeError):
+                        pass
+                return default
+
+            # Handle attribute access on self (e.g., self.boss_order)
+            if value.get('type') == 'attribute':
+                obj = value.get('object', {})
+                attr = value.get('attr', '')
+                if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                    if attr in self.settings:
+                        return self.settings[attr]
+                return default
+
             return default
         return value if value is not None else default

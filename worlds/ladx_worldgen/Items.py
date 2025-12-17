@@ -147,4 +147,5 @@ item_table: Dict[str, ItemData] = {
     "MEDICINE2": ItemData(None, ItemClassification.progression),
     "An Alarm Clock": ItemData(None, ItemClassification.progression),
     "Can Play Trendy Game": ItemData(None, ItemClassification.progression),
+    "RUPEES": ItemData(None, ItemClassification.progression),
 }

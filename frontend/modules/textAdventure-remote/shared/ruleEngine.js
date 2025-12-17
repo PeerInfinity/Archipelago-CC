@@ -4623,7 +4623,12 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
           // Bind arguments to parameter names
           for (let i = 0; i < helperArgs.length; i++) {
-            const argValue = evaluateRule(helperArgs[i], context, depth + 1, localScope);
+            let argValue = helperArgs[i];
+            // Only evaluate as a rule if it's an object with 'type' or 'rule' key
+            // Plain values (primitives, arrays, plain objects) should be used directly
+            if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
+              argValue = evaluateRule(argValue, context, depth + 1, localScope);
+            }
             if (params[i]) {
               helperLocalScope[params[i]] = argValue;
             }

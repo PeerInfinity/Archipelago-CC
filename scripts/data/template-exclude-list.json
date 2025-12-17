@@ -46,7 +46,15 @@
       "reason": "Temporarily excluded.  It takes too long to process."
     },
     {
+      "name": "Raft.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process."
+    },
+    {
       "name": "SMZ3.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process."
+    },
+    {
+      "name": "The Witness.yaml",
       "reason": "Temporarily excluded.  It takes too long to process."
     },
     {

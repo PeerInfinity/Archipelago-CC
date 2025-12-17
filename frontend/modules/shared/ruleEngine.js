@@ -4573,6 +4573,36 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return hasUndefined ? undefined : false;
     }
 
+    // Conditional: ternary rule (test ? if_true : if_false)
+    // Rule Builder: {"rule": "Conditional", "args": {"test": {...}, "if_true": {...}, "if_false": {...}}}
+    case 'Conditional': {
+      const testRule = args.test;
+      const ifTrueRule = args.if_true;
+      const ifFalseRule = args.if_false;
+
+      if (!testRule) {
+        log('warn', '[evaluateRuleBuilderRule] Conditional rule missing test');
+        return undefined;
+      }
+
+      const testResult = evaluateRule(testRule, context, depth + 1, localScope);
+
+      if (testResult === undefined) {
+        // If test is unknown, outcome is unknown
+        return undefined;
+      } else if (testResult) {
+        // Test is truthy - evaluate if_true branch
+        return ifTrueRule
+          ? evaluateRule(ifTrueRule, context, depth + 1, localScope)
+          : true;
+      } else {
+        // Test is falsy - evaluate if_false branch
+        return ifFalseRule
+          ? evaluateRule(ifFalseRule, context, depth + 1, localScope)
+          : false;
+      }
+    }
+
     // Wrapper rules: Not (inverts child)
     case 'Not': {
       if (!child) {
@@ -4623,7 +4653,12 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
           // Bind arguments to parameter names
           for (let i = 0; i < helperArgs.length; i++) {
-            const argValue = evaluateRule(helperArgs[i], context, depth + 1, localScope);
+            let argValue = helperArgs[i];
+            // Only evaluate as a rule if it's an object with 'type' or 'rule' key
+            // Plain values (primitives, arrays, plain objects) should be used directly
+            if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
+              argValue = evaluateRule(argValue, context, depth + 1, localScope);
+            }
             if (params[i]) {
               helperLocalScope[params[i]] = argValue;
             }
@@ -4729,9 +4764,11 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       }
     }
 
-    // Count: get the count of an item (used as operand in Compare/Arithmetic)
+    // Count/CountItem: get the count of an item (used as operand in Compare/Arithmetic)
     // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
-    case 'Count': {
+    // Rule Builder: {"rule": "CountItem", "args": {"item_name": "Key"}}
+    case 'Count':
+    case 'CountItem': {
       const itemName = args.item_name;
       if (!itemName) {
         log('warn', '[evaluateRuleBuilderRule] Count rule missing item_name');

@@ -80,6 +80,8 @@ class SavingPrincessWorldGenWorld(RuleWorldMixin, World):
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
+    collect_all_items_for_rules: ClassVar[bool] = True
+
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
     }
@@ -96,7 +98,6 @@ class SavingPrincessWorldGenWorld(RuleWorldMixin, World):
         "Keys": frozenset(["Cave Key", "Volcanic Key", "Arctic Key", "Swamp Key"]),
         "Filler": frozenset(["Full Heal", "Quick-fire Mode", "Active Camouflage"]),
         "Traps": frozenset(["Ice Trap", "Shake Trap", "Ninja Trap"]),
-        "Event": frozenset(["PRINCESS"]),
     }
 
     # Canonical item placements - where items belong in the "vanilla" game

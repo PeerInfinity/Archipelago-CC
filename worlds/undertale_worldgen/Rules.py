@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachRegion, Has, HelperCall
+from rule_builder import True_, False_, CanReachEntrance, CanReachRegion, Has, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -233,7 +233,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mettaton Plot", player),
-        CanReachRegion("Core Exit")
+        CanReachEntrance("Core Exit")
     )
 
     world.set_rule(

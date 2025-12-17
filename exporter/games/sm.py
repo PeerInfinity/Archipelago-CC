@@ -33,7 +33,24 @@ class SMGameExportHandler(GenericGameExportHandler):
         self._accesspoint_traverse_funcs: Optional[Dict[str, Any]] = None
         self._current_exit_context: Optional[str] = None  # Track current exit being processed
         self._accessfrom_data: Optional[Dict[str, Dict[str, Any]]] = None  # Cache for AccessFrom data
-        self._current_location_context: Optional[str] = None  # Track current location being processed
+        self._is_worldgen: Optional[bool] = None  # Cache for WorldGen detection
+
+    def _is_worldgen_world(self) -> bool:
+        """Check if this is a WorldGen world (not the original SM world).
+
+        WorldGen worlds use simpler Rule Builder rules and should not have
+        VARIA-specific processing applied.
+        """
+        if self._is_worldgen is None:
+            if self.world is None:
+                self._is_worldgen = False
+            else:
+                # Check if the world is from sm_worldgen module
+                module_path = type(self.world).__module__
+                self._is_worldgen = 'sm_worldgen' in module_path
+                if self._is_worldgen:
+                    logger.info("SM: Detected WorldGen world - using generic rule handling")
+        return self._is_worldgen
 
     def _get_accesspoint_traverse_funcs(self) -> Dict[str, Any]:
         """Get traverse functions for all AccessPoints (cached).
@@ -42,13 +59,17 @@ class SMGameExportHandler(GenericGameExportHandler):
             Dict mapping AccessPoint name to traverse function
         """
         if self._accesspoint_traverse_funcs is None:
-            try:
-                from .sm_traverse_extractor import get_accesspoint_traverse_funcs
-                self._accesspoint_traverse_funcs = get_accesspoint_traverse_funcs(self.world)
-                logger.info(f"SM: Loaded traverse functions for {len(self._accesspoint_traverse_funcs)} AccessPoints")
-            except Exception as e:
-                logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
+            # Skip VARIA traverse functions for WorldGen worlds
+            if self._is_worldgen_world():
                 self._accesspoint_traverse_funcs = {}
+            else:
+                try:
+                    from .sm_traverse_extractor import get_accesspoint_traverse_funcs
+                    self._accesspoint_traverse_funcs = get_accesspoint_traverse_funcs(self.world)
+                    logger.info(f"SM: Loaded traverse functions for {len(self._accesspoint_traverse_funcs)} AccessPoints")
+                except Exception as e:
+                    logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
+                    self._accesspoint_traverse_funcs = {}
 
         return self._accesspoint_traverse_funcs
 
@@ -59,13 +80,17 @@ class SMGameExportHandler(GenericGameExportHandler):
             Dict mapping location names to their AccessFrom info
         """
         if self._accessfrom_data is None:
-            try:
-                from .sm_accessfrom_extractor import get_location_accessfrom_data
-                self._accessfrom_data = get_location_accessfrom_data(self.world)
-                logger.info(f"SM: Loaded AccessFrom data for {len(self._accessfrom_data)} locations")
-            except Exception as e:
-                logger.error(f"SM: Failed to extract AccessFrom data: {e}", exc_info=True)
+            # Skip VARIA AccessFrom data for WorldGen worlds
+            if self._is_worldgen_world():
                 self._accessfrom_data = {}
+            else:
+                try:
+                    from .sm_accessfrom_extractor import get_location_accessfrom_data
+                    self._accessfrom_data = get_location_accessfrom_data(self.world)
+                    logger.info(f"SM: Loaded AccessFrom data for {len(self._accessfrom_data)} locations")
+                except Exception as e:
+                    logger.error(f"SM: Failed to extract AccessFrom data: {e}", exc_info=True)
+                    self._accessfrom_data = {}
 
         return self._accessfrom_data
 
@@ -224,6 +249,10 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             The custom rule to export, or None to use default handling
         """
+        # Skip VARIA-specific handling for WorldGen worlds
+        if self._is_worldgen_world():
+            return None
+
         if not hasattr(location, 'access_rule') or not location.access_rule:
             return None
 
@@ -691,6 +720,10 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             Expanded and transformed rule
         """
+        # Skip VARIA-specific post-processing for WorldGen worlds
+        if self._is_worldgen_world():
+            return rule
+
         # Set exit context for expand_rule to use
         saved_exit_context = self._current_exit_context
         self._current_exit_context = exit_name
@@ -814,6 +847,10 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             The unwrapped transition/traverse lambda if it was Cache.ldeco wrapped, otherwise None
         """
+        # Skip VARIA-specific handling for WorldGen worlds - use the default access_rule
+        if self._is_worldgen_world():
+            return None
+
         if not exit_name or '->' not in exit_name:
             return None
 
@@ -921,6 +958,10 @@ class SMGameExportHandler(GenericGameExportHandler):
         """
         if not rule:
             return rule
+
+        # Skip VARIA-specific expansion for WorldGen worlds - use parent class handling
+        if self._is_worldgen_world():
+            return super().expand_rule(rule, _depth)
 
         rule_type = rule.get('type')
 

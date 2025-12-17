@@ -1,0 +1,31 @@
+{
+  "game": "Undertale",
+  "assume_bidirectional_exits": false,
+  "use_resolved_items": false,
+  "options": {
+    "accessibility": 0,
+    "exclude_locations": [],
+    "item_links": [],
+    "key_hunt": 0,
+    "key_pieces": 5,
+    "local_items": [],
+    "no_equips": 0,
+    "non_local_items": [],
+    "only_flakes": 0,
+    "plando_items": [],
+    "priority_locations": [],
+    "prog_armor": 0,
+    "prog_weapons": 0,
+    "progression_balancing": 50,
+    "rando_item_button": 0,
+    "rando_love": 0,
+    "rando_stats": 0,
+    "route_required": 0,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location_hints": [],
+    "starting_area": 0,
+    "temy_include": 1
+  },
+  "world_directory": "undertale"
+}
