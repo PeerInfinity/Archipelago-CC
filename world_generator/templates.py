@@ -606,10 +606,142 @@ def set_rules(world: "World") -> None:
 '''
 
 
+def _extract_setting_values(rule: dict, settings: set = None) -> set:
+    """Extract all setting names referenced via setting_value nodes in a rule.
+
+    Args:
+        rule: The rule dict to analyze
+        settings: Set to collect setting names into (creates new set if None)
+
+    Returns:
+        Set of setting names used in setting_value nodes
+    """
+    if settings is None:
+        settings = set()
+
+    if not isinstance(rule, dict):
+        return settings
+
+    rule_type = rule.get('type', '')
+
+    # Check for setting_value nodes
+    if rule_type == 'setting_value':
+        setting_name = rule.get('setting')
+        if setting_name and isinstance(setting_name, str):
+            # Handle dot notation (e.g., "options.difficulty") - take first part
+            if '.' in setting_name:
+                setting_name = setting_name.split('.')[0]
+            settings.add(setting_name)
+
+    # Recurse into all dict and list values
+    for value in rule.values():
+        if isinstance(value, dict):
+            _extract_setting_values(value, settings)
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    _extract_setting_values(item, settings)
+
+    return settings
+
+
+def _setting_to_class_name(setting_name: str) -> str:
+    """Convert a setting name to a valid Python class name.
+
+    Examples:
+        'logic_percent' -> 'LogicPercent'
+        'canvas_size_increment' -> 'CanvasSizeIncrement'
+    """
+    return ''.join(word.capitalize() for word in setting_name.split('_'))
+
+
 def generate_options_py(data: ExtractedData) -> str:
-    """Generate Options.py file content."""
+    """Generate Options.py file content.
+
+    Extracts settings used in helper functions via setting_value lookups
+    and generates appropriate option classes for them.
+    """
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
+
+    # Collect all settings used in helpers via setting_value nodes
+    used_settings: Set[str] = set()
+    for helper_data in data.helpers.values():
+        if helper_data.body:
+            _extract_setting_values(helper_data.body, used_settings)
+
+    # Also check location and entrance rules for setting_value usage
+    for loc_data in data.locations.values():
+        if loc_data.access_rule:
+            _extract_setting_values(loc_data.access_rule, used_settings)
+    for exit_data in data.exits.values():
+        if exit_data.access_rule:
+            _extract_setting_values(exit_data.access_rule, used_settings)
+
+    # Get resolved settings for default values
+    resolved_settings = data.metadata.resolved_settings
+
+    # Generate option classes for used settings
+    option_classes = []
+    option_fields = []
+    imports_needed = {'Toggle'}  # Always need Toggle for RandomizeItems
+
+    for setting_name in sorted(used_settings):
+        # Skip settings that are part of PerGameCommonOptions or internal
+        if setting_name in ('game', 'assume_bidirectional_exits', 'use_resolved_items',
+                           'world_directory', 'options', 'accessibility', 'progression_balancing',
+                           'exclude_locations', 'priority_locations', 'item_links',
+                           'local_items', 'non_local_items', 'start_hints', 'start_location_hints',
+                           'start_inventory', 'start_inventory_from_pool', 'plando_items'):
+            continue
+
+        default_value = resolved_settings.get(setting_name, 0)
+        class_name_for_setting = _setting_to_class_name(setting_name)
+        display_name = ' '.join(word.capitalize() for word in setting_name.split('_'))
+
+        # Determine option type based on default value
+        if isinstance(default_value, bool):
+            imports_needed.add('Toggle')
+            option_classes.append(f'''
+class {class_name_for_setting}(Toggle):
+    """Option for {display_name}."""
+    display_name = "{display_name}"
+    default = {default_value}
+''')
+        elif isinstance(default_value, int):
+            imports_needed.add('Range')
+            # Use reasonable range based on the default value
+            if default_value <= 10:
+                range_start, range_end = 0, max(100, default_value * 2)
+            elif default_value <= 100:
+                range_start, range_end = 0, max(100, default_value + 50)
+            else:
+                range_start, range_end = 0, default_value * 2
+            option_classes.append(f'''
+class {class_name_for_setting}(Range):
+    """Option for {display_name}."""
+    display_name = "{display_name}"
+    range_start = {range_start}
+    range_end = {range_end}
+    default = {default_value}
+''')
+        else:
+            # For other types, skip generating an option
+            continue
+
+        option_fields.append(f'    {setting_name}: {class_name_for_setting}')
+
+    # Build imports string
+    imports_list = sorted(imports_needed)
+    imports_str = ', '.join(imports_list)
+
+    # Build option classes string
+    option_classes_str = ''.join(option_classes)
+
+    # Build option fields string
+    option_fields_str = '\n'.join(option_fields)
+    if option_fields_str:
+        option_fields_str = '\n' + option_fields_str
 
     return f'''"""
 Game options for {game_name}.
@@ -618,7 +750,7 @@ Auto-generated by world_generator.
 """
 
 from dataclasses import dataclass
-from Options import Toggle, PerGameCommonOptions
+from Options import {imports_str}, PerGameCommonOptions
 
 
 class RandomizeItems(Toggle):
@@ -628,12 +760,12 @@ class RandomizeItems(Toggle):
     """
     display_name = "Randomize Items"
     default = True
-
+{option_classes_str}
 
 @dataclass
 class {class_name}Options(PerGameCommonOptions):
     """Options for {game_name}."""
-    randomize_items: RandomizeItems
+    randomize_items: RandomizeItems{option_fields_str}
 '''
 
 
