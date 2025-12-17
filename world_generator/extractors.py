@@ -651,6 +651,57 @@ def compute_state_counter_accumulator_rules(
         })
         prog_items_init[target_name] = 0
 
+    # Pattern 3: Find items like "50 Rupees", "100 Rupees" that should accumulate
+    # These are detected by finding items matching "N <Suffix>" pattern where:
+    # - The suffix is title case (e.g., "Rupees")
+    # - Multiple items share the same suffix with different numbers
+    # - Look for patterns like "50 Rupees" -> accumulate to "RUPEES"
+    mixed_case_pattern = regex_module.compile(r'^(\d+)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)$')
+    mixed_suffix_candidates = {}  # suffix -> (uppercase_target, list of items)
+
+    for item_name in items.keys():
+        match = mixed_case_pattern.match(item_name)
+        if match:
+            suffix = match.group(2)  # e.g., "Rupees"
+            uppercase_target = suffix.upper()  # e.g., "RUPEES"
+            if suffix not in mixed_suffix_candidates:
+                mixed_suffix_candidates[suffix] = (uppercase_target, [])
+            mixed_suffix_candidates[suffix][1].append(item_name)
+
+    # Also check original_placements for additional items
+    for loc_name, item_name in original_placements.items():
+        match = mixed_case_pattern.match(item_name)
+        if match:
+            suffix = match.group(2)
+            uppercase_target = suffix.upper()
+            if suffix not in mixed_suffix_candidates:
+                mixed_suffix_candidates[suffix] = (uppercase_target, [])
+            if item_name not in mixed_suffix_candidates[suffix][1]:
+                mixed_suffix_candidates[suffix][1].append(item_name)
+
+    # For each suffix candidate, check if we should create an accumulator rule
+    for suffix, (target_name, matching_items) in mixed_suffix_candidates.items():
+        if len(matching_items) < 2:
+            continue  # Need at least 2 items to be a meaningful pattern
+
+        # Skip if we already have a rule for this target
+        if any(rule['target'] == target_name for rule in accumulator_rules):
+            continue
+
+        # Skip if there's already an item with exactly this name
+        if target_name in items:
+            continue
+
+        # Create the accumulator rule
+        pattern = f'^(\\d+) {suffix}$'
+        accumulator_rules.append({
+            'pattern': pattern,
+            'extract_value': True,
+            'target': target_name,
+            'discriminator': None
+        })
+        prog_items_init[target_name] = 0
+
     return accumulator_rules, prog_items_init
 
 
