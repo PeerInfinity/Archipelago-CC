@@ -983,6 +983,18 @@ export function createStateSnapshotInterface(
         return true;
       }
 
+      // Handle has_any_count - returns true if ANY ONE item meets its required count
+      if (methodName === 'has_any_count' && args.length >= 1) {
+        const itemCounts = args[0];
+        if (typeof itemCounts !== 'object' || itemCounts === null) return false;
+        for (const [itemName, requiredCount] of Object.entries(itemCounts)) {
+          if (finalSnapshotInterface.countItem(itemName) >= requiredCount) {
+            return true;
+          }
+        }
+        return false;
+      }
+
       // Handle count method - returns the count of a specific item
       if (methodName === 'count' && args.length >= 1) {
         const itemName = args[0];

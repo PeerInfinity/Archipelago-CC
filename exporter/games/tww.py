@@ -76,6 +76,21 @@ class TWWGameExportHandler(GenericGameExportHandler):
         '_tww_can_defeat_all_required_bosses': {'type': 'constant', 'value': True},
     }
 
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """Expand rules with TWW state method replacement.
+
+        This replaces _tww_* state_method calls with setting_value lookups during
+        the initial export pass, eliminating the need for JavaScript state methods.
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # First apply base class expansion
+        rule = super().expand_rule(rule, _depth)
+
+        # Then replace TWW state methods
+        return self._replace_tww_state_methods(rule)
+
     def _replace_tww_state_methods(self, rule: Any) -> Any:
         """
         Recursively replace _tww_* state_method calls with their equivalent rule structures.
@@ -103,36 +118,6 @@ class TWWGameExportHandler(GenericGameExportHandler):
 
         return result
 
-    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Post-process exported data to replace _tww_* state_method calls with
-        setting_value lookups. This eliminates the need for JavaScript state methods.
-        """
-        # Process regions (contains locations and exits with access_rule)
-        if 'regions' in data:
-            for player_id, regions in data['regions'].items():
-                for region_name, region_data in regions.items():
-                    # Process location access rules
-                    if 'locations' in region_data:
-                        for location in region_data['locations']:
-                            if 'access_rule' in location:
-                                location['access_rule'] = self._replace_tww_state_methods(
-                                    location['access_rule']
-                                )
-                    # Process exit access rules
-                    if 'exits' in region_data:
-                        for exit_data in region_data['exits']:
-                            if 'access_rule' in exit_data:
-                                exit_data['access_rule'] = self._replace_tww_state_methods(
-                                    exit_data['access_rule']
-                                )
-
-        # Process helper definitions
-        if 'helpers' in data:
-            for player_id, helpers in data['helpers'].items():
-                for helper_name, helper_rule in helpers.items():
-                    data['helpers'][player_id][helper_name] = self._replace_tww_state_methods(
-                        helper_rule
-                    )
-
-        return data
+    # NOTE: post_process_data removed - state method replacement now happens during
+    # the initial export pass via expand_rule() -> _replace_tww_state_methods()
+    # The fix in base.py ensures expand_rule is also called on cached helper definitions.
