@@ -13688,6 +13688,17 @@
       "rule_format": {
         "version": "1.0"
       },
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) REP$",
+          "extract_value": true,
+          "target": "rep",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "rep": 1400
+      },
       "web_theme": "ocean",
       "web_tutorials": [
         {

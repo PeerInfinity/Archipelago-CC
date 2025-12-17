@@ -511,7 +511,8 @@ def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str
 
 def compute_state_counter_accumulator_rules(
     items: Dict[str, 'ItemData'],
-    original_placements: Dict[str, str]
+    original_placements: Dict[str, str],
+    helpers: Dict[str, Any] = None
 ) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     """
     Compute accumulator rules and prog_items_init for state counter patterns.
@@ -519,6 +520,9 @@ def compute_state_counter_accumulator_rules(
     Some games (like DLCQuest) use state counters where collecting items like
     "60 coins" contributes to a " coins" counter. The rules check Has(" coins", X)
     but the actual items collected are "60 coins", "4 coins", etc.
+
+    Other games (like Bomb Rush Cyberfunk) use items like "8 REP", "16 REP" that
+    should accumulate to a "rep" counter checked via state.has("rep", player, N).
 
     Instead of precollecting all items (which breaks sphere progression), this
     generates accumulator_rules that tell the frontend how to parse item names
@@ -529,10 +533,12 @@ def compute_state_counter_accumulator_rules(
         - accumulator_rules: List of rule dicts with pattern, extract_value, target
         - prog_items_init: Dict mapping counter names to initial value (0)
     """
+    import re as regex_module
+
     accumulator_rules = []
     prog_items_init = {}
 
-    # Find items that are used in rules but have id=None (event/counter items)
+    # Pattern 1: Find items that are used in rules but have id=None (event/counter items)
     # and have a name pattern like " coins" or " coins freemium"
     # Use a list to preserve input order for deterministic output
     counter_items = []
@@ -541,9 +547,6 @@ def compute_state_counter_accumulator_rules(
             # This looks like a counter item (e.g., " coins")
             if item_name not in counter_items:
                 counter_items.append(item_name)
-
-    if not counter_items:
-        return accumulator_rules, prog_items_init
 
     # For each counter, find items that contribute to it and build a regex pattern
     # Check both the items dict and original_placements for matching items
@@ -594,6 +597,59 @@ def compute_state_counter_accumulator_rules(
                 'discriminator': None
             })
             prog_items_init[counter_name] = 0
+
+    # Pattern 2: Find items like "8 REP", "16 REP" that should accumulate to "rep"
+    # These are detected by finding items matching "N <SUFFIX>" pattern where:
+    # - The items have real IDs (not counter items)
+    # - There's no item with just the suffix name
+    # - A helper function references the lowercase suffix as a counter
+    #
+    # Look for patterns like "N REP" -> accumulate to "rep"
+    numeric_prefix_pattern = regex_module.compile(r'^(\d+)\s+([A-Z]+)$')
+    suffix_candidates = {}  # suffix -> list of matching items
+
+    for item_name in items.keys():
+        match = numeric_prefix_pattern.match(item_name)
+        if match:
+            suffix = match.group(2)  # e.g., "REP"
+            if suffix not in suffix_candidates:
+                suffix_candidates[suffix] = []
+            suffix_candidates[suffix].append(item_name)
+
+    # Also check original_placements for additional items
+    for loc_name, item_name in original_placements.items():
+        match = numeric_prefix_pattern.match(item_name)
+        if match:
+            suffix = match.group(2)
+            if suffix not in suffix_candidates:
+                suffix_candidates[suffix] = []
+            if item_name not in suffix_candidates[suffix]:
+                suffix_candidates[suffix].append(item_name)
+
+    # For each suffix candidate, check if we should create an accumulator rule
+    for suffix, matching_items in suffix_candidates.items():
+        if len(matching_items) < 2:
+            continue  # Need at least 2 items to be a meaningful pattern
+
+        target_name = suffix.lower()  # e.g., "REP" -> "rep"
+
+        # Skip if we already have a rule for this target
+        if any(rule['target'] == target_name for rule in accumulator_rules):
+            continue
+
+        # Skip if there's already an item with exactly this name
+        if target_name in items:
+            continue
+
+        # Create the accumulator rule
+        pattern = f'^(\\d+) {suffix}$'
+        accumulator_rules.append({
+            'pattern': pattern,
+            'extract_value': True,
+            'target': target_name,
+            'discriminator': None
+        })
+        prog_items_init[target_name] = 0
 
     return accumulator_rules, prog_items_init
 
