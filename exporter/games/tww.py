@@ -76,6 +76,21 @@ class TWWGameExportHandler(GenericGameExportHandler):
         '_tww_can_defeat_all_required_bosses': {'type': 'constant', 'value': True},
     }
 
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """Expand rules with TWW state method replacement.
+
+        This replaces _tww_* state_method calls with setting_value lookups during
+        the initial export pass, eliminating the need for JavaScript state methods.
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # First apply base class expansion
+        rule = super().expand_rule(rule, _depth)
+
+        # Then replace TWW state methods
+        return self._replace_tww_state_methods(rule)
+
     def _replace_tww_state_methods(self, rule: Any) -> Any:
         """
         Recursively replace _tww_* state_method calls with their equivalent rule structures.
@@ -107,6 +122,9 @@ class TWWGameExportHandler(GenericGameExportHandler):
         """
         Post-process exported data to replace _tww_* state_method calls with
         setting_value lookups. This eliminates the need for JavaScript state methods.
+
+        NOTE: This is kept as backup - expand_rule should handle this, but leaving
+        post_process_data for any rules that might be missed.
         """
         # Process regions (contains locations and exits with access_rule)
         if 'regions' in data:

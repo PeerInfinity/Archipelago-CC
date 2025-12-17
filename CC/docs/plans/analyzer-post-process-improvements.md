@@ -6,10 +6,10 @@
 |-------------|--------|-------|
 | For loop detection | ✅ IMPLEMENTED | Detects state-dependent for loop bodies |
 | Conditional branch evaluation | ⏳ Partial | Related - for loops now preserved as helpers |
-| F-string multi-pass resolution | 🔲 Pending | |
-| Closure variable capture | 🔲 Pending | Critical for kh1.py has_parasite_cage |
-| Dict subscript resolution | 🔲 Pending | |
-| State method optimization | 🔲 Pending | |
+| F-string multi-pass resolution | ✅ IMPLEMENTED | expand_rule already called during export - removed redundant post_process_data |
+| Closure variable capture | ✅ IMPLEMENTED | Parameter substitution for rule dict args |
+| Dict subscript resolution | ✅ IMPLEMENTED | Added expand_rule to civ_6 for era subscripts |
+| State method optimization | ✅ IMPLEMENTED | Added expand_rule to tww (kept post_process_data as backup) |
 
 ### Implementation Notes (2025-12-17)
 
