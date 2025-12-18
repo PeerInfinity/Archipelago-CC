@@ -656,7 +656,19 @@ class BaseGameExportHandler:
                     option = getattr(world.options, option_name)
                     # Check if it's an Option object with a value attribute
                     if hasattr(option, 'value'):
-                        value = option.value
+                        # For Choice options (which have name_lookup mapping values to string keys),
+                        # use the string key since helpers often use dict subscript with string
+                        # keys like 'easy', 'normal', 'hard'. For other options (Range, etc.),
+                        # use raw value since they don't have named options.
+                        # Note: dict/list values are unhashable so we catch TypeError.
+                        try:
+                            use_string_key = hasattr(option, 'name_lookup') and option.value in option.name_lookup
+                        except TypeError:
+                            use_string_key = False
+                        if use_string_key:
+                            value = option.current_key
+                        else:
+                            value = option.value
                         # Only export simple types (int, bool, str, list, dict)
                         if isinstance(value, (int, bool, str, list, dict)):
                             options_dict[option_name] = value
