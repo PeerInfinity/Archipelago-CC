@@ -15,25 +15,25 @@ from .cli import convert_snippet, detect_snippet_format
 class TestDetectSnippetFormat(unittest.TestCase):
     """Test format detection for single rule snippets."""
 
-    def test_detect_cc_format_item_check(self):
-        """Test detection of CC format item_check."""
+    def test_detect_ast_format_item_check(self):
+        """Test detection of AST format item_check."""
         rule = {"type": "item_check", "item": "Sword"}
-        self.assertEqual(detect_snippet_format(rule), 'cc')
+        self.assertEqual(detect_snippet_format(rule), 'ast')
 
-    def test_detect_cc_format_constant(self):
-        """Test detection of CC format constant."""
+    def test_detect_ast_format_constant(self):
+        """Test detection of AST format constant."""
         rule = {"type": "constant", "value": True}
-        self.assertEqual(detect_snippet_format(rule), 'cc')
+        self.assertEqual(detect_snippet_format(rule), 'ast')
 
-    def test_detect_cc_format_and(self):
-        """Test detection of CC format and rule."""
+    def test_detect_ast_format_and(self):
+        """Test detection of AST format and rule."""
         rule = {
             "type": "and",
             "conditions": [
                 {"type": "item_check", "item": "Sword"}
             ]
         }
-        self.assertEqual(detect_snippet_format(rule), 'cc')
+        self.assertEqual(detect_snippet_format(rule), 'ast')
 
     def test_detect_rb_format_has(self):
         """Test detection of Rule Builder format Has."""
@@ -71,8 +71,8 @@ class TestDetectSnippetFormat(unittest.TestCase):
 class TestConvertSnippet(unittest.TestCase):
     """Test the convert_snippet function."""
 
-    def test_convert_cc_to_rb(self):
-        """Test converting CC format to Rule Builder format."""
+    def test_convert_ast_to_rb(self):
+        """Test converting AST format to Rule Builder format."""
         rule_json = '{"type": "item_check", "item": "Sword"}'
         exit_code, output = convert_snippet(rule_json)
 
@@ -82,7 +82,7 @@ class TestConvertSnippet(unittest.TestCase):
         self.assertEqual(result["args"]["item_name"], "Sword")
 
     def test_convert_rb_to_cc(self):
-        """Test converting Rule Builder format to CC format."""
+        """Test converting Rule Builder format to AST format."""
         rule_json = '{"rule": "Has", "options": [], "args": {"item_name": "Sword"}}'
         exit_code, output = convert_snippet(rule_json)
 
@@ -91,10 +91,10 @@ class TestConvertSnippet(unittest.TestCase):
         self.assertEqual(result["type"], "item_check")
         self.assertEqual(result["item"], "Sword")
 
-    def test_convert_cc_to_cc_explicit(self):
+    def test_convert_ast_to_cc_explicit(self):
         """Test explicit conversion to same format (CC to CC)."""
         rule_json = '{"type": "item_check", "item": "Sword"}'
-        exit_code, output = convert_snippet(rule_json, target_format='cc')
+        exit_code, output = convert_snippet(rule_json, target_format='ast')
 
         self.assertEqual(exit_code, 0)
         result = json.loads(output)
@@ -109,7 +109,7 @@ class TestConvertSnippet(unittest.TestCase):
         result = json.loads(output)
         self.assertEqual(result["rule"], "Has")
 
-    def test_convert_cc_to_rb_explicit(self):
+    def test_convert_ast_to_rb_explicit(self):
         """Test explicit CC to RB conversion."""
         rule_json = '{"type": "item_check", "item": "Sword"}'
         exit_code, output = convert_snippet(rule_json, target_format='rb')
@@ -121,7 +121,7 @@ class TestConvertSnippet(unittest.TestCase):
     def test_convert_rb_to_cc_explicit(self):
         """Test explicit RB to CC conversion."""
         rule_json = '{"rule": "Has", "options": [], "args": {"item_name": "Sword"}}'
-        exit_code, output = convert_snippet(rule_json, target_format='cc')
+        exit_code, output = convert_snippet(rule_json, target_format='ast')
 
         self.assertEqual(exit_code, 0)
         result = json.loads(output)
@@ -169,7 +169,7 @@ class TestConvertSnippet(unittest.TestCase):
         """Test converting unknown format with explicit target."""
         # This will treat it as-is since it's not in the expected format
         rule_json = '{"unknown": "format"}'
-        exit_code, output = convert_snippet(rule_json, target_format='cc')
+        exit_code, output = convert_snippet(rule_json, target_format='ast')
 
         # Should succeed but produce a warning/unknown type
         self.assertEqual(exit_code, 0)
@@ -202,7 +202,7 @@ class TestConvertSnippetRoundTrip(unittest.TestCase):
         self.assertEqual(exit_code, 0)
 
         # RB -> CC
-        exit_code, cc_json = convert_snippet(rb_json, target_format='cc')
+        exit_code, cc_json = convert_snippet(rb_json, target_format='ast')
         self.assertEqual(exit_code, 0)
 
         result = json.loads(cc_json)
@@ -214,7 +214,7 @@ class TestConvertSnippetRoundTrip(unittest.TestCase):
         original_json = json.dumps(original)
 
         # RB -> CC
-        exit_code, cc_json = convert_snippet(original_json, target_format='cc')
+        exit_code, cc_json = convert_snippet(original_json, target_format='ast')
         self.assertEqual(exit_code, 0)
 
         # CC -> RB

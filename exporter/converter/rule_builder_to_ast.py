@@ -1,5 +1,5 @@
 """
-Converter from Rule Builder format (PR #5048) to Archipelago-CC format.
+Converter from Rule Builder format (PR #5048) to AST format.
 
 Rule Builder Format (B):
     {
@@ -8,7 +8,7 @@ Rule Builder Format (B):
         "args": {"item_name": "Sword", "count": 1}
     }
 
-Archipelago-CC Format (A):
+AST Format (A):
     {
         "type": "item_check",
         "item": "Sword",
@@ -35,9 +35,9 @@ class ConversionResult:
         return len(self.errors) == 0
 
 
-class RuleBuilderToCC:
+class RuleBuilderToAST:
     """
-    Converter from Rule Builder format to Archipelago-CC format.
+    Converter from Rule Builder format to AST format.
 
     Handles conversion of:
     - Boolean rules (True_, False_)
@@ -95,7 +95,7 @@ class RuleBuilderToCC:
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
         """
-        Convert a Rule Builder format rule to Archipelago-CC format.
+        Convert a Rule Builder format rule to AST format.
 
         Args:
             rule: Rule in Rule Builder format
@@ -129,7 +129,7 @@ class RuleBuilderToCC:
             rule: Rule in Rule Builder format
 
         Returns:
-            Rule in Archipelago-CC format
+            Rule in AST format
         """
         if not isinstance(rule, dict):
             # Handle primitive values
@@ -137,9 +137,9 @@ class RuleBuilderToCC:
 
         rule_name = rule.get('rule')
         if not rule_name:
-            # Not a Rule Builder format rule, might already be CC format or invalid
+            # Not a Rule Builder format rule, might already be AST format or invalid
             if 'type' in rule:
-                # Already in CC format, return as-is
+                # Already in AST format, return as-is
                 return rule
             self.warnings.append(f"Rule missing 'rule' field: {rule}")
             return {'type': 'unknown', 'original': rule}
@@ -169,7 +169,7 @@ class RuleBuilderToCC:
         """
         Wrap a rule with option-based conditionals.
 
-        Option filters in Rule Builder become conditional rules in CC format.
+        Option filters in Rule Builder become conditional rules in AST format.
         """
         if not options:
             return inner_rule
@@ -254,7 +254,7 @@ class RuleBuilderToCC:
         Convert Has rule.
 
         Rule Builder: {"rule": "Has", "args": {"item_name": "Sword", "count": 1}}
-        CC Format: {"type": "item_check", "item": "Sword", "count": 1}
+        AST Format: {"type": "item_check", "item": "Sword", "count": 1}
         """
         args = rule.get('args', {})
         item_name = args.get('item_name', args.get('item', ''))
@@ -271,10 +271,10 @@ class RuleBuilderToCC:
         Convert HasAll rule.
 
         Rule Builder: {"rule": "HasAll", "args": {"items": ["Key1", "Key2"]}}
-        CC Format: {"type": "and", "conditions": [{"type": "item_check", "item": "Key1"}, ...]}
+        AST Format: {"type": "and", "conditions": [{"type": "item_check", "item": "Key1"}, ...]}
 
         Or as state_method for efficiency:
-        CC Format: {"type": "state_method", "method": "has_all", "args": [{"type": "constant", "value": ["Key1", "Key2"]}]}
+        AST Format: {"type": "state_method", "method": "has_all", "args": [{"type": "constant", "value": ["Key1", "Key2"]}]}
         """
         args = rule.get('args', {})
         items = args.get('items', [])
@@ -294,10 +294,10 @@ class RuleBuilderToCC:
         Convert HasAny rule.
 
         Rule Builder: {"rule": "HasAny", "args": {"items": ["Sword", "Axe"]}}
-        CC Format: {"type": "or", "conditions": [{"type": "item_check", "item": "Sword"}, ...]}
+        AST Format: {"type": "or", "conditions": [{"type": "item_check", "item": "Sword"}, ...]}
 
         Or as state_method:
-        CC Format: {"type": "state_method", "method": "has_any", "args": [{"type": "constant", "value": ["Sword", "Axe"]}]}
+        AST Format: {"type": "state_method", "method": "has_any", "args": [{"type": "constant", "value": ["Sword", "Axe"]}]}
         """
         args = rule.get('args', {})
         items = args.get('items', [])
@@ -317,7 +317,7 @@ class RuleBuilderToCC:
         Convert HasAllCounts rule.
 
         Rule Builder: {"rule": "HasAllCounts", "args": {"items": {"Sword": 2, "Shield": 1}}}
-        CC Format: {"type": "state_method", "method": "has_all_counts", "args": [{"type": "constant", "value": {...}}]}
+        AST Format: {"type": "state_method", "method": "has_all_counts", "args": [{"type": "constant", "value": {...}}]}
         """
         args = rule.get('args', {})
         items = args.get('items', {})
@@ -339,7 +339,7 @@ class RuleBuilderToCC:
         Convert HasAnyCount rule.
 
         Rule Builder: {"rule": "HasAnyCount", "args": {"items": {"Sword": 2, "Axe": 3}}}
-        CC Format: {"type": "or", "conditions": [{"type": "item_check", "item": "Sword", "count": 2}, ...]}
+        AST Format: {"type": "or", "conditions": [{"type": "item_check", "item": "Sword", "count": 2}, ...]}
         """
         args = rule.get('args', {})
         items = args.get('items', {})
@@ -364,7 +364,7 @@ class RuleBuilderToCC:
         Convert HasFromList rule.
 
         Rule Builder: {"rule": "HasFromList", "args": {"items": ["A", "B", "C"], "count": 2}}
-        CC Format: {"type": "state_method", "method": "has_from_list", "args": [...]}
+        AST Format: {"type": "state_method", "method": "has_from_list", "args": [...]}
 
         This checks if player has at least 'count' total items from the list.
         """
@@ -411,7 +411,7 @@ class RuleBuilderToCC:
         Convert HasGroup rule.
 
         Rule Builder: {"rule": "HasGroup", "args": {"group": "Keys", "count": 3}}
-        CC Format: {"type": "group_check", "group": "Keys", "count": 3}
+        AST Format: {"type": "group_check", "group": "Keys", "count": 3}
         """
         args = rule.get('args', {})
         group = args.get('group', '')
@@ -451,7 +451,7 @@ class RuleBuilderToCC:
         Convert And rule.
 
         Rule Builder: {"rule": "And", "children": [...]}
-        CC Format: {"type": "and", "conditions": [...]}
+        AST Format: {"type": "and", "conditions": [...]}
         """
         children = rule.get('children', [])
 
@@ -489,7 +489,7 @@ class RuleBuilderToCC:
         Convert Or rule.
 
         Rule Builder: {"rule": "Or", "children": [...]}
-        CC Format: {"type": "or", "conditions": [...]}
+        AST Format: {"type": "or", "conditions": [...]}
         """
         children = rule.get('children', [])
 
@@ -531,7 +531,7 @@ class RuleBuilderToCC:
         Convert CanReachRegion rule.
 
         Rule Builder: {"rule": "CanReachRegion", "args": {"region_name": "Castle"}}
-        CC Format: {"type": "can_reach", "region": "Castle"}
+        AST Format: {"type": "can_reach", "region": "Castle"}
         """
         args = rule.get('args', {})
         region_name = args.get('region_name', args.get('region', ''))
@@ -543,7 +543,7 @@ class RuleBuilderToCC:
         Convert CanReachLocation rule.
 
         Rule Builder: {"rule": "CanReachLocation", "args": {"location_name": "Chest1"}}
-        CC Format: {"type": "location_check", "location": "Chest1"}
+        AST Format: {"type": "location_check", "location": "Chest1"}
         """
         args = rule.get('args', {})
         location_name = args.get('location_name', args.get('location', ''))
@@ -555,7 +555,7 @@ class RuleBuilderToCC:
         Convert CanReachEntrance rule.
 
         Rule Builder: {"rule": "CanReachEntrance", "args": {"entrance_name": "Door1"}}
-        CC Format: {"type": "can_reach_entrance", "entrance": "Door1"}
+        AST Format: {"type": "can_reach_entrance", "entrance": "Door1"}
         """
         args = rule.get('args', {})
         entrance_name = args.get('entrance_name', args.get('entrance', ''))
@@ -600,10 +600,10 @@ class RuleBuilderToCC:
 
     def _convert_compare(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Convert Compare rule to CC format comparison.
+        Convert Compare rule to AST format comparison.
 
         Rule Builder: {"rule": "Compare", "args": {"left": {...}, "op": ">=", "right": {...}}}
-        CC Format: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
+        AST Format: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
         """
         args = rule.get('args', {})
         left = args.get('left', {})
@@ -645,23 +645,23 @@ class RuleBuilderToCC:
 
     def _convert_helper_call(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Convert HelperCall rule to CC format helper call.
+        Convert HelperCall rule to AST format helper call.
 
         Rule Builder: {"rule": "HelperCall", "args": {"helper_name": "can_swim", "args": (), "body_data": {...}}}
-        CC Format: {"type": "helper", "name": "can_swim", "args": [...]}
+        AST Format: {"type": "helper", "name": "can_swim", "args": [...]}
         """
         args = rule.get('args', {})
         helper_name = args.get('helper_name', 'unknown_helper')
         helper_args = args.get('args', ())
         body_data = args.get('body_data')
 
-        # Convert helper arguments to CC format
+        # Convert helper arguments to AST format
         converted_args = []
         for arg in helper_args:
             if isinstance(arg, dict) and 'rule' in arg:
                 converted_args.append(self._convert_rule(arg))
             elif isinstance(arg, dict) and 'type' in arg:
-                # Already CC format
+                # Already AST format
                 converted_args.append(arg)
             else:
                 converted_args.append({'type': 'constant', 'value': arg})
@@ -732,9 +732,9 @@ class RuleBuilderToCC:
 # Convenience Functions
 # -------------------------------------------------------------------------
 
-def convert_rule_builder_to_cc(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+def convert_rule_builder_to_ast(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Convert a single rule from Rule Builder format to Archipelago-CC format.
+    Convert a single rule from Rule Builder format to AST format.
 
     Args:
         rule: Rule in Rule Builder format
@@ -742,14 +742,14 @@ def convert_rule_builder_to_cc(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], Li
     Returns:
         Tuple of (converted_rule, warnings)
     """
-    converter = RuleBuilderToCC()
+    converter = RuleBuilderToAST()
     result = converter.convert(rule)
     return result.rule, result.warnings + result.errors
 
 
-def convert_rules_file_to_cc(data: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+def convert_rules_file_to_ast(data: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Convert an entire rules file from Rule Builder format to Archipelago-CC format.
+    Convert an entire rules file from Rule Builder format to AST format.
 
     This handles the full file structure including regions, locations, etc.
 
@@ -759,7 +759,7 @@ def convert_rules_file_to_cc(data: Dict[str, Any]) -> Tuple[Dict[str, Any], List
     Returns:
         Tuple of (converted_data, all_warnings)
     """
-    converter = RuleBuilderToCC()
+    converter = RuleBuilderToAST()
     all_warnings = []
 
     def convert_access_rule(rule):
