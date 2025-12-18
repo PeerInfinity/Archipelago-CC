@@ -71,6 +71,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
     "Compass Badge": 1,
+    "PONS": 2425,
 }
 
 
@@ -114,6 +115,17 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
         "Crayon": frozenset(["Relic (Crayon Box)", "Relic (Red Crayon)", "Relic (Blue Crayon)", "Relic (Green Crayon)"]),
         "Cake": frozenset(["Relic (Cake Stand)", "Relic (Shortcake)", "Relic (Chocolate Cake Slice)", "Relic (Chocolate Cake)"]),
         "Necklace": frozenset(["Relic (Necklace Bust)", "Relic (Necklace)"]),
+    }
+
+    # Accumulator rules for state counters (e.g., coins)
+    # These tell the exporter how to parse items like "60 coins" -> add 60 to " coins" counter
+    accumulator_rules: ClassVar[list] = [
+        {"pattern": r"^(\d+) Pons$", "extract_value": True, "target": "PONS", "discriminator": None},
+    ]
+
+    # Initial values for prog_items accumulators
+    prog_items_init: ClassVar[dict] = {
+        "PONS": 0,
     }
 
     # Canonical item placements - where items belong in the "vanilla" game
@@ -372,6 +384,38 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
     def set_rules(self) -> None:
         """Set access rules."""
         set_rules(self)
+
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        """Collect item and track cumulative counters from accumulator rules."""
+        import re
+        change = super().collect(state, item)
+        if change:
+            for rule in self.accumulator_rules:
+                match = re.match(rule["pattern"], item.name)
+                if match:
+                    if rule["extract_value"]:
+                        value = int(match.group(1))
+                    else:
+                        value = 1
+                    state.prog_items[item.player][rule["target"]] += value
+                    break
+        return change
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        """Remove item and update cumulative counters from accumulator rules."""
+        import re
+        change = super().remove(state, item)
+        if change:
+            for rule in self.accumulator_rules:
+                match = re.match(rule["pattern"], item.name)
+                if match:
+                    if rule["extract_value"]:
+                        value = int(match.group(1))
+                    else:
+                        value = 1
+                    state.prog_items[item.player][rule["target"]] -= value
+                    break
+        return change
 
     def create_items(self) -> None:
         """Create randomized item pool."""
