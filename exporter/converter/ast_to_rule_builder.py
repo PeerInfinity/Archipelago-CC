@@ -1,7 +1,7 @@
 """
-Converter from Archipelago-CC format to Rule Builder format (PR #5048).
+Converter from AST format to Rule Builder format (PR #5048).
 
-Archipelago-CC Format (A):
+AST Format (A):
     {
         "type": "item_check",
         "item": "Sword",
@@ -38,9 +38,9 @@ class ConversionResult:
         return len(self.errors) == 0
 
 
-class CCToRuleBuilder:
+class ASTToRuleBuilder:
     """
-    Converter from Archipelago-CC format to Rule Builder format.
+    Converter from AST format to Rule Builder format.
 
     Handles conversion of:
     - Constants (true/false)
@@ -56,7 +56,7 @@ class CCToRuleBuilder:
     - Uses `_original_args` to restore original Rule Builder format
     """
 
-    # Mapping of CC types to converter methods
+    # Mapping of AST types to converter methods
     TYPE_CONVERTERS = {}
 
     def __init__(self):
@@ -107,10 +107,10 @@ class CCToRuleBuilder:
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
         """
-        Convert an Archipelago-CC format rule to Rule Builder format.
+        Convert an AST format rule to Rule Builder format.
 
         Args:
-            rule: Rule in Archipelago-CC format
+            rule: Rule in AST format
 
         Returns:
             ConversionResult with converted rule and any warnings/errors
@@ -138,7 +138,7 @@ class CCToRuleBuilder:
         Internal method to convert a single rule.
 
         Args:
-            rule: Rule in Archipelago-CC format
+            rule: Rule in AST format
 
         Returns:
             Rule in Rule Builder format
@@ -216,7 +216,7 @@ class CCToRuleBuilder:
         }
 
     def _make_custom_rule(self, rule_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
-        """Create a custom rule that preserves CC format data for round-trip."""
+        """Create a custom rule that preserves AST format data for round-trip."""
         result = self._make_rule(rule_name, args)
         result['_converted_from_cc'] = True
         return result
@@ -229,7 +229,7 @@ class CCToRuleBuilder:
         """
         Convert constant rule.
 
-        CC: {"type": "constant", "value": true}
+        AST: {"type": "constant", "value": true}
         RB: {"rule": "True_", "options": [], "args": {}}
         """
         value = rule.get('value')
@@ -250,7 +250,7 @@ class CCToRuleBuilder:
         """
         Convert item_check rule.
 
-        CC: {"type": "item_check", "item": "Sword", "count": 2}
+        AST: {"type": "item_check", "item": "Sword", "count": 2}
         RB: {"rule": "Has", "options": [], "args": {"item_name": "Sword", "count": 2}}
         """
         item = rule.get('item', '')
@@ -262,7 +262,7 @@ class CCToRuleBuilder:
             return self._make_custom_rule('ItemCheck', {
                 'item': item,
                 'count': count,
-                '_original_cc_type': 'item_check'
+                '_original_ast_type': 'item_check'
             })
 
         args = {'item_name': item}
@@ -275,7 +275,7 @@ class CCToRuleBuilder:
         """
         Convert count_check rule.
 
-        CC: {"type": "count_check", "item": "Arrow", "count": 10}
+        AST: {"type": "count_check", "item": "Arrow", "count": 10}
         RB: {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}}
         """
         item = rule.get('item', '')
@@ -286,7 +286,7 @@ class CCToRuleBuilder:
             return self._make_custom_rule('CountCheck', {
                 'item': item,
                 'count': count,
-                '_original_cc_type': 'count_check'
+                '_original_ast_type': 'count_check'
             })
 
         return self._make_rule('Has', {'item_name': item, 'count': count})
@@ -295,7 +295,7 @@ class CCToRuleBuilder:
         """
         Convert group_check rule.
 
-        CC: {"type": "group_check", "group": "Keys", "count": 3}
+        AST: {"type": "group_check", "group": "Keys", "count": 3}
         RB: {"rule": "HasGroup", "options": [], "args": {"group": "Keys", "count": 3}}
         """
         group = rule.get('group', '')
@@ -382,7 +382,7 @@ class CCToRuleBuilder:
         return self._make_custom_rule('StateMethod', {
             'method': method,
             'args': args,
-            '_original_cc_type': 'state_method'
+            '_original_ast_type': 'state_method'
         })
 
     # -------------------------------------------------------------------------
@@ -393,7 +393,7 @@ class CCToRuleBuilder:
         """
         Convert and rule.
 
-        CC: {"type": "and", "conditions": [...]}
+        AST: {"type": "and", "conditions": [...]}
         RB: {"rule": "And", "options": [], "children": [...]}
         """
         conditions = rule.get('conditions', [])
@@ -412,7 +412,7 @@ class CCToRuleBuilder:
         """
         Convert or rule.
 
-        CC: {"type": "or", "conditions": [...]}
+        AST: {"type": "or", "conditions": [...]}
         RB: {"rule": "Or", "options": [], "children": [...]}
         """
         conditions = rule.get('conditions', [])
@@ -431,7 +431,7 @@ class CCToRuleBuilder:
         """
         Convert not rule.
 
-        CC: {"type": "not", "condition": {...}}
+        AST: {"type": "not", "condition": {...}}
         RB: No direct equivalent - preserve as custom rule
         """
         condition = rule.get('condition', {})
@@ -440,7 +440,7 @@ class CCToRuleBuilder:
         self.warnings.append("'not' rule has no direct Rule Builder equivalent, preserved as custom rule")
         return self._make_custom_rule('Not', {
             'condition': converted_condition,
-            '_original_cc_type': 'not'
+            '_original_ast_type': 'not'
         })
 
     # -------------------------------------------------------------------------
@@ -451,7 +451,7 @@ class CCToRuleBuilder:
         """
         Convert can_reach rule.
 
-        CC: {"type": "can_reach", "region": "Castle"}
+        AST: {"type": "can_reach", "region": "Castle"}
         RB: {"rule": "CanReachRegion", "options": [], "args": {"region_name": "Castle"}}
         """
         region = rule.get('region', '')
@@ -461,7 +461,7 @@ class CCToRuleBuilder:
         """
         Convert location_check rule.
 
-        CC: {"type": "location_check", "location": "Chest1"}
+        AST: {"type": "location_check", "location": "Chest1"}
         RB: {"rule": "CanReachLocation", "options": [], "args": {"location_name": "Chest1"}}
         """
         location = rule.get('location', '')
@@ -471,7 +471,7 @@ class CCToRuleBuilder:
         """
         Convert can_reach_entrance rule.
 
-        CC: {"type": "can_reach_entrance", "entrance": "Door1"}
+        AST: {"type": "can_reach_entrance", "entrance": "Door1"}
         RB: {"rule": "CanReachEntrance", "options": [], "args": {"entrance_name": "Door1"}}
         """
         entrance = rule.get('entrance', '')
@@ -485,7 +485,7 @@ class CCToRuleBuilder:
         """
         Convert conditional rule (typically from option filter).
 
-        CC: {"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}
+        AST: {"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}
         RB: Rule with options array (if test is an option comparison)
         """
         test = rule.get('test', {})
@@ -515,7 +515,7 @@ class CCToRuleBuilder:
             'test': self._convert_rule(test) if isinstance(test, dict) else test,
             'if_true': self._convert_rule(if_true) if isinstance(if_true, dict) else if_true,
             'if_false': self._convert_rule(if_false) if isinstance(if_false, dict) else if_false,
-            '_original_cc_type': 'conditional'
+            '_original_ast_type': 'conditional'
         })
 
     def _extract_options_from_test(self, test: Dict[str, Any]) -> Optional[List[Dict]]:
@@ -611,7 +611,7 @@ class CCToRuleBuilder:
         self.warnings.append(f"Helper '{helper_name}' preserved as custom rule")
         return self._make_custom_rule(helper_name, {
             'args': [self._convert_rule(arg) if isinstance(arg, dict) else arg for arg in args],
-            '_original_cc_type': 'helper'
+            '_original_ast_type': 'helper'
         })
 
     # -------------------------------------------------------------------------
@@ -622,7 +622,7 @@ class CCToRuleBuilder:
         """
         Convert compare rule.
 
-        CC: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
+        AST: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
         RB: No direct equivalent - preserve as custom rule
         """
         left = rule.get('left', {})
@@ -634,14 +634,14 @@ class CCToRuleBuilder:
             'left': self._convert_rule(left) if isinstance(left, dict) else left,
             'op': op,
             'right': self._convert_rule(right) if isinstance(right, dict) else right,
-            '_original_cc_type': 'compare'
+            '_original_ast_type': 'compare'
         })
 
     def _convert_binary_op(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert binary_op rule to Arithmetic.
 
-        CC: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
+        AST: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
         RB: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
         """
         left = rule.get('left', {})
@@ -666,14 +666,14 @@ class CCToRuleBuilder:
         return self._make_custom_rule('Attribute', {
             'object': rule.get('object'),
             'attr': rule.get('attr'),
-            '_original_cc_type': 'attribute'
+            '_original_ast_type': 'attribute'
         })
 
     def _convert_name(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Convert name reference rule."""
         return self._make_custom_rule('Name', {
             'name': rule.get('name'),
-            '_original_cc_type': 'name'
+            '_original_ast_type': 'name'
         })
 
     def _convert_list(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -685,7 +685,7 @@ class CCToRuleBuilder:
         ]
         return self._make_custom_rule('List', {
             'value': converted_value,
-            '_original_cc_type': 'list'
+            '_original_ast_type': 'list'
         })
 
     def _convert_tuple(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -697,7 +697,7 @@ class CCToRuleBuilder:
         ]
         return self._make_custom_rule('Tuple', {
             'value': converted_value,
-            '_original_cc_type': 'tuple'
+            '_original_ast_type': 'tuple'
         })
 
     # -------------------------------------------------------------------------
@@ -705,49 +705,49 @@ class CCToRuleBuilder:
     # -------------------------------------------------------------------------
 
     def _convert_unknown(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle unknown CC types by preserving them as custom rules."""
+        """Handle unknown AST types by preserving them as custom rules."""
         rule_type = rule.get('type', 'unknown')
-        self.warnings.append(f"Unknown CC type '{rule_type}' preserved as custom rule")
+        self.warnings.append(f"Unknown AST type '{rule_type}' preserved as custom rule")
 
         # Preserve all fields except 'type'
         args = {k: v for k, v in rule.items() if k != 'type'}
-        args['_original_cc_type'] = rule_type
+        args['_original_ast_type'] = rule_type
 
-        return self._make_custom_rule(f'CC_{rule_type}', args)
+        return self._make_custom_rule(f'AST_{rule_type}', args)
 
 
 # -------------------------------------------------------------------------
 # Convenience Functions
 # -------------------------------------------------------------------------
 
-def convert_cc_to_rule_builder(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+def convert_ast_to_rule_builder(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Convert a single rule from Archipelago-CC format to Rule Builder format.
+    Convert a single rule from AST format to Rule Builder format.
 
     Args:
-        rule: Rule in Archipelago-CC format
+        rule: Rule in AST format
 
     Returns:
         Tuple of (converted_rule, warnings)
     """
-    converter = CCToRuleBuilder()
+    converter = ASTToRuleBuilder()
     result = converter.convert(rule)
     return result.rule, result.warnings + result.errors
 
 
 def convert_rules_file_to_rule_builder(data: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Convert an entire rules file from Archipelago-CC format to Rule Builder format.
+    Convert an entire rules file from AST format to Rule Builder format.
 
     This handles the full file structure including regions, locations, etc.
 
     Args:
-        data: Full rules file data in Archipelago-CC format
+        data: Full rules file data in AST format
 
     Returns:
         Tuple of (converted_data, all_warnings)
     """
-    converter = CCToRuleBuilder()
+    converter = ASTToRuleBuilder()
     all_warnings = []
 
     def convert_access_rule(rule):

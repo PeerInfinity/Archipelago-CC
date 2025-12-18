@@ -659,10 +659,10 @@ Helper bodies would be looked up from the top-level `helpers` section (which alr
 
 #### Legacy Support
 
-**`CCRule`** - Wrapper for AST format rules that can't be converted
+**`ASTRule`** - Wrapper for AST format rules that can't be converted
 ```json
 {
-  "rule": "CCRule",
+  "rule": "ASTRule",
   "options": [],
   "args": {
     "rule_data": {"type": "some_unknown_type", "...": "..."}
@@ -676,7 +676,7 @@ Helper bodies would be looked up from the top-level `helpers` section (which alr
 
 ## Proposed Rules (Phase 0 Consideration)
 
-These rules are proposed additions to address gaps in the current extended Rule Builder format. They would provide better coverage for AST format patterns that currently fall back to `CCRule`.
+These rules are proposed additions to address gaps in the current extended Rule Builder format. They would provide better coverage for AST format patterns that currently fall back to `ASTRule`.
 
 ### Numeric
 
@@ -840,8 +840,8 @@ With numeric index:
 | `setting_value` | `SettingValue` | Proposed |
 | `subscript` | `Subscript` | Proposed |
 | `compare` (with `in` op) | `Contains` | Proposed |
-| `attribute` | `CCRule` | Preserved |
-| Other | `CCRule` | Preserved |
+| `attribute` | `ASTRule` | Preserved |
+| Other | `ASTRule` | Preserved |
 
 ---
 
@@ -860,11 +860,11 @@ For each extension, decide: **Official** (keep as standard) or **Deprecated** (r
 | `MinValue` | Official | [x] Approved |
 | `Conditional` | Official | [x] Approved |
 | `HelperCall` | Official | [x] Approved |
-| `CCRule` | Deprecated (internal only) | [x] Approved |
+| `ASTRule` | Deprecated (internal only) | [x] Approved |
 
 ### Proposed Additions
 
-| Proposed Rule | Purpose | Replaces `CCRule` for | Decision |
+| Proposed Rule | Purpose | Replaces `ASTRule` for | Decision |
 |---------------|---------|----------------------|----------|
 | `MaxValue` | Maximum of multiple values | `max(...)` expressions | [x] Add |
 | `CountGroup` | Get group count as number | `state.count_group(...)` | [x] Add |
@@ -1007,5 +1007,5 @@ Estimated reduction for typical worldgen world:
 - Active development: https://github.com/drtchops/Archipelago/blob/rules-engine/rule_builder.py
 - AST Analyzer: `exporter/analyzer/`
 - Rule Builder classes: `rule_builder/rules.py`
-- AST format parser: `rule_builder/cc_format.py`
+- AST format parser: `rule_builder/ast_format.py`
 - Format converter: `exporter/converter/`

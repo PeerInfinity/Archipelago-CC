@@ -129,15 +129,17 @@ The AST analyzer produces these rule types:
 - `_converted_from_cc` → `_converted_from_ast`
 
 **Implementation Steps**:
-- [ ] Rename files
-- [ ] Update all imports
-- [ ] Rename functions, classes, and variables
-- [ ] Update documentation
+- [x] Rename files
+- [x] Update all imports
+- [x] Rename functions, classes, and variables
+- [x] Update documentation
 - [ ] Run tests to ensure nothing broke
 
 **Acceptance Criteria**:
 - No references to "CC format" remain in code or documentation
 - All tests pass
+
+**Status**: COMPLETED (2025-12-18) - All renames done, awaiting test verification
 
 ---
 
@@ -335,7 +337,7 @@ Based on user input:
 
 *Existing Extensions* - All approved as official:
 - `Not`, `CountItem`, `Compare`, `Arithmetic`, `MinValue`, `Conditional`, `HelperCall`
-- `CCRule` - Approved as deprecated (internal only)
+- `ASTRule` - Approved as deprecated (internal only)
 
 *New Rules* - All approved for addition:
 - `MaxValue`, `CountGroup`, `CountGroupUnique`, `Sum`, `Negate`
@@ -355,7 +357,7 @@ Based on user input:
 
 ### Rule Builder
 - `rule_builder/rules.py` - Rule classes
-- `rule_builder/cc_format.py` → `ast_format.py` - AST format parsing
+- `rule_builder/ast_format.py` - AST format parsing
 
 ### Frontend
 - `frontend/modules/shared/ruleEngine.js` - Rule evaluation

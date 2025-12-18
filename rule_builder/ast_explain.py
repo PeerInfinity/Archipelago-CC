@@ -1,9 +1,9 @@
 """
-CC Format Rule Explanation Functions.
+AST Format Rule Explanation Functions.
 
 This module provides functions to generate human-readable explanations
-for CC format rules. These explanations are used by the Rule Builder's
-explain_json() method when handling CC format rules that can't be
+for AST format rules. These explanations are used by the Rule Builder's
+explain_json() method when handling AST format rules that can't be
 converted to native Rule Builder classes.
 
 The explain functions return JSONMessagePart lists compatible with
@@ -21,17 +21,17 @@ if TYPE_CHECKING:
 JSONMessagePart = dict[str, Any]
 
 
-def explain_cc_rule(
+def explain_ast_rule(
     rule: dict,
     state: "CollectionState | None",
     player: int,
     depth: int = 0
 ) -> list[JSONMessagePart]:
     """
-    Generate explain output for any CC format rule.
+    Generate explain output for any AST format rule.
 
     Args:
-        rule: CC format rule dict
+        rule: AST format rule dict
         state: Current collection state (or None for static explanation)
         player: Player ID
         depth: Recursion depth (for cycle prevention)
@@ -165,7 +165,7 @@ def _explain_and(
     for i, cond in enumerate(conditions):
         if i > 0:
             messages.append({"type": "text", "text": " & "})
-        messages.extend(explain_cc_rule(cond, state, player, depth + 1))
+        messages.extend(explain_ast_rule(cond, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -182,7 +182,7 @@ def _explain_or(
     for i, cond in enumerate(conditions):
         if i > 0:
             messages.append({"type": "text", "text": " | "})
-        messages.extend(explain_cc_rule(cond, state, player, depth + 1))
+        messages.extend(explain_ast_rule(cond, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -193,7 +193,7 @@ def _explain_not(
     """Explain a NOT rule."""
     condition = rule.get('condition') or rule.get('operand', {})
     messages: list[JSONMessagePart] = [{"type": "text", "text": "NOT ("}]
-    messages.extend(explain_cc_rule(condition, state, player, depth + 1))
+    messages.extend(explain_ast_rule(condition, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -207,9 +207,9 @@ def _explain_compare(
     right = rule.get('right', {})
 
     messages: list[JSONMessagePart] = []
-    messages.extend(explain_cc_rule(left, state, player, depth + 1))
+    messages.extend(explain_ast_rule(left, state, player, depth + 1))
     messages.append({"type": "text", "text": f" {op} "})
-    messages.extend(explain_cc_rule(right, state, player, depth + 1))
+    messages.extend(explain_ast_rule(right, state, player, depth + 1))
     return messages
 
 
@@ -222,11 +222,11 @@ def _explain_conditional(
     if_false = rule.get('if_false', {})
 
     messages: list[JSONMessagePart] = [{"type": "text", "text": "If ("}]
-    messages.extend(explain_cc_rule(test, state, player, depth + 1))
+    messages.extend(explain_ast_rule(test, state, player, depth + 1))
     messages.append({"type": "text", "text": ") then ("})
-    messages.extend(explain_cc_rule(if_true, state, player, depth + 1))
+    messages.extend(explain_ast_rule(if_true, state, player, depth + 1))
     messages.append({"type": "text", "text": ") else ("})
-    messages.extend(explain_cc_rule(if_false, state, player, depth + 1))
+    messages.extend(explain_ast_rule(if_false, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -249,7 +249,7 @@ def _explain_helper(
             if i > 0:
                 messages.append({"type": "text", "text": ", "})
             if isinstance(arg, dict):
-                messages.extend(explain_cc_rule(arg, state, player, depth + 1))
+                messages.extend(explain_ast_rule(arg, state, player, depth + 1))
             else:
                 messages.append({"type": "text", "text": str(arg)})
         messages.append({"type": "text", "text": ")"})
@@ -348,9 +348,9 @@ def _explain_binary_op(
     right = rule.get('right', {})
 
     messages: list[JSONMessagePart] = [{"type": "text", "text": "("}]
-    messages.extend(explain_cc_rule(left, state, player, depth + 1))
+    messages.extend(explain_ast_rule(left, state, player, depth + 1))
     messages.append({"type": "text", "text": f" {op} "})
-    messages.extend(explain_cc_rule(right, state, player, depth + 1))
+    messages.extend(explain_ast_rule(right, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -362,7 +362,7 @@ def _explain_sum(
     args = rule.get('args', [])
     if args:
         messages: list[JSONMessagePart] = [{"type": "text", "text": "sum("}]
-        messages.extend(explain_cc_rule(args[0], state, player, depth + 1))
+        messages.extend(explain_ast_rule(args[0], state, player, depth + 1))
         messages.append({"type": "text", "text": ")"})
         return messages
     return [{"type": "text", "text": "sum()"}]
@@ -377,7 +377,7 @@ def _explain_min(
     for i, arg in enumerate(args):
         if i > 0:
             messages.append({"type": "text", "text": ", "})
-        messages.extend(explain_cc_rule(arg, state, player, depth + 1))
+        messages.extend(explain_ast_rule(arg, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -391,7 +391,7 @@ def _explain_max(
     for i, arg in enumerate(args):
         if i > 0:
             messages.append({"type": "text", "text": ", "})
-        messages.extend(explain_cc_rule(arg, state, player, depth + 1))
+        messages.extend(explain_ast_rule(arg, state, player, depth + 1))
     messages.append({"type": "text", "text": ")"})
     return messages
 
@@ -404,7 +404,7 @@ def _explain_attribute(
     attr = rule.get('attr', '')
 
     messages: list[JSONMessagePart] = []
-    messages.extend(explain_cc_rule(obj, state, player, depth + 1))
+    messages.extend(explain_ast_rule(obj, state, player, depth + 1))
     messages.append({"type": "text", "text": f".{attr}"})
     return messages
 
@@ -417,9 +417,9 @@ def _explain_subscript(
     index = rule.get('index', {})
 
     messages: list[JSONMessagePart] = []
-    messages.extend(explain_cc_rule(value, state, player, depth + 1))
+    messages.extend(explain_ast_rule(value, state, player, depth + 1))
     messages.append({"type": "text", "text": "["})
-    messages.extend(explain_cc_rule(index, state, player, depth + 1))
+    messages.extend(explain_ast_rule(index, state, player, depth + 1))
     messages.append({"type": "text", "text": "]"})
     return messages
 
@@ -441,7 +441,7 @@ def _explain_function_call(
 
     # Handle func as a rule (e.g., attribute access)
     if isinstance(func, dict):
-        messages = explain_cc_rule(func, state, player, depth + 1)
+        messages = explain_ast_rule(func, state, player, depth + 1)
     else:
         messages = [{"type": "text", "text": str(func)}]
 
@@ -450,7 +450,7 @@ def _explain_function_call(
         if i > 0:
             messages.append({"type": "text", "text": ", "})
         if isinstance(arg, dict):
-            messages.extend(explain_cc_rule(arg, state, player, depth + 1))
+            messages.extend(explain_ast_rule(arg, state, player, depth + 1))
         else:
             messages.append({"type": "text", "text": str(arg)})
     messages.append({"type": "text", "text": ")"})
@@ -475,5 +475,5 @@ def _explain_return(
     """Explain a return statement."""
     value = rule.get('value', {})
     messages: list[JSONMessagePart] = [{"type": "text", "text": "return "}]
-    messages.extend(explain_cc_rule(value, state, player, depth + 1))
+    messages.extend(explain_ast_rule(value, state, player, depth + 1))
     return messages
