@@ -445,6 +445,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return rule; // Return the primitive value itself
   }
 
+  // Handle arrays directly - they're literal values, not rules
+  // This happens when Compare rules have raw arrays for placement lookups like ["Item", 1]
+  if (Array.isArray(rule)) {
+    return rule;
+  }
+
   // Check if context is provided and is a valid snapshot interface
   const isValidContext = context && context._isSnapshotInterface === true;
   if (!isValidContext) {
@@ -4686,19 +4692,31 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         if (bodyData.params && bodyData.body) {
           const params = bodyData.params;
           const helperArgs = args.args || [];
+          const defaults = bodyData.defaults || {};
           let helperLocalScope = localScope ? { ...localScope } : {};
 
-          // Bind arguments to parameter names
-          for (let i = 0; i < helperArgs.length; i++) {
-            let argValue = helperArgs[i];
-            // Only evaluate as a rule if it's an object with 'type' or 'rule' key
-            // Plain values (primitives, arrays, plain objects) should be used directly
-            if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
-              argValue = evaluateRule(argValue, context, depth + 1, localScope);
+          // Bind arguments to parameter names, using defaults for missing params
+          for (let i = 0; i < params.length; i++) {
+            const paramName = params[i];
+            let argValue;
+
+            if (i < helperArgs.length) {
+              argValue = helperArgs[i];
+              // Only evaluate as a rule if it's an object with 'type' or 'rule' key
+              // Plain values (primitives, arrays, plain objects) should be used directly
+              if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
+                argValue = evaluateRule(argValue, context, depth + 1, localScope);
+              }
+            } else if (defaults[paramName] !== undefined) {
+              // Use default value from body_data.defaults
+              argValue = defaults[paramName];
+            } else {
+              // No default provided - use 1 as common default for quantity-like params
+              // This matches Python's common default patterns (quantity=1, count=1)
+              argValue = 1;
             }
-            if (params[i]) {
-              helperLocalScope[params[i]] = argValue;
-            }
+
+            helperLocalScope[paramName] = argValue;
           }
 
           let result = evaluateRule(bodyData.body, context, depth + 1, helperLocalScope);
@@ -4741,9 +4759,19 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       switch (op) {
         case '==':
         case 'eq':
+          // Handle array comparison by value (JS === compares by reference)
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length === rightValue.length &&
+                   leftValue.every((val, index) => val === rightValue[index]);
+          }
           return leftValue === rightValue;
         case '!=':
         case 'ne':
+          // Handle array comparison by value
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length !== rightValue.length ||
+                   leftValue.some((val, index) => val !== rightValue[index]);
+          }
           return leftValue !== rightValue;
         case '<':
         case 'lt':
@@ -4757,6 +4785,44 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         case '>=':
         case 'ge':
           return leftValue >= rightValue;
+        case 'in':
+          // Check if leftValue is in rightValue (array)
+          if (Array.isArray(rightValue)) {
+            // Handle array comparison with deep equality for nested arrays
+            if (Array.isArray(leftValue)) {
+              return rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  // Deep array comparison
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return rightValue.includes(leftValue);
+          }
+          return false;
+        case 'not in':
+          // Negate the 'in' check
+          if (Array.isArray(rightValue)) {
+            if (Array.isArray(leftValue)) {
+              return !rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return !rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return !rightValue.includes(leftValue);
+          }
+          return true;
         default:
           log('warn', `[evaluateRuleBuilderRule] Unknown Compare operator '${op}'`);
           return undefined;

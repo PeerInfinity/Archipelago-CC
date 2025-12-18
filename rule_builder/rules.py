@@ -2373,10 +2373,11 @@ class Compare(Rule[TWorld], game="Archipelago"):
     """
     Comparison between two values/rules.
 
-    Supports operators: ==, !=, <, >, <=, >=
+    Supports operators: ==, !=, <, >, <=, >=, in, not in
 
     Usage:
         rule = Compare(CountItem("Key"), ">=", 3)
+        rule = Compare(['Item', 1], "in", [['Item', 1], ['Other', 1]])
     """
     left: "Rule[TWorld] | int | float | str" = dataclasses.field(default_factory=lambda: True_())
     op: str = "=="
@@ -2445,6 +2446,10 @@ class Compare(Rule[TWorld], game="Archipelago"):
                 return left_val <= right_val
             elif self.op == '>=':
                 return left_val >= right_val
+            elif self.op == 'in':
+                return left_val in right_val
+            elif self.op == 'not in':
+                return left_val not in right_val
             else:
                 return False
 
