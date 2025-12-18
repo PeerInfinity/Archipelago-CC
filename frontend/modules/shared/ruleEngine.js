@@ -445,6 +445,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return rule; // Return the primitive value itself
   }
 
+  // Handle arrays directly - they're literal values, not rules
+  // This happens when Compare rules have raw arrays for placement lookups like ["Item", 1]
+  if (Array.isArray(rule)) {
+    return rule;
+  }
+
   // Check if context is provided and is a valid snapshot interface
   const isValidContext = context && context._isSnapshotInterface === true;
   if (!isValidContext) {
@@ -4753,9 +4759,19 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       switch (op) {
         case '==':
         case 'eq':
+          // Handle array comparison by value (JS === compares by reference)
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length === rightValue.length &&
+                   leftValue.every((val, index) => val === rightValue[index]);
+          }
           return leftValue === rightValue;
         case '!=':
         case 'ne':
+          // Handle array comparison by value
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length !== rightValue.length ||
+                   leftValue.some((val, index) => val !== rightValue[index]);
+          }
           return leftValue !== rightValue;
         case '<':
         case 'lt':
@@ -4769,6 +4785,44 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         case '>=':
         case 'ge':
           return leftValue >= rightValue;
+        case 'in':
+          // Check if leftValue is in rightValue (array)
+          if (Array.isArray(rightValue)) {
+            // Handle array comparison with deep equality for nested arrays
+            if (Array.isArray(leftValue)) {
+              return rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  // Deep array comparison
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return rightValue.includes(leftValue);
+          }
+          return false;
+        case 'not in':
+          // Negate the 'in' check
+          if (Array.isArray(rightValue)) {
+            if (Array.isArray(leftValue)) {
+              return !rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return !rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return !rightValue.includes(leftValue);
+          }
+          return true;
         default:
           log('warn', `[evaluateRuleBuilderRule] Unknown Compare operator '${op}'`);
           return undefined;

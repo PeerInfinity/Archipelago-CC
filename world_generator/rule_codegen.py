@@ -39,7 +39,7 @@ class RuleCodeGenerator:
         self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
         self.placements = placements or {}  # location_name -> item_name
 
-    def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None) -> Dict[str, Any]:
+    def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
         Recursively expand helper references in a rule body.
 
@@ -47,9 +47,13 @@ class RuleCodeGenerator:
         or setting values, which allows the frontend to evaluate rules without needing
         helper or settings lookups.
 
+        Note: Nested helpers (depth > 0) are NOT expanded to avoid creating overly complex
+        rules. The frontend will look them up from the helpers dict instead.
+
         Args:
             rule: Rule dict in CC format
             visited: Set of helper names already visited (for cycle detection)
+            depth: Current expansion depth. Only expand at depth 0 (top level).
 
         Returns:
             Rule dict with helper references and setting_value references expanded
@@ -62,16 +66,19 @@ class RuleCodeGenerator:
 
         rule_type = rule.get('type', '')
 
-        # If this is a helper reference, expand it
+        # If this is a helper reference, expand it (only at top level to avoid overly complex rules)
         if rule_type == 'helper':
             helper_name = rule.get('name', '')
             if helper_name in visited:
                 # Circular reference - return as-is to avoid infinite loop
                 return rule
-            if helper_name in self.helper_bodies:
+            # Only expand helpers at depth 0 (top level rules)
+            # Nested helpers (depth > 0) are left as references for frontend lookup
+            if depth == 0 and helper_name in self.helper_bodies:
                 # Expand the helper body, marking this helper as visited
                 new_visited = visited | {helper_name}
-                expanded_body = self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
+                # Use depth + 1 so nested helper references won't be expanded
+                expanded_body = self._expand_helper_refs(self.helper_bodies[helper_name], new_visited, depth + 1)
 
                 # Rename local variables to avoid collision with outer scope
                 # This is critical when inlining nested helpers that use the same
@@ -158,9 +165,17 @@ class RuleCodeGenerator:
         # ONLY if the test is a placement_lookup comparison (to avoid JavaScript array comparison issues)
         # Be conservative - don't optimize away complex runtime logic
         if rule_type == 'conditional':
-            expanded_test = self._expand_helper_refs(rule.get('test', {}), visited)
-            expanded_if_true = self._expand_helper_refs(rule.get('if_true', {}), visited)
-            expanded_if_false = self._expand_helper_refs(rule.get('if_false', {}), visited)
+            expanded_test = self._expand_helper_refs(rule.get('test', {}), visited, depth)
+            expanded_if_true = self._expand_helper_refs(rule.get('if_true', {}), visited, depth)
+            expanded_if_false = self._expand_helper_refs(rule.get('if_false', {}), visited, depth)
+
+            # First check if test is a constant boolean - simplify if so
+            if isinstance(expanded_test, dict) and expanded_test.get('type') == 'constant':
+                test_value = expanded_test.get('value')
+                if test_value is True:
+                    return expanded_if_true
+                elif test_value is False:
+                    return expanded_if_false
 
             # Only try static evaluation for placement_lookup comparisons
             # These need to be evaluated statically because JS can't compare arrays by value
@@ -182,10 +197,10 @@ class RuleCodeGenerator:
         result = dict(rule)
         for key, value in rule.items():
             if isinstance(value, dict):
-                result[key] = self._expand_helper_refs(value, visited)
+                result[key] = self._expand_helper_refs(value, visited, depth)
             elif isinstance(value, list):
                 result[key] = [
-                    self._expand_helper_refs(item, visited) if isinstance(item, dict) else item
+                    self._expand_helper_refs(item, visited, depth) if isinstance(item, dict) else item
                     for item in value
                 ]
         return result
@@ -490,6 +505,7 @@ class RuleCodeGenerator:
         converters = {
             'constant': self._convert_constant,
             'item_check': self._convert_item_check,
+            'count_check': self._convert_count_check,
             'group_check': self._convert_group_check,
             'and': self._convert_and,
             'or': self._convert_or,
@@ -505,6 +521,7 @@ class RuleCodeGenerator:
             'conditional': self._convert_conditional,
             'name': self._convert_name,
             'placement_lookup': self._convert_placement_lookup,
+            'list': self._convert_list,
         }
 
         converter = converters.get(rule_type)
@@ -553,6 +570,30 @@ class RuleCodeGenerator:
             self.required_imports.add('False_')
             return 'False_()'
 
+    def _convert_list(self, rule: Dict[str, Any]) -> str:
+        """Convert list rule to Python list literal.
+
+        List rules are used for things like 'in' comparisons where we need
+        to check if a value is in a list of expected values.
+        """
+        items = rule.get('value', [])
+        converted_items = []
+        for item in items:
+            if isinstance(item, dict):
+                item_type = item.get('type', '')
+                if item_type == 'constant':
+                    converted_items.append(repr(item.get('value')))
+                elif item_type == 'list':
+                    # Nested list - recursively convert
+                    converted_items.append(self._convert_list(item))
+                else:
+                    # Other rule types - convert recursively
+                    converted_items.append(self._convert_rule(item))
+            else:
+                # Raw value
+                converted_items.append(repr(item))
+        return f'[{", ".join(converted_items)}]'
+
     def _extract_constant_value(self, value: Any, default: Any = None) -> Any:
         """
         Extract a constant value from either a raw value or a constant rule dict.
@@ -572,6 +613,27 @@ class RuleCodeGenerator:
 
     def _convert_item_check(self, rule: Dict[str, Any]) -> str:
         """Convert item_check to Has()."""
+        self.required_imports.add('Has')
+
+        item_raw = rule.get('item', '')
+        item = self._extract_constant_value(item_raw, '')
+        count_raw = rule.get('count', 1)
+        count = self._extract_constant_value(count_raw, 1)
+
+        # Escape item name for Python string
+        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+
+        if count == 1:
+            return f'Has("{item_escaped}")'
+        else:
+            return f'Has("{item_escaped}", {count})'
+
+    def _convert_count_check(self, rule: Dict[str, Any]) -> str:
+        """Convert count_check to Has().
+
+        count_check is similar to item_check but typically has a count > 1.
+        Common in dungeon key checks like 'has 5 small keys'.
+        """
         self.required_imports.add('Has')
 
         item_raw = rule.get('item', '')
@@ -836,6 +898,29 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
+        # Check if this is a comparison between list constants (resolved placement lookups)
+        # JavaScript can't compare arrays by value, so we must statically evaluate these
+        left_list_val = self._get_list_constant_value(left)
+        right_list_val = self._get_list_constant_value(right)
+
+        if left_list_val is not None and right_list_val is not None:
+            # Both sides are list constants - statically evaluate
+            if op in ('==', 'eq'):
+                static_result = left_list_val == right_list_val
+            elif op in ('!=', 'ne'):
+                static_result = left_list_val != right_list_val
+            else:
+                # Unsupported comparison for lists - fall through to Compare
+                static_result = None
+
+            if static_result is not None:
+                if static_result:
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                else:
+                    self.required_imports.add('False_')
+                    return 'False_()'
+
         # Use Compare class for all other patterns
         # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
         self.required_imports.add('Compare')
@@ -843,6 +928,40 @@ class RuleCodeGenerator:
         right_code = self._convert_compare_operand(right)
 
         return f'Compare({left_code}, "{op}", {right_code})'
+
+    def _get_list_constant_value(self, operand: Any) -> Optional[list]:
+        """
+        Extract a list constant value from an operand for static comparison.
+        Returns None if the operand is not a resolvable list constant.
+        """
+        if not isinstance(operand, dict):
+            return None
+
+        op_type = operand.get('type', '')
+
+        if op_type == 'list':
+            # Extract values from list type
+            value_list = operand.get('value', [])
+            result = []
+            for item in value_list:
+                if isinstance(item, dict) and item.get('type') == 'constant':
+                    result.append(item.get('value'))
+                else:
+                    # Non-constant item in list - can't statically evaluate
+                    return None
+            return result
+
+        if op_type == 'placement_lookup':
+            # Resolve placement lookup to list value
+            location_rule = operand.get('location', {})
+            if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+                location_name = location_rule.get('value', '')
+                if location_name and location_name in self.placements:
+                    item_name = self.placements[location_name]
+                    return [item_name, 1]  # [item_name, player]
+            return None  # Unknown location
+
+        return None
 
     def _convert_compare_operand(self, operand: Any) -> str:
         """Convert a compare operand to Python code."""
