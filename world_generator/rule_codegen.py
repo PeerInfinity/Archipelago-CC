@@ -522,6 +522,9 @@ class RuleCodeGenerator:
             'name': self._convert_name,
             'placement_lookup': self._convert_placement_lookup,
             'list': self._convert_list,
+            'binary_op': self._convert_binary_op,
+            'sum': self._convert_sum,
+            'setting_value': self._convert_setting_value,
         }
 
         converter = converters.get(rule_type)
@@ -1075,6 +1078,73 @@ class RuleCodeGenerator:
 
         return f'MinValue({left_code}, {right_code})'
 
+    def _convert_sum(self, rule: Dict[str, Any]) -> str:
+        """Convert a sum rule to an Arithmetic addition chain.
+
+        A sum rule adds up boolean checks (treated as 0 or 1) for items.
+        Example: sum of [has(Valor Form), has(Wisdom Form), ...]
+        becomes: Arithmetic(Arithmetic(..., "+", Has("Valor Form")), "+", Has("Wisdom Form"))
+        """
+        # Get the iterable to sum over
+        iterable = rule.get('iterable', {})
+
+        # If it's a list, convert each element and chain with Arithmetic
+        if iterable.get('type') == 'list':
+            items = iterable.get('value', [])
+            if not items:
+                return '0'  # Empty sum is 0
+
+            # Convert each item in the list
+            item_exprs = [self._convert_rule(item) for item in items]
+
+            if len(item_exprs) == 1:
+                # Single item - wrap in conditional to convert bool to int
+                self.required_imports.add('Conditional')
+                return f'Conditional(test={item_exprs[0]}, if_true=1, if_false=0)'
+
+            # Multiple items - chain with Arithmetic additions
+            # Each Has() evaluates to True/False which Python treats as 1/0 in arithmetic
+            self.required_imports.add('Arithmetic')
+            result = item_exprs[0]
+            for expr in item_exprs[1:]:
+                result = f'Arithmetic({result}, "+", {expr})'
+            return result
+
+        # For other iterable types, try to convert
+        return self._convert_rule(iterable)
+
+    def _convert_setting_value(self, rule: Dict[str, Any]) -> str:
+        """Convert a setting_value reference to its resolved value.
+
+        Settings are resolved at generation time since worldgen worlds
+        don't have access to the original game options at runtime.
+        """
+        setting = rule.get('setting', '')
+
+        # Look up the setting value in our resolved settings
+        if setting in self.settings:
+            value = self.settings[setting]
+            # Handle boolean values
+            if isinstance(value, bool):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
+            # Handle string 'true'/'false' which are boolean-like
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif value.lower() == 'false':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # For other strings (like 'normal', 'light_and_darkness'), return as string literal
+                return repr(value)
+            else:
+                return repr(value)
+
+        # Setting not found - return False as safe default
+        self.required_imports.add('False_')
+        return 'False_()'
+
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
     ) -> Optional[str]:
@@ -1401,7 +1471,9 @@ class HelperCodeGenerator:
                 else:
                     sig_params.append(f'{param} = {repr(default_val)}')
             else:
-                sig_params.append(param)
+                # No default provided - use None as default so callers can omit this arg
+                # This is needed when helper body is hardcoded/expanded and doesn't use the param
+                sig_params.append(f'{param} = None')
 
         # Determine return type based on body structure
         return_type = "bool"
@@ -1957,6 +2029,27 @@ class HelperCodeGenerator:
         # Returning True makes the location always accessible, which is safer than crashing
         return 'True'
 
+    def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
+        """Get argument expression - handles both constants and variable references.
+
+        For variable references (name type), returns the variable name.
+        For constants, returns repr() of the value.
+        """
+        if isinstance(arg, dict):
+            arg_type = arg.get('type', '')
+            # Handle name type (variable reference)
+            if arg_type == 'name':
+                return arg.get('name', str(default))
+            # Handle constant type
+            if arg_type == 'constant':
+                value = arg.get('value', default)
+                return repr(value)
+            if arg_type == 'value':
+                value = arg.get('value', default)
+                return repr(value)
+        # Raw value
+        return repr(arg) if arg is not None else repr(default)
+
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""
         method = expr.get('method', '')
@@ -1965,49 +2058,51 @@ class HelperCodeGenerator:
         # Map methods to their Python equivalents
         if method == 'has':
             if len(args) >= 1:
-                item = self._extract_constant(args[0], '')
+                item_expr = self._get_arg_expr(args[0], '')
                 count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
                 if count == 1:
-                    return f'state.has({repr(item)}, player)'
-                return f'state.has({repr(item)}, player, {count})'
+                    return f'state.has({item_expr}, player)'
+                return f'state.has({item_expr}, player, {count})'
 
         elif method == 'has_all':
             if len(args) >= 1:
+                # has_all expects a tuple/list of item names
                 items = self._extract_constant(args[0], [])
                 items_repr = repr(tuple(items)) if items else '()'
                 return f'state.has_all({items_repr}, player)'
 
         elif method == 'has_any':
             if len(args) >= 1:
+                # has_any expects a tuple/list of item names
                 items = self._extract_constant(args[0], [])
                 items_repr = repr(tuple(items)) if items else '()'
                 return f'state.has_any({items_repr}, player)'
 
         elif method == 'count':
             if len(args) >= 1:
-                item = self._extract_constant(args[0], '')
-                return f'state.count({repr(item)}, player)'
+                item_expr = self._get_arg_expr(args[0], '')
+                return f'state.count({item_expr}, player)'
 
         elif method == 'count_group':
             if len(args) >= 1:
-                group = self._extract_constant(args[0], '')
-                return f'state.count_group({repr(group)}, player)'
+                group_expr = self._get_arg_expr(args[0], '')
+                return f'state.count_group({group_expr}, player)'
 
         elif method == 'has_group':
             if len(args) >= 1:
-                group = self._extract_constant(args[0], '')
+                group_expr = self._get_arg_expr(args[0], '')
                 count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
                 if count == 1:
-                    return f'state.has_group({repr(group)}, player)'
-                return f'state.has_group({repr(group)}, player, {count})'
+                    return f'state.has_group({group_expr}, player)'
+                return f'state.has_group({group_expr}, player, {count})'
 
         elif method == 'has_group_unique':
             if len(args) >= 1:
-                group = self._extract_constant(args[0], '')
+                group_expr = self._get_arg_expr(args[0], '')
                 count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
                 if count == 1:
-                    return f'state.has_group_unique({repr(group)}, player)'
-                return f'state.has_group_unique({repr(group)}, player, {count})'
+                    return f'state.has_group_unique({group_expr}, player)'
+                return f'state.has_group_unique({group_expr}, player, {count})'
 
         elif method == 'can_reach':
             if len(args) >= 1:
