@@ -71,14 +71,14 @@ class RuleWorldMixin(World):
     def rule_from_dict(cls, data: Mapping[str, Any]) -> "Rule[Self]":
         """Create a rule instance from a serialized dict representation.
 
-        Supports both Rule Builder format and CC (Archipelago-CC) format:
+        Supports both Rule Builder format and AST format:
         - Rule Builder: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
-        - CC format: {"type": "item_check", "item": "Sword"}
+        - AST format: {"type": "item_check", "item": "Sword"}
         """
-        # Check if this is CC format (has 'type' key, no 'rule' key)
+        # Check if this is AST format (has 'type' key, no 'rule' key)
         if 'type' in data and 'rule' not in data:
-            from rule_builder.cc_format import parse_cc_rule
-            return parse_cc_rule(data, cls)
+            from rule_builder.ast_format import parse_ast_rule
+            return parse_ast_rule(data, cls)
 
         # Standard Rule Builder format
         name = data.get("rule", "")
@@ -2193,34 +2193,34 @@ class CanReachEntrance(Rule[TWorld], game="Archipelago"):
 
 
 # =============================================================================
-# CC Format Support Classes
+# AST Format Support Classes
 # =============================================================================
 
 
 @dataclasses.dataclass()
-class CCRule(Rule[TWorld], game="Archipelago"):
+class ASTRule(Rule[TWorld], game="Archipelago"):
     """
-    Wraps a CC format rule that can't be converted to a native Rule Builder class.
+    Wraps an AST format rule that can't be converted to a native Rule Builder class.
 
-    This class provides explain support for complex CC format rules while
+    This class provides explain support for complex AST format rules while
     delegating evaluation to either a pre-computed value or returning True
     as a fallback.
     """
     rule_data: dict = dataclasses.field(default_factory=dict)
-    """The original CC format rule data"""
+    """The original AST format rule data"""
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         return self.Resolved(
             self.rule_data,
             player=world.player,
-            caching_enabled=False,  # Bypass caching for CC rules
+            caching_enabled=False,  # Bypass caching for AST rules
         )
 
     @override
     def __str__(self) -> str:
         rule_type = self.rule_data.get('type', 'unknown')
-        return f"CCRule({rule_type})"
+        return f"ASTRule({rule_type})"
 
     class Resolved(Rule.Resolved):
         rule_data: dict
@@ -2228,24 +2228,24 @@ class CCRule(Rule[TWorld], game="Archipelago"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            # CC rules currently return True as fallback
-            # Future enhancement: implement CC rule evaluation
+            # AST rules currently return True as fallback
+            # Future enhancement: implement AST rule evaluation
             return True
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
-            from rule_builder.cc_explain import explain_cc_rule
-            return explain_cc_rule(self.rule_data, state, self.player)
+            from rule_builder.ast_explain import explain_ast_rule
+            return explain_ast_rule(self.rule_data, state, self.player)
 
         @override
         def explain_str(self, state: CollectionState | None = None) -> str:
             rule_type = self.rule_data.get('type', 'unknown')
-            return f"[CC:{rule_type}]"
+            return f"[AST:{rule_type}]"
 
         @override
         def __str__(self) -> str:
             rule_type = self.rule_data.get('type', 'unknown')
-            return f"CCRule({rule_type})"
+            return f"ASTRule({rule_type})"
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:

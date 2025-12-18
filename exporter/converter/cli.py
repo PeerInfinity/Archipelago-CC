@@ -3,7 +3,7 @@
 Command-line interface for rule format conversion.
 
 Supports conversion between:
-- Archipelago-CC JSON format (cc)
+- AST JSON format (cc)
 - Rule Builder JSON format (rb)
 - Python code (python)
 
@@ -39,7 +39,7 @@ def detect_snippet_format(rule: Dict[str, Any]) -> str:
         rule: A single rule dictionary
 
     Returns:
-        'rb' for Rule Builder format, 'cc' for Archipelago-CC format, 'unknown' otherwise
+        'rb' for Rule Builder format, 'ast' for AST format, 'unknown' otherwise
     """
     if not isinstance(rule, dict):
         return 'unknown'
@@ -48,9 +48,9 @@ def detect_snippet_format(rule: Dict[str, Any]) -> str:
     if 'rule' in rule and 'options' in rule:
         return 'rb'
 
-    # Archipelago-CC format has a 'type' key
+    # AST format has a 'type' key
     if 'type' in rule:
-        return 'cc'
+        return 'ast'
 
     return 'unknown'
 
@@ -63,7 +63,7 @@ def detect_format(data: Dict[str, Any]) -> str:
         data: Parsed JSON data
 
     Returns:
-        'rb' for Rule Builder format, 'cc' for Archipelago-CC format, 'unknown' otherwise
+        'rb' for Rule Builder format, 'ast' for AST format, 'unknown' otherwise
     """
     # Check for Rule Builder format indicators
     if 'regions' in data:
@@ -79,7 +79,7 @@ def detect_format(data: Dict[str, Any]) -> str:
                             if 'rule' in rule and 'options' in rule:
                                 return 'rb'  # Rule Builder format
                             if 'type' in rule:
-                                return 'cc'  # Archipelago-CC format
+                                return 'ast'  # AST format
 
                     # Check locations
                     for loc_data in region_data.get('locations', []):
@@ -88,7 +88,7 @@ def detect_format(data: Dict[str, Any]) -> str:
                             if 'rule' in rule and 'options' in rule:
                                 return 'rb'
                             if 'type' in rule:
-                                return 'cc'
+                                return 'ast'
 
     return 'unknown'
 
@@ -106,7 +106,7 @@ def convert_file(
     Args:
         input_path: Path to input JSON file
         output_path: Path for output JSON file (default: stdout)
-        target_format: Target format ('cc' or 'rb', None for auto-detect and convert)
+        target_format: Target format ('ast' or 'rb', None for auto-detect and convert)
         indent: JSON indentation (default: 2)
         verbose: Print warnings and info
 
@@ -139,8 +139,8 @@ def convert_file(
         if target_format is None:
             # Auto-convert to opposite format
             if input_format == 'rb':
-                target_format = 'cc'
-            elif input_format == 'cc':
+                target_format = 'ast'
+            elif input_format == 'ast':
                 target_format = 'rb'
             else:
                 print("Error: Could not auto-detect input format. Please specify --format", file=sys.stderr)
@@ -150,14 +150,14 @@ def convert_file(
             print(f"Target format: {target_format}", file=sys.stderr)
 
         # Perform conversion
-        if target_format == 'cc':
-            if input_format == 'cc':
-                print("Warning: Input already in CC format, no conversion needed", file=sys.stderr)
+        if target_format == 'ast':
+            if input_format == 'ast':
+                print("Warning: Input already in AST format, no conversion needed", file=sys.stderr)
                 converted, warnings = data, []
             else:
                 converted, warnings = convert_rules_file_to_cc(data)
                 if verbose:
-                    print(f"Converted from Rule Builder to Archipelago-CC format", file=sys.stderr)
+                    print(f"Converted from Rule Builder to AST format", file=sys.stderr)
 
         elif target_format == 'rb':
             if input_format == 'rb':
@@ -166,7 +166,7 @@ def convert_file(
             else:
                 converted, warnings = convert_rules_file_to_rule_builder(data)
                 if verbose:
-                    print(f"Converted from Archipelago-CC to Rule Builder format", file=sys.stderr)
+                    print(f"Converted from AST to Rule Builder format", file=sys.stderr)
 
         else:
             print(f"Error: Unknown target format '{target_format}'. Supported: cc, rb", file=sys.stderr)
@@ -220,7 +220,7 @@ def convert_snippet(
 
     Args:
         rule_json: JSON string containing a single rule
-        target_format: Target format ('cc' or 'rb', None for auto-detect and convert)
+        target_format: Target format ('ast' or 'rb', None for auto-detect and convert)
         indent: JSON indentation (default: 2)
         verbose: Print warnings and info
 
@@ -228,8 +228,8 @@ def convert_snippet(
         Tuple of (exit_code, output_json_string)
     """
     # Import converters
-    from .rule_builder_to_cc import convert_rule_builder_to_cc
-    from .cc_to_rule_builder import convert_cc_to_rule_builder
+    from .rule_builder_to_ast import convert_rule_builder_to_ast
+    from .ast_to_rule_builder import convert_ast_to_rule_builder
 
     try:
         rule = json.loads(rule_json)
@@ -244,8 +244,8 @@ def convert_snippet(
     # Determine target format
     if target_format is None:
         if input_format == 'rb':
-            target_format = 'cc'
-        elif input_format == 'cc':
+            target_format = 'ast'
+        elif input_format == 'ast':
             target_format = 'rb'
         else:
             return 1, "Error: Could not auto-detect format. Please specify --format"
@@ -255,20 +255,20 @@ def convert_snippet(
 
     # Perform conversion
     warnings = []
-    if target_format == 'cc':
-        if input_format == 'cc':
+    if target_format == 'ast':
+        if input_format == 'ast':
             if verbose:
-                print("Warning: Input already in CC format", file=sys.stderr)
+                print("Warning: Input already in AST format", file=sys.stderr)
             converted = rule
         else:
-            converted, warnings = convert_rule_builder_to_cc(rule)
+            converted, warnings = convert_rule_builder_to_ast(rule)
     elif target_format == 'rb':
         if input_format == 'rb':
             if verbose:
                 print("Warning: Input already in Rule Builder format", file=sys.stderr)
             converted = rule
         else:
-            converted, warnings = convert_cc_to_rule_builder(rule)
+            converted, warnings = convert_ast_to_rule_builder(rule)
     else:
         return 1, f"Error: Unknown target format '{target_format}'"
 
@@ -389,7 +389,7 @@ Examples:
   python -m exporter.converter input.json -o output.json --format cc
 
 Supported formats:
-  cc      Archipelago-CC JSON format (this repository)
+  cc      AST JSON format (this repository)
   rb      Rule Builder JSON format (PR #5048)
   python  Python code (expressions, lambdas, or function definitions)
 
@@ -440,7 +440,7 @@ Round-trip conversion:
 
     parser.add_argument(
         '-f', '--format',
-        choices=['cc', 'rb'],
+        choices=['ast', 'rb'],
         help='Target JSON format (default: auto-detect and convert to opposite)'
     )
 
