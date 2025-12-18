@@ -397,8 +397,8 @@ STARTING_ITEMS: Dict[str, int] = {
     "Traveling Merchant: Thursday": 1,
     "Traveling Merchant: Friday": 1,
     "Traveling Merchant: Saturday": 1,
-    # Progression percent for gated content
-    "Received Progression Percent": 20,
+    # Progression percent for gated content (set to 100 to allow all progression rules to pass)
+    "Received Progression Percent": 100,
     # Boat repair for Island access
     "Boat Repair": 1,
     # Progressive weapons for combat progression
@@ -1078,10 +1078,8 @@ class StardewValleyWorldGenWorld(RuleWorldMixin, World):
     }
 
     def generate_early(self) -> None:
-        """Push starting items and disable randomization for seed 1."""
+        """Push starting items."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
