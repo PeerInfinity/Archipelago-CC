@@ -853,27 +853,33 @@ For each extension, decide: **Official** (keep as standard) or **Deprecated** (r
 
 | Extension Rule | Recommendation | Decision |
 |----------------|----------------|----------|
-| `Not` | Official | [ ] Approve |
-| `CountItem` | Official | [ ] Approve |
-| `Compare` | Official | [ ] Approve |
-| `Arithmetic` | Official | [ ] Approve |
-| `MinValue` | Official | [ ] Approve |
-| `Conditional` | Official | [ ] Approve |
-| `HelperCall` | Official | [ ] Approve |
-| `CCRule` | Deprecated (internal only) | [ ] Approve |
+| `Not` | Official | [x] Approved |
+| `CountItem` | Official | [x] Approved |
+| `Compare` | Official | [x] Approved |
+| `Arithmetic` | Official | [x] Approved |
+| `MinValue` | Official | [x] Approved |
+| `Conditional` | Official | [x] Approved |
+| `HelperCall` | Official | [x] Approved |
+| `CCRule` | Deprecated (internal only) | [x] Approved |
 
 ### Proposed Additions
 
 | Proposed Rule | Purpose | Replaces `CCRule` for | Decision |
 |---------------|---------|----------------------|----------|
-| `MaxValue` | Maximum of multiple values | `max(...)` expressions | [ ] Add |
-| `CountGroup` | Get group count as number | `state.count_group(...)` | [ ] Add |
-| `CountGroupUnique` | Get unique group count as number | `state.count_group_unique(...)` | [ ] Add |
-| `Sum` | Sum multiple values | `sum(...)` expressions | [ ] Add |
-| `Negate` | Unary minus for numbers | `-x` expressions | [ ] Add |
-| `SettingValue` | Access game options | `world.options.x` / `setting_value` | [ ] Add |
-| `Subscript` | Array/dict indexing | `x[y]` / `subscript` | [ ] Add |
-| `Contains` | Check value in list | `x in [...]` comparisons | [ ] Add |
+| `MaxValue` | Maximum of multiple values | `max(...)` expressions | [x] Add |
+| `CountGroup` | Get group count as number | `state.count_group(...)` | [x] Add |
+| `CountGroupUnique` | Get unique group count as number | `state.count_group_unique(...)` | [x] Add |
+| `Sum` | Sum multiple values | `sum(...)` expressions | [x] Add |
+| `Negate` | Unary minus for numbers | `-x` expressions | [x] Add |
+| `SettingValue` | Access game options | `world.options.x` / `setting_value` | [x] Add |
+| `Subscript` | Array/dict indexing | `x[y]` / `subscript` | [x] Add |
+| `Contains` | Check value in list | `x in [...]` comparisons | [x] Add |
+
+### Structural Changes
+
+| Change | Issue | Decision |
+|--------|-------|----------|
+| `HelperCall` reference-based lookup | Currently inlines `body_data` at every call site | [x] Refactor (Phase 2) |
 
 ### Structural Changes
 

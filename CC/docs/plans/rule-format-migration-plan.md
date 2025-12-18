@@ -163,10 +163,29 @@ The AST analyzer remains unchanged—it still produces AST format internally. Th
 - [ ] Add `preserve_ast_format` setting for debugging/comparison
 - [ ] Update tests to verify Rule Builder output
 
+**HelperCall Refactoring** (included in this phase):
+
+Currently, worldgen `HelperCall` rules inline `body_data` at every call site, duplicating helper bodies many times. This defeats the purpose of helpers and bloats file sizes.
+
+*Required Changes*:
+- [ ] Remove `body_data` from `HelperCall._get_args_dict()` in `rule_builder/rules.py`
+- [ ] Update world generator to export helpers to the `helpers` section instead of inlining
+- [ ] Modify `world_generator/rule_codegen.py` to:
+  - Generate a `get_helper_definitions()` method returning all helper bodies
+  - Remove `body_data` parameter from `HelperCall` generation
+- [ ] Frontend already supports reference-based lookup (no changes needed)
+
+*Files to modify*:
+- `rule_builder/rules.py:2976-2981` - `HelperCall._get_args_dict()`
+- `world_generator/rule_codegen.py:1241-1307` - `_convert_helper()` method
+
+*Expected impact*: 50-80% file size reduction for worldgen rules.json files
+
 **Acceptance Criteria**:
 - All existing spoiler tests pass with Rule Builder format output
 - New exports produce Rule Builder format by default
 - AST format can be enabled via setting for debugging
+- HelperCall rules reference helpers section instead of inlining body_data
 
 ---
 
@@ -311,6 +330,19 @@ Based on user input:
 3. **"CC format" → "AST format"** - Rename everywhere including code
 4. **Schema updates later** - After format is finalized
 5. **Existing workflows** - Use `generate-presets.yml` and `test-all-sequential.yml`
+
+**Phase 0 Decisions** (2025-12-18):
+
+*Existing Extensions* - All approved as official:
+- `Not`, `CountItem`, `Compare`, `Arithmetic`, `MinValue`, `Conditional`, `HelperCall`
+- `CCRule` - Approved as deprecated (internal only)
+
+*New Rules* - All approved for addition:
+- `MaxValue`, `CountGroup`, `CountGroupUnique`, `Sum`, `Negate`
+- `SettingValue`, `Subscript`, `Contains`
+
+*Structural Changes*:
+- `HelperCall` refactoring to use reference-based lookup (include in Phase 2)
 
 ---
 
