@@ -218,9 +218,15 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     # Extract resolved settings for evaluating setting_value nodes in helpers
     # These are the actual values used in the seed, stored at the top level of settings
     # Also include game_options since many setting_value nodes reference world.options.X.value
-    resolved_settings = {k: v for k, v in settings.items() if k not in INTERNAL_SETTINGS}
-    # Merge in game options for settings like goal, castle_skip, etc.
-    resolved_settings.update(game_options)
+    # IMPORTANT: Start with game_options, then merge top-level settings to let them take precedence.
+    # This is necessary because:
+    # - game_options may have string keys for Choice options (e.g., "100" instead of 100)
+    # - Top-level settings from game-specific handlers have the correct types
+    # - By applying top-level settings last, we ensure correct types win
+    resolved_settings = dict(game_options)
+    for k, v in settings.items():
+        if k not in INTERNAL_SETTINGS:
+            resolved_settings[k] = v
 
     return GameMetadata(
         game_name=game_name,
