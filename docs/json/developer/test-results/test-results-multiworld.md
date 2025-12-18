@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-17 21:17:56
+**Generated:** 2025-12-18 02:04:30
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 70 (95.9%)
+- **Failed:** 3 (4.1%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 73
+- **Second Pass Tested:** 70
+- **Second Pass Passed:** 70
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 30/73 (41.1% of passed)
-- **Passing with Generic Logic:** 64/73 (87.7% of passed)
-- **Passing with Both Generic:** 30/73 (41.1% of passed)
+- **Passing with Generic Exporter:** 28/70 (40.0% of passed)
+- **Passing with Generic Logic:** 62/70 (88.6% of passed)
+- **Passing with Both Generic:** 28/70 (40.0% of passed)
 
 ## Test Results
 
@@ -58,46 +58,46 @@
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 57.9KB | 5.6KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.1KB | 105.3KB |
+| Kingdom Hearts 2 | ❌ Failed | — | 3 | 3 | 33.7KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.1KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 41.4KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 17.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.4KB | ✅ |
+| Mario & Luigi Superstar Saga | ❌ Failed | — | 4 | 4 | 0.4KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | 4 | 4 | 2.0KB | ✅ |
-| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | 3.5KB | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 3 | 3 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | 0.7KB | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | ✅ Passed | 5 | 5 | 7.2KB | ✅ |
+| Paint | ✅ Passed | ✅ Passed | 4 | 4 | 7.2KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | 3.4KB | ✅ |
+| Saving Princess | ✅ Passed | ✅ Passed | 4 | 4 | 3.4KB | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 33.2KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.6KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 6.0KB | ✅ |
-| Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
+| Subnautica | ❌ Failed | — | 6 | 6 | 6.0KB | ✅ |
+| Super Mario 64 | ✅ Passed | ✅ Passed | 5 | 5 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 73.6KB | 114.6KB |
+| Super Metroid | ✅ Passed | ✅ Passed | 5 | 5 | 73.6KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.3KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 5.9KB | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.2KB | ✅ |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
-| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.4KB | ✅ |
+| The Wind Waker | ✅ Passed | ✅ Passed | 6 | 6 | 5.4KB | ✅ |
+| The Witness | ✅ Passed | ✅ Passed | 6 | 6 | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.0KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 6 | 6 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 0.9KB | 285.0KB |
@@ -302,7 +302,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts.yaml |
 
-### Kingdom Hearts 2 ✅ (Split 8)
+### Kingdom Hearts 2 ❌ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -354,7 +354,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 
-### Mario & Luigi Superstar Saga ✅ (Split 5)
+### Mario & Luigi Superstar Saga ❌ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -387,8 +387,7 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
 
 ### Meritous ✅ (Split 9)
 
@@ -455,8 +454,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
+| 4 | Paint.yaml |
 
 ### Raft ✅ (Split 6)
 
@@ -484,9 +482,8 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
 
 ### Secret of Evermore ✅ (Split 9)
 
@@ -541,7 +538,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Old School Runescape.yaml |
 | 6 | Stardew Valley.yaml |
 
-### Subnautica ✅ (Split 4)
+### Subnautica ❌ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -559,9 +556,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
 
 ### Super Mario Land 2 ✅ (Split 6)
 
@@ -591,10 +587,9 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
 
 ### TOEM original ✅ (Split 9)
 
@@ -663,8 +658,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
+| 6 | The Wind Waker.yaml |
 
 ### The Witness ✅ (Split 5)
 
@@ -673,10 +667,9 @@ Shows which templates were in the multiworld when each game was tested:
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 ### Timespinner ✅ (Split 6)
 
@@ -708,11 +701,10 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 ### Wargroove ✅ (Split 9)
 
@@ -778,6 +770,42 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | shapez.yaml |
 
 
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Kingdom Hearts 2 (Kingdom Hearts 2.yaml)
+
+**Failing pairs found:** 2
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Bumper Stickers.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM 1993.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Mario & Luigi Superstar Saga (Mario & Luigi Superstar Saga.yaml)
+
+**Failing pairs found:** 3
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Adventure.yaml | ❌ | ✅ | ✅ | ❌ |
+| Choo-Choo Charles.yaml | ❌ | ✅ | ✅ | ❌ |
+| Heretic.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Subnautica (Subnautica.yaml)
+
+**Failing pairs found:** 5
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| APQuest.yaml | ❌ | ✅ | ✅ | ❌ |
+| ChocolateChipCookies.yaml | ❌ | ✅ | ✅ | ❌ |
+| Final Fantasy Mystic Quest.yaml | ❌ | ✅ | ✅ | ❌ |
+| Lufia II Ancient Cave.yaml | ❌ | ✅ | ✅ | ❌ |
+| Overcooked! 2.yaml | ❌ | ✅ | ✅ | ❌ |
+
+
 ## Second Pass Results
 
 Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.
@@ -787,71 +815,68 @@ Templates tested in the first pass with fewer than the maximum number of players
 | A Hat in Time | 1 | 8 | 1 | ✅ Passed |
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
 | A Short Hike | 1 | 8 | 1 | ✅ Passed |
-| APQuest | 1 | 7 | 1 | ✅ Passed |
-| Adventure | 1 | 7 | 1 | ✅ Passed |
+| APQuest | 1 | 6 | 1 | ✅ Passed |
+| Adventure | 1 | 6 | 1 | ✅ Passed |
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
-| Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
+| Bumper Stickers | 1 | 6 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 8 | 2 | ✅ Passed |
-| ChocolateChipCookies | 2 | 7 | 2 | ✅ Passed |
-| Choo-Choo Charles | 2 | 7 | 2 | ✅ Passed |
+| ChocolateChipCookies | 2 | 6 | 2 | ✅ Passed |
+| Choo-Choo Charles | 2 | 6 | 2 | ✅ Passed |
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
-| DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
+| DOOM 1993 | 2 | 6 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 7 | 2 | ✅ Passed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
 | Faxanadu | 3 | 8 | 3 | ✅ Passed |
-| Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
-| Heretic | 3 | 7 | 3 | ✅ Passed |
+| Final Fantasy Mystic Quest | 3 | 6 | 3 | ✅ Passed |
+| Heretic | 3 | 6 | 3 | ✅ Passed |
 | Hylics 2 | 3 | 7 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
-| Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 3 | 7 | 3 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
 | Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
-| Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
-| Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
+| Lufia II Ancient Cave | 4 | 6 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 2 | 4 | 7 | 4 | ✅ Passed |
-| MegaMan Battle Network 3 | 4 | 7 | 4 | ✅ Passed |
+| MegaMan Battle Network 3 | 3 | 6 | 3 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 4 | 7 | 4 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
 | Noita | 5 | 8 | 5 | ✅ Passed |
 | Old School Runescape | 5 | 8 | 5 | ✅ Passed |
-| Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
-| Paint | 5 | 7 | 5 | ✅ Passed |
+| Overcooked! 2 | 5 | 6 | 5 | ✅ Passed |
+| Paint | 4 | 6 | 4 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 5 | 7 | 5 | ✅ Passed |
-| Saving Princess | 5 | 7 | 5 | ✅ Passed |
+| Saving Princess | 4 | 6 | 4 | ✅ Passed |
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
 | Shivers | 5 | 7 | 5 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
 | Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
-| Subnautica | 6 | 7 | 6 | ✅ Passed |
-| Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
+| Super Mario 64 | 5 | 6 | 5 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario World | 6 | 7 | 6 | ✅ Passed |
-| Super Metroid | 6 | 7 | 6 | ✅ Passed |
+| Super Metroid | 5 | 6 | 5 | ✅ Passed |
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
 | TOEM rule builder | 6 | 7 | 6 | ✅ Passed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
 | The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
 | The Messenger | 7 | 8 | 7 | ✅ Passed |
-| The Wind Waker | 7 | 7 | 7 | ✅ Passed |
-| The Witness | 7 | 7 | 7 | ✅ Passed |
+| The Wind Waker | 6 | 6 | 6 | ✅ Passed |
+| The Witness | 6 | 6 | 6 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
 | Undertale | 7 | 7 | 7 | ✅ Passed |
-| VVVVVV | 7 | 7 | 7 | ✅ Passed |
+| VVVVVV | 6 | 6 | 6 | ✅ Passed |
 | Wargroove | 7 | 7 | 7 | ✅ Passed |
 | WebDevJourney | 7 | 7 | 7 | ✅ Passed |
 | Yacht Dice | 8 | 8 | 8 | ✅ Passed |
@@ -910,8 +935,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
+| 6 | The Wind Waker.yaml |
 
 #### Adventure ✅ (Split 5)
 
@@ -920,10 +944,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 #### Aquaria ✅ (Split 6)
 
@@ -955,11 +978,10 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Castlevania - Circle of the Moon ✅ (Split 9)
 
@@ -1033,8 +1055,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
+| 6 | The Wind Waker.yaml |
 
 #### Choo-Choo Charles ✅ (Split 5)
 
@@ -1043,10 +1064,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 #### Civilization VI ✅ (Split 6)
 
@@ -1078,11 +1098,10 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 #### DOOM II ✅ (Split 9)
 
@@ -1156,8 +1175,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
+| 6 | The Wind Waker.yaml |
 
 #### Heretic ✅ (Split 5)
 
@@ -1166,10 +1184,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 #### Hylics 2 ✅ (Split 6)
 
@@ -1206,18 +1223,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Secret of Evermore.yaml |
 | 6 | TOEM original.yaml |
 | 7 | Wargroove.yaml |
-
-#### Kingdom Hearts 2 ✅ (Split 8)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Bumper Stickers.yaml |
-| 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
 
 #### Kirby's Dream Land 3 ✅ (Split 10)
 
@@ -1279,20 +1284,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
-
-#### Mario & Luigi Superstar Saga ✅ (Split 5)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Adventure.yaml |
-| 2 | Choo-Choo Charles.yaml |
-| 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 6 | The Wind Waker.yaml |
 
 #### MathProof2p2e4 ✅ (Split 6)
 
@@ -1324,11 +1316,10 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Meritous ✅ (Split 9)
 
@@ -1402,8 +1393,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
+| 6 | The Wind Waker.yaml |
 
 #### Paint ✅ (Split 5)
 
@@ -1412,10 +1402,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 #### Raft ✅ (Split 6)
 
@@ -1447,11 +1436,10 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Secret of Evermore ✅ (Split 9)
 
@@ -1516,18 +1504,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Messenger.yaml |
 | 8 | shapez.yaml |
 
-#### Subnautica ✅ (Split 4)
-
-| Player # | Template |
-|----------|----------|
-| 1 | APQuest.yaml |
-| 2 | ChocolateChipCookies.yaml |
-| 3 | Final Fantasy Mystic Quest.yaml |
-| 4 | Lufia II Ancient Cave.yaml |
-| 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
-
 #### Super Mario 64 ✅ (Split 5)
 
 | Player # | Template |
@@ -1535,10 +1511,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 #### Super Mario Land 2 ✅ (Split 6)
 
@@ -1570,11 +1545,10 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 #### TOEM original ✅ (Split 9)
 
@@ -1648,8 +1622,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Wind Waker.yaml |
+| 6 | The Wind Waker.yaml |
 
 #### The Witness ✅ (Split 5)
 
@@ -1658,10 +1631,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Witness.yaml |
+| 4 | Paint.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | The Witness.yaml |
 
 #### Timespinner ✅ (Split 6)
 
@@ -1693,11 +1665,10 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Saving Princess.yaml |
+| 5 | Super Metroid.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Wargroove ✅ (Split 9)
 
