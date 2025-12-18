@@ -52,11 +52,6 @@ class RuleWorldMixin(World):
     rule_caching_enabled: ClassVar[bool] = True
     """Enable or disable the rule result caching system"""
 
-    collect_all_items_for_rules: ClassVar[bool] = False
-    """When True, all items are collected into prog_items (not just progression items).
-    This allows Has() rules to check for useful/filler items.
-    Use this for games where items marked as 'useful' or 'filler' are used in access rules."""
-
     def __init__(self, multiworld: MultiWorld, player: int) -> None:
         super().__init__(multiworld, player)
         self.rules_by_hash = {}
@@ -386,13 +381,8 @@ class RuleWorldMixin(World):
     def collect_item(self, state: CollectionState, item: Item, remove: bool = False) -> str | None:
         """Collect an item name into state.
 
-        When collect_all_items_for_rules is True, all items are collected into prog_items
-        (not just progression items). This allows Has() rules to work with useful/filler items.
+        Only collects progression items (items with advancement=True) into state.
         """
-        if self.collect_all_items_for_rules:
-            # Collect all items regardless of classification
-            return item.name
-        # Default behavior: only collect progression items
         if item.advancement:
             return item.name
         return None
