@@ -2,7 +2,9 @@
 
 ## Executive Summary
 
-This document outlines a phased migration plan to standardize on Rule Builder format throughout the codebase, eventually deprecating the AST format. The goal is to complete the export standardization before documentation and public announcements.
+This document outlines a phased migration plan to standardize on Rule Builder format for the exported `rules.json` files. The AST analyzer will continue to be used to analyze Python lambda rules from original Archipelago worlds, but its output will be converted to Rule Builder format before being written to files.
+
+The goal is to complete the export standardization before documentation and public announcements.
 
 ## Current Status
 
@@ -18,6 +20,16 @@ The world generator already performs AST→Rule Builder format conversion. Curre
 | Cross-Validation | 39/61 | 22 | 64% |
 
 **Key insight**: Format conversion itself works for all 69 games. Failures occur in subsequent logic validation, indicating rule semantics issues rather than format issues.
+
+### Existing Infrastructure
+
+**Workflows**:
+- `.github/workflows/generate-presets.yml` - Regenerates all presets
+- `.github/workflows/test-all-sequential.yml` - Tests all presets
+- `.github/workflows/test-world-generator.yml` - Tests world generator round-trip
+
+**Configuration**:
+- Exporter uses settings in `host.yaml` (not command-line parameters)
 
 ### AST Format Types Inventory
 
@@ -93,40 +105,72 @@ The AST analyzer produces these rule types:
 
 ---
 
-### Phase 1: Update Exporter to Prefer Rule Builder Format
+### Phase 1: Rename "CC" to "AST" Throughout Codebase
 
-**Goal**: Make the exporter output Rule Builder format by default, falling back to AST format only when necessary.
+**Goal**: Replace all references to "CC format" with "AST format" for clarity.
+
+**Scope**:
+- Documentation files
+- Code comments
+- Function names (e.g., `parse_cc_rule` → `parse_ast_rule`)
+- Variable names (e.g., `cc_format` → `ast_format`)
+- File names (e.g., `cc_format.py` → `ast_format.py`)
+- Converter module names and functions
+
+**Files to Rename**:
+- `rule_builder/cc_format.py` → `rule_builder/ast_format.py`
+- `exporter/converter/cc_to_rule_builder.py` → `exporter/converter/ast_to_rule_builder.py`
+- `exporter/converter/rule_builder_to_cc.py` → `exporter/converter/rule_builder_to_ast.py`
+
+**Functions/Variables to Rename** (examples):
+- `parse_cc_rule()` → `parse_ast_rule()`
+- `convert_cc_to_rule_builder()` → `convert_ast_to_rule_builder()`
+- `CCToRuleBuilder` → `ASTToRuleBuilder`
+- `_converted_from_cc` → `_converted_from_ast`
+
+**Implementation Steps**:
+- [ ] Rename files
+- [ ] Update all imports
+- [ ] Rename functions, classes, and variables
+- [ ] Update documentation
+- [ ] Run tests to ensure nothing broke
+
+**Acceptance Criteria**:
+- No references to "CC format" remain in code or documentation
+- All tests pass
+
+---
+
+### Phase 2: Update Exporter to Output Rule Builder Format
+
+**Goal**: Make the exporter convert AST analyzer output to Rule Builder format before writing to `rules.json`.
+
+**Architecture**:
+```
+Lambda rules → AST Analyzer → AST format (internal) → Converter → Rule Builder format (output)
+```
+
+The AST analyzer remains unchanged—it still produces AST format internally. The conversion to Rule Builder format happens as a post-processing step before writing to disk.
 
 **Current State**:
 - Exporter checks for `.to_dict()` method (lines 1051-1062 in exporter.py)
 - Falls back to AST analysis if `.to_dict()` not available
-- Most games use lambda rules without `.to_dict()`
-
-**Required Changes**:
-
-1. **Option A: Convert AST output to Rule Builder on export**
-   - After AST analysis, run through `cc_to_rule_builder` converter
-   - Simpler, but adds conversion overhead
-
-2. **Option B: Integrate Rule Builder generation into AST analyzer**
-   - Generate Rule Builder format directly from AST
-   - More work, but cleaner output
-
-**Recommendation**: Option A (convert after analysis)
+- Most original Archipelago worlds use lambda rules without `.to_dict()`
 
 **Implementation Steps**:
-- [ ] Add `--output-format` flag to exporter (default: `rule_builder`)
-- [ ] After `analyze_rule()`, convert to Rule Builder format
-- [ ] Add `--preserve-ast-format` flag for debugging/comparison
+- [ ] Add setting in `host.yaml` for output format (default: `rule_builder`)
+- [ ] After `analyze_rule()`, convert result to Rule Builder format
+- [ ] Add `preserve_ast_format` setting for debugging/comparison
 - [ ] Update tests to verify Rule Builder output
 
 **Acceptance Criteria**:
 - All existing spoiler tests pass with Rule Builder format output
 - New exports produce Rule Builder format by default
+- AST format can be enabled via setting for debugging
 
 ---
 
-### Phase 2: Regenerate All Presets
+### Phase 3: Regenerate All Presets
 
 **Goal**: Convert all existing presets from AST format to Rule Builder format.
 
@@ -136,8 +180,9 @@ The AST analyzer produces these rule types:
 - ~20,500 helper rules, ~16,400 complex expressions in AST format
 
 **Implementation Steps**:
-- [ ] Create script to batch-regenerate all presets
-- [ ] Run `test-all-templates.py` with `--seed-range 1-3` for validation
+- [ ] Update exporter settings in `host.yaml` to output Rule Builder format
+- [ ] Run `.github/workflows/generate-presets.yml` to regenerate all presets
+- [ ] Run `.github/workflows/test-all-sequential.yml` to validate
 - [ ] Compare spoiler test results before/after conversion
 - [ ] Fix any regressions in format conversion
 
@@ -148,7 +193,7 @@ The AST analyzer produces these rule types:
 
 ---
 
-### Phase 3: Unify Frontend Evaluator
+### Phase 4: Unify Frontend Evaluator
 
 **Goal**: Make `evaluateRuleBuilderRule` self-contained, removing delegation to AST evaluator.
 
@@ -175,27 +220,29 @@ The Rule Builder evaluator delegates to AST evaluator for:
 
 ---
 
-### Phase 4: Deprecate AST Format Support
+### Phase 5: Remove AST Format from Output Path
 
-**Goal**: Remove AST format code from the codebase.
+**Goal**: Remove AST format evaluation from the frontend (keep AST analyzer for internal use).
 
-**Scope**:
-- `exporter/analyzer/` (~6,100 lines) - AST analysis
-- `rule_builder/cc_format.py` - AST format parsing
-- `exporter/converter/` - bidirectional conversion (keep for tooling?)
-- Frontend AST evaluation path
+**What Stays**:
+- `exporter/analyzer/` - Still needed to analyze lambda rules
+- `exporter/converter/ast_to_rule_builder.py` - Still needed to convert analyzer output
+
+**What Gets Removed**:
+- AST format evaluation in frontend `evaluateRule`
+- `rule_builder/ast_format.py` (parsing AST format from JSON) - replaced by Rule Builder parsing
+- Possibly `exporter/converter/rule_builder_to_ast.py` (reverse conversion) - unless needed for tooling
 
 **Implementation Steps**:
-- [ ] Remove AST analysis fallback from exporter
-- [ ] Remove AST evaluation from frontend `evaluateRule`
-- [ ] Archive or remove `exporter/analyzer/` package
-- [ ] Update documentation to reflect Rule Builder-only format
-- [ ] Remove CC-related naming throughout codebase
+- [ ] Remove AST format evaluation switch in frontend `evaluateRule`
+- [ ] Remove or archive `rule_builder/ast_format.py`
+- [ ] Update schema to describe Rule Builder format only
+- [ ] Update documentation
 
 **Acceptance Criteria**:
-- No AST format code remains in production paths
-- All functionality works with Rule Builder format only
-- Code size reduced by ~6,000+ lines
+- Frontend only evaluates Rule Builder format
+- All tests pass
+- Schema describes Rule Builder format
 
 ---
 
@@ -211,10 +258,11 @@ The Rule Builder evaluator delegates to AST evaluator for:
 ### Rollback Plan
 
 Each phase can be rolled back independently:
-- Phase 1: Revert exporter changes, regenerate with AST format
-- Phase 2: Restore presets from git history
-- Phase 3: Keep AST evaluator until Phase 4
-- Phase 4: Most risk; ensure all tests pass before removing code
+- Phase 1: Revert renames (git history)
+- Phase 2: Revert exporter changes, `host.yaml` settings
+- Phase 3: Restore presets from git history
+- Phase 4: Keep AST evaluator code until Phase 5
+- Phase 5: Most risk; ensure all tests pass before removing code
 
 ### Known Issues to Address
 
@@ -224,32 +272,26 @@ Games failing world generator tests (may need special handling):
 
 ---
 
-## Timeline Considerations
+## Priority Order
 
-**Priority Order**:
-1. Phase 0 (format decisions) - should be done first
-2. Phase 1 (exporter update) - enables Phase 2
-3. Phase 2 (regenerate presets) - main deliverable before announcements
-4. Phase 3 (frontend unification) - can be done incrementally
-5. Phase 4 (deprecation) - do when confident in coverage
-
-**Not Time-Boxed**: Per user preference, no specific timeline estimates are provided. Each phase should be completed when ready, with Phase 2 ideally done before documentation/announcements.
+1. **Phase 0** (format decisions) - Should be done first to inform other phases
+2. **Phase 1** (CC→AST renaming) - Improves clarity, low risk
+3. **Phase 2** (exporter update) - Enables Phase 3
+4. **Phase 3** (regenerate presets) - Main deliverable before announcements
+5. **Phase 4** (frontend unification) - Can be done incrementally after announcements
+6. **Phase 5** (remove AST output) - Do when confident in coverage
 
 ---
 
-## Open Questions
+## Decisions Made
 
-1. **Should the converter be kept for tooling purposes?**
-   - Useful for migrating external rules.json files
-   - Could be a standalone CLI tool
+Based on user input:
 
-2. **What naming should replace "CC format" throughout?**
-   - "AST format" in documentation
-   - Variable/function names in code?
-
-3. **Should the schema file be updated?**
-   - `frontend/schema/rules.schema.json` currently describes AST format
-   - Should it describe Rule Builder format, or both?
+1. **AST analyzer will be kept** - Original Archipelago worlds use lambda rules that require AST analysis
+2. **Exporter uses `host.yaml`** - Not command-line parameters
+3. **"CC format" → "AST format"** - Rename everywhere including code
+4. **Schema updates later** - After format is finalized
+5. **Existing workflows** - Use `generate-presets.yml` and `test-all-sequential.yml`
 
 ---
 
@@ -257,18 +299,21 @@ Games failing world generator tests (may need special handling):
 
 ### Exporter
 - `exporter/exporter.py` - Main export logic
-- `exporter/analyzer/` - AST analysis package
+- `exporter/analyzer/` - AST analysis package (stays)
 - `exporter/converter/` - Format conversion
 
 ### Rule Builder
 - `rule_builder/rules.py` - Rule classes
-- `rule_builder/cc_format.py` - AST format parsing
+- `rule_builder/cc_format.py` → `ast_format.py` - AST format parsing
 
 ### Frontend
 - `frontend/modules/shared/ruleEngine.js` - Rule evaluation
-- `frontend/schema/rules.schema.json` - Format schema
+- `frontend/schema/rules.schema.json` - Format schema (update later)
 
-### Testing
-- `scripts/test/test-world-generator.py` - World generator tests
-- `.github/workflows/test-world-generator.yml` - CI workflow
-- `docs/json/developer/test-results/test-results-world-generator.md` - Results
+### Workflows
+- `.github/workflows/generate-presets.yml` - Regenerate presets
+- `.github/workflows/test-all-sequential.yml` - Test presets
+- `.github/workflows/test-world-generator.yml` - World generator tests
+
+### Test Results
+- `docs/json/developer/test-results/test-results-world-generator.md` - World generator results
