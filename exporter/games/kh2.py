@@ -369,23 +369,24 @@ class KH2GameExportHandler(BaseGameExportHandler):
             }
 
             # Build the full conditional based on FinalFormLogic setting
-            # FinalFormLogic options: 0=no_light_and_darkness, 1=light_and_darkness, 2=just_a_form
+            # FinalFormLogic options: 'no_light_and_darkness', 'light_and_darkness', 'just_a_form'
+            # Note: Settings are exported as string keys (e.g., "light_and_darkness"), not integer values
             return {
                 'type': 'conditional',
                 'test': {
                     'type': 'comparison',
                     'op': '!=',  # ruleEngine uses 'op' not 'operator'
                     'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
-                    'right': {'type': 'constant', 'value': 0}  # no_light_and_darkness
+                    'right': {'type': 'constant', 'value': 'no_light_and_darkness'}
                 },
                 'if_true': {
-                    # FinalFormLogic is either light_and_darkness (1) or just_a_form (2)
+                    # FinalFormLogic is either 'light_and_darkness' or 'just_a_form'
                     'type': 'conditional',
                     'test': {
                         'type': 'comparison',
                         'op': '==',  # ruleEngine uses 'op' not 'operator'
                         'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
-                        'right': {'type': 'constant', 'value': 1}  # light_and_darkness
+                        'right': {'type': 'constant', 'value': 'light_and_darkness'}
                     },
                     'if_true': ld_check,
                     'if_false': just_form_check
