@@ -16,12 +16,10 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
-class Hatitems(Range):
+class Hatitems(Toggle):
     """Option for Hatitems."""
     display_name = "Hatitems"
-    range_start = 0
-    range_end = 100
-    default = 0
+    default = False
 
 class Logicdifficulty(Range):
     """Option for Logicdifficulty."""
@@ -30,26 +28,20 @@ class Logicdifficulty(Range):
     range_end = 100
     default = -1
 
-class Nopaintingskips(Range):
+class Nopaintingskips(Toggle):
     """Option for Nopaintingskips."""
     display_name = "Nopaintingskips"
-    range_start = 0
-    range_end = 100
-    default = 0
+    default = False
 
-class Shufflesubconpaintings(Range):
+class Shufflesubconpaintings(Toggle):
     """Option for Shufflesubconpaintings."""
     display_name = "Shufflesubconpaintings"
-    range_start = 0
-    range_end = 100
-    default = 0
+    default = False
 
-class Umbrellalogic(Range):
+class Umbrellalogic(Toggle):
     """Option for Umbrellalogic."""
     display_name = "Umbrellalogic"
-    range_start = 0
-    range_end = 100
-    default = 0
+    default = False
 
 
 @dataclass

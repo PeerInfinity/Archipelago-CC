@@ -220,9 +220,18 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     # IMPORTANT: Start with game_options, then merge top-level settings to let them take precedence.
     # This is necessary because:
     # - game_options may have string keys for Choice options (e.g., "100" instead of 100)
+    # - game_options may have string booleans ('true'/'false') that need conversion
     # - Top-level settings from game-specific handlers have the correct types
     # - By applying top-level settings last, we ensure correct types win
-    resolved_settings = dict(game_options)
+    resolved_settings = {}
+    for k, v in game_options.items():
+        # Convert string booleans to actual booleans
+        if v == 'true':
+            resolved_settings[k] = True
+        elif v == 'false':
+            resolved_settings[k] = False
+        else:
+            resolved_settings[k] = v
     for k, v in settings.items():
         if k not in INTERNAL_SETTINGS:
             resolved_settings[k] = v
