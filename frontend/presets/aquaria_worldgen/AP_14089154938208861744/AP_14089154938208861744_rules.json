@@ -276,12 +276,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -417,12 +418,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -624,12 +626,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -1054,12 +1057,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -1116,12 +1120,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -1164,12 +1169,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -1287,12 +1293,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -1497,37 +1504,42 @@
                       ]
                     ],
                     "body_data": {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Baby Blaster"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Baby Nautilus"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Baby Piranha"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Beast Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Energy Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Nature Form"
-                        }
-                      ]
+                      "params": [
+                        "damaging_items"
+                      ],
+                      "body": {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Baby Blaster"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Baby Nautilus"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Baby Piranha"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Beast Form"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Energy Form"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Li and Li Song"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Nature Form"
+                          }
+                        ]
+                      }
                     }
                   }
                 }
@@ -2304,12 +2316,13 @@
                               "type": "and",
                               "conditions": [
                                 {
-                                  "type": "item_check",
-                                  "item": "Dual Form"
+                                  "type": "helper",
+                                  "name": "_has_li",
+                                  "args": []
                                 },
                                 {
                                   "type": "item_check",
-                                  "item": "Li and Li Song"
+                                  "item": "Dual Form"
                                 }
                               ]
                             },
@@ -2690,37 +2703,42 @@
                 "helper_name": "_has_damaging_item",
                 "args": [],
                 "body_data": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Baby Blaster"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Nautilus"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Piranha"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Beast Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Li and Li Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Nature Form"
-                    }
-                  ]
+                  "params": [
+                    "damaging_items"
+                  ],
+                  "body": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Baby Blaster"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Nautilus"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Piranha"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Beast Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Energy Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Li and Li Song"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Nature Form"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -2959,12 +2977,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -3063,37 +3082,42 @@
                 "helper_name": "_has_damaging_item",
                 "args": [],
                 "body_data": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Baby Blaster"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Nautilus"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Piranha"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Beast Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Li and Li Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Nature Form"
-                    }
-                  ]
+                  "params": [
+                    "damaging_items"
+                  ],
+                  "body": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Baby Blaster"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Nautilus"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Piranha"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Beast Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Energy Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Li and Li Song"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Nature Form"
+                      }
+                    ]
+                  }
                 }
               }
             },
@@ -3153,37 +3177,42 @@
                 "helper_name": "_has_damaging_item",
                 "args": [],
                 "body_data": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Baby Blaster"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Nautilus"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Piranha"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Beast Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Li and Li Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Nature Form"
-                    }
-                  ]
+                  "params": [
+                    "damaging_items"
+                  ],
+                  "body": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Baby Blaster"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Nautilus"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Piranha"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Beast Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Energy Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Li and Li Song"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Nature Form"
+                      }
+                    ]
+                  }
                 }
               }
             },
@@ -3218,37 +3247,42 @@
                 "helper_name": "_has_damaging_item",
                 "args": [],
                 "body_data": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Baby Blaster"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Nautilus"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Piranha"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Beast Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Li and Li Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Nature Form"
-                    }
-                  ]
+                  "params": [
+                    "damaging_items"
+                  ],
+                  "body": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Baby Blaster"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Nautilus"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Piranha"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Beast Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Energy Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Li and Li Song"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Nature Form"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -3487,37 +3521,42 @@
                 "helper_name": "_has_damaging_item",
                 "args": [],
                 "body_data": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Baby Blaster"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Nautilus"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Baby Piranha"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Beast Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Li and Li Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Nature Form"
-                    }
-                  ]
+                  "params": [
+                    "damaging_items"
+                  ],
+                  "body": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Baby Blaster"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Nautilus"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Baby Piranha"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Beast Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Energy Form"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Li and Li Song"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Nature Form"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -3538,12 +3577,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -3773,12 +3813,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -3807,12 +3848,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -3904,37 +3946,42 @@
                     "helper_name": "_has_damaging_item",
                     "args": [],
                     "body_data": {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Baby Blaster"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Baby Nautilus"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Baby Piranha"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Beast Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Energy Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Nature Form"
-                        }
-                      ]
+                      "params": [
+                        "damaging_items"
+                      ],
+                      "body": {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Baby Blaster"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Baby Nautilus"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Baby Piranha"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Beast Form"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Energy Form"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Li and Li Song"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Nature Form"
+                          }
+                        ]
+                      }
                     }
                   }
                 }
@@ -4155,12 +4202,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -4221,12 +4269,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -4645,12 +4694,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -5036,12 +5086,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -5215,12 +5266,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -5289,12 +5341,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -5888,12 +5941,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -6835,12 +6889,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -7032,12 +7087,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -7423,12 +7479,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -8118,12 +8175,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -8180,12 +8238,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -8258,12 +8317,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -8326,12 +8386,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -9226,12 +9287,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -9328,12 +9390,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -9406,12 +9469,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -9456,12 +9520,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -9677,12 +9742,13 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Dual Form"
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
                     },
@@ -9735,12 +9801,13 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "item_check",
-                              "item": "Dual Form"
+                              "type": "helper",
+                              "name": "_has_li",
+                              "args": []
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
                         },
@@ -12142,7 +12209,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -12150,7 +12217,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
