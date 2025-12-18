@@ -3,9 +3,9 @@
   "assume_bidirectional_exits": false,
   "use_resolved_items": false,
   "options": {
-    "accessibility": 0,
-    "canvas_size_increment": 100,
-    "death_link": 0,
+    "accessibility": "full",
+    "canvas_size_increment": "100",
+    "death_link": "false",
     "exclude_locations": [],
     "goal_image": 1,
     "goal_percent": 80,
@@ -22,7 +22,7 @@
     "start_inventory": {},
     "start_inventory_from_pool": {},
     "start_location_hints": [],
-    "starting_tool": 0,
+    "starting_tool": "brush",
     "trap_count": 0
   },
   "canvas_size_increment": 100,
