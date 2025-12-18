@@ -1,19 +1,19 @@
-# Rule Format Migration Analysis: CC Format to Rule Builder Format
+# Rule Format Migration Analysis: AST Format to Rule Builder Format
 
 ## Overview
 
-This document analyzes the feasibility and implications of migrating from the original CC (Archipelago-CC) JSON rule format to the Rule Builder format throughout the codebase.
+This document analyzes the feasibility and implications of migrating from the original AST-based JSON rule format to the Rule Builder format throughout the codebase.
 
 ## Background
 
-When this project was first developed, the exporter wrote rule data to `rules.json` files in what is now called the **CC format**. This format wasn't designed ahead of time—it mirrors the structure of Python AST nodes from which rules were extracted.
+When this project was first developed, the exporter wrote rule data to `rules.json` files in what is now called the **AST format**. This format wasn't designed ahead of time—it mirrors the structure of Python AST nodes from which rules were extracted.
 
 Later, the **Rule Builder format** was discovered (from Archipelago PR #5048), which uses a more declarative, class-based approach. When the world generator was created to convert `rules.json` data into Python apworld directories, it was decided to:
 
-1. Convert CC format to Rule Builder format first
+1. Convert AST format to Rule Builder format first
 2. Use Rule Builder classes to generate Python code
 
-The Rule Builder format was also extended to support more CC format features. Now both the exporter and frontend support Rule Builder format in addition to CC format.
+The Rule Builder format was also extended to support more AST format features. Now both the exporter and frontend support Rule Builder format in addition to AST format.
 
 ## Current State
 
@@ -21,20 +21,20 @@ The Rule Builder format was also extended to support more CC format features. No
 
 | Format | Identifier | Origin | Example |
 |--------|------------|--------|---------|
-| **CC Format** | `type` field | AST analysis | `{"type": "item_check", "item": "Sword", "count": 2}` |
+| **AST Format** | `type` field | AST analysis | `{"type": "item_check", "item": "Sword", "count": 2}` |
 | **Rule Builder** | `rule` field | PR #5048 | `{"rule": "Has", "args": {"item_name": "Sword", "count": 2}}` |
 
 ### Code Size Comparison
 
 | Component | Lines of Code | Purpose |
 |-----------|---------------|---------|
-| `exporter/analyzer/` | ~6,100 | AST analysis → CC format |
-| `rule_builder/` | ~4,200 | Rule Builder classes & CC parsing |
+| `exporter/analyzer/` | ~6,100 | AST analysis → AST format |
+| `rule_builder/` | ~4,200 | Rule Builder classes & AST parsing |
 | `exporter/converter/` | ~2,800 | Bidirectional format conversion |
 
 ### Current Usage by Component
 
-| Component | CC Format | Rule Builder Format |
+| Component | AST Format | Rule Builder Format |
 |-----------|-----------|---------------------|
 | **Exporter** (AST path) | Produces | - |
 | **Exporter** (`.to_dict()` path) | - | Produces |
@@ -71,7 +71,7 @@ if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
 
 ## Format Comparison
 
-### CC Format Structure
+### AST Format Structure
 
 ```json
 {
@@ -101,12 +101,12 @@ Common rules: `True_`, `False_`, `Has`, `HasAll`, `HasAny`, `HasAllCounts`, `Has
 
 | Direction | Coverage | Notes |
 |-----------|----------|-------|
-| Rule Builder → CC | 85-95% | High fidelity, most rules convert cleanly |
-| CC → Rule Builder | 60-70% | Core rules convert; complex patterns preserved as custom rules |
+| Rule Builder → AST | 85-95% | High fidelity, most rules convert cleanly |
+| AST → Rule Builder | 60-70% | Core rules convert; complex patterns preserved as custom rules |
 
 ### Fully Bidirectional Mappings
 
-| CC Format | Rule Builder | Lossless |
+| AST Format | Rule Builder | Lossless |
 |-----------|--------------|----------|
 | `constant` (true/false) | `True_`/`False_` | Yes |
 | `item_check` | `Has` | Yes |
@@ -119,9 +119,9 @@ Common rules: `True_`, `False_`, `Has`, `HasAll`, `HasAny`, `HasAllCounts`, `Has
 | `state_method` (has_all) | `HasAll` | Yes |
 | `state_method` (has_any) | `HasAny` | Yes |
 
-### Partial/Preserved Conversions (CC → RB)
+### Partial/Preserved Conversions (AST → RB)
 
-| CC Type | Conversion Notes |
+| AST Type | Conversion Notes |
 |---------|------------------|
 | `not` | Becomes `Not` custom rule (extended RB) |
 | `helper` | Becomes `HelperCall` with body data |
@@ -133,7 +133,7 @@ Common rules: `True_`, `False_`, `Has`, `HasAll`, `HasAny`, `HasAllCounts`, `Has
 
 ### Non-Convertible Types
 
-These CC types have no clean Rule Builder equivalent:
+These AST types have no clean Rule Builder equivalent:
 - `all_of` / `any_of` (generator expressions)
 - `f_string` (string formatting)
 - Game-specific types (`capability`, `coins`, etc.)
@@ -148,12 +148,12 @@ These CC types have no clean Rule Builder equivalent:
 |----------|-------------|--------|
 | New exports prefer RB format | ✅ Already implemented | Done |
 | Convert existing presets to RB | ⚠️ 60-70% clean conversion | Medium |
-| Remove CC evaluation from frontend | ❌ RB evaluator delegates to CC | High |
+| Remove AST evaluation from frontend | ❌ RB evaluator delegates to AST | High |
 | Remove AST analyzer entirely | ❌ Still needed for lambda rules | High |
 
 ### Key Blockers for Complete Migration
 
-1. **Frontend RB evaluator delegates to CC**: The `evaluateRuleBuilderRule` function calls `evaluateRule` (CC evaluator) for several rule types (Has, CanReach, helpers, etc.)
+1. **Frontend RB evaluator delegates to AST**: The `evaluateRuleBuilderRule` function calls `evaluateRule` (AST evaluator) for several rule types (Has, CanReach, helpers, etc.)
 
 2. **Games without Rule Builder support**: Many games use lambda rules that require AST analysis to extract
 
@@ -172,7 +172,7 @@ These CC types have no clean Rule Builder equivalent:
 1. **Edge cases**: Some complex rules may not convert correctly
 2. **Testing burden**: Need to verify all presets work identically
 3. **Frontend refactoring**: RB evaluator needs to be self-contained
-4. **No rollback**: Once CC support removed, can't easily restore
+4. **No rollback**: Once AST support removed, can't easily restore
 
 ## Recommendations
 
@@ -180,32 +180,32 @@ These CC types have no clean Rule Builder equivalent:
 
 **Phase 1: Export Preference** (Low effort, already partial)
 - Ensure exporter prefers RB format when `.to_dict()` available
-- Fall back to CC format only for unsupported patterns
+- Fall back to AST format only for unsupported patterns
 - Status: Partially implemented
 
 **Phase 2: Extend Rule Builder** (Medium effort)
 - Add any missing RB rule types (e.g., proper `Not` support)
-- Ensure all CC patterns have RB equivalents or graceful fallbacks
+- Ensure all AST patterns have RB equivalents or graceful fallbacks
 - Update converter to handle edge cases
 
 **Phase 3: Convert Existing Presets** (Medium effort)
 - Use converter to migrate all presets to RB format
-- Preserve unconverted rules with `_converted_from_cc` metadata
+- Preserve unconverted rules with `_converted_from_ast` metadata
 - Verify spoiler tests pass for all converted presets
 
 **Phase 4: Unify Frontend Evaluator** (Higher effort)
 - Refactor `evaluateRuleBuilderRule` to be self-contained
-- Remove delegation to CC evaluator
+- Remove delegation to AST evaluator
 - Comprehensive frontend testing
 
-**Phase 5: Deprecate CC Format** (Future)
+**Phase 5: Deprecate AST Format** (Future)
 - Remove AST analyzer (~6,100 lines)
-- Remove CC evaluation path from frontend
+- Remove AST evaluation path from frontend
 - Update documentation
 
 ### Not Recommended: Big Bang Migration
 
-Attempting to remove CC support all at once would be risky because:
+Attempting to remove AST support all at once would be risky because:
 - Many edge cases may not be discovered until runtime
 - No easy rollback path
 - Large testing burden concentrated in one change
@@ -216,7 +216,7 @@ Attempting to remove CC support all at once would be risky because:
 
 1. Standardize new development on Rule Builder format
 2. Gradually convert existing presets
-3. Keep CC support as fallback until all edge cases are handled
-4. Remove CC support only when confident in full coverage
+3. Keep AST support as fallback until all edge cases are handled
+4. Remove AST support only when confident in full coverage
 
 The end state would eliminate ~6,100 lines of analyzer code, simplify the frontend evaluator, and provide a cleaner, more maintainable rule format throughout the system.
