@@ -1650,6 +1650,8 @@ class HelperCodeGenerator:
             'max': self._expr_max,
             'block': self._expr_block,
             'placement_lookup': self._expr_placement_lookup,
+            'f_string': self._expr_f_string,
+            'formatted_value': self._expr_formatted_value,
         }
 
         handler = handlers.get(expr_type)
@@ -2009,15 +2011,28 @@ class HelperCodeGenerator:
 
         elif method == 'can_reach':
             if len(args) >= 1:
-                target = self._extract_constant(args[0], '')
+                # First try to get a constant value
+                target = self._extract_constant(args[0], None)
+                if target is not None:
+                    # It's a constant, use repr
+                    target_expr = repr(target)
+                else:
+                    # It's a dynamic expression (like entrance.connected_region)
+                    target_expr = self._generate_expression(args[0])
                 # Second arg specifies reach type: "Region" or "Location"
                 reach_type = self._extract_constant(args[1], 'Region') if len(args) > 1 else 'Region'
-                return f'state.can_reach({repr(target)}, {repr(reach_type)}, player)'
+                return f'state.can_reach({target_expr}, {repr(reach_type)}, player)'
 
         elif method == 'can_reach_location':
             if len(args) >= 1:
-                location = self._extract_constant(args[0], '')
-                return f'state.can_reach_location({repr(location)}, player)'
+                # First try to get a constant value
+                location = self._extract_constant(args[0], None)
+                if location is not None:
+                    location_expr = repr(location)
+                else:
+                    # It's a dynamic expression
+                    location_expr = self._generate_expression(args[0])
+                return f'state.can_reach_location({location_expr}, player)'
 
         # Generic fallback
         arg_exprs = [self._generate_expression(a) for a in args]
@@ -2271,3 +2286,47 @@ class HelperCodeGenerator:
 
             return default
         return value if value is not None else default
+
+    def _expr_f_string(self, expr: Dict[str, Any]) -> str:
+        """Generate Python f-string expression.
+
+        Handles f-string expressions like f"Act Completion ({entrance.connected_region.name})"
+        """
+        parts = expr.get('parts', [])
+        if not parts:
+            return "''"
+
+        # Build the f-string content
+        f_string_parts = []
+        for part in parts:
+            if isinstance(part, dict):
+                part_type = part.get('type', '')
+                if part_type == 'constant':
+                    # Literal string part
+                    value = part.get('value', '')
+                    # Escape any braces in the literal part
+                    value = str(value).replace('{', '{{').replace('}', '}}')
+                    f_string_parts.append(value)
+                elif part_type == 'formatted_value':
+                    # Expression to be interpolated
+                    inner_value = part.get('value', {})
+                    inner_expr = self._generate_expression(inner_value)
+                    f_string_parts.append('{' + inner_expr + '}')
+                else:
+                    # Fallback - treat as expression
+                    inner_expr = self._generate_expression(part)
+                    f_string_parts.append('{' + inner_expr + '}')
+            else:
+                # Simple string part
+                str_part = str(part).replace('{', '{{').replace('}', '}}')
+                f_string_parts.append(str_part)
+
+        return 'f"' + ''.join(f_string_parts) + '"'
+
+    def _expr_formatted_value(self, expr: Dict[str, Any]) -> str:
+        """Generate expression for a formatted value in an f-string.
+
+        This is used when a formatted_value appears standalone (rare).
+        """
+        value = expr.get('value', {})
+        return self._generate_expression(value)

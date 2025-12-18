@@ -220,7 +220,17 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     # Also include game_options since many setting_value nodes reference world.options.X.value
     resolved_settings = {k: v for k, v in settings.items() if k not in INTERNAL_SETTINGS}
     # Merge in game options for settings like goal, castle_skip, etc.
-    resolved_settings.update(game_options)
+    # Only merge options that aren't already in resolved_settings (top-level takes precedence)
+    # Also convert string booleans to actual booleans
+    for key, value in game_options.items():
+        if key not in resolved_settings:
+            # Convert string booleans to actual booleans
+            if value == 'true':
+                resolved_settings[key] = True
+            elif value == 'false':
+                resolved_settings[key] = False
+            else:
+                resolved_settings[key] = value
 
     return GameMetadata(
         game_name=game_name,
