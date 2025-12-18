@@ -613,17 +613,30 @@ Supported operators: `+`, `-`, `*`, `/`, `//`, `%`
 #### Helpers
 
 **`HelperCall`** - Call a helper function
+
+**Current format (with inlined body):**
 ```json
 {
   "rule": "HelperCall",
   "options": [],
   "args": {
-    "name": "can_lift_rocks",
+    "helper_name": "can_lift_rocks",
     "args": [],
-    "body_data": {
-      "params": [],
-      "body": {"type": "item_check", "item": "Gloves"}
-    }
+    "body_data": {"type": "item_check", "item": "Gloves"}
+  }
+}
+```
+
+⚠️ **Known Issue**: The current implementation inlines `body_data` at every call site, defeating the purpose of helpers. The same body is duplicated many times throughout the file.
+
+**Proposed format (reference only):**
+```json
+{
+  "rule": "HelperCall",
+  "options": [],
+  "args": {
+    "helper_name": "can_lift_rocks",
+    "args": []
   }
 }
 ```
@@ -634,18 +647,15 @@ With arguments:
   "rule": "HelperCall",
   "options": [],
   "args": {
-    "name": "has_medallion",
-    "args": ["Bombos"],
-    "body_data": {
-      "params": ["medallion_name"],
-      "defaults": {},
-      "body": {"type": "item_check", "item": {"type": "name", "name": "medallion_name"}}
-    }
+    "helper_name": "has_medallion",
+    "args": ["Bombos"]
   }
 }
 ```
 
-**Status**: Extension - not in original Rule Builder
+Helper bodies would be looked up from the top-level `helpers` section (which already exists in the file format). This matches how the AST format handles helpers.
+
+**Status**: Extension - not in original Rule Builder. Needs refactoring to use reference-based lookup.
 
 #### Legacy Support
 
@@ -864,6 +874,12 @@ For each extension, decide: **Official** (keep as standard) or **Deprecated** (r
 | `SettingValue` | Access game options | `world.options.x` / `setting_value` | [ ] Add |
 | `Subscript` | Array/dict indexing | `x[y]` / `subscript` | [ ] Add |
 | `Contains` | Check value in list | `x in [...]` comparisons | [ ] Add |
+
+### Structural Changes
+
+| Change | Issue | Impact | Decision |
+|--------|-------|--------|----------|
+| `HelperCall` reference-based lookup | Currently inlines `body_data` at every call site, duplicating helper bodies many times | Reduces file size, matches AST format design | [ ] Refactor |
 
 ---
 
