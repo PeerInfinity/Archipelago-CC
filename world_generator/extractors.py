@@ -46,7 +46,6 @@ class GameMetadata:
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
-    collect_all_items_for_rules: bool = False  # When True, Has() rules check all items, not just progression
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
 
 
@@ -235,7 +234,6 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         slot_data_fields=slot_data_fields,
         game_options=game_options,
         resolved_settings=resolved_settings,
-        collect_all_items_for_rules=settings.get('collect_all_items_for_rules', False),
         use_auto_indirect_conditions=settings.get('use_auto_indirect_conditions', False),
     )
 
