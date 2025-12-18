@@ -193,12 +193,13 @@ The AST analyzer remains unchanged—it still produces AST format internally. Th
 
 ---
 
-### Phase 4: Unify Frontend Evaluator
+### Phase 4: Unify Frontend Evaluator and UI Display
 
-**Goal**: Make `evaluateRuleBuilderRule` self-contained, removing delegation to AST evaluator.
+**Goal**: Make `evaluateRuleBuilderRule` self-contained and update UI to display Rule Builder rules.
 
 **Current State**:
-The Rule Builder evaluator delegates to AST evaluator for:
+
+*Evaluation*: The Rule Builder evaluator delegates to AST evaluator for:
 - `Has` → `item_check`
 - `HasAll`, `HasAny`, etc. → multiple `item_check` calls
 - `HasGroup` → `group_check`
@@ -206,15 +207,33 @@ The Rule Builder evaluator delegates to AST evaluator for:
 - `CanReachLocation` → `location_check`
 - `CanReachEntrance` → `can_reach_entrance`
 
+*UI Display*: The logic tree display code (`commonUI.js`) only handles AST format types:
+- Handles: `constant`, `item_check`, `count_check`, `group_check`, `helper`, `attribute`, `subscript`, `function_call`, `name`, `and`, `or`, `state_method`, `comparison`, `compare`, `conditional`, `binary_op`
+- Does NOT handle Rule Builder types (`Has`, `And`, `Or`, `CanReachRegion`, etc.)
+- Currently shows "Type: undefined [unhandled rule type]" for Rule Builder rules
+
 **Implementation Steps**:
+
+*Evaluation*:
 - [ ] Implement item checking directly in `evaluateRuleBuilderRule`
 - [ ] Implement group checking directly
 - [ ] Implement reachability checking directly
 - [ ] Add comprehensive tests for Rule Builder evaluation
 - [ ] Remove delegation to `evaluateRule` for AST format
 
+*UI Display* (`frontend/modules/commonUI/commonUI.js`):
+- [ ] Add cases for Rule Builder types in `createLogicTree` function
+- [ ] Handle: `True_`, `False_`, `Has`, `HasAll`, `HasAny`, `HasAllCounts`, `HasAnyCount`
+- [ ] Handle: `HasFromList`, `HasFromListUnique`, `HasGroup`, `HasGroupUnique`
+- [ ] Handle: `And`, `Or`, `Not`
+- [ ] Handle: `CanReachRegion`, `CanReachLocation`, `CanReachEntrance`
+- [ ] Handle: `Compare`, `Arithmetic`, `CountItem`, `Conditional`
+- [ ] Handle: `HelperCall`, `Filtered`
+- [ ] Consider: Detect format by `rule` vs `type` field and route accordingly
+
 **Acceptance Criteria**:
 - All Rule Builder rules evaluate without calling AST evaluator
+- All Rule Builder rules display correctly in the UI logic tree
 - All spoiler tests pass
 - Performance is same or better
 
