@@ -10,6 +10,26 @@ logger = logging.getLogger(__name__)
 class SubnauticaGameExportHandler(GenericGameExportHandler):
     # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Get settings data with swim_rule exported as integer.
+
+        The SwimRule option class has computed properties that use the integer value:
+        - base_depth: returns [200, 400, 600][value % 3]
+        - consider_items: returns value > 2
+
+        The base exporter exports Choice options as string keys, but our helper
+        expansion relies on swim_rule being an integer for arithmetic operations.
+        We override the options export to use the integer value for swim_rule.
+        """
+        settings_data = super().get_settings_data(world, multiworld, player)
+
+        # Ensure swim_rule is exported as integer value, not string key
+        if 'options' in settings_data and 'swim_rule' in settings_data['options']:
+            if hasattr(world, 'options') and hasattr(world.options, 'swim_rule'):
+                settings_data['options']['swim_rule'] = world.options.swim_rule.value
+
+        return settings_data
+
     def expand_helper(self, helper_def: dict, helper_name: str) -> dict:
         """Expand SwimRule property accesses in helper definitions.
 
