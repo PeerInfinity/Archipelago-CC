@@ -4,7 +4,9 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-18 05:19:40
+[View Original Template Results](./test-results-multiworld.md)
+
+**Generated:** 2025-12-18 05:49:02
 
 ## Summary
 
