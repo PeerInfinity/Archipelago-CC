@@ -126,6 +126,27 @@ class ExpressionResolver:
                     try:
                         # Try to get the attribute
                         resolved = getattr(obj_value, attr_name)
+
+                        # Special handling for Option class attributes like Goal.option_vanilla
+                        # These should return the string option name (e.g., "vanilla") instead of the
+                        # numeric value (e.g., 0) because settings in the exported JSON use string names.
+                        # This ensures comparisons like `goal == Goal.option_vanilla` work correctly
+                        # when goal is passed as "vanilla" from settings.
+                        if attr_name.startswith('option_') and isinstance(resolved, int):
+                            # Check if the parent is an Option class (has option_* class attributes)
+                            if hasattr(obj_value, '__mro__'):
+                                from Options import Choice, Toggle
+                                # Check if it's a subclass of Choice or Toggle (Option types)
+                                try:
+                                    if issubclass(obj_value, (Choice, Toggle)):
+                                        # Return the option name without the 'option_' prefix
+                                        option_name = attr_name[7:]  # Remove 'option_' prefix
+                                        logging.debug(f"Resolved Option attribute {attr_name} to string name: {option_name}")
+                                        return option_name
+                                except TypeError:
+                                    # obj_value is not a class, ignore
+                                    pass
+
                         logging.debug(f"Resolved attribute {attr_name} to value: {resolved}")
                         return resolved
                     except AttributeError as e:
