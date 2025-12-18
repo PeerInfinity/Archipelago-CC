@@ -445,6 +445,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return rule; // Return the primitive value itself
   }
 
+  // Handle arrays directly - they're literal values, not rules
+  // This happens when Compare rules have raw arrays for placement lookups like ["Item", 1]
+  if (Array.isArray(rule)) {
+    return rule;
+  }
+
   // Check if context is provided and is a valid snapshot interface
   const isValidContext = context && context._isSnapshotInterface === true;
   if (!isValidContext) {
@@ -2743,9 +2749,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'binary_op': {
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3673,8 +3687,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'compare': {
         // Handle comparison operations: ==, !=, <, <=, >, >=
         // Note: 'compare' is the type from Python analyzer, 'comparison' is the canonical name
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3699,8 +3721,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'binary_op': {
         // Handle binary arithmetic operations: +, -, *, /, //, %
         // Note: 'binary_op' is the type from Python analyzer, 'binop' is the canonical name
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3881,10 +3911,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        // Create a new scope for this block (inheriting from parent scope)
-        // Track if this is a top-level block (localScope was null)
+        // Use parent scope directly for Python-like scoping semantics
+        // In Python, blocks don't create a new scope - variables assigned
+        // in a block are visible in the enclosing function scope.
+        // This is needed for worldgen rules where blocks assign variables
+        // that are referenced later in the same function.
         const isTopLevelBlock = localScope === null;
-        const blockScope = isTopLevelBlock ? {} : { ...localScope };
+        const blockScope = isTopLevelBlock ? {} : localScope;
 
         for (let i = 0; i < rule.statements.length; i++) {
           const stmt = rule.statements[i];
@@ -3923,7 +3956,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        const value = evaluateRule(rule.value, context, depth + 1, localScope);
+        let value = evaluateRule(rule.value, context, depth + 1, localScope);
+
+        // Unwrap return marker if block was used as expression
+        if (value && typeof value === 'object' && value.__isReturn) {
+          value = value.value;
+        }
 
         if (rule.op && rule.op !== '=') {
           // Compound assignment
@@ -4198,7 +4236,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'if_statement': {
         // Execute body or orelse statements based on test condition
-        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+        let testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+
+        // Unwrap return marker if block was used as test expression
+        if (testResult && typeof testResult === 'object' && testResult.__isReturn) {
+          testResult = testResult.value;
+        }
 
         if (testResult === undefined) {
           result = undefined;
@@ -4649,19 +4692,31 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         if (bodyData.params && bodyData.body) {
           const params = bodyData.params;
           const helperArgs = args.args || [];
+          const defaults = bodyData.defaults || {};
           let helperLocalScope = localScope ? { ...localScope } : {};
 
-          // Bind arguments to parameter names
-          for (let i = 0; i < helperArgs.length; i++) {
-            let argValue = helperArgs[i];
-            // Only evaluate as a rule if it's an object with 'type' or 'rule' key
-            // Plain values (primitives, arrays, plain objects) should be used directly
-            if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
-              argValue = evaluateRule(argValue, context, depth + 1, localScope);
+          // Bind arguments to parameter names, using defaults for missing params
+          for (let i = 0; i < params.length; i++) {
+            const paramName = params[i];
+            let argValue;
+
+            if (i < helperArgs.length) {
+              argValue = helperArgs[i];
+              // Only evaluate as a rule if it's an object with 'type' or 'rule' key
+              // Plain values (primitives, arrays, plain objects) should be used directly
+              if (argValue && typeof argValue === 'object' && !Array.isArray(argValue) && (argValue.type || argValue.rule)) {
+                argValue = evaluateRule(argValue, context, depth + 1, localScope);
+              }
+            } else if (defaults[paramName] !== undefined) {
+              // Use default value from body_data.defaults
+              argValue = defaults[paramName];
+            } else {
+              // No default provided - use 1 as common default for quantity-like params
+              // This matches Python's common default patterns (quantity=1, count=1)
+              argValue = 1;
             }
-            if (params[i]) {
-              helperLocalScope[params[i]] = argValue;
-            }
+
+            helperLocalScope[paramName] = argValue;
           }
 
           let result = evaluateRule(bodyData.body, context, depth + 1, helperLocalScope);
@@ -4704,9 +4759,19 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       switch (op) {
         case '==':
         case 'eq':
+          // Handle array comparison by value (JS === compares by reference)
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length === rightValue.length &&
+                   leftValue.every((val, index) => val === rightValue[index]);
+          }
           return leftValue === rightValue;
         case '!=':
         case 'ne':
+          // Handle array comparison by value
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length !== rightValue.length ||
+                   leftValue.some((val, index) => val !== rightValue[index]);
+          }
           return leftValue !== rightValue;
         case '<':
         case 'lt':
@@ -4720,6 +4785,44 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         case '>=':
         case 'ge':
           return leftValue >= rightValue;
+        case 'in':
+          // Check if leftValue is in rightValue (array)
+          if (Array.isArray(rightValue)) {
+            // Handle array comparison with deep equality for nested arrays
+            if (Array.isArray(leftValue)) {
+              return rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  // Deep array comparison
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return rightValue.includes(leftValue);
+          }
+          return false;
+        case 'not in':
+          // Negate the 'in' check
+          if (Array.isArray(rightValue)) {
+            if (Array.isArray(leftValue)) {
+              return !rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return !rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return !rightValue.includes(leftValue);
+          }
+          return true;
         default:
           log('warn', `[evaluateRuleBuilderRule] Unknown Compare operator '${op}'`);
           return undefined;

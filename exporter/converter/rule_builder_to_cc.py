@@ -88,6 +88,9 @@ class RuleBuilderToCC:
 
             # Helper calls
             'HelperCall': self._convert_helper_call,
+
+            # Comparison rules
+            'Compare': self._convert_compare,
         }
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
@@ -590,6 +593,51 @@ class RuleBuilderToCC:
         inner_rule = args.get('rule', args.get('inner', {}))
 
         return self._convert_rule(inner_rule)
+
+    # -------------------------------------------------------------------------
+    # Compare Handler
+    # -------------------------------------------------------------------------
+
+    def _convert_compare(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert Compare rule to CC format comparison.
+
+        Rule Builder: {"rule": "Compare", "args": {"left": {...}, "op": ">=", "right": {...}}}
+        CC Format: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
+        """
+        args = rule.get('args', {})
+        left = args.get('left', {})
+        op = args.get('op', '==')
+        right = args.get('right', {})
+
+        # Convert left and right operands if they're Rule Builder format
+        converted_left = left
+        converted_right = right
+
+        if isinstance(left, dict) and 'rule' in left:
+            converted_left = self._convert_rule(left)
+        elif isinstance(left, dict) and 'type' not in left:
+            # Might be a primitive value wrapped in a dict
+            converted_left = {'type': 'constant', 'value': left}
+
+        if isinstance(right, dict) and 'rule' in right:
+            converted_right = self._convert_rule(right)
+        elif isinstance(right, dict) and 'type' not in right:
+            # Might be a primitive value wrapped in a dict
+            converted_right = {'type': 'constant', 'value': right}
+
+        # Handle primitive values
+        if not isinstance(converted_left, dict):
+            converted_left = {'type': 'constant', 'value': converted_left}
+        if not isinstance(converted_right, dict):
+            converted_right = {'type': 'constant', 'value': converted_right}
+
+        return {
+            'type': 'compare',
+            'left': converted_left,
+            'op': op,
+            'right': converted_right
+        }
 
     # -------------------------------------------------------------------------
     # Helper Call Handler

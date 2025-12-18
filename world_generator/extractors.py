@@ -165,6 +165,7 @@ class ExtractedData:
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
+    world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes (e.g., hat_info)
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -651,6 +652,57 @@ def compute_state_counter_accumulator_rules(
         })
         prog_items_init[target_name] = 0
 
+    # Pattern 3: Find items like "50 Rupees", "100 Rupees" that should accumulate
+    # These are detected by finding items matching "N <Suffix>" pattern where:
+    # - The suffix is title case (e.g., "Rupees")
+    # - Multiple items share the same suffix with different numbers
+    # - Look for patterns like "50 Rupees" -> accumulate to "RUPEES"
+    mixed_case_pattern = regex_module.compile(r'^(\d+)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)$')
+    mixed_suffix_candidates = {}  # suffix -> (uppercase_target, list of items)
+
+    for item_name in items.keys():
+        match = mixed_case_pattern.match(item_name)
+        if match:
+            suffix = match.group(2)  # e.g., "Rupees"
+            uppercase_target = suffix.upper()  # e.g., "RUPEES"
+            if suffix not in mixed_suffix_candidates:
+                mixed_suffix_candidates[suffix] = (uppercase_target, [])
+            mixed_suffix_candidates[suffix][1].append(item_name)
+
+    # Also check original_placements for additional items
+    for loc_name, item_name in original_placements.items():
+        match = mixed_case_pattern.match(item_name)
+        if match:
+            suffix = match.group(2)
+            uppercase_target = suffix.upper()
+            if suffix not in mixed_suffix_candidates:
+                mixed_suffix_candidates[suffix] = (uppercase_target, [])
+            if item_name not in mixed_suffix_candidates[suffix][1]:
+                mixed_suffix_candidates[suffix][1].append(item_name)
+
+    # For each suffix candidate, check if we should create an accumulator rule
+    for suffix, (target_name, matching_items) in mixed_suffix_candidates.items():
+        if len(matching_items) < 2:
+            continue  # Need at least 2 items to be a meaningful pattern
+
+        # Skip if we already have a rule for this target
+        if any(rule['target'] == target_name for rule in accumulator_rules):
+            continue
+
+        # Skip if there's already an item with exactly this name
+        if target_name in items:
+            continue
+
+        # Create the accumulator rule
+        pattern = f'^(\\d+) {suffix}$'
+        accumulator_rules.append({
+            'pattern': pattern,
+            'extract_value': True,
+            'target': target_name,
+            'discriminator': None
+        })
+        prog_items_init[target_name] = 0
+
     return accumulator_rules, prog_items_init
 
 
@@ -704,6 +756,37 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
     return helpers
 
 
+def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Extract game-specific world instance attributes from JSON.
+
+    These are attributes that need to be added to the generated world class
+    as instance attributes. For example, A Hat in Time has hat_info containing
+    hat_yarn_costs and hat_craft_order.
+
+    Returns:
+        Dict of attribute_name -> attribute_value
+    """
+    world_attributes: Dict[str, Any] = {}
+
+    # Extract game_info for player 1
+    game_info = json_data.get('game_info', {}).get('1', {})
+
+    # Extract hat_info for A Hat in Time
+    hat_info = game_info.get('hat_info')
+    if hat_info:
+        # Convert hat_yarn_costs keys from strings to integers
+        hat_yarn_costs_raw = hat_info.get('hat_yarn_costs', {})
+        hat_yarn_costs = {int(k): v for k, v in hat_yarn_costs_raw.items()}
+        world_attributes['hat_yarn_costs'] = hat_yarn_costs
+
+        # hat_craft_order is already a list of integers
+        hat_craft_order = hat_info.get('hat_craft_order', [])
+        world_attributes['hat_craft_order'] = hat_craft_order
+
+    return world_attributes
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -734,11 +817,11 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
 
-    # For games with state counters, we also need to precollect counter items
-    # for generation to work (rules check Has(" coins", X) which needs items in inventory)
+    # For games with state counters, we need to precollect the counter items
+    # for generation to work (rules check Has(" coins", X) which needs items in inventory).
     # The exporter will filter these out from starting_items since the frontend
-    # uses accumulator_rules instead. But we DO need to set prog_items_init to the
-    # same total so the test world's sphere 0 matches the original sphere log.
+    # uses accumulator_rules instead. The prog_items_init stays at 0 (set by
+    # compute_state_counter_accumulator_rules) and the counter accumulates as items are collected.
     if accumulator_rules:
         # Calculate total for each counter from items in original_placements
         for rule in accumulator_rules:
@@ -755,10 +838,11 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
                     except (ValueError, IndexError):
                         pass
             if total > 0:
+                # Add to starting_items for generation (will be filtered by exporter)
                 starting_items[target] = starting_items.get(target, 0) + total
-                # Also update prog_items_init so the frontend test world matches
-                # the original sphere log (which has the precollected total at sphere 0)
-                prog_items_init[target] = total
+                # Note: prog_items_init[target] stays at 0 - it's already set by
+                # compute_state_counter_accumulator_rules. We don't want to initialize
+                # the counter to the total - we want it to accumulate from 0.
 
     # Extract QP items for OSRS-like games that have quest points
     # Pattern: "N QP (Quest Name)" where N is the quest point value
@@ -772,6 +856,9 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
             qp_items[item_name] = qp_value
     if qp_items:
         metadata.resolved_settings['qp_items'] = qp_items
+
+    # Extract game-specific world attributes (e.g., hat_info for A Hat in Time)
+    world_attributes = extract_world_attributes(json_data)
 
     return ExtractedData(
         metadata=metadata,
@@ -791,4 +878,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
         progression_mapping=progression_mapping,
+        world_attributes=world_attributes,
     )

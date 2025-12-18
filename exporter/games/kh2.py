@@ -604,8 +604,17 @@ class KH2GameExportHandler(BaseGameExportHandler):
         for setting_name in kh2_settings:
             if hasattr(world, 'options') and hasattr(world.options, setting_name):
                 option = getattr(world.options, setting_name)
-                # Get the value (could be an integer option or boolean)
-                if hasattr(option, 'value'):
+                # For Choice options (which have name_lookup mapping values to string keys),
+                # use the string key (e.g., "easy", "normal", "hard") since helper dicts
+                # use string keys. For other options (Range, etc.), use raw value.
+                # Note: dict/list values are unhashable so we catch TypeError.
+                try:
+                    use_string_key = hasattr(option, 'name_lookup') and hasattr(option, 'value') and option.value in option.name_lookup
+                except TypeError:
+                    use_string_key = False
+                if use_string_key:
+                    settings_dict[setting_name] = option.current_key
+                elif hasattr(option, 'value'):
                     settings_dict[setting_name] = option.value
                 else:
                     settings_dict[setting_name] = option

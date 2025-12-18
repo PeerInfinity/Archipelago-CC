@@ -53,7 +53,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 10 Graffiti Spots",
@@ -69,7 +69,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 15 Graffiti Spots",
@@ -85,7 +85,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 20 Graffiti Spots",
@@ -101,7 +101,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 25 Graffiti Spots",
@@ -117,7 +117,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 30 Graffiti Spots",
@@ -133,7 +133,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 35 Graffiti Spots",
@@ -149,7 +149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 40 Graffiti Spots",
@@ -165,7 +165,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 45 Graffiti Spots",
@@ -181,7 +181,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 50 Graffiti Spots",
@@ -197,7 +197,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 55 Graffiti Spots",
@@ -213,7 +213,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 60 Graffiti Spots",
@@ -229,7 +229,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 65 Graffiti Spots",
@@ -245,7 +245,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 70 Graffiti Spots",
@@ -261,7 +261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 75 Graffiti Spots",
@@ -277,7 +277,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 80 Graffiti Spots",
@@ -293,7 +293,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 85 Graffiti Spots",
@@ -309,7 +309,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 90 Graffiti Spots",
@@ -325,7 +325,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 95 Graffiti Spots",
@@ -341,7 +341,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 100 Graffiti Spots",
@@ -357,7 +357,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 105 Graffiti Spots",
@@ -373,7 +373,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 110 Graffiti Spots",
@@ -389,7 +389,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 115 Graffiti Spots",
@@ -405,7 +405,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 120 Graffiti Spots",
@@ -421,7 +421,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 125 Graffiti Spots",
@@ -437,7 +437,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 130 Graffiti Spots",
@@ -453,7 +453,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 135 Graffiti Spots",
@@ -469,7 +469,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 140 Graffiti Spots",
@@ -485,7 +485,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 145 Graffiti Spots",
@@ -501,7 +501,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 150 Graffiti Spots",
@@ -517,7 +517,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 155 Graffiti Spots",
@@ -533,7 +533,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 160 Graffiti Spots",
@@ -549,7 +549,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 165 Graffiti Spots",
@@ -565,7 +565,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 170 Graffiti Spots",
@@ -581,7 +581,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 175 Graffiti Spots",
@@ -597,7 +597,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 180 Graffiti Spots",
@@ -613,7 +613,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 185 Graffiti Spots",
@@ -629,7 +629,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 190 Graffiti Spots",
@@ -645,7 +645,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 195 Graffiti Spots",
@@ -661,7 +661,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 200 Graffiti Spots",
@@ -677,7 +677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 205 Graffiti Spots",
@@ -693,7 +693,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 210 Graffiti Spots",
@@ -709,7 +709,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 215 Graffiti Spots",
@@ -725,7 +725,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 220 Graffiti Spots",
@@ -741,7 +741,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 225 Graffiti Spots",
@@ -757,7 +757,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 230 Graffiti Spots",
@@ -773,7 +773,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 235 Graffiti Spots",
@@ -789,7 +789,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 240 Graffiti Spots",
@@ -805,7 +805,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 245 Graffiti Spots",
@@ -821,7 +821,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 250 Graffiti Spots",
@@ -837,7 +837,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 255 Graffiti Spots",
@@ -853,7 +853,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 260 Graffiti Spots",
@@ -869,7 +869,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 265 Graffiti Spots",
@@ -885,7 +885,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 270 Graffiti Spots",
@@ -901,7 +901,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 275 Graffiti Spots",
@@ -917,7 +917,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 280 Graffiti Spots",
@@ -933,7 +933,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 285 Graffiti Spots",
@@ -949,7 +949,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 290 Graffiti Spots",
@@ -965,7 +965,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 295 Graffiti Spots",
@@ -981,7 +981,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 300 Graffiti Spots",
@@ -997,7 +997,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 305 Graffiti Spots",
@@ -1013,7 +1013,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 310 Graffiti Spots",
@@ -1029,7 +1029,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 315 Graffiti Spots",
@@ -1045,7 +1045,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 320 Graffiti Spots",
@@ -1061,7 +1061,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 325 Graffiti Spots",
@@ -1077,7 +1077,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 330 Graffiti Spots",
@@ -1093,7 +1093,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 335 Graffiti Spots",
@@ -1109,7 +1109,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 340 Graffiti Spots",
@@ -1125,7 +1125,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 345 Graffiti Spots",
@@ -1141,7 +1141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 350 Graffiti Spots",
@@ -1157,7 +1157,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 355 Graffiti Spots",
@@ -1173,7 +1173,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 360 Graffiti Spots",
@@ -1189,7 +1189,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 365 Graffiti Spots",
@@ -1205,7 +1205,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 370 Graffiti Spots",
@@ -1221,7 +1221,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 375 Graffiti Spots",
@@ -1237,7 +1237,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 380 Graffiti Spots",
@@ -1253,7 +1253,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 385 Graffiti Spots",
@@ -1269,7 +1269,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tagged 389 Graffiti Spots",
@@ -1285,7 +1285,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1313,8 +1313,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 20
                   }
                 }
               }
@@ -1335,8 +1335,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -1363,8 +1363,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -1391,7 +1391,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Garage tower CD",
@@ -1406,7 +1406,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Rooftop CD",
@@ -1421,7 +1421,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Under staircase graffiti",
@@ -1436,7 +1436,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Secret area graffiti",
@@ -1451,7 +1451,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Rear studio graffiti",
@@ -1466,7 +1466,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Corner ledge graffiti",
@@ -1481,7 +1481,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Upper platform skateboard",
@@ -1496,7 +1496,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: BMX garage skateboard",
@@ -1545,7 +1545,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Unlock phone app",
@@ -1587,7 +1587,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Vinyl joins the crew",
@@ -1629,7 +1629,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hideout: Solace joins the crew",
@@ -1671,7 +1671,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1729,8 +1729,8 @@
                       },
                       "op": ">=",
                       "right": {
-                        "type": "name",
-                        "name": "spots"
+                        "type": "constant",
+                        "value": 10
                       }
                     },
                     "if_false": {
@@ -1757,7 +1757,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Behind glass graffiti",
@@ -1772,7 +1772,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Office room graffiti",
@@ -1787,7 +1787,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: BMX gate outfit",
@@ -1836,7 +1836,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Big Polo",
@@ -1859,7 +1859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Trash Polo",
@@ -1882,7 +1882,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1910,8 +1910,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 20
                   }
                 }
               }
@@ -1932,8 +1932,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -1958,8 +1958,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 120
                   }
                 }
               }
@@ -1978,8 +1978,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 65
                   }
                 }
               }
@@ -1998,8 +1998,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 90
                   }
                 }
               }
@@ -2020,7 +2020,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Train rail ledge skateboard",
@@ -2035,7 +2035,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Train station CD",
@@ -2050,7 +2050,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Billboard platform outfit",
@@ -2065,7 +2065,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Hilltop Robo Post CD",
@@ -2080,7 +2080,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Hill secret skateboard",
@@ -2095,7 +2095,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Rooftop CD",
@@ -2110,7 +2110,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Wallrunning challenge reward",
@@ -2125,8 +2125,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 50
                   }
                 }
               }
@@ -2137,7 +2137,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Manual challenge reward",
@@ -2152,8 +2152,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 58
                   }
                 }
               }
@@ -2164,7 +2164,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Corner challenge reward",
@@ -2179,8 +2179,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 65
                   }
                 }
               }
@@ -2191,7 +2191,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Glass floor skates",
@@ -2240,7 +2240,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Frank joins the crew",
@@ -2282,7 +2282,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2332,8 +2332,8 @@
                       },
                       "op": ">=",
                       "right": {
-                        "type": "name",
-                        "name": "spots"
+                        "type": "constant",
+                        "value": 10
                       }
                     },
                     "if_false": {
@@ -2360,7 +2360,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Underground mall vending machine skateboard",
@@ -2375,7 +2375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Rave joins the crew",
@@ -2408,8 +2408,8 @@
                         "count": {
                           "type": "binary_op",
                           "left": {
-                            "type": "name",
-                            "name": "chapter"
+                            "type": "constant",
+                            "value": 4
                           },
                           "op": "-",
                           "right": {
@@ -2449,8 +2449,8 @@
                               },
                               "op": ">=",
                               "right": {
-                                "type": "name",
-                                "name": "spots"
+                                "type": "constant",
+                                "value": 90
                               }
                             },
                             "if_false": {
@@ -2486,8 +2486,8 @@
                               },
                               "op": ">=",
                               "right": {
-                                "type": "name",
-                                "name": "spots"
+                                "type": "constant",
+                                "value": 51
                               }
                             },
                             "if_false": {
@@ -2505,8 +2505,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -2546,8 +2546,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 89
                                 }
                               },
                               "if_false": {
@@ -2583,8 +2583,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 51
                                 }
                               },
                               "if_false": {
@@ -2625,8 +2625,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 85
                                 }
                               },
                               "if_false": {
@@ -2662,8 +2662,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 48
                                 }
                               },
                               "if_false": {
@@ -2706,8 +2706,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 26
                             }
                           },
                           "if_false": {
@@ -2743,8 +2743,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 10
                             }
                           },
                           "if_false": {
@@ -2764,7 +2764,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Fruit stand Polo",
@@ -2787,7 +2787,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2837,8 +2837,8 @@
                       },
                       "op": ">=",
                       "right": {
-                        "type": "name",
-                        "name": "spots"
+                        "type": "constant",
+                        "value": 10
                       }
                     },
                     "if_false": {
@@ -2865,7 +2865,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Side street secret skateboard",
@@ -2880,7 +2880,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2930,8 +2930,8 @@
                       },
                       "op": ">=",
                       "right": {
-                        "type": "name",
-                        "name": "spots"
+                        "type": "constant",
+                        "value": 10
                       }
                     },
                     "if_false": {
@@ -2956,8 +2956,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 20
                   }
                 }
               }
@@ -2978,7 +2978,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Basketball court Robo Post CD",
@@ -2993,7 +2993,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Basketball court shortcut CD",
@@ -3035,7 +3035,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Rietveld joins the crew",
@@ -3091,8 +3091,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -3106,8 +3106,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 2
                             },
                             "op": "-",
                             "right": {
@@ -3149,8 +3149,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 67
                             }
                           },
                           "if_false": {
@@ -3164,8 +3164,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 2
                             },
                             "op": "-",
                             "right": {
@@ -3186,7 +3186,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Versum Hill: Complete Chapter 1",
@@ -3242,8 +3242,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 98
                             }
                           },
                           "if_false": {
@@ -3255,8 +3255,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 90
                           }
                         }
                       ]
@@ -3292,8 +3292,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 27
                             }
                           },
                           "if_false": {
@@ -3305,8 +3305,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 90
                           }
                         }
                       ]
@@ -3372,8 +3372,8 @@
                       },
                       "op": ">=",
                       "right": {
-                        "type": "name",
-                        "name": "spots"
+                        "type": "constant",
+                        "value": 10
                       }
                     },
                     "if_false": {
@@ -3407,8 +3407,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 2
                         },
                         "op": "-",
                         "right": {
@@ -3421,8 +3421,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 180
                       }
                     }
                   ]
@@ -3448,8 +3448,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 3
                         },
                         "op": "-",
                         "right": {
@@ -3462,8 +3462,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 380
                       }
                     }
                   ]
@@ -3486,8 +3486,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 4
                     },
                     "op": "-",
                     "right": {
@@ -3514,8 +3514,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -3542,7 +3542,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Rooftop staircase graffiti",
@@ -3557,7 +3557,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Toilet graffiti",
@@ -3572,7 +3572,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Trash graffiti",
@@ -3587,7 +3587,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Center tower graffiti",
@@ -3602,7 +3602,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Rooftop billboard graffiti",
@@ -3617,7 +3617,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Center Robo Post CD",
@@ -3632,7 +3632,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Parking garage Robo Post CD",
@@ -3647,7 +3647,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Mall ledge outfit",
@@ -3662,7 +3662,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Alley rooftop outfit",
@@ -3677,7 +3677,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Alley staircase skateboard",
@@ -3692,7 +3692,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Secret painting skates",
@@ -3707,7 +3707,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Vending machine skates",
@@ -3722,7 +3722,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Walkway roof skates",
@@ -3737,7 +3737,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Alley ledge skates",
@@ -3752,7 +3752,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: DJ Cyber joins the crew",
@@ -3767,7 +3767,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Square: Half pipe Polo",
@@ -3790,7 +3790,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3812,8 +3812,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -3838,8 +3838,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 250
                   }
                 }
               }
@@ -3858,8 +3858,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 320
                   }
                 }
               }
@@ -3878,8 +3878,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 220
                   }
                 }
               }
@@ -3900,8 +3900,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 188
                   }
                 }
               }
@@ -3912,7 +3912,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Manual challenge reward",
@@ -3927,8 +3927,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 200
                   }
                 }
               }
@@ -3939,7 +3939,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Score challenge reward",
@@ -3954,8 +3954,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 220
                   }
                 }
               }
@@ -3966,7 +3966,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Under square ledge graffiti",
@@ -3981,7 +3981,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Bus graffiti",
@@ -3996,7 +3996,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Under square Robo Post graffiti",
@@ -4011,7 +4011,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: BMX gate graffiti",
@@ -4060,7 +4060,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Square tower CD",
@@ -4075,7 +4075,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Trash CD",
@@ -4090,7 +4090,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Shop roof outfit",
@@ -4105,7 +4105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Glass roof skates",
@@ -4120,7 +4120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Eclipse joins the crew",
@@ -4162,7 +4162,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Behind glass Polo",
@@ -4185,7 +4185,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4214,8 +4214,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 2
                         },
                         "op": "-",
                         "right": {
@@ -4228,8 +4228,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 180
                       }
                     }
                   ]
@@ -4252,7 +4252,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Underground ramp skates",
@@ -4267,7 +4267,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4296,8 +4296,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 2
                         },
                         "op": "-",
                         "right": {
@@ -4310,8 +4310,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 180
                       }
                     }
                   ]
@@ -4375,8 +4375,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -4412,8 +4412,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 45
                             }
                           },
                           "if_false": {
@@ -4454,8 +4454,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 67
                             }
                           },
                           "if_false": {
@@ -4491,8 +4491,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 45
                             }
                           },
                           "if_false": {
@@ -4512,7 +4512,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Ocean platform CD",
@@ -4527,7 +4527,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: End of dock CD",
@@ -4542,7 +4542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Dock Robo Post outfit",
@@ -4557,7 +4557,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Control room skates",
@@ -4572,7 +4572,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Mesh joins the crew",
@@ -4628,8 +4628,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -4665,8 +4665,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 45
                             }
                           },
                           "if_false": {
@@ -4707,8 +4707,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 67
                             }
                           },
                           "if_false": {
@@ -4744,8 +4744,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 45
                             }
                           },
                           "if_false": {
@@ -4765,7 +4765,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4794,8 +4794,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 2
                         },
                         "op": "-",
                         "right": {
@@ -4808,8 +4808,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 180
                       }
                     }
                   ]
@@ -4830,8 +4830,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 280
                   }
                 }
               }
@@ -4852,7 +4852,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4881,8 +4881,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 2
                         },
                         "op": "-",
                         "right": {
@@ -4895,8 +4895,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 180
                       }
                     }
                   ]
@@ -4917,8 +4917,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 220
                   }
                 }
               }
@@ -4939,7 +4939,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Rooftop glass CD",
@@ -4988,7 +4988,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Tower core outfit",
@@ -5003,7 +5003,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: High rooftop outfit",
@@ -5018,7 +5018,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brink Terminal: Complete Chapter 2",
@@ -5074,8 +5074,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 103
                             }
                           },
                           "if_false": {
@@ -5087,8 +5087,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 280
                           }
                         }
                       ]
@@ -5124,8 +5124,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 62
                             }
                           },
                           "if_false": {
@@ -5137,8 +5137,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 280
                           }
                         }
                       ]
@@ -5176,8 +5176,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -5238,8 +5238,8 @@
                               },
                               "op": ">=",
                               "right": {
-                                "type": "name",
-                                "name": "spots"
+                                "type": "constant",
+                                "value": 78
                               }
                             },
                             "if_false": {
@@ -5251,8 +5251,8 @@
                             "type": "item_check",
                             "item": "rep",
                             "count": {
-                              "type": "name",
-                              "name": "required"
+                              "type": "constant",
+                              "value": 491
                             }
                           }
                         ]
@@ -5261,8 +5261,8 @@
                         "type": "item_check",
                         "item": "rep",
                         "count": {
-                          "type": "name",
-                          "name": "required"
+                          "type": "constant",
+                          "value": 580
                         }
                       }
                     ]
@@ -5325,8 +5325,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -5340,8 +5340,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -5383,8 +5383,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 72
                             }
                           },
                           "if_false": {
@@ -5398,8 +5398,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -5430,7 +5430,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Wall alcove graffiti",
@@ -5445,7 +5445,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Maintenance shaft CD",
@@ -5460,7 +5460,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Glass cylinder CD",
@@ -5509,7 +5509,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Lower Robo Post outfit",
@@ -5524,7 +5524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5549,8 +5549,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 3
                         },
                         "op": "-",
                         "right": {
@@ -5563,8 +5563,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 380
                       }
                     }
                   ]
@@ -5587,7 +5587,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5612,8 +5612,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 3
                         },
                         "op": "-",
                         "right": {
@@ -5626,8 +5626,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 380
                       }
                     }
                   ]
@@ -5648,8 +5648,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 530
                   }
                 }
               }
@@ -5701,8 +5701,8 @@
                           },
                           "op": ">=",
                           "right": {
-                            "type": "name",
-                            "name": "spots"
+                            "type": "constant",
+                            "value": 78
                           }
                         },
                         "if_false": {
@@ -5714,8 +5714,8 @@
                         "type": "item_check",
                         "item": "rep",
                         "count": {
-                          "type": "name",
-                          "name": "required"
+                          "type": "constant",
+                          "value": 491
                         }
                       }
                     ]
@@ -5739,7 +5739,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Trick challenge reward",
@@ -5754,8 +5754,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 434
                   }
                 }
               }
@@ -5766,7 +5766,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Slide challenge reward",
@@ -5781,8 +5781,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 442
                   }
                 }
               }
@@ -5793,7 +5793,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Fish challenge reward",
@@ -5808,8 +5808,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 450
                   }
                 }
               }
@@ -5820,7 +5820,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Score challenge reward",
@@ -5835,8 +5835,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 458
                   }
                 }
               }
@@ -5847,7 +5847,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium top floor Robo Post CD",
@@ -5862,7 +5862,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium top floor floating CD",
@@ -5877,7 +5877,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium top floor BMX",
@@ -5892,7 +5892,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater entrance BMX",
@@ -5907,7 +5907,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium BMX gate BMX",
@@ -5956,7 +5956,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Upside down rail outfit",
@@ -5971,7 +5971,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: DOT.EXE joins the crew",
@@ -6013,7 +6013,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6074,8 +6074,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -6089,8 +6089,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -6132,8 +6132,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 72
                             }
                           },
                           "if_false": {
@@ -6147,8 +6147,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -6179,7 +6179,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6240,8 +6240,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -6255,8 +6255,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -6298,8 +6298,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 72
                             }
                           },
                           "if_false": {
@@ -6313,8 +6313,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 3
                             },
                             "op": "-",
                             "right": {
@@ -6348,8 +6348,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 3
                         },
                         "op": "-",
                         "right": {
@@ -6362,8 +6362,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 380
                       }
                     }
                   ]
@@ -6386,7 +6386,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater hanging billboards graffiti",
@@ -6401,7 +6401,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater garage graffiti",
@@ -6416,7 +6416,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater maintenance CD",
@@ -6431,7 +6431,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Shine joins the crew",
@@ -6473,7 +6473,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Millennium Mall: Complete Chapter 3",
@@ -6529,8 +6529,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 107
                             }
                           },
                           "if_false": {
@@ -6566,8 +6566,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -6579,8 +6579,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 491
                           }
                         }
                       ]
@@ -6616,8 +6616,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 80
                             }
                           },
                           "if_false": {
@@ -6653,8 +6653,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 78
                             }
                           },
                           "if_false": {
@@ -6666,8 +6666,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 491
                           }
                         }
                       ]
@@ -6705,8 +6705,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -6731,8 +6731,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 620
                   }
                 }
               }
@@ -6753,7 +6753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo graffiti",
@@ -6768,7 +6768,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Above entrance graffiti",
@@ -6783,7 +6783,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: BMX gate BMX",
@@ -6832,7 +6832,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 1",
@@ -6855,7 +6855,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 2",
@@ -6878,7 +6878,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 3",
@@ -6901,7 +6901,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 4",
@@ -6924,7 +6924,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6946,8 +6946,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 4
                     },
                     "op": "-",
                     "right": {
@@ -6972,8 +6972,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 780
                   }
                 }
               }
@@ -7033,8 +7033,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -7046,8 +7046,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 660
                           }
                         }
                       ]
@@ -7083,8 +7083,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 88
                             }
                           },
                           "if_false": {
@@ -7096,8 +7096,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 660
                           }
                         }
                       ]
@@ -7122,7 +7122,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Supply port Robo Post CD",
@@ -7137,7 +7137,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Above gate ledge CD",
@@ -7152,7 +7152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Smoke hole BMX",
@@ -7167,7 +7167,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Above gate rail outfit",
@@ -7182,7 +7182,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Rail loop outfit",
@@ -7197,7 +7197,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Score challenge reward",
@@ -7217,8 +7217,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 4
                         },
                         "op": "-",
                         "right": {
@@ -7231,8 +7231,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 630
                       }
                     }
                   ]
@@ -7245,7 +7245,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Score challenge 2 reward",
@@ -7260,8 +7260,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 650
                   }
                 }
               }
@@ -7272,7 +7272,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Quarter pipe challenge reward",
@@ -7287,8 +7287,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 660
                   }
                 }
               }
@@ -7299,7 +7299,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7319,8 +7319,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 620
                   }
                 }
               }
@@ -7375,7 +7375,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze glass Polo",
@@ -7398,7 +7398,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze classroom Polo",
@@ -7421,7 +7421,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze vent Polo",
@@ -7444,7 +7444,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Big maze Polo",
@@ -7467,7 +7467,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze desk Polo",
@@ -7490,7 +7490,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze forklift Polo",
@@ -7513,7 +7513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7535,8 +7535,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 4
                     },
                     "op": "-",
                     "right": {
@@ -7561,8 +7561,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 620
                   }
                 }
               }
@@ -7583,8 +7583,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 5
                     },
                     "op": "-",
                     "right": {
@@ -7611,7 +7611,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Shortcut glass CD",
@@ -7660,7 +7660,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Turret jump CD",
@@ -7675,7 +7675,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Helipad BMX",
@@ -7690,7 +7690,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Pipe outfit",
@@ -7705,7 +7705,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Trash outfit",
@@ -7720,7 +7720,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Devil Theory joins the crew",
@@ -7762,7 +7762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Complete Chapter 4",
@@ -7818,8 +7818,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 108
                             }
                           },
                           "if_false": {
@@ -7831,8 +7831,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 730
                           }
                         }
                       ]
@@ -7868,8 +7868,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 97
                             }
                           },
                           "if_false": {
@@ -7881,8 +7881,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 730
                           }
                         }
                       ]
@@ -7920,8 +7920,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 4
                     },
                     "op": "-",
                     "right": {
@@ -7946,8 +7946,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 620
                   }
                 }
               }
@@ -8007,8 +8007,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 114
                             }
                           },
                           "if_false": {
@@ -8020,8 +8020,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 660
                           }
                         }
                       ]
@@ -8057,8 +8057,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 88
                             }
                           },
                           "if_false": {
@@ -8070,8 +8070,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 660
                           }
                         }
                       ]
@@ -8096,7 +8096,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Pyramid top Robo Post CD",
@@ -8111,7 +8111,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Island: Rise joins the crew",
@@ -8134,7 +8134,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8164,8 +8164,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -8195,8 +8195,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 5
                         },
                         "op": "-",
                         "right": {
@@ -8209,8 +8209,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 850
                       }
                     }
                   ]
@@ -8233,7 +8233,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Secret ledge BMX",
@@ -8248,7 +8248,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Highway rooftop BMX",
@@ -8263,7 +8263,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8285,8 +8285,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -8352,8 +8352,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 108
                             }
                           },
                           "if_false": {
@@ -8367,8 +8367,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -8381,8 +8381,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -8418,8 +8418,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 98
                             }
                           },
                           "if_false": {
@@ -8433,8 +8433,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -8447,8 +8447,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -8473,7 +8473,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Half pipe CD",
@@ -8488,7 +8488,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Across bull horns graffiti",
@@ -8503,7 +8503,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Small rooftop graffiti",
@@ -8518,7 +8518,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Trash graffiti",
@@ -8533,7 +8533,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Trash Polo",
@@ -8556,7 +8556,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8581,8 +8581,8 @@
                       "count": {
                         "type": "binary_op",
                         "left": {
-                          "type": "name",
-                          "name": "chapter"
+                          "type": "constant",
+                          "value": 5
                         },
                         "op": "-",
                         "right": {
@@ -8595,8 +8595,8 @@
                       "type": "item_check",
                       "item": "rep",
                       "count": {
-                        "type": "name",
-                        "name": "required"
+                        "type": "constant",
+                        "value": 850
                       }
                     }
                   ]
@@ -8617,8 +8617,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 935
                   }
                 }
               }
@@ -8684,8 +8684,8 @@
                                     },
                                     "op": ">=",
                                     "right": {
-                                      "type": "name",
-                                      "name": "spots"
+                                      "type": "constant",
+                                      "value": 59
                                     }
                                   },
                                   "if_false": {
@@ -8697,8 +8697,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 880
                                   }
                                 }
                               ]
@@ -8734,8 +8734,8 @@
                                     },
                                     "op": ">=",
                                     "right": {
-                                      "type": "name",
-                                      "name": "spots"
+                                      "type": "constant",
+                                      "value": 57
                                     }
                                   },
                                   "if_false": {
@@ -8747,8 +8747,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 880
                                   }
                                 }
                               ]
@@ -8758,8 +8758,8 @@
                             "type": "item_check",
                             "item": "rep",
                             "count": {
-                              "type": "name",
-                              "name": "required"
+                              "type": "constant",
+                              "value": 920
                             }
                           }
                         ]
@@ -8768,8 +8768,8 @@
                         "type": "item_check",
                         "item": "rep",
                         "count": {
-                          "type": "name",
-                          "name": "required"
+                          "type": "constant",
+                          "value": 960
                         }
                       }
                     ]
@@ -8793,7 +8793,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Deep city tower CD",
@@ -8808,7 +8808,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Race challenge reward",
@@ -8864,8 +8864,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 108
                             }
                           },
                           "if_false": {
@@ -8879,8 +8879,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -8893,8 +8893,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -8930,8 +8930,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 98
                             }
                           },
                           "if_false": {
@@ -8945,8 +8945,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -8959,8 +8959,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -8975,7 +8975,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Wallrunning challenge reward",
@@ -9031,8 +9031,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 59
                             }
                           },
                           "if_false": {
@@ -9044,8 +9044,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 880
                           }
                         }
                       ]
@@ -9081,8 +9081,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 57
                             }
                           },
                           "if_false": {
@@ -9094,8 +9094,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 880
                           }
                         }
                       ]
@@ -9110,7 +9110,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Score challenge reward",
@@ -9125,8 +9125,8 @@
                   "type": "item_check",
                   "item": "rep",
                   "count": {
-                    "type": "name",
-                    "name": "required"
+                    "type": "constant",
+                    "value": 920
                   }
                 }
               }
@@ -9137,7 +9137,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Deep city vent jump BMX",
@@ -9152,7 +9152,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Deep city side wires outfit",
@@ -9167,7 +9167,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Deep city center island outfit",
@@ -9182,7 +9182,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9243,8 +9243,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 108
                             }
                           },
                           "if_false": {
@@ -9258,8 +9258,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -9272,8 +9272,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -9309,8 +9309,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 98
                             }
                           },
                           "if_false": {
@@ -9324,8 +9324,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -9338,8 +9338,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -9364,7 +9364,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Red light side alley outfit",
@@ -9379,7 +9379,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9440,8 +9440,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 108
                             }
                           },
                           "if_false": {
@@ -9455,8 +9455,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -9469,8 +9469,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -9506,8 +9506,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 98
                             }
                           },
                           "if_false": {
@@ -9521,8 +9521,8 @@
                           "count": {
                             "type": "binary_op",
                             "left": {
-                              "type": "name",
-                              "name": "chapter"
+                              "type": "constant",
+                              "value": 5
                             },
                             "op": "-",
                             "right": {
@@ -9535,8 +9535,8 @@
                           "type": "item_check",
                           "item": "rep",
                           "count": {
-                            "type": "name",
-                            "name": "required"
+                            "type": "constant",
+                            "value": 864
                           }
                         }
                       ]
@@ -9615,8 +9615,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 59
                                           }
                                         },
                                         "if_false": {
@@ -9628,8 +9628,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -9665,8 +9665,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 57
                                           }
                                         },
                                         "if_false": {
@@ -9678,8 +9678,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -9689,8 +9689,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 920
                                   }
                                 }
                               ]
@@ -9699,8 +9699,8 @@
                               "type": "item_check",
                               "item": "rep",
                               "count": {
-                                "type": "name",
-                                "name": "required"
+                                "type": "constant",
+                                "value": 960
                               }
                             }
                           ]
@@ -9733,8 +9733,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 122
                             }
                           },
                           "if_false": {
@@ -9770,8 +9770,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 59
                             }
                           },
                           "if_false": {
@@ -9827,8 +9827,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 59
                                           }
                                         },
                                         "if_false": {
@@ -9840,8 +9840,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -9877,8 +9877,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 57
                                           }
                                         },
                                         "if_false": {
@@ -9890,8 +9890,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -9901,8 +9901,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 920
                                   }
                                 }
                               ]
@@ -9911,8 +9911,8 @@
                               "type": "item_check",
                               "item": "rep",
                               "count": {
-                                "type": "name",
-                                "name": "required"
+                                "type": "constant",
+                                "value": 960
                               }
                             }
                           ]
@@ -9945,8 +9945,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 117
                             }
                           },
                           "if_false": {
@@ -9982,8 +9982,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 57
                             }
                           },
                           "if_false": {
@@ -10013,7 +10013,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -10035,8 +10035,8 @@
                   "count": {
                     "type": "binary_op",
                     "left": {
-                      "type": "name",
-                      "name": "chapter"
+                      "type": "constant",
+                      "value": 2
                     },
                     "op": "-",
                     "right": {
@@ -10063,7 +10063,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Elephant tower glass outfit",
@@ -10078,7 +10078,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Helipad outfit",
@@ -10093,7 +10093,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Vending machine CD",
@@ -10108,7 +10108,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Coil joins the crew",
@@ -10179,8 +10179,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 59
                                           }
                                         },
                                         "if_false": {
@@ -10192,8 +10192,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -10229,8 +10229,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 57
                                           }
                                         },
                                         "if_false": {
@@ -10242,8 +10242,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -10253,8 +10253,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 920
                                   }
                                 }
                               ]
@@ -10263,8 +10263,8 @@
                               "type": "item_check",
                               "item": "rep",
                               "count": {
-                                "type": "name",
-                                "name": "required"
+                                "type": "constant",
+                                "value": 960
                               }
                             }
                           ]
@@ -10297,8 +10297,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 122
                             }
                           },
                           "if_false": {
@@ -10334,8 +10334,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 59
                             }
                           },
                           "if_false": {
@@ -10391,8 +10391,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 59
                                           }
                                         },
                                         "if_false": {
@@ -10404,8 +10404,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -10441,8 +10441,8 @@
                                           },
                                           "op": ">=",
                                           "right": {
-                                            "type": "name",
-                                            "name": "spots"
+                                            "type": "constant",
+                                            "value": 57
                                           }
                                         },
                                         "if_false": {
@@ -10454,8 +10454,8 @@
                                         "type": "item_check",
                                         "item": "rep",
                                         "count": {
-                                          "type": "name",
-                                          "name": "required"
+                                          "type": "constant",
+                                          "value": 880
                                         }
                                       }
                                     ]
@@ -10465,8 +10465,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 920
                                   }
                                 }
                               ]
@@ -10475,8 +10475,8 @@
                               "type": "item_check",
                               "item": "rep",
                               "count": {
-                                "type": "name",
-                                "name": "required"
+                                "type": "constant",
+                                "value": 960
                               }
                             }
                           ]
@@ -10509,8 +10509,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 117
                             }
                           },
                           "if_false": {
@@ -10546,8 +10546,8 @@
                             },
                             "op": ">=",
                             "right": {
-                              "type": "name",
-                              "name": "spots"
+                              "type": "constant",
+                              "value": 57
                             }
                           },
                           "if_false": {
@@ -10567,7 +10567,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Flesh Prince joins the crew",
@@ -10582,7 +10582,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Futurism joins the crew",
@@ -10597,7 +10597,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mataan: Shopping Polo",
@@ -10620,7 +10620,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Defeat Faux",
@@ -10694,8 +10694,8 @@
                                               },
                                               "op": ">=",
                                               "right": {
-                                                "type": "name",
-                                                "name": "spots"
+                                                "type": "constant",
+                                                "value": 59
                                               }
                                             },
                                             "if_false": {
@@ -10707,8 +10707,8 @@
                                             "type": "item_check",
                                             "item": "rep",
                                             "count": {
-                                              "type": "name",
-                                              "name": "required"
+                                              "type": "constant",
+                                              "value": 880
                                             }
                                           }
                                         ]
@@ -10744,8 +10744,8 @@
                                               },
                                               "op": ">=",
                                               "right": {
-                                                "type": "name",
-                                                "name": "spots"
+                                                "type": "constant",
+                                                "value": 57
                                               }
                                             },
                                             "if_false": {
@@ -10757,8 +10757,8 @@
                                             "type": "item_check",
                                             "item": "rep",
                                             "count": {
-                                              "type": "name",
-                                              "name": "required"
+                                              "type": "constant",
+                                              "value": 880
                                             }
                                           }
                                         ]
@@ -10768,8 +10768,8 @@
                                       "type": "item_check",
                                       "item": "rep",
                                       "count": {
-                                        "type": "name",
-                                        "name": "required"
+                                        "type": "constant",
+                                        "value": 920
                                       }
                                     }
                                   ]
@@ -10778,8 +10778,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 960
                                   }
                                 }
                               ]
@@ -10812,8 +10812,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 122
                                 }
                               },
                               "if_false": {
@@ -10849,8 +10849,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 59
                                 }
                               },
                               "if_false": {
@@ -10906,8 +10906,8 @@
                                               },
                                               "op": ">=",
                                               "right": {
-                                                "type": "name",
-                                                "name": "spots"
+                                                "type": "constant",
+                                                "value": 59
                                               }
                                             },
                                             "if_false": {
@@ -10919,8 +10919,8 @@
                                             "type": "item_check",
                                             "item": "rep",
                                             "count": {
-                                              "type": "name",
-                                              "name": "required"
+                                              "type": "constant",
+                                              "value": 880
                                             }
                                           }
                                         ]
@@ -10956,8 +10956,8 @@
                                               },
                                               "op": ">=",
                                               "right": {
-                                                "type": "name",
-                                                "name": "spots"
+                                                "type": "constant",
+                                                "value": 57
                                               }
                                             },
                                             "if_false": {
@@ -10969,8 +10969,8 @@
                                             "type": "item_check",
                                             "item": "rep",
                                             "count": {
-                                              "type": "name",
-                                              "name": "required"
+                                              "type": "constant",
+                                              "value": 880
                                             }
                                           }
                                         ]
@@ -10980,8 +10980,8 @@
                                       "type": "item_check",
                                       "item": "rep",
                                       "count": {
-                                        "type": "name",
-                                        "name": "required"
+                                        "type": "constant",
+                                        "value": 920
                                       }
                                     }
                                   ]
@@ -10990,8 +10990,8 @@
                                   "type": "item_check",
                                   "item": "rep",
                                   "count": {
-                                    "type": "name",
-                                    "name": "required"
+                                    "type": "constant",
+                                    "value": 960
                                   }
                                 }
                               ]
@@ -11024,8 +11024,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 117
                                 }
                               },
                               "if_false": {
@@ -11061,8 +11061,8 @@
                                 },
                                 "op": ">=",
                                 "right": {
-                                  "type": "name",
-                                  "name": "spots"
+                                  "type": "constant",
+                                  "value": 57
                                 }
                               },
                               "if_false": {
@@ -11101,8 +11101,8 @@
                           },
                           "op": ">=",
                           "right": {
-                            "type": "name",
-                            "name": "spots"
+                            "type": "constant",
+                            "value": 122
                           }
                         },
                         "if_false": {
@@ -13388,260 +13388,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "Tagged 5 Graffiti Spots": "Graffiti (XL - WILD STRUXXA)",
-      "Tagged 10 Graffiti Spots": "Music (Two Days Off)",
-      "Tagged 15 Graffiti Spots": "Graffiti (XL - Gamex UPA ABL)",
-      "Tagged 20 Graffiti Spots": "Inline Skates (Strawberry Missiles)",
-      "Tagged 25 Graffiti Spots": "8 REP",
-      "Tagged 30 Graffiti Spots": "Music (In The Pocket)",
-      "Tagged 35 Graffiti Spots": "Music (Chromebies)",
-      "Tagged 40 Graffiti Spots": "Graffiti (XL - Bomb Burner)",
-      "Tagged 45 Graffiti Spots": "Graffiti (L - Campaign Trail)",
-      "Tagged 50 Graffiti Spots": "16 REP",
-      "Tagged 55 Graffiti Spots": "BMX (Ceremony)",
-      "Tagged 60 Graffiti Spots": "Outfit (Mesh - Winter)",
-      "Tagged 65 Graffiti Spots": "Music (JACK DA FUNK)",
-      "Tagged 70 Graffiti Spots": "Outfit (Solace - Autumn)",
-      "Tagged 75 Graffiti Spots": "8 REP",
-      "Tagged 80 Graffiti Spots": "Graffiti (XL - Raver Funk)",
-      "Tagged 85 Graffiti Spots": "Music (Bounce Upon A Time)",
-      "Tagged 90 Graffiti Spots": "Shine",
-      "Tagged 95 Graffiti Spots": "8 REP",
-      "Tagged 100 Graffiti Spots": "Music (Condensed milk)",
-      "Tagged 105 Graffiti Spots": "Inline Skates (Mech Adversary)",
-      "Tagged 110 Graffiti Spots": "16 REP",
-      "Tagged 115 Graffiti Spots": "Graffiti (L - FREAKS)",
-      "Tagged 120 Graffiti Spots": "16 REP",
-      "Tagged 125 Graffiti Spots": "32 REP",
-      "Tagged 130 Graffiti Spots": "Rise",
-      "Tagged 135 Graffiti Spots": "Graffiti (M - B-boy Love)",
-      "Tagged 140 Graffiti Spots": "BMX (Gum)",
-      "Tagged 145 Graffiti Spots": "Music (House Cats Mixtape)",
-      "Tagged 150 Graffiti Spots": "24 REP",
-      "Tagged 155 Graffiti Spots": "16 REP",
-      "Tagged 160 Graffiti Spots": "Music (Sunshine Popping Mixtape)",
-      "Tagged 165 Graffiti Spots": "Flesh Prince",
-      "Tagged 170 Graffiti Spots": "Frank",
-      "Tagged 175 Graffiti Spots": "Graffiti (L - Graffo Le Fou)",
-      "Tagged 180 Graffiti Spots": "BMX (oyo)",
-      "Tagged 185 Graffiti Spots": "16 REP",
-      "Tagged 190 Graffiti Spots": "Outfit (Coil - Autumn)",
-      "Tagged 195 Graffiti Spots": "16 REP",
-      "Tagged 200 Graffiti Spots": "Music (Scraped On The Way Out)",
-      "Tagged 205 Graffiti Spots": "16 REP",
-      "Tagged 210 Graffiti Spots": "Skateboard (Sylk)",
-      "Tagged 215 Graffiti Spots": "8 REP",
-      "Tagged 220 Graffiti Spots": "32 REP",
-      "Tagged 225 Graffiti Spots": "Graffiti (L - Fang It Up!)",
-      "Tagged 230 Graffiti Spots": "8 REP",
-      "Tagged 235 Graffiti Spots": "Graffiti (L - Tius)",
-      "Tagged 240 Graffiti Spots": "16 REP",
-      "Tagged 245 Graffiti Spots": "Outfit (Tryce - Autumn)",
-      "Tagged 250 Graffiti Spots": "Music (Precious Thing)",
-      "Tagged 255 Graffiti Spots": "BMX (XXX)",
-      "Tagged 260 Graffiti Spots": "Coil",
-      "Tagged 265 Graffiti Spots": "Outfit (Bel - Autumn)",
-      "Tagged 270 Graffiti Spots": "24 REP",
-      "Tagged 275 Graffiti Spots": "8 REP",
-      "Tagged 280 Graffiti Spots": "24 REP",
-      "Tagged 285 Graffiti Spots": "8 REP",
-      "Tagged 290 Graffiti Spots": "16 REP",
-      "Tagged 295 Graffiti Spots": "Music (Breaking Machine Mixtape)",
-      "Tagged 300 Graffiti Spots": "32 REP",
-      "Tagged 305 Graffiti Spots": "24 REP",
-      "Tagged 310 Graffiti Spots": "8 REP",
-      "Tagged 315 Graffiti Spots": "Graffiti (M - TeleBinge)",
-      "Tagged 320 Graffiti Spots": "16 REP",
-      "Tagged 325 Graffiti Spots": "Graffiti (M - Devil 68)",
-      "Tagged 330 Graffiti Spots": "Graffiti (L - WHOLE SIXER)",
-      "Tagged 335 Graffiti Spots": "Graffiti (M - BOMB BEATS)",
-      "Tagged 340 Graffiti Spots": "Music (Iridium)",
-      "Tagged 345 Graffiti Spots": "Outfit (Coil - Winter)",
-      "Tagged 350 Graffiti Spots": "16 REP",
-      "Tagged 355 Graffiti Spots": "8 REP",
-      "Tagged 360 Graffiti Spots": "Music (Spectres)",
-      "Tagged 365 Graffiti Spots": "Graffiti (XL - Bomb Croc)",
-      "Tagged 370 Graffiti Spots": "Music (Chuckin Up)",
-      "Tagged 375 Graffiti Spots": "8 REP",
-      "Tagged 380 Graffiti Spots": "8 REP",
-      "Tagged 385 Graffiti Spots": "16 REP",
-      "Tagged 389 Graffiti Spots": "Music (Operator)",
-      "Hideout: Half pipe CD": "Graffiti (XL - headphones on Helmet on)",
-      "Hideout: Garage tower CD": "Graffiti (M - Vom'B)",
-      "Hideout: Rooftop CD": "Graffiti (M - colorBOMB)",
-      "Hideout: Under staircase graffiti": "Futurism",
-      "Hideout: Secret area graffiti": "Graffiti (XL - Bombing by FireMan)",
-      "Hideout: Rear studio graffiti": "Music (Refuse)",
-      "Hideout: Corner ledge graffiti": "Graffiti (L - Moai Marathon)",
-      "Hideout: Upper platform skateboard": "16 REP",
-      "Hideout: BMX garage skateboard": "Skateboard (Terrence)",
-      "Hideout: Unlock phone app": "Inline Skates (Glaciers)",
-      "Hideout: Vinyl joins the crew": "Inline Skates (Red Industry)",
-      "Hideout: Solace joins the crew": "16 REP",
-      "Versum Hill: Main street Robo Post graffiti": "Graffiti (M - Zona Leste)",
-      "Versum Hill: Behind glass graffiti": "Graffiti (M - OVERWHELMME)",
-      "Versum Hill: Office room graffiti": "24 REP",
-      "Versum Hill: BMX gate outfit": "24 REP",
-      "Versum Hill: Big Polo": "Music (You Can Say Hi)",
-      "Versum Hill: Trash Polo": "Bel",
-      "Versum Hill: Under bridge graffiti": "16 REP",
-      "Versum Hill: Train rail ledge skateboard": "Skateboard (Taiga)",
-      "Versum Hill: Train station CD": "8 REP",
-      "Versum Hill: Billboard platform outfit": "16 REP",
-      "Versum Hill: Hilltop Robo Post CD": "Rietveld",
-      "Versum Hill: Hill secret skateboard": "Outfit (Red - Autumn)",
-      "Versum Hill: Rooftop CD": "Inline Skates (Orange Blasters)",
-      "Versum Hill: Wallrunning challenge reward": "Solace",
-      "Versum Hill: Manual challenge reward": "Graffiti (L - INFINITY)",
-      "Versum Hill: Corner challenge reward": "8 REP",
-      "Versum Hill: Glass floor skates": "8 REP",
-      "Versum Hill: Frank joins the crew": "24 REP",
-      "Versum Hill: Underground mall billboard graffiti": "Outfit (Shine - Autumn)",
-      "Versum Hill: Underground mall vending machine skateboard": "Skateboard (Death Boogie)",
-      "Versum Hill: Rave joins the crew": "Music (Anime Break)",
-      "Versum Hill: Fruit stand Polo": "Music (GET ENUF)",
-      "Versum Hill: Side street alley outfit": "Graffiti (L - NOISY NINJA)",
-      "Versum Hill: Side street secret skateboard": "Music (Big City Life)",
-      "Versum Hill: Basketball court alley skateboard": "Graffiti (L - wild rush)",
-      "Versum Hill: Basketball court Robo Post CD": "8 REP",
-      "Versum Hill: Basketball court shortcut CD": "Graffiti (M - Stacked Symbols)",
-      "Versum Hill: Rietveld joins the crew": "Music (Plume)",
-      "Versum Hill: Complete Chapter 1": "Chapter Completed",
-      "Millennium Square: Center ramp graffiti": "24 REP",
-      "Millennium Square: Rooftop staircase graffiti": "8 REP",
-      "Millennium Square: Toilet graffiti": "DOT.EXE",
-      "Millennium Square: Trash graffiti": "8 REP",
-      "Millennium Square: Center tower graffiti": "16 REP",
-      "Millennium Square: Rooftop billboard graffiti": "8 REP",
-      "Millennium Square: Center Robo Post CD": "Graffiti (L - Messenger Mural)",
-      "Millennium Square: Parking garage Robo Post CD": "Music (Next To Me)",
-      "Millennium Square: Mall ledge outfit": "32 REP",
-      "Millennium Square: Alley rooftop outfit": "Graffiti (M - pico pow)",
-      "Millennium Square: Alley staircase skateboard": "16 REP",
-      "Millennium Square: Secret painting skates": "48 REP",
-      "Millennium Square: Vending machine skates": "Graffiti (XL - Deep Dive)",
-      "Millennium Square: Walkway roof skates": "Music (AGUA)",
-      "Millennium Square: Alley ledge skates": "Graffiti (M - QUICK BING)",
-      "Millennium Square: DJ Cyber joins the crew": "Graffiti (M - BLOCKY)",
-      "Millennium Square: Half pipe Polo": "Outfit (Red - Winter)",
-      "Brink Terminal: Upside grind challenge reward": "Music (Light Switch)",
-      "Brink Terminal: Manual challenge reward": "16 REP",
-      "Brink Terminal: Score challenge reward": "Graffiti (L - RECORD.HEAD)",
-      "Brink Terminal: Under square ledge graffiti": "16 REP",
-      "Brink Terminal: Bus graffiti": "Skateboard (Lazer Accuracy)",
-      "Brink Terminal: Under square Robo Post graffiti": "8 REP",
-      "Brink Terminal: BMX gate graffiti": "Skateboard (Devon)",
-      "Brink Terminal: Square tower CD": "48 REP",
-      "Brink Terminal: Trash CD": "8 REP",
-      "Brink Terminal: Shop roof outfit": "Music (Beastmode Hip Hop Mixtape)",
-      "Brink Terminal: Glass roof skates": "Outfit (Shine - Winter)",
-      "Brink Terminal: Eclipse joins the crew": "Skateboard (Just Swell)",
-      "Brink Terminal: Behind glass Polo": "Graffiti (M - Pora)",
-      "Brink Terminal: Underground glass skates": "Graffiti (XL - end 2 end)",
-      "Brink Terminal: Underground ramp skates": "16 REP",
-      "Brink Terminal: Mesh's skateboard": "Mesh",
-      "Brink Terminal: Ocean platform CD": "8 REP",
-      "Brink Terminal: End of dock CD": "Music (hwbouths)",
-      "Brink Terminal: Dock Robo Post outfit": "16 REP",
-      "Brink Terminal: Control room skates": "8 REP",
-      "Brink Terminal: Mesh joins the crew": "24 REP",
-      "Brink Terminal: Wire grind CD": "Skateboard (Mantra)",
-      "Brink Terminal: Rooftop halfpipe graffiti": "16 REP",
-      "Brink Terminal: Rooftop glass CD": "8 REP",
-      "Brink Terminal: Tower core outfit": "Graffiti (XL - SECOND SIGHT)",
-      "Brink Terminal: High rooftop outfit": "8 REP",
-      "Brink Terminal: Complete Chapter 2": "Chapter Completed",
-      "Millennium Mall: Warehouse pallet graffiti": "Graffiti (XL - MegaHood)",
-      "Millennium Mall: Wall alcove graffiti": "Music (Morning Glow)",
-      "Millennium Mall: Maintenance shaft CD": "Inline Skates (Sweet Royale)",
-      "Millennium Mall: Glass cylinder CD": "Vinyl",
-      "Millennium Mall: Lower Robo Post outfit": "Outfit (Vinyl - Winter)",
-      "Millennium Mall: Hanging lights CD": "Outfit (Mesh - Autumn)",
-      "Millennium Mall: Atrium vending machine graffiti": "BMX (Mr. Taupe)",
-      "Millennium Mall: Trick challenge reward": "Graffiti (XL - FATE)",
-      "Millennium Mall: Slide challenge reward": "24 REP",
-      "Millennium Mall: Fish challenge reward": "8 REP",
-      "Millennium Mall: Score challenge reward": "Inline Skates (Sharpshooters)",
-      "Millennium Mall: Atrium top floor Robo Post CD": "Outfit (Bel - Winter)",
-      "Millennium Mall: Atrium top floor floating CD": "Graffiti (L - Boom)",
-      "Millennium Mall: Atrium top floor BMX": "BMX (Terrazza)",
-      "Millennium Mall: Theater entrance BMX": "Music (Last Hoorah)",
-      "Millennium Mall: Atrium BMX gate BMX": "Tryce",
-      "Millennium Mall: Upside down rail outfit": "Inline Skates (ck)",
-      "Millennium Mall: DOT.EXE joins the crew": "Graffiti (L - Jd Vila Formosa)",
-      "Millennium Mall: Race track Robo Post CD": "8 REP",
-      "Millennium Mall: Theater stage corner graffiti": "Graffiti (M - SHOGUN)",
-      "Millennium Mall: Theater hanging billboards graffiti": "Graffiti (M - Street classic)",
-      "Millennium Mall: Theater garage graffiti": "Eclipse",
-      "Millennium Mall: Theater maintenance CD": "Rave",
-      "Millennium Mall: Shine joins the crew": "Oldhead",
-      "Millennium Mall: Complete Chapter 3": "Chapter Completed",
-      "Pyramid Island: Lower rooftop graffiti": "Outfit (Felix - Autumn)",
-      "Pyramid Island: Polo graffiti": "Inline Skates (Ice Cold Killers)",
-      "Pyramid Island: Above entrance graffiti": "16 REP",
-      "Pyramid Island: BMX gate BMX": "Outfit (Rise - Autumn)",
-      "Pyramid Island: Polo pile 1": "Graffiti (M - 0m33)",
-      "Pyramid Island: Polo pile 2": "Music (DA PEOPLE)",
-      "Pyramid Island: Polo pile 3": "Devil Theory",
-      "Pyramid Island: Polo pile 4": "Outfit (Solace - Winter)",
-      "Pyramid Island: Quarter pipe rooftop graffiti": "24 REP",
-      "Pyramid Island: Supply port Robo Post CD": "Graffiti (XL - BiGSHiNYBoMB)",
-      "Pyramid Island: Above gate ledge CD": "Skateboard (Maceo)",
-      "Pyramid Island: Smoke hole BMX": "32 REP",
-      "Pyramid Island: Above gate rail outfit": "16 REP",
-      "Pyramid Island: Rail loop outfit": "Graffiti (XL - MOTORCYCLE GANG)",
-      "Pyramid Island: Score challenge reward": "8 REP",
-      "Pyramid Island: Score challenge 2 reward": "16 REP",
-      "Pyramid Island: Quarter pipe challenge reward": "8 REP",
-      "Pyramid Island: Maze outfit": "Graffiti (XL - Web Spitter)",
-      "Pyramid Island: Maze glass Polo": "Graffiti (XL - Gold Rush)",
-      "Pyramid Island: Maze classroom Polo": "Outfit (Rave - Autumn)",
-      "Pyramid Island: Maze vent Polo": "Music (Funk Express)",
-      "Pyramid Island: Big maze Polo": "8 REP",
-      "Pyramid Island: Maze desk Polo": "16 REP",
-      "Pyramid Island: Maze forklift Polo": "Music (watchyaback!)",
-      "Pyramid Island: Wind turbines CD": "Graffiti (L - buttercup)",
-      "Pyramid Island: Shortcut glass CD": "Music (Trinitron)",
-      "Pyramid Island: Turret jump CD": "Graffiti (XL - VIBRATIONS)",
-      "Pyramid Island: Helipad BMX": "DJ Cyber",
-      "Pyramid Island: Pipe outfit": "24 REP",
-      "Pyramid Island: Trash outfit": "Outfit (Tryce - Winter)",
-      "Pyramid Island: Devil Theory joins the crew": "Music (State of Mind)",
-      "Pyramid Island: Complete Chapter 4": "Chapter Completed",
-      "Pyramid Island: Pyramid top CD": "8 REP",
-      "Pyramid Island: Pyramid top Robo Post CD": "16 REP",
-      "Pyramid Island: Rise joins the crew": "16 REP",
-      "Mataan: Robo Post graffiti": "Music (I Wanna Kno)",
-      "Mataan: Secret ledge BMX": "8 REP",
-      "Mataan: Highway rooftop BMX": "8 REP",
-      "Mataan: Trash CD": "Graffiti (L - Lauder)",
-      "Mataan: Half pipe CD": "Camera App",
-      "Mataan: Across bull horns graffiti": "Graffiti (M - Teddy 4)",
-      "Mataan: Small rooftop graffiti": "Music (Hair Dun Nails Dun)",
-      "Mataan: Trash graffiti": "24 REP",
-      "Mataan: Trash Polo": "8 REP",
-      "Mataan: Deep city Robo Post CD": "Graffiti (L - skate or di3)",
-      "Mataan: Deep city tower CD": "16 REP",
-      "Mataan: Race challenge reward": "48 REP",
-      "Mataan: Wallrunning challenge reward": "Music (Feel The Funk (Computer Love))",
-      "Mataan: Score challenge reward": "Outfit (Rave - Winter)",
-      "Mataan: Deep city vent jump BMX": "BMX (Steel Wheeler)",
-      "Mataan: Deep city side wires outfit": "16 REP",
-      "Mataan: Deep city center island outfit": "BMX (Rigid No.6)",
-      "Mataan: Red light rail graffiti": "Outfit (Vinyl - Autumn)",
-      "Mataan: Red light side alley outfit": "Graffiti (M - SPRAYTANICPANIC!)",
-      "Mataan: Statue hand outfit": "16 REP",
-      "Mataan: Crane CD": "BMX (Dedication)",
-      "Mataan: Elephant tower glass outfit": "Graffiti (M - Thick Candy)",
-      "Mataan: Helipad outfit": "Graffiti (XL - Pirate's Life 4 Me)",
-      "Mataan: Vending machine CD": "Graffiti (L - VoodooBoy)",
-      "Mataan: Coil joins the crew": "8 REP",
-      "Mataan: Flesh Prince joins the crew": "Outfit (Rise - Winter)",
-      "Mataan: Futurism joins the crew": "Graffiti (L - SpawningSeason)",
-      "Mataan: Shopping Polo": "Outfit (Felix - Winter)",
-      "Defeat Faux": "Victory"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {
@@ -13674,7 +13421,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": 1,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -13697,7 +13444,7 @@
         }
       ],
       "prog_items_init": {
-        "rep": 1400
+        "rep": 0
       },
       "web_theme": "ocean",
       "web_tutorials": [

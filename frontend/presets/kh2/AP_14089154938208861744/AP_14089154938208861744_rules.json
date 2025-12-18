@@ -25591,14 +25591,14 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "AntiForm": 0,
-        "AtlanticaToggle": 0,
-        "AutoFormLogic": 0,
+        "AntiForm": "false",
+        "AtlanticaToggle": "false",
+        "AutoFormLogic": "false",
         "BountyAmount": 10,
         "BountyRequired": 7,
-        "BountyStartingHintToggle": 0,
-        "CorSkipToggle": 0,
-        "Cups": 0,
+        "BountyStartingHintToggle": "false",
+        "CorSkipToggle": "false",
+        "Cups": "no_cups",
         "CustomItemPoolQuantity": {
           "Aerial Dodge": 4,
           "Anti Form": 1,
@@ -25640,33 +25640,33 @@
           "Way to the Dawn": 2,
           "Wisdom Form": 1
         },
-        "DonaldGoofyStatsanity": 1,
-        "FightLogic": 1,
-        "FillerItemsLocal": 1,
-        "FinalFormLogic": 1,
-        "FinalXemnas": 1,
+        "DonaldGoofyStatsanity": "true",
+        "FightLogic": "normal",
+        "FillerItemsLocal": "true",
+        "FinalFormLogic": "light_and_darkness",
+        "FinalXemnas": "true",
         "Final_Form_EXP": 3,
-        "Goal": 1,
+        "Goal": "lucky_emblem_hunt",
         "Keyblade_Maximum": 7,
         "Keyblade_Minimum": 3,
-        "LevelDepth": 0,
+        "LevelDepth": "level_50",
         "Limit_Form_EXP": 3,
         "LuckyEmblemsAmount": 40,
         "LuckyEmblemsRequired": 35,
         "Master_Form_EXP": 3,
-        "Promise_Charm": 0,
+        "Promise_Charm": "false",
         "RandomGrowth": 0,
         "RandomVisitLockingItem": 0,
-        "Schmovement": 1,
+        "Schmovement": "level_1",
         "Sora_Level_EXP": 5,
-        "SummonLevelLocationToggle": 0,
+        "SummonLevelLocationToggle": "false",
         "Summon_EXP": 5,
-        "SuperBosses": 1,
+        "SuperBosses": "true",
         "Valor_Form_EXP": 3,
-        "Visitlocking": 2,
-        "WeaponSlotStartHint": 0,
+        "Visitlocking": "first_and_second_visit_locking",
+        "WeaponSlotStartHint": "false",
         "Wisdom_Form_EXP": 3,
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [
           "(AT) Musical Blizzard Element",
           "(AT) Musical Orichalcum+",
@@ -25692,11 +25692,11 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "FightLogic": 1,
-      "AutoFormLogic": 0,
-      "FinalFormLogic": 1,
-      "Promise_Charm": 0,
-      "CorSkipToggle": 0,
+      "FightLogic": "normal",
+      "AutoFormLogic": "false",
+      "FinalFormLogic": "light_and_darkness",
+      "Promise_Charm": "false",
+      "CorSkipToggle": "false",
       "world_directory": "kh2"
     }
   },
@@ -25930,7 +25930,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -25988,7 +25988,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -26046,7 +26046,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },
