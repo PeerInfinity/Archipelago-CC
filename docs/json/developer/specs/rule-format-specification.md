@@ -883,6 +883,118 @@ For each extension, decide: **Official** (keep as standard) or **Deprecated** (r
 
 ---
 
+## Implementation Details: HelperCall Refactoring
+
+This section documents the required changes to fix the `HelperCall` body inlining issue.
+
+### Current Behavior
+
+**Non-worldgen worlds (AST analyzer)**:
+- Helper references in rules: `{"type": "helper", "name": "can_swim", "args": []}`
+- Helpers section populated: `helpers["1"]["can_swim"] = {...body...}`
+- Frontend looks up body from helpers section ✓
+
+**Worldgen worlds (Rule Builder)**:
+- Helper references in rules: `{"rule": "HelperCall", "args": {"helper_name": "air_dash", "body_data": {...body...}}}`
+- Helpers section: EMPTY
+- Frontend uses inlined `body_data` (duplicated everywhere) ✗
+
+### Required Changes
+
+#### 1. `rule_builder/rules.py` - HelperCall._get_args_dict()
+
+**File**: `rule_builder/rules.py:2976-2981`
+
+**Current**:
+```python
+def _get_args_dict(self) -> dict[str, Any]:
+    return {
+        "helper_name": self.helper_name,
+        "args": self.args,
+        "body_data": self.body_data,  # ← Remove this
+    }
+```
+
+**Change**: Remove `body_data` from serialization output.
+
+#### 2. Worldgen Helper Export
+
+Two options:
+
+**Option A: World Generator exports helpers dict**
+
+Add helper definitions to a new `get_helper_definitions()` method on worldgen World classes, returning a dict like:
+```python
+{
+    "air_dash": {"type": "item_check", "item": "PNEUMATOPHORE"},
+    "airship": {"type": "item_check", "item": "DOCK KEY"},
+    ...
+}
+```
+
+The exporter already calls `game_handler.get_helper_definitions(world)` and stores the result in `export_data['helpers'][player_str]`.
+
+**Option B: Exporter extracts helpers from worldgen Rules.py**
+
+Modify `get_helper_definitions()` in the base game handler to also discover helpers from worldgen Rules.py files by:
+1. Finding functions matching `_<worldname>_<helper_name>`
+2. Analyzing them with the AST analyzer
+3. Stripping the prefix from helper names
+
+**Recommendation**: Option A is cleaner - the world generator already has the helper bodies available when creating `HelperCall` rules.
+
+#### 3. World Generator Changes
+
+**File**: `world_generator/rule_codegen.py`
+
+The `_convert_helper()` method (lines 1241-1307) currently embeds `body_data`. Changes needed:
+
+1. Remove `body_data` parameter from HelperCall generation
+2. Generate a `get_helper_definitions()` method that returns all helper bodies
+
+**Current code pattern**:
+```python
+# Lines 1284-1301
+if helper_name in self.helper_bodies:
+    body = self.helper_bodies[helper_name]
+    expanded_body = self._expand_helper_refs(body)
+    parts.append(f'body_data={repr(expanded_body)}')
+```
+
+**New pattern**: Collect helper bodies for separate export, don't inline.
+
+#### 4. Frontend (No Changes Needed)
+
+The frontend already supports reference-based lookup. In `evaluateRuleBuilderRule()`:
+
+```javascript
+// Lines 4733-4737 in ruleEngine.js
+const helperName = args.helper_name;
+if (helperName) {
+  const helperArgs = args.args || [];
+  return evaluateRule({ type: 'helper', name: helperName, args: helperArgs }, ...);
+}
+```
+
+This delegates to the AST format `helper` case which looks up from `staticData?.helpers?.[playerIdKey]?.[rule.name]`.
+
+### Migration Path
+
+1. **Phase 1**: Update worldgen to export helpers section
+2. **Phase 2**: Keep `body_data` serialization for backward compatibility
+3. **Phase 3**: Remove `body_data` from `_get_args_dict()`
+4. **Phase 4**: Regenerate all worldgen presets
+5. **Phase 5**: Remove `body_data` fallback code from frontend (optional)
+
+### File Size Impact
+
+Estimated reduction for typical worldgen world:
+- Current: Each helper body repeated 10-50+ times
+- After: Each helper body stored once
+- Expected reduction: 50-80% for rules.json files with many helper calls
+
+---
+
 ## References
 
 - Original Rule Builder PR: https://github.com/ArchipelagoMW/Archipelago/pull/5048
