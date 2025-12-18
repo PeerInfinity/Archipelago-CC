@@ -664,6 +664,137 @@ With arguments:
 
 ---
 
+## Proposed Rules (Phase 0 Consideration)
+
+These rules are proposed additions to address gaps in the current extended Rule Builder format. They would provide better coverage for AST format patterns that currently fall back to `CCRule`.
+
+### Numeric
+
+**`MaxValue`** - Maximum of multiple values (complements `MinValue`)
+```json
+{
+  "rule": "MaxValue",
+  "options": [],
+  "args": {
+    "values": [
+      {"rule": "CountItem", "args": {"item_name": "Key A"}},
+      {"rule": "CountItem", "args": {"item_name": "Key B"}}
+    ]
+  }
+}
+```
+
+**Status**: Proposed - adds symmetry with `MinValue`
+
+**`CountGroup`** - Get group item count as number (summing all items)
+```json
+{
+  "rule": "CountGroup",
+  "options": [],
+  "args": {"item_name_group": "Weapons"}
+}
+```
+
+**Status**: Proposed - numeric counterpart to `HasGroup`
+
+**`CountGroupUnique`** - Get unique group item count as number
+```json
+{
+  "rule": "CountGroupUnique",
+  "options": [],
+  "args": {"item_name_group": "Collectibles"}
+}
+```
+
+**Status**: Proposed - numeric counterpart to `HasGroupUnique`
+
+**`Sum`** - Add multiple values together
+```json
+{
+  "rule": "Sum",
+  "options": [],
+  "args": {
+    "values": [
+      {"rule": "CountItem", "args": {"item_name": "Red Key"}},
+      {"rule": "CountItem", "args": {"item_name": "Blue Key"}},
+      {"rule": "CountItem", "args": {"item_name": "Green Key"}}
+    ]
+  }
+}
+```
+
+**Status**: Proposed - aggregation for multiple counts
+
+**`Negate`** - Unary minus for numbers
+```json
+{
+  "rule": "Negate",
+  "options": [],
+  "args": {
+    "value": {"rule": "CountItem", "args": {"item_name": "Penalty"}}
+  }
+}
+```
+
+**Status**: Proposed - matches AST format `negate` type
+
+### Data Access
+
+**`SettingValue`** - Access game options/settings
+```json
+{
+  "rule": "SettingValue",
+  "options": [],
+  "args": {"setting": "shuffle_keys"}
+}
+```
+
+**Status**: Proposed - matches AST format `setting_value` type
+
+**`Subscript`** - Array/dict indexing
+```json
+{
+  "rule": "Subscript",
+  "options": [],
+  "args": {
+    "value": {"rule": "SettingValue", "args": {"setting": "medallion_table"}},
+    "index": "turtle_rock"
+  }
+}
+```
+
+With numeric index:
+```json
+{
+  "rule": "Subscript",
+  "options": [],
+  "args": {
+    "value": {"type": "list", "items": ["Sword", "Master Sword", "Tempered Sword"]},
+    "index": 2
+  }
+}
+```
+
+**Status**: Proposed - matches AST format `subscript` type
+
+### Membership
+
+**`Contains`** - Check if value is in a list (for `in` operator)
+```json
+{
+  "rule": "Contains",
+  "options": [],
+  "args": {
+    "value": {"rule": "SettingValue", "args": {"setting": "current_mode"}},
+    "container": ["normal", "hard", "expert"]
+  }
+}
+```
+
+**Status**: Proposed - supports `x in [...]` comparisons
+
+---
+
 ## Format Mapping
 
 ### AST → Rule Builder Conversion
@@ -690,9 +821,16 @@ With arguments:
 | `compare` | `Compare` | Extension |
 | `binary_op` | `Arithmetic` | Extension |
 | `conditional` | `Conditional` | Extension |
+| `state_method` (count_group) | `CountGroup` | Proposed |
+| `state_method` (count_group_unique) | `CountGroupUnique` | Proposed |
+| `max` | `MaxValue` | Proposed |
+| `min` | `MinValue` | Extension |
+| `sum` | `Sum` | Proposed |
+| `negate` | `Negate` | Proposed |
+| `setting_value` | `SettingValue` | Proposed |
+| `subscript` | `Subscript` | Proposed |
+| `compare` (with `in` op) | `Contains` | Proposed |
 | `attribute` | `CCRule` | Preserved |
-| `subscript` | `CCRule` | Preserved |
-| `setting_value` | `CCRule` | Preserved |
 | Other | `CCRule` | Preserved |
 
 ---
@@ -700,6 +838,8 @@ With arguments:
 ## Phase 0 Decision Checklist
 
 For each extension, decide: **Official** (keep as standard) or **Deprecated** (remove/replace)
+
+### Existing Extensions
 
 | Extension Rule | Recommendation | Decision |
 |----------------|----------------|----------|
@@ -712,13 +852,18 @@ For each extension, decide: **Official** (keep as standard) or **Deprecated** (r
 | `HelperCall` | Official | [ ] Approve |
 | `CCRule` | Deprecated (internal only) | [ ] Approve |
 
-### Additional Rules to Consider
+### Proposed Additions
 
-| Proposed Rule | Purpose | Decision |
-|---------------|---------|----------|
-| `SettingValue` | Access game options | [ ] Add |
-| `Subscript` | Array/dict indexing | [ ] Add |
-| `Negate` | Unary minus for numbers | [ ] Add |
+| Proposed Rule | Purpose | Replaces `CCRule` for | Decision |
+|---------------|---------|----------------------|----------|
+| `MaxValue` | Maximum of multiple values | `max(...)` expressions | [ ] Add |
+| `CountGroup` | Get group count as number | `state.count_group(...)` | [ ] Add |
+| `CountGroupUnique` | Get unique group count as number | `state.count_group_unique(...)` | [ ] Add |
+| `Sum` | Sum multiple values | `sum(...)` expressions | [ ] Add |
+| `Negate` | Unary minus for numbers | `-x` expressions | [ ] Add |
+| `SettingValue` | Access game options | `world.options.x` / `setting_value` | [ ] Add |
+| `Subscript` | Array/dict indexing | `x[y]` / `subscript` | [ ] Add |
+| `Contains` | Check value in list | `x in [...]` comparisons | [ ] Add |
 
 ---
 
