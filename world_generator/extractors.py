@@ -275,6 +275,65 @@ def _determine_classification(item_data: Dict[str, Any]) -> str:
     return 'filler'
 
 
+def _extract_required_items_from_rule(rule: Optional[Dict[str, Any]], required_items: set) -> None:
+    """Recursively extract item names required by an access rule.
+
+    Parses Has, And, Or rules to find all items that are checked for access.
+    """
+    if not rule:
+        return
+
+    rule_type = rule.get('rule', '')
+
+    if rule_type == 'Has':
+        item_name = rule.get('args', {}).get('item_name')
+        if item_name:
+            required_items.add(item_name)
+    elif rule_type in ('And', 'Or'):
+        for child in rule.get('args', {}).get('rules', []):
+            _extract_required_items_from_rule(child, required_items)
+    elif rule_type == 'Not':
+        # Don't add items from Not rules - they're negated requirements
+        pass
+
+
+def upgrade_required_items_to_progression(
+    items: Dict[str, 'ItemData'],
+    locations: Dict[str, 'LocationData']
+) -> Dict[str, 'ItemData']:
+    """Upgrade items required by location access rules to progression.
+
+    Items that are required by location access rules (via Has) must be
+    progression to ensure proper accessibility checking. This fixes cases
+    where the original game marked items as 'useful' but the WorldGen
+    version has locations that require those items.
+
+    Args:
+        items: Dict of item name to ItemData
+        locations: Dict of location name to LocationData
+
+    Returns:
+        Updated items dict with required items upgraded to progression
+    """
+    from dataclasses import replace
+
+    # Find all items required by location access rules
+    required_items: set = set()
+    for loc_data in locations.values():
+        _extract_required_items_from_rule(loc_data.access_rule, required_items)
+
+    # Upgrade non-progression items to progression if they're required
+    updated_items = {}
+    for item_name, item_data in items.items():
+        if item_name in required_items and not item_data.classification.startswith('progression'):
+            # Upgrade to progression
+            updated_items[item_name] = replace(item_data, classification='progression')
+        else:
+            updated_items[item_name] = item_data
+
+    return updated_items
+
+
 def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[str], Dict[str, List[str]]]:
     """
     Extract items and item groups from JSON.
@@ -813,6 +872,11 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     metadata = extract_game_metadata(json_data)
     items, item_groups, item_name_groups = extract_items(json_data)
     locations, original_placements, locked_placements = extract_locations(json_data)
+
+    # Upgrade items required by location access rules to progression
+    # This ensures accessibility checking works correctly for items that unlock locations
+    items = upgrade_required_items_to_progression(items, locations)
+
     regions, exits = extract_regions(json_data)
     start_region = extract_start_region(json_data)
     itempool_counts = extract_itempool_counts(json_data)

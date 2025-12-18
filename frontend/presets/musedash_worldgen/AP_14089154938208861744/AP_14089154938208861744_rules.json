@@ -20,12 +20,9 @@
             "name": "Breaking Dawn-0",
             "id": 2900006,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Breaking Dawn",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -39,12 +36,9 @@
             "name": "Breaking Dawn-1",
             "id": 2900007,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Breaking Dawn",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Ira",
@@ -58,12 +52,9 @@
             "name": "Best One feat.tooko-0",
             "id": 2900024,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Best One feat.tooko",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -77,12 +68,9 @@
             "name": "Best One feat.tooko-1",
             "id": 2900025,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Best One feat.tooko",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Mopemope",
@@ -96,12 +84,9 @@
             "name": "I don't care about Christmas though-0",
             "id": 2900064,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "I don't care about Christmas though",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -115,12 +100,9 @@
             "name": "I don't care about Christmas though-1",
             "id": 2900065,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "I don't care about Christmas though",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -134,12 +116,9 @@
             "name": "Koi no Moonlight-0",
             "id": 2900036,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Koi no Moonlight",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Bass Telekinesis",
@@ -153,12 +132,9 @@
             "name": "Koi no Moonlight-1",
             "id": 2900037,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Koi no Moonlight",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Dohna Dohna no Uta",
@@ -172,12 +148,9 @@
             "name": "Yuki no Shizuku Ame no Oto-0",
             "id": 2900022,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Yuki no Shizuku Ame no Oto",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Stargazer",
@@ -191,12 +164,9 @@
             "name": "Yuki no Shizuku Ame no Oto-1",
             "id": 2900023,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Yuki no Shizuku Ame no Oto",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Miss To Great (5 Pack)",
@@ -210,12 +180,9 @@
             "name": "Iyaiya-0",
             "id": 2900002,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Iyaiya",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -229,12 +196,9 @@
             "name": "Iyaiya-1",
             "id": 2900003,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Iyaiya",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -248,12 +212,9 @@
             "name": "Heart Message feat. Aoi Tokimori-0",
             "id": 2901260,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Heart Message feat. Aoi Tokimori",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Miss To Great (5 Pack)",
@@ -267,12 +228,9 @@
             "name": "Heart Message feat. Aoi Tokimori-1",
             "id": 2901261,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Heart Message feat. Aoi Tokimori",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Medicine of Sing",
@@ -286,12 +244,9 @@
             "name": "irregulyze-0",
             "id": 2900062,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "irregulyze",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Ira",
@@ -305,12 +260,9 @@
             "name": "irregulyze-1",
             "id": 2900063,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "irregulyze",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Dolphin and Broadcast",
@@ -324,12 +276,9 @@
             "name": "Clock Room & Spiritual World-0",
             "id": 2900092,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clock Room & Spiritual World",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -343,12 +292,9 @@
             "name": "Clock Room & Spiritual World-1",
             "id": 2900093,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clock Room & Spiritual World",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Miss To Great (5 Pack)",
@@ -362,12 +308,9 @@
             "name": "Latitude-0",
             "id": 2900086,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Latitude",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Evolution",
@@ -381,12 +324,9 @@
             "name": "Latitude-1",
             "id": 2900087,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Latitude",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Lys Tourbillon",
@@ -400,12 +340,9 @@
             "name": "Etude -Sunset--0",
             "id": 2900824,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Etude -Sunset-",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -419,12 +356,9 @@
             "name": "Etude -Sunset--1",
             "id": 2900825,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Etude -Sunset-",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Heart Message feat. Aoi Tokimori",
@@ -438,12 +372,9 @@
             "name": "Evolution-0",
             "id": 2900018,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Evolution",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Out of Sense",
@@ -457,12 +388,9 @@
             "name": "Evolution-1",
             "id": 2900019,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Evolution",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -476,12 +404,9 @@
             "name": "Blackest Luxury Car-0",
             "id": 2900058,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Blackest Luxury Car",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Galaxy Striker",
@@ -495,12 +420,9 @@
             "name": "Blackest Luxury Car-1",
             "id": 2900059,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Blackest Luxury Car",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Out of Sense",
@@ -514,12 +436,9 @@
             "name": "Bass Telekinesis-0",
             "id": 2900052,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Bass Telekinesis",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Dolphin and Broadcast",
@@ -533,12 +452,9 @@
             "name": "Bass Telekinesis-1",
             "id": 2900053,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Bass Telekinesis",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -552,12 +468,9 @@
             "name": "Confession-0",
             "id": 2900046,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Confession",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "From the New World",
@@ -571,12 +484,9 @@
             "name": "Confession-1",
             "id": 2900047,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Confession",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Miss To Great (5 Pack)",
@@ -590,12 +500,9 @@
             "name": "Lys Tourbillon-0",
             "id": 2900830,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lys Tourbillon",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Pancake is Love",
@@ -609,12 +516,9 @@
             "name": "Lys Tourbillon-1",
             "id": 2900831,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lys Tourbillon",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Frost Land",
@@ -628,12 +532,9 @@
             "name": "Pancake is Love-0",
             "id": 2900014,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Pancake is Love",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Departure Road",
@@ -647,12 +548,9 @@
             "name": "Pancake is Love-1",
             "id": 2900015,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Pancake is Love",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Shenri Kuaira -repeat-",
@@ -666,12 +564,9 @@
             "name": "umpopoff-0",
             "id": 2900102,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "umpopoff",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "irregulyze",
@@ -685,12 +580,9 @@
             "name": "umpopoff-1",
             "id": 2900103,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "umpopoff",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Yume Ou Mono Yo",
@@ -704,12 +596,9 @@
             "name": "Night Wander-0",
             "id": 2900028,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Night Wander",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Evolution",
@@ -723,12 +612,9 @@
             "name": "Night Wander-1",
             "id": 2900029,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Night Wander",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Iyaiya",
@@ -742,12 +628,9 @@
             "name": "Dolphin and Broadcast-0",
             "id": 2900020,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Dolphin and Broadcast",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Heart-Pounding Flight",
@@ -761,12 +644,9 @@
             "name": "Dolphin and Broadcast-1",
             "id": 2900021,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Dolphin and Broadcast",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Aqua Stars",
@@ -780,12 +660,9 @@
             "name": "Mezame Eurythmics-0",
             "id": 2900082,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Mezame Eurythmics",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Extra Life",
@@ -799,12 +676,9 @@
             "name": "Mezame Eurythmics-1",
             "id": 2900083,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Mezame Eurythmics",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -818,12 +692,9 @@
             "name": "Mujinku-Vacuum-0",
             "id": 2900098,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Mujinku-Vacuum",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Goodbye Boss",
@@ -837,12 +708,9 @@
             "name": "Mujinku-Vacuum-1",
             "id": 2900099,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Mujinku-Vacuum",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "EXIST",
@@ -856,12 +724,9 @@
             "name": "Departure Road-0",
             "id": 2900050,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Departure Road",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "MilK",
@@ -875,12 +740,9 @@
             "name": "Departure Road-1",
             "id": 2900051,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Departure Road",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Blackest Luxury Car",
@@ -894,12 +756,9 @@
             "name": "MilK-0",
             "id": 2900100,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "MilK",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Mujinku-Vacuum",
@@ -913,12 +772,9 @@
             "name": "MilK-1",
             "id": 2900101,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "MilK",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Candy-coloured Love Theory",
@@ -932,12 +788,9 @@
             "name": "Yume Ou Mono Yo-0",
             "id": 2901066,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Yume Ou Mono Yo",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Heart Message feat. Aoi Tokimori",
@@ -951,12 +804,9 @@
             "name": "Yume Ou Mono Yo-1",
             "id": 2901067,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Yume Ou Mono Yo",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -970,12 +820,9 @@
             "name": "Frost Land-0",
             "id": 2900010,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Frost Land",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -989,12 +836,9 @@
             "name": "Frost Land-1",
             "id": 2900011,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Frost Land",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Blackest Luxury Car",
@@ -1008,12 +852,9 @@
             "name": "Say! Fanfare!-0",
             "id": 2900074,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Say! Fanfare!",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Etude -Sunset-",
@@ -1027,12 +868,9 @@
             "name": "Say! Fanfare!-1",
             "id": 2900075,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Say! Fanfare!",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "umpopoff",
@@ -1046,12 +884,9 @@
             "name": "Out of Sense-0",
             "id": 2900820,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Out of Sense",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Clock Room & Spiritual World",
@@ -1065,12 +900,9 @@
             "name": "Out of Sense-1",
             "id": 2900821,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Out of Sense",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Night Wander",
@@ -1084,12 +916,9 @@
             "name": "Funkotsu Saishin Casino-0",
             "id": 2900090,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Funkotsu Saishin Casino",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -1103,12 +932,9 @@
             "name": "Funkotsu Saishin Casino-1",
             "id": 2900091,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Funkotsu Saishin Casino",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Clock Room & Spiritual World",
@@ -1122,12 +948,9 @@
             "name": "Medicine of Sing-0",
             "id": 2900060,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Medicine of Sing",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -1141,12 +964,9 @@
             "name": "Medicine of Sing-1",
             "id": 2900061,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Medicine of Sing",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -1160,12 +980,9 @@
             "name": "Goodbye Boss-0",
             "id": 2900826,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Goodbye Boss",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Latitude",
@@ -1179,12 +996,9 @@
             "name": "Goodbye Boss-1",
             "id": 2900827,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Goodbye Boss",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -1198,12 +1012,9 @@
             "name": "Dohna Dohna no Uta-0",
             "id": 2900030,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Dohna Dohna no Uta",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Pancake is Love",
@@ -1217,12 +1028,9 @@
             "name": "Dohna Dohna no Uta-1",
             "id": 2900031,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Dohna Dohna no Uta",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Confession",
@@ -1236,12 +1044,9 @@
             "name": "Heart-Pounding Flight-0",
             "id": 2900012,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Heart-Pounding Flight",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -1255,12 +1060,9 @@
             "name": "Heart-Pounding Flight-1",
             "id": 2900013,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Heart-Pounding Flight",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Galaxy Striker",
@@ -1274,12 +1076,9 @@
             "name": "Stargazer-0",
             "id": 2900828,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Stargazer",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Candy-coloured Love Theory",
@@ -1293,12 +1092,9 @@
             "name": "Stargazer-1",
             "id": 2900829,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Stargazer",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "DISCO NIGHT",
@@ -1312,12 +1108,9 @@
             "name": "Aqua Stars-0",
             "id": 2900088,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Aqua Stars",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -1331,12 +1124,9 @@
             "name": "Aqua Stars-1",
             "id": 2900089,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Aqua Stars",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Dohna Dohna no Uta",
@@ -1350,12 +1140,9 @@
             "name": "Ira-0",
             "id": 2900056,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Ira",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Lys Tourbillon",
@@ -1369,12 +1156,9 @@
             "name": "Ira-1",
             "id": 2900057,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Ira",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Stargazer",
@@ -1388,12 +1172,9 @@
             "name": "Mopemope-0",
             "id": 2900104,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Mopemope",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Etude -Sunset-",
@@ -1407,12 +1188,9 @@
             "name": "Mopemope-1",
             "id": 2900105,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Mopemope",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Frost Land",
@@ -1426,12 +1204,9 @@
             "name": "DISCO NIGHT-0",
             "id": 2900034,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "DISCO NIGHT",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Say! Fanfare!",
@@ -1445,12 +1220,9 @@
             "name": "DISCO NIGHT-1",
             "id": 2900035,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "DISCO NIGHT",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "From the New World",
@@ -1464,12 +1236,9 @@
             "name": "From the New World-0",
             "id": 2900070,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "From the New World",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Heart-Pounding Flight",
@@ -1483,12 +1252,9 @@
             "name": "From the New World-1",
             "id": 2900071,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "From the New World",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Lian Ai Audio Navigation",
@@ -1502,12 +1268,9 @@
             "name": "Lights of Muse-0",
             "id": 2900040,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lights of Muse",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -1521,12 +1284,9 @@
             "name": "Lights of Muse-1",
             "id": 2900041,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lights of Muse",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -1540,12 +1300,9 @@
             "name": "Shenri Kuaira -repeat--0",
             "id": 2900084,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shenri Kuaira -repeat-",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Lights of Muse",
@@ -1559,12 +1316,9 @@
             "name": "Shenri Kuaira -repeat--1",
             "id": 2900085,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shenri Kuaira -repeat-",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -1578,12 +1332,9 @@
             "name": "EXIST-0",
             "id": 2900648,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "EXIST",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Music Sheet",
@@ -1597,12 +1348,9 @@
             "name": "EXIST-1",
             "id": 2900649,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "EXIST",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Mezame Eurythmics",
@@ -1616,12 +1364,9 @@
             "name": "Lian Ai Audio Navigation-0",
             "id": 2900038,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lian Ai Audio Navigation",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Confession",
@@ -1635,12 +1380,9 @@
             "name": "Lian Ai Audio Navigation-1",
             "id": 2900039,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lian Ai Audio Navigation",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Great To Perfect (10 Pack)",
@@ -1654,12 +1396,9 @@
             "name": "Candy-coloured Love Theory-0",
             "id": 2900026,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Candy-coloured Love Theory",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "EXIST",
@@ -1673,12 +1412,9 @@
             "name": "Candy-coloured Love Theory-1",
             "id": 2900027,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Candy-coloured Love Theory",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Lights of Muse",
@@ -1692,12 +1428,9 @@
             "name": "Galaxy Striker-0",
             "id": 2900048,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Galaxy Striker",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Funkotsu Saishin Casino",
@@ -1711,12 +1444,9 @@
             "name": "Galaxy Striker-1",
             "id": 2900049,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Galaxy Striker",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Lian Ai Audio Navigation",
