@@ -2,21 +2,29 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
-    "created": "2025-12-18T01:26:15.225068",
+    "created": "2025-12-18T05:03:28.733636",
     "intermittent_tracking": {
       "failures": [
         {
           "now_passing": true,
           "previously_failed": true,
           "seed": 1,
-          "template": "Terraria.yaml",
+          "template": "Kirby's Dream Land 3.yaml",
           "test_type": "spoiler",
-          "timestamp": "2025-12-18T01:23:20.574608"
+          "timestamp": "2025-12-18T05:02:28.357153"
+        },
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 1,
+          "template": "shapez.yaml",
+          "test_type": "spoiler",
+          "timestamp": "2025-12-18T05:02:16.222738"
         }
       ],
-      "last_updated": "2025-12-18T01:26:15.225075"
+      "last_updated": "2025-12-18T05:03:28.733645"
     },
-    "last_updated": "2025-12-18T01:26:15.225073",
+    "last_updated": "2025-12-18T05:03:28.733643",
     "script_version": "1.0.0"
   },
   "results": {
@@ -35,7 +43,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:27.195060"
+          "timestamp": "2025-12-18T05:01:04.961496"
         }
       },
       "game_name_from_filename": "ahit",
@@ -43,7 +51,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.17,
+        "processing_time_seconds": 5.05,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -58,7 +66,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 16.96,
+        "processing_time_seconds": 14.23,
         "return_code": 0,
         "sphere_reached": 5.11,
         "success": true,
@@ -66,7 +74,7 @@
         "warning_count": 0
       },
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-12-18T01:20:31.840720",
+      "timestamp": "2025-12-18T04:58:39.381282",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "exporter_size": 11405,
@@ -87,14 +95,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "b6528fe9c8ab8a9137bb2400a8cb03807a6c8a27f661d455a6d0a4bb55703d53",
+          "new_rules_hash": "68846a12e88bbfd281502cd4eab24303ae269eea27c9b1ec6855250261237c3d",
           "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "original_rules_hash": "b6528fe9c8ab8a9137bb2400a8cb03807a6c8a27f661d455a6d0a4bb55703d53",
+          "original_rules_hash": "68846a12e88bbfd281502cd4eab24303ae269eea27c9b1ec6855250261237c3d",
           "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:20.915041"
+          "timestamp": "2025-12-18T05:01:12.709006"
         }
       },
       "game_name_from_filename": "alttp",
@@ -102,14 +110,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.57,
+        "processing_time_seconds": 10.46,
         "return_code": 0,
         "success": true,
         "warning_count": 3
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 625193,
+        "size_bytes": 625203,
         "size_mb": 0.6
       },
       "seed": "1",
@@ -117,7 +125,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 19.95,
+        "processing_time_seconds": 21.03,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -125,10 +133,10 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-18T01:20:41.209234",
+      "timestamp": "2025-12-18T04:58:37.075879",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
-        "exporter_size": 40358,
+        "exporter_size": 41560,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "alttp",
@@ -153,7 +161,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:45.970100"
+          "timestamp": "2025-12-18T05:02:21.807171"
         }
       },
       "game_name_from_filename": "shorthike",
@@ -161,7 +169,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.37,
+        "processing_time_seconds": 3.93,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -176,7 +184,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.09,
+        "processing_time_seconds": 10.41,
         "return_code": 0,
         "sphere_reached": 3.1,
         "success": true,
@@ -184,7 +192,7 @@
         "warning_count": 0
       },
       "template_filename": "A Short Hike.yaml",
-      "timestamp": "2025-12-18T01:20:28.049159",
+      "timestamp": "2025-12-18T04:58:41.796127",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -212,7 +220,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:49.117877"
+          "timestamp": "2025-12-18T05:01:05.328894"
         }
       },
       "game_name_from_filename": "apquest",
@@ -220,7 +228,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.6,
+        "processing_time_seconds": 3.41,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -235,7 +243,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 13.59,
+        "processing_time_seconds": 6.17,
         "return_code": 0,
         "sphere_reached": 3.1,
         "success": true,
@@ -243,7 +251,7 @@
         "warning_count": 0
       },
       "template_filename": "APQuest.yaml",
-      "timestamp": "2025-12-18T01:20:46.184913",
+      "timestamp": "2025-12-18T04:58:38.868255",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -271,7 +279,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:38.592739"
+          "timestamp": "2025-12-18T05:00:28.042276"
         }
       },
       "game_name_from_filename": "adventure",
@@ -279,7 +287,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.44,
+        "processing_time_seconds": 3.53,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -294,7 +302,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.98,
+        "processing_time_seconds": 6.86,
         "return_code": 0,
         "sphere_reached": 6.1,
         "success": true,
@@ -302,7 +310,7 @@
         "warning_count": 0
       },
       "template_filename": "Adventure.yaml",
-      "timestamp": "2025-12-18T01:20:34.534476",
+      "timestamp": "2025-12-18T04:58:36.346944",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -330,7 +338,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:20.537799"
+          "timestamp": "2025-12-18T05:00:24.922088"
         }
       },
       "game_name_from_filename": "aquaria",
@@ -338,7 +346,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.75,
+        "processing_time_seconds": 7.87,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -353,7 +361,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.6,
+        "processing_time_seconds": 9.74,
         "return_code": 0,
         "sphere_reached": 5.2,
         "success": true,
@@ -361,7 +369,7 @@
         "warning_count": 0
       },
       "template_filename": "Aquaria.yaml",
-      "timestamp": "2025-12-18T01:20:37.963899",
+      "timestamp": "2025-12-18T04:58:41.838557",
       "world_info": {
         "exporter_path": "exporter/games/aquaria.py",
         "exporter_size": 3341,
@@ -389,7 +397,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:27.773772"
+          "timestamp": "2025-12-18T05:00:27.665007"
         }
       },
       "game_name_from_filename": "bomb_rush_cyberfunk",
@@ -397,7 +405,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.81,
+        "processing_time_seconds": 11.6,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -412,7 +420,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 25.52,
+        "processing_time_seconds": 22.33,
         "return_code": 0,
         "sphere_reached": 10.9,
         "success": true,
@@ -420,7 +428,7 @@
         "warning_count": 0
       },
       "template_filename": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-12-18T01:20:32.286106",
+      "timestamp": "2025-12-18T04:58:34.644380",
       "world_info": {
         "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
         "exporter_size": 1585,
@@ -448,7 +456,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:09.191045"
+          "timestamp": "2025-12-18T05:01:04.464625"
         }
       },
       "game_name_from_filename": "bumpstik",
@@ -456,7 +464,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.41,
+        "processing_time_seconds": 3.72,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -471,7 +479,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.09,
+        "processing_time_seconds": 11.3,
         "return_code": 0,
         "sphere_reached": 8.2,
         "success": true,
@@ -479,7 +487,7 @@
         "warning_count": 0
       },
       "template_filename": "Bumper Stickers.yaml",
-      "timestamp": "2025-12-18T01:20:33.173997",
+      "timestamp": "2025-12-18T04:58:37.458156",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -507,7 +515,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:32.384655"
+          "timestamp": "2025-12-18T05:00:33.899753"
         }
       },
       "game_name_from_filename": "cvcotm",
@@ -515,7 +523,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.53,
+        "processing_time_seconds": 3.46,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -530,7 +538,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.31,
+        "processing_time_seconds": 6.23,
         "return_code": 0,
         "sphere_reached": 4.4,
         "success": true,
@@ -538,7 +546,7 @@
         "warning_count": 0
       },
       "template_filename": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-12-18T01:20:27.472638",
+      "timestamp": "2025-12-18T04:58:34.442669",
       "world_info": {
         "exporter_path": "exporter/games/cvcotm.py",
         "exporter_size": 15411,
@@ -559,14 +567,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "b2660e70bcff3c5885e3e8522cc5706e7196c52f4470b0309f1f59ec6db202c3",
+          "new_rules_hash": "9f656b39e721001538f9eb2b1e885bea80eb21927200cb2d7aee02e9e0f4a099",
           "new_sphere_log_hash": "c8858eafb58e4e7527649009af5fe118a5697315dcf5c9690ce2386eb29260ee",
-          "original_rules_hash": "b2660e70bcff3c5885e3e8522cc5706e7196c52f4470b0309f1f59ec6db202c3",
+          "original_rules_hash": "9f656b39e721001538f9eb2b1e885bea80eb21927200cb2d7aee02e9e0f4a099",
           "original_sphere_log_hash": "c8858eafb58e4e7527649009af5fe118a5697315dcf5c9690ce2386eb29260ee",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:11.073696"
+          "timestamp": "2025-12-18T05:02:34.007113"
         }
       },
       "game_name_from_filename": "cv64",
@@ -574,14 +582,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.45,
+        "processing_time_seconds": 3.78,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 142163,
+        "size_bytes": 142164,
         "size_mb": 0.14
       },
       "seed": "1",
@@ -589,7 +597,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.15,
+        "processing_time_seconds": 7.84,
         "return_code": 0,
         "sphere_reached": 4.5,
         "success": true,
@@ -597,7 +605,7 @@
         "warning_count": 0
       },
       "template_filename": "Castlevania 64.yaml",
-      "timestamp": "2025-12-18T01:20:27.549248",
+      "timestamp": "2025-12-18T04:58:34.248969",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -625,7 +633,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:31.686592"
+          "timestamp": "2025-12-18T05:01:09.400217"
         }
       },
       "game_name_from_filename": "celeste_open_world",
@@ -633,7 +641,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.43,
+        "processing_time_seconds": 4.34,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -648,7 +656,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 13.74,
+        "processing_time_seconds": 13.71,
         "return_code": 0,
         "sphere_reached": 16.2,
         "success": true,
@@ -656,7 +664,7 @@
         "warning_count": 0
       },
       "template_filename": "Celeste (Open World).yaml",
-      "timestamp": "2025-12-18T01:20:55.123805",
+      "timestamp": "2025-12-18T04:58:59.693046",
       "world_info": {
         "exporter_path": "exporter/games/celeste_open_world.py",
         "exporter_size": 7243,
@@ -684,7 +692,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:24.246754"
+          "timestamp": "2025-12-18T05:01:16.211129"
         }
       },
       "game_name_from_filename": "celeste64",
@@ -692,7 +700,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.34,
+        "processing_time_seconds": 3.37,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -715,7 +723,7 @@
         "warning_count": 0
       },
       "template_filename": "Celeste 64.yaml",
-      "timestamp": "2025-12-18T01:21:12.746412",
+      "timestamp": "2025-12-18T04:59:09.581226",
       "world_info": {
         "exporter_path": "exporter/games/celeste64.py",
         "exporter_size": 9092,
@@ -743,7 +751,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:49.139782"
+          "timestamp": "2025-12-18T05:02:25.386265"
         }
       },
       "game_name_from_filename": "checksfinder",
@@ -751,7 +759,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.12,
+        "processing_time_seconds": 3.52,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -766,7 +774,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.57,
+        "processing_time_seconds": 6.73,
         "return_code": 0,
         "sphere_reached": 4.5,
         "success": true,
@@ -774,7 +782,7 @@
         "warning_count": 0
       },
       "template_filename": "ChecksFinder.yaml",
-      "timestamp": "2025-12-18T01:20:42.392208",
+      "timestamp": "2025-12-18T04:58:57.186192",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -802,7 +810,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:52.491472"
+          "timestamp": "2025-12-18T05:01:08.499215"
         }
       },
       "game_name_from_filename": "bakingadventure",
@@ -810,7 +818,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.31,
+        "processing_time_seconds": 3.16,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -825,7 +833,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.68,
+        "processing_time_seconds": 5.67,
         "return_code": 0,
         "sphere_reached": 8.1,
         "success": true,
@@ -833,7 +841,7 @@
         "warning_count": 0
       },
       "template_filename": "ChocolateChipCookies.yaml",
-      "timestamp": "2025-12-18T01:21:04.370916",
+      "timestamp": "2025-12-18T04:58:49.416353",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -861,7 +869,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:41.961544"
+          "timestamp": "2025-12-18T05:00:31.808817"
         }
       },
       "game_name_from_filename": "cccharles",
@@ -869,7 +877,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.31,
+        "processing_time_seconds": 3.34,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -884,7 +892,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.72,
+        "processing_time_seconds": 10.59,
         "return_code": 0,
         "sphere_reached": 4.1,
         "success": true,
@@ -892,7 +900,7 @@
         "warning_count": 0
       },
       "template_filename": "Choo-Choo Charles.yaml",
-      "timestamp": "2025-12-18T01:20:48.933818",
+      "timestamp": "2025-12-18T04:58:47.618581",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -920,7 +928,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:23.990591"
+          "timestamp": "2025-12-18T05:00:28.517149"
         }
       },
       "game_name_from_filename": "civ_6",
@@ -928,7 +936,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.41,
+        "processing_time_seconds": 3.5,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -943,7 +951,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.69,
+        "processing_time_seconds": 8.71,
         "return_code": 0,
         "sphere_reached": 8.2,
         "success": true,
@@ -951,7 +959,7 @@
         "warning_count": 0
       },
       "template_filename": "Civilization VI.yaml",
-      "timestamp": "2025-12-18T01:20:57.313576",
+      "timestamp": "2025-12-18T04:59:00.490250",
       "world_info": {
         "exporter_path": "exporter/games/civ_6.py",
         "exporter_size": 8112,
@@ -979,7 +987,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:31.245941"
+          "timestamp": "2025-12-18T05:00:31.277972"
         }
       },
       "game_name_from_filename": "dlcquest",
@@ -987,7 +995,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.43,
+        "processing_time_seconds": 3.51,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1002,7 +1010,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.62,
+        "processing_time_seconds": 5.64,
         "return_code": 0,
         "sphere_reached": 8.1,
         "success": true,
@@ -1010,7 +1018,7 @@
         "warning_count": 0
       },
       "template_filename": "DLCQuest.yaml",
-      "timestamp": "2025-12-18T01:21:10.624112",
+      "timestamp": "2025-12-18T04:59:09.596156",
       "world_info": {
         "exporter_path": "exporter/games/dlcquest.py",
         "exporter_size": 9678,
@@ -1038,7 +1046,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:12.759321"
+          "timestamp": "2025-12-18T05:01:08.218286"
         }
       },
       "game_name_from_filename": "doom_1993",
@@ -1046,7 +1054,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.46,
+        "processing_time_seconds": 3.8,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1061,7 +1069,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.73,
+        "processing_time_seconds": 12.8,
         "return_code": 0,
         "sphere_reached": 18.2,
         "success": true,
@@ -1069,7 +1077,7 @@
         "warning_count": 0
       },
       "template_filename": "DOOM 1993.yaml",
-      "timestamp": "2025-12-18T01:20:46.666686",
+      "timestamp": "2025-12-18T04:58:53.552755",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -1097,7 +1105,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:35.965070"
+          "timestamp": "2025-12-18T05:00:37.500190"
         }
       },
       "game_name_from_filename": "doom_ii",
@@ -1105,7 +1113,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.59,
+        "processing_time_seconds": 3.53,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1120,7 +1128,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 15.72,
+        "processing_time_seconds": 14.73,
         "return_code": 0,
         "sphere_reached": 21.2,
         "success": true,
@@ -1128,7 +1136,7 @@
         "warning_count": 0
       },
       "template_filename": "DOOM II.yaml",
-      "timestamp": "2025-12-18T01:20:41.330188",
+      "timestamp": "2025-12-18T04:58:45.109544",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -1156,7 +1164,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:16.116051"
+          "timestamp": "2025-12-18T05:02:39.484348"
         }
       },
       "game_name_from_filename": "dark_souls_3",
@@ -1164,7 +1172,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.04,
+        "processing_time_seconds": 5.36,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1179,7 +1187,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 24.75,
+        "processing_time_seconds": 24.84,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -1187,7 +1195,7 @@
         "warning_count": 0
       },
       "template_filename": "Dark Souls III.yaml",
-      "timestamp": "2025-12-18T01:20:39.117469",
+      "timestamp": "2025-12-18T04:58:46.891528",
       "world_info": {
         "exporter_path": "exporter/games/dark_souls_3.py",
         "exporter_size": 4691,
@@ -1215,7 +1223,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:35.005278"
+          "timestamp": "2025-12-18T05:01:12.744179"
         }
       },
       "game_name_from_filename": "dkc3",
@@ -1223,7 +1231,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.3,
+        "processing_time_seconds": 3.29,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -1246,7 +1254,7 @@
         "warning_count": 0
       },
       "template_filename": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-12-18T01:21:14.263250",
+      "timestamp": "2025-12-18T04:59:18.730957",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -1274,7 +1282,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:28.203926"
+          "timestamp": "2025-12-18T05:01:20.294805"
         }
       },
       "game_name_from_filename": "factorio",
@@ -1282,7 +1290,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.77,
+        "processing_time_seconds": 3.84,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1297,7 +1305,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.69,
+        "processing_time_seconds": 9.68,
         "return_code": 0,
         "sphere_reached": 12.1,
         "success": true,
@@ -1305,7 +1313,7 @@
         "warning_count": 0
       },
       "template_filename": "Factorio.yaml",
-      "timestamp": "2025-12-18T01:21:23.718610",
+      "timestamp": "2025-12-18T04:59:20.575522",
       "world_info": {
         "exporter_path": "exporter/games/factorio.py",
         "exporter_size": 7289,
@@ -1333,7 +1341,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:52.394166"
+          "timestamp": "2025-12-18T05:02:29.043788"
         }
       },
       "game_name_from_filename": "faxanadu",
@@ -1341,7 +1349,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.17,
+        "processing_time_seconds": 3.61,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1356,7 +1364,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.53,
+        "processing_time_seconds": 6.73,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -1364,7 +1372,7 @@
         "warning_count": 0
       },
       "template_filename": "Faxanadu.yaml",
-      "timestamp": "2025-12-18T01:20:52.997010",
+      "timestamp": "2025-12-18T04:59:08.495491",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -1392,7 +1400,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:56.850899"
+          "timestamp": "2025-12-18T05:01:12.688719"
         }
       },
       "game_name_from_filename": "ffmq",
@@ -1400,7 +1408,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.35,
+        "processing_time_seconds": 4.14,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1415,7 +1423,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.76,
+        "processing_time_seconds": 10.69,
         "return_code": 0,
         "sphere_reached": 18.2,
         "success": true,
@@ -1423,7 +1431,7 @@
         "warning_count": 0
       },
       "template_filename": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-12-18T01:21:14.345361",
+      "timestamp": "2025-12-18T04:58:59.240463",
       "world_info": {
         "exporter_path": "exporter/games/ffmq.py",
         "exporter_size": 7749,
@@ -1451,7 +1459,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:45.612729"
+          "timestamp": "2025-12-18T05:00:35.813232"
         }
       },
       "game_name_from_filename": "heretic",
@@ -1459,7 +1467,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.52,
+        "processing_time_seconds": 3.73,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1474,7 +1482,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 14.73,
+        "processing_time_seconds": 15.8,
         "return_code": 0,
         "sphere_reached": 24.1,
         "success": true,
@@ -1482,7 +1490,7 @@
         "warning_count": 0
       },
       "template_filename": "Heretic.yaml",
-      "timestamp": "2025-12-18T01:21:04.117641",
+      "timestamp": "2025-12-18T04:59:02.476872",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -1510,7 +1518,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:28.302738"
+          "timestamp": "2025-12-18T05:00:33.006753"
         }
       },
       "game_name_from_filename": "hylics2",
@@ -1518,7 +1526,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.36,
+        "processing_time_seconds": 4.44,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1533,7 +1541,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.64,
+        "processing_time_seconds": 6.67,
         "return_code": 0,
         "sphere_reached": 7.2,
         "success": true,
@@ -1541,7 +1549,7 @@
         "warning_count": 0
       },
       "template_filename": "Hylics 2.yaml",
-      "timestamp": "2025-12-18T01:21:10.396916",
+      "timestamp": "2025-12-18T04:59:13.717925",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -1569,7 +1577,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:34.585760"
+          "timestamp": "2025-12-18T05:00:34.638964"
         }
       },
       "game_name_from_filename": "inscryption",
@@ -1577,7 +1585,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.28,
+        "processing_time_seconds": 3.37,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1592,7 +1600,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.63,
+        "processing_time_seconds": 6.64,
         "return_code": 0,
         "sphere_reached": 9.2,
         "success": true,
@@ -1600,7 +1608,7 @@
         "warning_count": 0
       },
       "template_filename": "Inscryption.yaml",
-      "timestamp": "2025-12-18T01:21:20.657974",
+      "timestamp": "2025-12-18T04:59:19.708408",
       "world_info": {
         "exporter_path": "exporter/games/inscryption.py",
         "exporter_size": 8220,
@@ -1621,14 +1629,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "b4831821ce898c374a5b03b5bd6ce0d162e502bec723b54309ca80c1fa7521b5",
+          "new_rules_hash": "f7cbf6d4e4ddff5594b32791b1ec3122729ef2d3c15a0dcc4880c887a406b7ff",
           "new_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "original_rules_hash": "b34b590abed401ca7e95d916bd0e0affa09a3bd6f6df46e32564824f06932535",
+          "original_rules_hash": "4f3689f7c2fb6cfffc32efbca37efe9932631949d88fe1483b997fd170e1cb06",
           "original_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
           "rules_identical": false,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:18.408989"
+          "timestamp": "2025-12-18T05:01:14.093529"
         }
       },
       "game_name_from_filename": "kh2",
@@ -1636,33 +1644,33 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.63,
+        "processing_time_seconds": 6.01,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 1487802,
+        "size_bytes": 1490467,
         "size_mb": 1.42
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.59,
-        "return_code": 1,
-        "sphere_reached": 0.2,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 43.14,
+        "return_code": 0,
+        "sphere_reached": 15.1,
+        "success": true,
         "total_spheres": 15.1,
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-12-18T01:22:43.994461",
+      "timestamp": "2025-12-18T04:59:11.199053",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
-        "exporter_size": 34498,
+        "exporter_size": 34594,
         "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
         "game_logic_size": 107789,
         "game_name_from_filename": "kh2",
@@ -1687,7 +1695,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:45.169230"
+          "timestamp": "2025-12-18T05:00:46.805743"
         }
       },
       "game_name_from_filename": "kh1",
@@ -1710,7 +1718,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 28.83,
+        "processing_time_seconds": 27.78,
         "return_code": 0,
         "sphere_reached": 10.3,
         "success": true,
@@ -1718,7 +1726,7 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts.yaml",
-      "timestamp": "2025-12-18T01:21:01.656348",
+      "timestamp": "2025-12-18T04:59:04.563265",
       "world_info": {
         "exporter_path": "exporter/games/kh1.py",
         "exporter_size": 59239,
@@ -1746,7 +1754,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:21.006401"
+          "timestamp": "2025-12-18T05:02:44.652110"
         }
       },
       "game_name_from_filename": "kdl3",
@@ -1754,7 +1762,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.88,
+        "processing_time_seconds": 5.25,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1769,7 +1777,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 53.94,
+        "processing_time_seconds": 56.69,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -1777,7 +1785,7 @@
         "warning_count": 0
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-12-18T01:21:09.879934",
+      "timestamp": "2025-12-18T05:01:26.264076",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
         "exporter_size": 9884,
@@ -1798,14 +1806,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "ab432b4ddc29e73f866450b37c6cc110a5948d8be565e8d7ac9a168f2814222b",
+          "new_rules_hash": "e810645ce479b6130ac565d2da5c9855e1b8a29ea18ff5ea40c14b94d4b97d59",
           "new_sphere_log_hash": "7ce6520d065272adc907bdf61cd27fcf154c1c108150eabb724173acbb479c62",
-          "original_rules_hash": "bcf3f0de46cda5a1be72ae5ab49cd0b55b5a9df4d1e8b3354640d76c01fece57",
+          "original_rules_hash": "d46d5f9e19a419429ef0dc3588a8e4a9f50c879ce26aa0e5c00f9ce895324131",
           "original_sphere_log_hash": "7ce6520d065272adc907bdf61cd27fcf154c1c108150eabb724173acbb479c62",
           "rules_identical": false,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:38.580186"
+          "timestamp": "2025-12-18T05:01:16.305025"
         }
       },
       "game_name_from_filename": "landstalker",
@@ -1813,14 +1821,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.48,
+        "processing_time_seconds": 3.44,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 248005,
+        "size_bytes": 248040,
         "size_mb": 0.24
       },
       "seed": "1",
@@ -1828,7 +1836,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.66,
+        "processing_time_seconds": 8.64,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -1836,7 +1844,7 @@
         "warning_count": 0
       },
       "template_filename": "Landstalker - The Treasures of King Nole.yaml",
-      "timestamp": "2025-12-18T01:21:32.238057",
+      "timestamp": "2025-12-18T04:59:36.723861",
       "world_info": {
         "exporter_path": "exporter/games/landstalker.py",
         "exporter_size": 16477,
@@ -1864,7 +1872,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:32.012090"
+          "timestamp": "2025-12-18T05:01:24.301829"
         }
       },
       "game_name_from_filename": "lingo",
@@ -1887,7 +1895,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.66,
+        "processing_time_seconds": 5.69,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -1895,7 +1903,7 @@
         "warning_count": 0
       },
       "template_filename": "Lingo.yaml",
-      "timestamp": "2025-12-18T01:21:38.159520",
+      "timestamp": "2025-12-18T04:59:35.057072",
       "world_info": {
         "exporter_path": "exporter/games/lingo.py",
         "exporter_size": 42437,
@@ -1923,7 +1931,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:01.738653"
+          "timestamp": "2025-12-18T05:02:39.422003"
         }
       },
       "game_name_from_filename": "links_awakening_dx",
@@ -1931,7 +1939,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.42,
+        "processing_time_seconds": 10.15,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -1946,7 +1954,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 17.75,
+        "processing_time_seconds": 17.88,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -1954,7 +1962,7 @@
         "warning_count": 0
       },
       "template_filename": "Links Awakening DX.yaml",
-      "timestamp": "2025-12-18T01:21:03.608639",
+      "timestamp": "2025-12-18T04:59:19.928511",
       "world_info": {
         "exporter_path": "exporter/games/ladx.py",
         "exporter_size": 17893,
@@ -1982,7 +1990,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:25:00.254914"
+          "timestamp": "2025-12-18T05:01:15.923720"
         }
       },
       "game_name_from_filename": "lufia2ac",
@@ -1990,7 +1998,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.49,
+        "processing_time_seconds": 3.2,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -2005,7 +2013,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.7,
+        "processing_time_seconds": 5.65,
         "return_code": 0,
         "sphere_reached": 4.11,
         "success": true,
@@ -2013,7 +2021,7 @@
         "warning_count": 0
       },
       "template_filename": "Lufia II Ancient Cave.yaml",
-      "timestamp": "2025-12-18T01:21:30.455747",
+      "timestamp": "2025-12-18T04:59:15.071433",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2034,14 +2042,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "745291c72e6e40c8cd84ad70810a4fdfae116617831985a7fd80a7eaf5b7059e",
+          "new_rules_hash": "1157bc6c03e5adfe9693eaa233fd3e481b275ab1be4b6063138d99a28916fc23",
           "new_sphere_log_hash": "b2bb25436e5c5e0a160f5468b20297af25f773b0f595dacf35cab79db4784ce8",
-          "original_rules_hash": "745291c72e6e40c8cd84ad70810a4fdfae116617831985a7fd80a7eaf5b7059e",
+          "original_rules_hash": "1157bc6c03e5adfe9693eaa233fd3e481b275ab1be4b6063138d99a28916fc23",
           "original_sphere_log_hash": "b2bb25436e5c5e0a160f5468b20297af25f773b0f595dacf35cab79db4784ce8",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:49.771134"
+          "timestamp": "2025-12-18T05:00:39.876772"
         }
       },
       "game_name_from_filename": "mlss",
@@ -2049,30 +2057,30 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.01,
+        "processing_time_seconds": 4.11,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 397342,
+        "size_bytes": 397350,
         "size_mb": 0.38
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 23.69,
-        "return_code": 1,
-        "sphere_reached": 4.3,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 10.61,
+        "return_code": 0,
+        "sphere_reached": 7.3,
+        "success": true,
         "total_spheres": 7.3,
         "warning_count": 0
       },
       "template_filename": "Mario & Luigi Superstar Saga.yaml",
-      "timestamp": "2025-12-18T01:23:05.808848",
+      "timestamp": "2025-12-18T04:59:22.904445",
       "world_info": {
         "exporter_path": "exporter/games/mlss.py",
         "exporter_size": 401,
@@ -2100,7 +2108,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:31.613151"
+          "timestamp": "2025-12-18T05:00:36.444482"
         }
       },
       "game_name_from_filename": "mathadventure",
@@ -2108,7 +2116,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.29,
+        "processing_time_seconds": 3.4,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2123,7 +2131,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.67,
+        "processing_time_seconds": 5.7,
         "return_code": 0,
         "sphere_reached": 4.1,
         "success": true,
@@ -2131,7 +2139,7 @@
         "warning_count": 0
       },
       "template_filename": "MathProof2p2e4.yaml",
-      "timestamp": "2025-12-18T01:21:22.398279",
+      "timestamp": "2025-12-18T04:59:25.846406",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2159,7 +2167,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:37.875780"
+          "timestamp": "2025-12-18T05:00:38.169401"
         }
       },
       "game_name_from_filename": "mm2",
@@ -2167,7 +2175,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.28,
+        "processing_time_seconds": 3.41,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2182,7 +2190,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.6,
+        "processing_time_seconds": 6.65,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -2190,7 +2198,7 @@
         "warning_count": 0
       },
       "template_filename": "Mega Man 2.yaml",
-      "timestamp": "2025-12-18T01:21:31.548617",
+      "timestamp": "2025-12-18T04:59:30.736659",
       "world_info": {
         "exporter_path": "exporter/games/mm2.py",
         "exporter_size": 2034,
@@ -2218,7 +2226,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:21.967066"
+          "timestamp": "2025-12-18T05:01:17.714390"
         }
       },
       "game_name_from_filename": "mmbn3",
@@ -2226,7 +2234,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.44,
+        "processing_time_seconds": 3.71,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -2241,7 +2249,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.65,
+        "processing_time_seconds": 8.7,
         "return_code": 0,
         "sphere_reached": 6.1,
         "success": true,
@@ -2249,7 +2257,7 @@
         "warning_count": 0
       },
       "template_filename": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-12-18T01:21:25.127087",
+      "timestamp": "2025-12-18T05:00:01.370309",
       "world_info": {
         "exporter_path": "exporter/games/mmbn3.py",
         "exporter_size": 3554,
@@ -2277,7 +2285,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:48.456084"
+          "timestamp": "2025-12-18T05:00:50.103944"
         }
       },
       "game_name_from_filename": "meritous",
@@ -2285,7 +2293,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.38,
+        "processing_time_seconds": 3.22,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2308,7 +2316,7 @@
         "warning_count": 0
       },
       "template_filename": "Meritous.yaml",
-      "timestamp": "2025-12-18T01:21:40.682303",
+      "timestamp": "2025-12-18T04:59:42.475389",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2336,7 +2344,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:30.917754"
+          "timestamp": "2025-12-18T05:02:55.107337"
         }
       },
       "game_name_from_filename": "metamath",
@@ -2344,7 +2352,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.57,
+        "processing_time_seconds": 11.51,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2359,7 +2367,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.62,
+        "processing_time_seconds": 5.73,
         "return_code": 0,
         "sphere_reached": 3.1,
         "success": true,
@@ -2367,7 +2375,7 @@
         "warning_count": 0
       },
       "template_filename": "Metamath.yaml",
-      "timestamp": "2025-12-18T01:22:09.673008",
+      "timestamp": "2025-12-18T05:00:24.721560",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2388,14 +2396,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "a4d887e1ac3299fa5aff45970ead08e7fefaa381cd697ced7348f5b0d981ae7d",
+          "new_rules_hash": "c7f1f31bf4f451980458733cfc853a8a3daa421ad675e3cebb0ad3f396c2e760",
           "new_sphere_log_hash": "fa7bfbf02046366f1de2f38ae750d391e28d1c663499fafa0478b67234ee3dff",
-          "original_rules_hash": "a4d887e1ac3299fa5aff45970ead08e7fefaa381cd697ced7348f5b0d981ae7d",
+          "original_rules_hash": "c7f1f31bf4f451980458733cfc853a8a3daa421ad675e3cebb0ad3f396c2e760",
           "original_sphere_log_hash": "fa7bfbf02046366f1de2f38ae750d391e28d1c663499fafa0478b67234ee3dff",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:42.092906"
+          "timestamp": "2025-12-18T05:01:19.719326"
         }
       },
       "game_name_from_filename": "musedash",
@@ -2403,14 +2411,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.34,
+        "processing_time_seconds": 3.39,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/musedash/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 229118,
+        "size_bytes": 229075,
         "size_mb": 0.22
       },
       "seed": "1",
@@ -2418,7 +2426,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.65,
+        "processing_time_seconds": 7.64,
         "return_code": 0,
         "sphere_reached": 8.1,
         "success": true,
@@ -2426,10 +2434,10 @@
         "warning_count": 0
       },
       "template_filename": "Muse Dash.yaml",
-      "timestamp": "2025-12-18T01:21:45.345233",
+      "timestamp": "2025-12-18T04:59:49.799315",
       "world_info": {
         "exporter_path": "exporter/games/musedash.py",
-        "exporter_size": 761,
+        "exporter_size": 208,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "musedash",
@@ -2454,7 +2462,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:35.265046"
+          "timestamp": "2025-12-18T05:01:27.694808"
         }
       },
       "game_name_from_filename": "noita",
@@ -2462,7 +2470,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.33,
+        "processing_time_seconds": 3.24,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2477,7 +2485,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.69,
+        "processing_time_seconds": 5.63,
         "return_code": 0,
         "sphere_reached": 0.15,
         "success": true,
@@ -2485,7 +2493,7 @@
         "warning_count": 0
       },
       "template_filename": "Noita.yaml",
-      "timestamp": "2025-12-18T01:21:48.576414",
+      "timestamp": "2025-12-18T04:59:45.492727",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2513,7 +2521,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:06.242597"
+          "timestamp": "2025-12-18T05:02:44.536663"
         }
       },
       "game_name_from_filename": "osrs",
@@ -2521,7 +2529,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.48,
+        "processing_time_seconds": 5.08,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2536,7 +2544,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.57,
+        "processing_time_seconds": 8.77,
         "return_code": 0,
         "sphere_reached": 7.5,
         "success": true,
@@ -2544,7 +2552,7 @@
         "warning_count": 0
       },
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-12-18T01:21:31.683190",
+      "timestamp": "2025-12-18T04:59:49.017749",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
         "exporter_size": 6056,
@@ -2572,7 +2580,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:25:03.916334"
+          "timestamp": "2025-12-18T05:01:19.394777"
         }
       },
       "game_name_from_filename": "overcooked2",
@@ -2580,7 +2588,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.63,
+        "processing_time_seconds": 3.45,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2595,7 +2603,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 21.82,
+        "processing_time_seconds": 20.78,
         "return_code": 0,
         "sphere_reached": 18.2,
         "success": true,
@@ -2603,7 +2611,7 @@
         "warning_count": 0
       },
       "template_filename": "Overcooked! 2.yaml",
-      "timestamp": "2025-12-18T01:21:40.663964",
+      "timestamp": "2025-12-18T04:59:24.923166",
       "world_info": {
         "exporter_path": "exporter/games/overcooked2.py",
         "exporter_size": 26723,
@@ -2631,7 +2639,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:53.045293"
+          "timestamp": "2025-12-18T05:00:43.427226"
         }
       },
       "game_name_from_filename": "paint",
@@ -2639,7 +2647,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.27,
+        "processing_time_seconds": 3.51,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2654,7 +2662,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.73,
+        "processing_time_seconds": 7.74,
         "return_code": 0,
         "sphere_reached": 12.1,
         "success": true,
@@ -2662,7 +2670,7 @@
         "warning_count": 0
       },
       "template_filename": "Paint.yaml",
-      "timestamp": "2025-12-18T01:21:52.623999",
+      "timestamp": "2025-12-18T04:59:38.596454",
       "world_info": {
         "exporter_path": "exporter/games/paint.py",
         "exporter_size": 7350,
@@ -2690,7 +2698,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:35.034164"
+          "timestamp": "2025-12-18T05:00:39.954050"
         }
       },
       "game_name_from_filename": "raft",
@@ -2698,7 +2706,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.4,
+        "processing_time_seconds": 3.5,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2713,7 +2721,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.72,
+        "processing_time_seconds": 9.7,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -2721,7 +2729,7 @@
         "warning_count": 0
       },
       "template_filename": "Raft.yaml",
-      "timestamp": "2025-12-18T01:21:32.326174",
+      "timestamp": "2025-12-18T04:59:35.947919",
       "world_info": {
         "exporter_path": "exporter/games/raft.py",
         "exporter_size": 12239,
@@ -2749,7 +2757,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:41.237331"
+          "timestamp": "2025-12-18T05:00:41.719550"
         }
       },
       "game_name_from_filename": "ror2",
@@ -2757,7 +2765,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.33,
+        "processing_time_seconds": 3.27,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2772,7 +2780,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.6,
+        "processing_time_seconds": 6.63,
         "return_code": 0,
         "sphere_reached": 8.3,
         "success": true,
@@ -2780,7 +2788,7 @@
         "warning_count": 0
       },
       "template_filename": "Risk of Rain 2.yaml",
-      "timestamp": "2025-12-18T01:21:42.415776",
+      "timestamp": "2025-12-18T04:59:41.777347",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2801,14 +2809,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "3b4d416b66efc84e357c86a799d09dd6df6a697b9830c3c873d3b05cbe9be3d3",
+          "new_rules_hash": "cfb6badb0f9a61b06a54c549c2635d0c359386c75ff10bc7e4c4d569de9b1cfd",
           "new_sphere_log_hash": "8386113bea0719733fd4aa7aa5b0f071e2ebb1053603456283537f1ade1f561c",
-          "original_rules_hash": "3b4d416b66efc84e357c86a799d09dd6df6a697b9830c3c873d3b05cbe9be3d3",
+          "original_rules_hash": "cfb6badb0f9a61b06a54c549c2635d0c359386c75ff10bc7e4c4d569de9b1cfd",
           "original_sphere_log_hash": "8386113bea0719733fd4aa7aa5b0f071e2ebb1053603456283537f1ade1f561c",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:25.246412"
+          "timestamp": "2025-12-18T05:01:21.189396"
         }
       },
       "game_name_from_filename": "saving_princess",
@@ -2816,14 +2824,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.24,
+        "processing_time_seconds": 3.53,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/saving_princess/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 32810,
+        "size_bytes": 32767,
         "size_mb": 0.03
       },
       "seed": "1",
@@ -2831,7 +2839,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.61,
+        "processing_time_seconds": 5.73,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -2839,10 +2847,10 @@
         "warning_count": 0
       },
       "template_filename": "Saving Princess.yaml",
-      "timestamp": "2025-12-18T01:21:38.195800",
+      "timestamp": "2025-12-18T05:00:14.822761",
       "world_info": {
         "exporter_path": "exporter/games/saving_princess.py",
-        "exporter_size": 3445,
+        "exporter_size": 3260,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "saving_princess",
@@ -2867,7 +2875,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:53.321665"
+          "timestamp": "2025-12-18T05:00:54.953235"
         }
       },
       "game_name_from_filename": "soe",
@@ -2875,7 +2883,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.78,
+        "processing_time_seconds": 4.86,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -2890,7 +2898,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.67,
+        "processing_time_seconds": 7.65,
         "return_code": 0,
         "sphere_reached": 5.2,
         "success": true,
@@ -2898,7 +2906,7 @@
         "warning_count": 0
       },
       "template_filename": "Secret of Evermore.yaml",
-      "timestamp": "2025-12-18T01:21:50.708210",
+      "timestamp": "2025-12-18T04:59:52.323460",
       "world_info": {
         "exporter_path": "exporter/games/soe.py",
         "exporter_size": 13987,
@@ -2926,7 +2934,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:34.449565"
+          "timestamp": "2025-12-18T05:02:58.996399"
         }
       },
       "game_name_from_filename": "shivers",
@@ -2934,7 +2942,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.5,
+        "processing_time_seconds": 3.84,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -2949,7 +2957,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.65,
+        "processing_time_seconds": 9.74,
         "return_code": 0,
         "sphere_reached": 17.1,
         "success": true,
@@ -2957,7 +2965,7 @@
         "warning_count": 0
       },
       "template_filename": "Shivers.yaml",
-      "timestamp": "2025-12-18T01:22:26.854855",
+      "timestamp": "2025-12-18T05:00:42.994224",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -2985,7 +2993,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:45.831599"
+          "timestamp": "2025-12-18T05:01:23.444556"
         }
       },
       "game_name_from_filename": "sa2b",
@@ -2993,7 +3001,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.6,
+        "processing_time_seconds": 3.66,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3008,7 +3016,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 13.7,
+        "processing_time_seconds": 13.69,
         "return_code": 0,
         "sphere_reached": 7.11,
         "success": true,
@@ -3016,7 +3024,7 @@
         "warning_count": 0
       },
       "template_filename": "Sonic Adventure 2 Battle.yaml",
-      "timestamp": "2025-12-18T01:21:57.318598",
+      "timestamp": "2025-12-18T05:00:01.850436",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -3037,14 +3045,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "170e1632a3d44aa533f89a8b15b248b3cbb7407b3bb245931dddfb0388a65e84",
+          "new_rules_hash": "97c002fad1e8b3f93349dfb21d927c99a0939cabce0a0c76e4e7783b3e8416ed",
           "new_sphere_log_hash": "ad876006feaa5b7e719d832afe02375af134b69f27424d3f97ca0549ef90946e",
-          "original_rules_hash": "170e1632a3d44aa533f89a8b15b248b3cbb7407b3bb245931dddfb0388a65e84",
+          "original_rules_hash": "97c002fad1e8b3f93349dfb21d927c99a0939cabce0a0c76e4e7783b3e8416ed",
           "original_sphere_log_hash": "ad876006feaa5b7e719d832afe02375af134b69f27424d3f97ca0549ef90946e",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:42.012142"
+          "timestamp": "2025-12-18T05:01:34.742474"
         }
       },
       "game_name_from_filename": "sc2",
@@ -3052,14 +3060,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.72,
+        "processing_time_seconds": 6.65,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 1162057,
+        "size_bytes": 1162651,
         "size_mb": 1.11
       },
       "seed": "1",
@@ -3067,7 +3075,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 33.78,
+        "processing_time_seconds": 28.78,
         "return_code": 0,
         "sphere_reached": 15.5,
         "success": true,
@@ -3075,10 +3083,10 @@
         "warning_count": 0
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-12-18T01:21:58.643157",
+      "timestamp": "2025-12-18T04:59:55.398208",
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
-        "exporter_size": 33985,
+        "exporter_size": 34805,
         "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
         "game_logic_size": 88384,
         "game_name_from_filename": "sc2",
@@ -3096,14 +3104,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "569373401489ba1be934b0ce061dab5a09ee32677e475b95f06d1294aad9a614",
+          "new_rules_hash": "b346d142d385fa1e85967674755ed996601b4e4cb5dcdc6d473b6e314e7a604f",
           "new_sphere_log_hash": "4e273924d459441ba2255c7f74510033a3c4a92b2efb3b1e4014c3d3fba738bb",
-          "original_rules_hash": "6772f295794c98a1b05a1437a39ca40de569c97adfe6e07344e0834daab3ab50",
+          "original_rules_hash": "70cccffb8ee92ffb9e17960a22c0dab20e043014e26eda6412d8e662588fa7ce",
           "original_sphere_log_hash": "4e273924d459441ba2255c7f74510033a3c4a92b2efb3b1e4014c3d3fba738bb",
           "rules_identical": false,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:12.081915"
+          "timestamp": "2025-12-18T05:02:50.863506"
         }
       },
       "game_name_from_filename": "stardew_valley",
@@ -3111,7 +3119,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.72,
+        "processing_time_seconds": 6.28,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3126,7 +3134,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 80.56,
+        "processing_time_seconds": 79.79,
         "return_code": 0,
         "sphere_reached": 44.1,
         "success": true,
@@ -3134,7 +3142,7 @@
         "warning_count": 0
       },
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-12-18T01:21:45.678431",
+      "timestamp": "2025-12-18T05:00:03.970693",
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
         "exporter_size": 21118,
@@ -3155,14 +3163,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "204d6fb062ae1fb2a18decf7ef71259ee05675dbbd027f22cf89ead2f188f7a6",
+          "new_rules_hash": "0c41536ed9d1bf3460debd9e17f9693348ae9d3a2d5f36c63aa6a3b553b7f526",
           "new_sphere_log_hash": "cd749396655ba1ea1d69d9f59c0e286fb21e56b74083070def80b47cc7a29ef3",
-          "original_rules_hash": "204d6fb062ae1fb2a18decf7ef71259ee05675dbbd027f22cf89ead2f188f7a6",
+          "original_rules_hash": "0c41536ed9d1bf3460debd9e17f9693348ae9d3a2d5f36c63aa6a3b553b7f526",
           "original_sphere_log_hash": "cd749396655ba1ea1d69d9f59c0e286fb21e56b74083070def80b47cc7a29ef3",
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:25:31.566297"
+          "timestamp": "2025-12-18T05:01:46.547931"
         }
       },
       "game_name_from_filename": "subnautica",
@@ -3170,33 +3178,33 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 27.73,
+        "processing_time_seconds": 27.15,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 189477,
+        "size_bytes": 189472,
         "size_mb": 0.18
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.47,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 14.68,
+        "return_code": 0,
+        "sphere_reached": 6.1,
+        "success": true,
         "total_spheres": 6.1,
         "warning_count": 0
       },
       "template_filename": "Subnautica.yaml",
-      "timestamp": "2025-12-18T01:24:01.629593",
+      "timestamp": "2025-12-18T04:59:50.144393",
       "world_info": {
         "exporter_path": "exporter/games/subnautica.py",
-        "exporter_size": 6138,
+        "exporter_size": 7155,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "subnautica",
@@ -3221,7 +3229,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:56.541120"
+          "timestamp": "2025-12-18T05:00:47.011741"
         }
       },
       "game_name_from_filename": "sm64ex",
@@ -3229,7 +3237,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.37,
+        "processing_time_seconds": 3.28,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3244,7 +3252,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.69,
+        "processing_time_seconds": 13.62,
         "return_code": 0,
         "sphere_reached": 5.4,
         "success": true,
@@ -3252,7 +3260,7 @@
         "warning_count": 0
       },
       "template_filename": "Super Mario 64.yaml",
-      "timestamp": "2025-12-18T01:22:03.626020",
+      "timestamp": "2025-12-18T04:59:50.744229",
       "world_info": {
         "exporter_path": "exporter/games/sm64ex.py",
         "exporter_size": 14920,
@@ -3280,7 +3288,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:39.386237"
+          "timestamp": "2025-12-18T05:00:44.507744"
         }
       },
       "game_name_from_filename": "marioland2",
@@ -3288,7 +3296,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.28,
+        "processing_time_seconds": 4.42,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3303,7 +3311,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.73,
+        "processing_time_seconds": 7.75,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -3311,7 +3319,7 @@
         "warning_count": 0
       },
       "template_filename": "Super Mario Land 2.yaml",
-      "timestamp": "2025-12-18T01:21:46.474133",
+      "timestamp": "2025-12-18T04:59:50.168102",
       "world_info": {
         "exporter_path": "exporter/games/marioland2.py",
         "exporter_size": 14328,
@@ -3339,7 +3347,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:45.597068"
+          "timestamp": "2025-12-18T05:00:46.177282"
         }
       },
       "game_name_from_filename": "smw",
@@ -3347,7 +3355,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.35,
+        "processing_time_seconds": 4.41,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -3362,7 +3370,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.63,
+        "processing_time_seconds": 6.64,
         "return_code": 0,
         "sphere_reached": 8.2,
         "success": true,
@@ -3370,7 +3378,7 @@
         "warning_count": 0
       },
       "template_filename": "Super Mario World.yaml",
-      "timestamp": "2025-12-18T01:21:53.344862",
+      "timestamp": "2025-12-18T04:59:52.670249",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -3398,7 +3406,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:37.087164"
+          "timestamp": "2025-12-18T05:01:33.735877"
         }
       },
       "game_name_from_filename": "sm",
@@ -3406,7 +3414,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.76,
+        "processing_time_seconds": 12.71,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3421,7 +3429,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.67,
+        "processing_time_seconds": 10.79,
         "return_code": 0,
         "sphere_reached": 8.3,
         "success": true,
@@ -3429,7 +3437,7 @@
         "warning_count": 0
       },
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-12-18T01:21:48.027401",
+      "timestamp": "2025-12-18T05:00:25.152126",
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
         "exporter_size": 75332,
@@ -3450,14 +3458,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "98cb62254e70bf074367aa2ee93f87de315ccbc20e1e83e25124a084acce559d",
+          "new_rules_hash": "c4213b064c386151acb891f9a193e1be689559dbaa75a5a65e6067022a14deb6",
           "new_sphere_log_hash": "19cae808c50fd789980f1120b63983801278da754016fc79211629ee00469fb3",
-          "original_rules_hash": "a1fe3c098df4d1f65437ff555cb35aaf0c64131d9f2d2aa929efaa537c6cef9d",
+          "original_rules_hash": "292452de212fcce7ce51ddfb9422ac748bda6ff66235f66b54dc40422d283ef1",
           "original_sphere_log_hash": "19cae808c50fd789980f1120b63983801278da754016fc79211629ee00469fb3",
           "rules_identical": false,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:56.617071"
+          "timestamp": "2025-12-18T05:00:58.267350"
         }
       },
       "game_name_from_filename": "toem_original",
@@ -3465,7 +3473,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.23,
+        "processing_time_seconds": 3.21,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3480,7 +3488,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.64,
+        "processing_time_seconds": 8.65,
         "return_code": 0,
         "sphere_reached": 3.24,
         "success": true,
@@ -3488,7 +3496,7 @@
         "warning_count": 0
       },
       "template_filename": "TOEM original.yaml",
-      "timestamp": "2025-12-18T01:22:04.184646",
+      "timestamp": "2025-12-18T05:00:05.830463",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -3509,14 +3517,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "bcd71ce84cc067b6b694e9c9580782f9e1ca94a5edd09d38d257de08978b951c",
+          "new_rules_hash": "b339275916a7963531eaed9f4f3e51891029c36613be0acce16e7f9b0cfab5e2",
           "new_sphere_log_hash": "19cae808c50fd789980f1120b63983801278da754016fc79211629ee00469fb3",
-          "original_rules_hash": "7563f36db0f257e90cf92545e55507166d79e1047212a85a00b4e037da034c9b",
+          "original_rules_hash": "7bb61c5a9ab26221186c321fe403c7a691a65072b745d8e66ca851ac29a07175",
           "original_sphere_log_hash": "19cae808c50fd789980f1120b63983801278da754016fc79211629ee00469fb3",
           "rules_identical": false,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:37.648034"
+          "timestamp": "2025-12-18T05:03:02.592552"
         }
       },
       "game_name_from_filename": "toem_rule_builder",
@@ -3524,7 +3532,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.16,
+        "processing_time_seconds": 3.62,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3539,7 +3547,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.64,
+        "processing_time_seconds": 9.8,
         "return_code": 0,
         "sphere_reached": 3.24,
         "success": true,
@@ -3547,7 +3555,7 @@
         "warning_count": 0
       },
       "template_filename": "TOEM rule builder.yaml",
-      "timestamp": "2025-12-18T01:22:41.002864",
+      "timestamp": "2025-12-18T05:00:57.630036",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -3575,7 +3583,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:49.230529"
+          "timestamp": "2025-12-18T05:01:26.839562"
         }
       },
       "game_name_from_filename": "terraria",
@@ -3583,7 +3591,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.36,
+        "processing_time_seconds": 3.34,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3598,7 +3606,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 19.78,
+        "processing_time_seconds": 20.78,
         "return_code": 0,
         "sphere_reached": 9.5,
         "success": true,
@@ -3606,7 +3614,7 @@
         "warning_count": 0
       },
       "template_filename": "Terraria.yaml",
-      "timestamp": "2025-12-18T01:22:57.277587",
+      "timestamp": "2025-12-18T05:00:20.229152",
       "world_info": {
         "exporter_path": "exporter/games/terraria.py",
         "exporter_size": 19736,
@@ -3634,7 +3642,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:46.817902"
+          "timestamp": "2025-12-18T05:01:39.791416"
         }
       },
       "game_name_from_filename": "tloz",
@@ -3642,7 +3650,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.96,
+        "processing_time_seconds": 4.72,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -3657,7 +3665,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.81,
+        "processing_time_seconds": 8.65,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -3665,7 +3673,7 @@
         "warning_count": 0
       },
       "template_filename": "The Legend of Zelda.yaml",
-      "timestamp": "2025-12-18T01:22:40.138686",
+      "timestamp": "2025-12-18T05:00:31.818790",
       "world_info": {
         "exporter_path": "exporter/games/tloz.py",
         "exporter_size": 6065,
@@ -3693,7 +3701,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:15.531118"
+          "timestamp": "2025-12-18T05:02:54.741660"
         }
       },
       "game_name_from_filename": "messenger",
@@ -3701,7 +3709,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.41,
+        "processing_time_seconds": 3.82,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3716,7 +3724,7 @@
       "spoiler_test": {
         "error_count": 5,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.69,
+        "processing_time_seconds": 12.92,
         "return_code": 0,
         "sphere_reached": 6.3,
         "success": true,
@@ -3724,7 +3732,7 @@
         "warning_count": 0
       },
       "template_filename": "The Messenger.yaml",
-      "timestamp": "2025-12-18T01:23:12.853669",
+      "timestamp": "2025-12-18T05:01:31.083548",
       "world_info": {
         "exporter_path": "exporter/games/messenger.py",
         "exporter_size": 11475,
@@ -3752,7 +3760,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:25:49.420419"
+          "timestamp": "2025-12-18T05:02:03.970508"
         }
       },
       "game_name_from_filename": "tww",
@@ -3760,7 +3768,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 17.99,
+        "processing_time_seconds": 17.37,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3775,7 +3783,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.72,
+        "processing_time_seconds": 9.67,
         "return_code": 0,
         "sphere_reached": 18.1,
         "success": true,
@@ -3783,7 +3791,7 @@
         "warning_count": 0
       },
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-12-18T01:22:48.154878",
+      "timestamp": "2025-12-18T05:00:32.956525",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
         "exporter_size": 5564,
@@ -3811,7 +3819,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:04.678083"
+          "timestamp": "2025-12-18T05:00:54.979629"
         }
       },
       "game_name_from_filename": "witness",
@@ -3819,7 +3827,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.05,
+        "processing_time_seconds": 8.01,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3834,7 +3842,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.7,
+        "processing_time_seconds": 5.6,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -3842,7 +3850,7 @@
         "warning_count": 0
       },
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-12-18T01:22:20.686160",
+      "timestamp": "2025-12-18T05:00:08.590302",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
         "exporter_size": 29042,
@@ -3870,7 +3878,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:43.157098"
+          "timestamp": "2025-12-18T05:00:48.447010"
         }
       },
       "game_name_from_filename": "timespinner",
@@ -3878,7 +3886,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.76,
+        "processing_time_seconds": 3.86,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3893,7 +3901,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.68,
+        "processing_time_seconds": 7.73,
         "return_code": 0,
         "sphere_reached": 7.1,
         "success": true,
@@ -3901,7 +3909,7 @@
         "warning_count": 0
       },
       "template_filename": "Timespinner.yaml",
-      "timestamp": "2025-12-18T01:21:59.522975",
+      "timestamp": "2025-12-18T05:00:03.418356",
       "world_info": {
         "exporter_path": "exporter/games/timespinner.py",
         "exporter_size": 4135,
@@ -3929,7 +3937,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:48.938291"
+          "timestamp": "2025-12-18T05:00:49.565351"
         }
       },
       "game_name_from_filename": "undertale",
@@ -3937,7 +3945,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.32,
+        "processing_time_seconds": 3.51,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -3952,7 +3960,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.62,
+        "processing_time_seconds": 5.65,
         "return_code": 0,
         "sphere_reached": 4.3,
         "success": true,
@@ -3960,7 +3968,7 @@
         "warning_count": 0
       },
       "template_filename": "Undertale.yaml",
-      "timestamp": "2025-12-18T01:22:05.328999",
+      "timestamp": "2025-12-18T05:00:04.724249",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -3988,7 +3996,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:40.318483"
+          "timestamp": "2025-12-18T05:01:37.209618"
         }
       },
       "game_name_from_filename": "v6",
@@ -3996,7 +4004,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.17,
+        "processing_time_seconds": 3.42,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -4011,7 +4019,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.61,
+        "processing_time_seconds": 5.7,
         "return_code": 0,
         "sphere_reached": 2.4,
         "success": true,
@@ -4019,7 +4027,7 @@
         "warning_count": 0
       },
       "template_filename": "VVVVVV.yaml",
-      "timestamp": "2025-12-18T01:22:11.442127",
+      "timestamp": "2025-12-18T05:00:49.705257",
       "world_info": {
         "exporter_path": "exporter/games/v6.py",
         "exporter_size": 5505,
@@ -4047,7 +4055,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:22:59.904959"
+          "timestamp": "2025-12-18T05:01:01.582160"
         }
       },
       "game_name_from_filename": "wargroove",
@@ -4055,7 +4063,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.26,
+        "processing_time_seconds": 3.25,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -4070,7 +4078,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.62,
+        "processing_time_seconds": 6.63,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -4078,7 +4086,7 @@
         "warning_count": 0
       },
       "template_filename": "Wargroove.yaml",
-      "timestamp": "2025-12-18T01:22:17.039378",
+      "timestamp": "2025-12-18T05:00:18.641783",
       "world_info": {
         "exporter_path": "exporter/games/wargroove.py",
         "exporter_size": 9795,
@@ -4106,7 +4114,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:40.891117"
+          "timestamp": "2025-12-18T05:03:06.193497"
         }
       },
       "game_name_from_filename": "codingadventure",
@@ -4114,7 +4122,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.2,
+        "processing_time_seconds": 3.54,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -4129,7 +4137,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.71,
+        "processing_time_seconds": 8.74,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -4137,7 +4145,7 @@
         "warning_count": 0
       },
       "template_filename": "WebDevJourney.yaml",
-      "timestamp": "2025-12-18T01:22:53.786859",
+      "timestamp": "2025-12-18T05:01:12.096269",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
@@ -4165,7 +4173,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:53.116899"
+          "timestamp": "2025-12-18T05:01:30.747091"
         }
       },
       "game_name_from_filename": "yachtdice",
@@ -4173,7 +4181,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.81,
+        "processing_time_seconds": 3.85,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -4188,7 +4196,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.64,
+        "processing_time_seconds": 8.66,
         "return_code": 0,
         "sphere_reached": 21.1,
         "success": true,
@@ -4196,7 +4204,7 @@
         "warning_count": 0
       },
       "template_filename": "Yacht Dice.yaml",
-      "timestamp": "2025-12-18T01:22:43.002301",
+      "timestamp": "2025-12-18T05:00:45.382062",
       "world_info": {
         "exporter_path": "exporter/games/yachtdice.py",
         "exporter_size": 931,
@@ -4224,7 +4232,7 @@
           "rules_identical": true,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:23:50.738705"
+          "timestamp": "2025-12-18T05:01:43.946206"
         }
       },
       "game_name_from_filename": "yoshisisland",
@@ -4232,7 +4240,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.91,
+        "processing_time_seconds": 3.87,
         "return_code": 0,
         "success": true,
         "warning_count": 3
@@ -4247,7 +4255,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.67,
+        "processing_time_seconds": 9.69,
         "return_code": 0,
         "sphere_reached": 12.4,
         "success": true,
@@ -4255,7 +4263,7 @@
         "warning_count": 0
       },
       "template_filename": "Yoshi's Island.yaml",
-      "timestamp": "2025-12-18T01:22:54.926151",
+      "timestamp": "2025-12-18T05:00:46.187217",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
         "exporter_size": 11075,
@@ -4276,14 +4284,14 @@
       },
       "consistency_tests": {
         "1": {
-          "new_rules_hash": "8ff1ba5a9a6d2355300e2e1d71d3bebf3bdee9fa894116994a49400818affc89",
+          "new_rules_hash": "7ff2b7242bb0b747c45708d63bf64d8edde1f1cab474fe7481848031b5b0d237",
           "new_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-          "original_rules_hash": "24f8dd05cb01e5df2e5017edb718a2f723be702d0cc4079ff8c4a38fd56ef135",
+          "original_rules_hash": "8ff1ba5a9a6d2355300e2e1d71d3bebf3bdee9fa894116994a49400818affc89",
           "original_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
           "rules_identical": false,
           "seed": "1",
           "spoilers_identical": true,
-          "timestamp": "2025-12-18T01:24:19.645716"
+          "timestamp": "2025-12-18T05:02:59.410614"
         }
       },
       "game_name_from_filename": "shapez",
@@ -4291,7 +4299,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.41,
+        "processing_time_seconds": 4.61,
         "return_code": 0,
         "success": true,
         "warning_count": 1
@@ -4306,7 +4314,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.53,
+        "processing_time_seconds": 6.78,
         "return_code": 0,
         "sphere_reached": 5.7,
         "success": true,
@@ -4314,7 +4322,7 @@
         "warning_count": 0
       },
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-12-18T01:23:29.930488",
+      "timestamp": "2025-12-18T05:02:04.675804",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
