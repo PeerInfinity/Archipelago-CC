@@ -648,7 +648,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Also export computed logic properties that are used in rules
         # These are computed from options but accessed as attributes on the logic object
         try:
-            from worlds.sc2.Rules import SC2Logic
+            from worlds.sc2.rules import SC2Logic
             logic = SC2Logic(world)
 
             # Export computed boolean properties that are referenced in access rules
@@ -666,6 +666,23 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     # Only export simple types
                     if isinstance(prop_value, (bool, int, str, float)):
                         settings_dict[prop_name] = prop_value
+
+            # Export unit lists that are computed from required_tactics option
+            # These are used in helper functions like terran_common_unit
+            unit_list_properties = [
+                'basic_terran_units',
+                'basic_zerg_units',
+                'basic_protoss_units'
+            ]
+
+            for prop_name in unit_list_properties:
+                if hasattr(logic, prop_name):
+                    prop_value = getattr(logic, prop_name)
+                    # Convert sets to sorted lists for JSON serialization
+                    if isinstance(prop_value, (set, frozenset)):
+                        settings_dict[prop_name] = sorted(list(prop_value))
+                    elif isinstance(prop_value, (list, tuple)):
+                        settings_dict[prop_name] = list(prop_value)
         except Exception as e:
             logger.warning(f"Could not export SC2 logic properties: {e}")
 
