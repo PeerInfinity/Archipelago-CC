@@ -1401,7 +1401,9 @@ class HelperCodeGenerator:
                 else:
                     sig_params.append(f'{param} = {repr(default_val)}')
             else:
-                sig_params.append(param)
+                # No default provided - use None as default so callers can omit this arg
+                # This is needed when helper body is hardcoded/expanded and doesn't use the param
+                sig_params.append(f'{param} = None')
 
         # Determine return type based on body structure
         return_type = "bool"
