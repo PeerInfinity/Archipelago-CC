@@ -1279,10 +1279,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
             if (!hasBoss && hasBosses) {
               // Use the new bosses format - default to "None" entry
-              return baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+              const boss = baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+              return boss;
             }
           }
-          
+
           // Special handling for dungeon attribute - resolve string to actual dungeon object
           if (rule.attr === 'dungeon') {
             const hasDungeon = baseObject.dungeon !== undefined;
@@ -1361,6 +1362,18 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           if (rule.attr === 'value' && baseObject !== undefined && baseObject !== null) {
             return baseObject;
           }
+
+          // Special case: Allow resolveAttribute to handle string baseObjects
+          // This is needed for cases like region.dungeon.boss where:
+          // - region.dungeon returns a string dungeon name "Tower of Hera"
+          // - We then need to resolve .boss on that string by looking up the dungeon object
+          if (typeof baseObject === 'string' && typeof context.resolveAttribute === 'function') {
+            const resolvedValue = context.resolveAttribute(baseObject, rule.attr);
+            if (resolvedValue !== undefined) {
+              return resolvedValue;
+            }
+          }
+
           return undefined;
         }
       }
@@ -1566,7 +1579,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Look for patterns:
           // 1. location.parent_region.dungeon.boss.can_defeat
           // 2. location.parent_region.dungeon.bosses["index"].can_defeat (subscript pattern)
-          
+
           // First check if immediate parent is a subscript accessing bosses
           if (current && current.type === 'subscript') {
             // Check if the subscript is accessing a bosses attribute
@@ -1579,7 +1592,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               subscriptValue = subscriptValue.object;
             }
           }
-          
+
           // Also check the standard attribute chain
           while (current && current.type === 'attribute') {
             if (current.attr === 'boss' || current.attr === 'bosses') {
@@ -4507,6 +4520,90 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         }
       }
       return undefined;
+    }
+
+    // AST_placement_search (from converted AST format) - search for an item at specific locations
+    // Returns true if the item is found at any of the locations, false otherwise
+    case 'AST_placement_search': {
+      // Evaluate item name
+      let searchItem = args.item;
+      if (searchItem && typeof searchItem === 'object' && (searchItem.type || searchItem.rule)) {
+        searchItem = evaluateRule(searchItem, context, depth + 1, localScope);
+      }
+
+      // Evaluate player
+      let searchPlayer = args.player;
+      if (searchPlayer && typeof searchPlayer === 'object' && (searchPlayer.type || searchPlayer.rule)) {
+        searchPlayer = evaluateRule(searchPlayer, context, depth + 1, localScope);
+      }
+      searchPlayer = searchPlayer ?? 1;
+
+      // Evaluate locations list
+      let locations = args.locations;
+      if (locations && typeof locations === 'object') {
+        if (locations.type === 'constant') {
+          locations = locations.value;
+        } else if (locations.type === 'list' && Array.isArray(locations.value)) {
+          // Recursively evaluate list items
+          locations = locations.value.map(item => {
+            if (item && typeof item === 'object' && (item.type || item.rule)) {
+              return evaluateRule(item, context, depth + 1, localScope);
+            }
+            return item;
+          });
+        } else if (locations.type || locations.rule) {
+          locations = evaluateRule(locations, context, depth + 1, localScope);
+        }
+      }
+
+      if (!Array.isArray(locations) || !searchItem) {
+        return undefined;
+      }
+
+      // Search each location for the item
+      for (const locEntry of locations) {
+        let locName, locPlayer;
+        if (Array.isArray(locEntry)) {
+          [locName, locPlayer] = locEntry;
+        } else if (locEntry && typeof locEntry === 'object') {
+          locName = locEntry.location || locEntry.name;
+          locPlayer = locEntry.player ?? 1;
+        } else {
+          continue;
+        }
+
+        locPlayer = locPlayer ?? 1;
+
+        // Get the item at this location
+        if (typeof context?.getLocationItem === 'function') {
+          const foundItem = context.getLocationItem(locName);
+          if (foundItem) {
+            const itemName = foundItem.name || foundItem.item;
+            const itemPlayer = foundItem.player || 1;
+            // Check if this matches what we're searching for
+            if (itemName === searchItem && itemPlayer === searchPlayer) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+
+    // AST_function_call (from converted AST format) - evaluate a function call like boss.can_defeat()
+    case 'AST_function_call': {
+      // Convert Rule Builder format to legacy function_call format
+      // Structure: { rule: 'AST_function_call', args: { function: {...}, args: [...], _original_ast_type: 'function_call' } }
+      const funcExpr = args.function;
+      const funcArgs = args.args || [];
+
+      // Build the legacy format and evaluate it
+      return evaluateRule({
+        type: 'function_call',
+        function: funcExpr,
+        args: funcArgs
+      }, context, depth + 1, localScope);
     }
 
     // Item check: Has(item_name, count)
