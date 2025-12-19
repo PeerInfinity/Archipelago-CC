@@ -16,8 +16,7 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
-# Rule Builder format is now output directly to the frontend (no conversion to CC format)
-# The frontend's evaluateRuleBuilderRule handles Rule Builder format natively
+from .converter import convert_rules_file_to_rule_builder
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
 
@@ -2001,7 +2000,7 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 
 
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder") -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2012,6 +2011,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         filename_base: Base name for output files
         save_presets: Whether to save copies of files to the presets directory
         skip_preset_copy_if_rules_identical: If True, skip copying to presets if files are identical
+        rules_json_format: Output format - "rule_builder" (default), "ast", or "both"
 
     Returns:
         Dict containing paths to generated files
@@ -2059,6 +2059,36 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     if not cleaned_data: # Handle potential errors from the helper
         logger.error("Failed to get cleaned data, cannot export game rules.")
         return {}
+
+    # Validate rules_json_format parameter
+    valid_formats = ("rule_builder", "ast", "both")
+    if rules_json_format not in valid_formats:
+        logger.warning(f"Invalid rules_json_format '{rules_json_format}', defaulting to 'rule_builder'")
+        rules_json_format = "rule_builder"
+
+    # Prepare data in appropriate format(s)
+    # AST format is what we get from _get_cleaned_rules_data
+    ast_data = cleaned_data
+    rb_data = None
+
+    if rules_json_format in ("rule_builder", "both"):
+        # Convert to Rule Builder format
+        try:
+            rb_data, conversion_warnings = convert_rules_file_to_rule_builder(cleaned_data)
+            if conversion_warnings:
+                logger.debug(f"Format conversion warnings: {len(conversion_warnings)} warnings")
+                for warning in conversion_warnings[:5]:  # Log first 5 warnings
+                    logger.debug(f"  - {warning}")
+                if len(conversion_warnings) > 5:
+                    logger.debug(f"  ... and {len(conversion_warnings) - 5} more warnings")
+        except Exception as e:
+            logger.error(f"Error converting to Rule Builder format: {e}")
+            if rules_json_format == "rule_builder":
+                logger.warning("Falling back to AST format due to conversion error")
+                rules_json_format = "ast"
+            else:
+                logger.warning("Skipping Rule Builder output due to conversion error")
+                rb_data = None
 
     # --- Helper function to create an ordered dictionary with proper field ordering ---
     def create_ordered_export_data(data, game_name=None, player_id=None):
@@ -2166,7 +2196,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             return False
     
     results = {}
-    
+
     # --- Determine Game Name for Combined File ---
     combined_game_name = "Unknown"
     if multiworld.game:
@@ -2177,17 +2207,33 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             combined_game_name = sorted(unique_games)[0]
         else:
             combined_game_name = "Unknown"
-    
+
     # --- Process Combined Export (all players) ---
+    # Determine which data to use for the primary output file
+    if rules_json_format == "ast":
+        primary_data = ast_data
+    else:
+        # For "rule_builder" or "both", use Rule Builder format as primary
+        primary_data = rb_data if rb_data is not None else ast_data
+
     combined_rules_path = os.path.join(output_dir, f"{filename_base}_rules.json")
-    ordered_data = create_ordered_export_data(cleaned_data, game_name=combined_game_name)
-    
+    ordered_data = create_ordered_export_data(primary_data, game_name=combined_game_name)
+
     if write_export_data(ordered_data, combined_rules_path):
         results['rules_combined'] = combined_rules_path
     else:
         # Handle failure if needed
         pass
-    
+
+    # Write AST format file if "both" is selected
+    if rules_json_format == "both":
+        ast_rules_path = os.path.join(output_dir, f"{filename_base}_rules-ast.json")
+        ordered_ast_data = create_ordered_export_data(ast_data, game_name=combined_game_name)
+        if write_export_data(ordered_ast_data, ast_rules_path):
+            results['rules_combined_ast'] = ast_rules_path
+        else:
+            logger.warning("Failed to write AST format file")
+
     # --- Process Player-Specific Exports ---
     # Only create individual player files if more than one player
     if len(multiworld.player_ids) > 1:
@@ -2195,15 +2241,22 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             player_str = str(player)
             player_game_name = multiworld.game.get(player, "Unknown")
             player_rules_path = os.path.join(output_dir, f"{filename_base}_P{player_str}_rules.json")
-            
-            # Create ordered player-specific data
-            player_data = create_ordered_export_data(cleaned_data, game_name=player_game_name, player_id=player_str)
-            
+
+            # Create ordered player-specific data (use primary format)
+            player_data = create_ordered_export_data(primary_data, game_name=player_game_name, player_id=player_str)
+
             # Write player-specific file
             if write_export_data(player_data, player_rules_path):
                 results[f"rules_p{player_str}"] = player_rules_path
             else:
                 results[f"rules_p{player_str}"] = f"ERROR: Failed to write file"
+
+            # Write AST format player file if "both" is selected
+            if rules_json_format == "both":
+                player_ast_path = os.path.join(output_dir, f"{filename_base}_P{player_str}_rules-ast.json")
+                player_ast_data = create_ordered_export_data(ast_data, game_name=player_game_name, player_id=player_str)
+                if write_export_data(player_ast_data, player_ast_path):
+                    results[f"rules_p{player_str}_ast"] = player_ast_path
 
     # If save_presets is False, skip the preset saving parts
     if not save_presets:
