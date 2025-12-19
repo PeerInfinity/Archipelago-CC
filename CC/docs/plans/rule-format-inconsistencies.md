@@ -220,22 +220,32 @@ if (rule.attr === 'boss') {
 
 ## Summary Table
 
-| Issue | Severity | Fix Location | Recommendation |
-|-------|----------|--------------|----------------|
-| Nested args in helpers | Medium | Exporter | Fix in Phase 5 |
-| Inconsistent location lists | Low | Exporter | Fix in Phase 5 |
+| Issue | Severity | Fix Location | Status |
+|-------|----------|--------------|--------|
+| Nested args in helpers | Medium | Exporter | **FIXED** |
+| Inconsistent location lists | Low | Exporter | **FIXED** |
 | Dungeon string vs object | Low | N/A | Document as expected |
 | Boss vs bosses naming | Low | N/A | Document as expected |
 
 ---
 
-## Implementation Priority
+## Implementation Status
 
-1. **Document Now**: Issues 3 and 4 are working correctly and should be documented as expected behavior patterns.
+### Fixed (2025-12-19)
 
-2. **Fix in Phase 5** (Remove AST Format): Issues 1 and 2 should be fixed when cleaning up the format conversion, as they're artifacts of the AST→Rule Builder conversion.
+**Issue 1: Nested args in helpers** - Fixed in `exporter/converter/ast_to_rule_builder.py`
+- Modified `_convert_helper()` to output flattened structure
+- Helper args are now a direct array at the `args` key
+- `_original_ast_type` moved to rule level
 
-3. **Consider for Future**: If we ever rev the Rule Builder format version, we could clean up all these patterns.
+**Issue 2: Inconsistent location lists** - Fixed in `exporter/converter/ast_to_rule_builder.py`
+- Added dedicated `_convert_placement_search()` converter
+- Locations are now flattened to simple `[[name, player], ...]` format
+- Added helper methods: `_flatten_locations()`, `_flatten_inner_list()`, `_flatten_single_location()`
+
+### Documented as Expected Behavior
+
+Issues 3 (dungeon string vs object) and 4 (boss vs bosses naming) are working correctly with evaluator workarounds and should remain as-is.
 
 ---
 

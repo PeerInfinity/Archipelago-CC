@@ -5070,9 +5070,14 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     default: {
       log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);
       // Handle converted helper rules (from AST format)
-      // These have structure: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
+      // New format: {rule: "helper_name", args: [...], _original_ast_type: "helper"}
+      // Old format: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
       let helperArgs;
-      if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+      if (Array.isArray(args)) {
+        // New flattened format - args is directly an array
+        helperArgs = args;
+      } else if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+        // Old nested format - args.args contains the helper arguments
         helperArgs = args.args;
       } else {
         // For simpler Rule Builder rules, use all arg values (excluding metadata keys)

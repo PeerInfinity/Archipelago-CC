@@ -81,10 +81,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -103,10 +101,8 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -288,10 +284,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -301,10 +295,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -401,10 +393,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -414,10 +404,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -442,10 +430,8 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -468,10 +454,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -501,10 +485,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -542,10 +524,8 @@
                         {
                           "rule": "can_lift_rocks",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -560,10 +540,8 @@
                     {
                       "rule": "can_lift_heavy_rocks",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -665,10 +643,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -705,10 +681,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -760,10 +734,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -791,10 +763,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -1007,10 +977,8 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -1030,10 +998,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -1279,10 +1245,8 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -1669,10 +1633,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -1699,10 +1661,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -1729,10 +1689,8 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -1750,10 +1708,8 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -1771,10 +1727,8 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -1830,10 +1784,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2304,10 +2256,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2368,19 +2318,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 4
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2398,19 +2346,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 4
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2428,19 +2374,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 4
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2458,19 +2402,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 4
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2488,19 +2430,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 4
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -2842,10 +2782,8 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -2855,10 +2793,8 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -2921,10 +2857,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -2970,10 +2904,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -3046,10 +2978,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -3224,19 +3154,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 3
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 3
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -3308,19 +3236,17 @@
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 4
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 4
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3357,19 +3283,17 @@
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 4
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 4
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3452,10 +3376,8 @@
                 {
                   "rule": "has_fire_source",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -3549,10 +3471,8 @@
                     {
                       "rule": "has_fire_source",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -3697,19 +3617,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -3753,19 +3671,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 5
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 5
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -3784,10 +3700,7 @@
                                   "rule": "AST_placement_lookup",
                                   "options": [],
                                   "args": {
-                                    "location": {
-                                      "type": "constant",
-                                      "value": "Eastern Palace - Big Key Chest"
-                                    },
+                                    "location": "Eastern Palace - Big Key Chest",
                                     "_original_ast_type": "placement_lookup"
                                   },
                                   "_converted_from_cc": true
@@ -3953,10 +3866,8 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -4048,10 +3959,8 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -4194,10 +4103,8 @@
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -4284,28 +4191,24 @@
                 {
                   "rule": "basement_key_rule",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 1
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 1
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -4426,19 +4329,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -4467,19 +4368,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 1
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 1
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -4501,28 +4400,24 @@
                 {
                   "rule": "basement_key_rule",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 2
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -4559,19 +4454,17 @@
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 1
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 1
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -4738,19 +4631,17 @@
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 1
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 1
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -4818,10 +4709,8 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -4959,10 +4848,8 @@
                     {
                       "rule": "has_sword",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -4994,19 +4881,17 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "Constant",
-                    "options": [],
-                    "args": {
-                      "value": 4
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -5045,19 +4930,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 4
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 4
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -5107,19 +4990,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 4
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 4
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -5169,19 +5050,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 4
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 4
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -5646,10 +5525,8 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -5668,10 +5545,8 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -5725,10 +5600,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -5771,28 +5644,22 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -5826,28 +5693,22 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -5881,28 +5742,22 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -5936,28 +5791,22 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -5991,28 +5840,22 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -6042,10 +5885,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -6063,10 +5904,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -6207,10 +6046,8 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -6494,10 +6331,8 @@
             "access_rule": {
               "rule": "can_retrieve_tablet",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -6563,10 +6398,8 @@
                 {
                   "rule": "can_activate_crystal_switch",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -6581,10 +6414,7 @@
                           "rule": "AST_placement_lookup",
                           "options": [],
                           "args": {
-                            "location": {
-                              "type": "constant",
-                              "value": "Tower of Hera - Big Key Chest"
-                            },
+                            "location": "Tower of Hera - Big Key Chest",
                             "_original_ast_type": "placement_lookup"
                           },
                           "_converted_from_cc": true
@@ -6652,10 +6482,8 @@
                     {
                       "rule": "can_activate_crystal_switch",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -6678,10 +6506,8 @@
                         {
                           "rule": "can_shoot_arrows",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -6696,10 +6522,8 @@
                     {
                       "rule": "has_melee_weapon",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -6738,10 +6562,8 @@
             "access_rule": {
               "rule": "can_activate_crystal_switch",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -6759,10 +6581,8 @@
             "access_rule": {
               "rule": "can_activate_crystal_switch",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -6790,10 +6610,8 @@
             "access_rule": {
               "rule": "has_fire_source",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -7010,10 +6828,8 @@
                     {
                       "rule": "cross_peg_bridge",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -7185,10 +7001,8 @@
                     {
                       "rule": "can_lift_rocks",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -7250,10 +7064,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -7333,10 +7145,8 @@
                     {
                       "rule": "can_lift_rocks",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -7364,10 +7174,8 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -7454,10 +7262,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -7489,10 +7295,8 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -7746,10 +7550,8 @@
             "access_rule": {
               "rule": "can_retrieve_tablet",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
             "item": {
@@ -7906,10 +7708,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -7941,10 +7741,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -7993,10 +7791,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8027,10 +7823,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8061,10 +7855,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8095,10 +7887,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8187,10 +7977,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8290,10 +8078,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8349,10 +8135,8 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -8445,10 +8229,8 @@
                                                 {
                                                   "rule": "can_lift_heavy_rocks",
                                                   "options": [],
-                                                  "args": {
-                                                    "args": [],
-                                                    "_original_ast_type": "helper"
-                                                  },
+                                                  "args": [],
+                                                  "_original_ast_type": "helper",
                                                   "_converted_from_cc": true
                                                 },
                                                 {
@@ -8636,10 +8418,8 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -9322,19 +9102,15 @@
                 {
                   "rule": "has_misery_mire_medallion",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -9544,20 +9320,18 @@
             "access_rule": {
               "rule": "has_crystals",
               "options": [],
-              "args": {
-                "args": [
-                  {
-                    "rule": "AST_setting_value",
-                    "options": [],
-                    "args": {
-                      "setting": "crystals_needed_for_gt",
-                      "_original_ast_type": "setting_value"
-                    },
-                    "_converted_from_cc": true
-                  }
-                ],
-                "_original_ast_type": "helper"
-              },
+              "args": [
+                {
+                  "rule": "AST_setting_value",
+                  "options": [],
+                  "args": {
+                    "setting": "crystals_needed_for_gt",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_cc": true
+                }
+              ],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           },
@@ -9580,10 +9354,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -9617,19 +9389,15 @@
                 {
                   "rule": "has_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_turtle_rock_medallion",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -9911,10 +9679,8 @@
                     {
                       "rule": "can_lift_rocks",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -9928,24 +9694,22 @@
                             {
                               "rule": "can_extend_magic",
                               "options": [],
-                              "args": {
-                                "args": [
-                                  {
-                                    "rule": "Constant",
-                                    "options": [],
-                                    "args": {
-                                      "value": 16
-                                    },
-                                    "_converted_from_cc": true
+                              "args": [
+                                {
+                                  "rule": "Constant",
+                                  "options": [],
+                                  "args": {
+                                    "value": 16
                                   },
-                                  {
-                                    "rule": "True_",
-                                    "options": [],
-                                    "args": {}
-                                  }
-                                ],
-                                "_original_ast_type": "helper"
-                              },
+                                  "_converted_from_cc": true
+                                },
+                                {
+                                  "rule": "True_",
+                                  "options": [],
+                                  "args": {}
+                                }
+                              ],
+                              "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             },
                             {
@@ -9981,19 +9745,17 @@
                                         {
                                           "rule": "has_hearts",
                                           "options": [],
-                                          "args": {
-                                            "args": [
-                                              {
-                                                "rule": "Constant",
-                                                "options": [],
-                                                "args": {
-                                                  "value": 4
-                                                },
-                                                "_converted_from_cc": true
-                                              }
-                                            ],
-                                            "_original_ast_type": "helper"
-                                          },
+                                          "args": [
+                                            {
+                                              "rule": "Constant",
+                                              "options": [],
+                                              "args": {
+                                                "value": 4
+                                              },
+                                              "_converted_from_cc": true
+                                            }
+                                          ],
+                                          "_original_ast_type": "helper",
                                           "_converted_from_cc": true
                                         },
                                         {
@@ -10010,24 +9772,22 @@
                                 {
                                   "rule": "can_extend_magic",
                                   "options": [],
-                                  "args": {
-                                    "args": [
-                                      {
-                                        "rule": "Constant",
-                                        "options": [],
-                                        "args": {
-                                          "value": 12
-                                        },
-                                        "_converted_from_cc": true
+                                  "args": [
+                                    {
+                                      "rule": "Constant",
+                                      "options": [],
+                                      "args": {
+                                        "value": 12
                                       },
-                                      {
-                                        "rule": "True_",
-                                        "options": [],
-                                        "args": {}
-                                      }
-                                    ],
-                                    "_original_ast_type": "helper"
-                                  },
+                                      "_converted_from_cc": true
+                                    },
+                                    {
+                                      "rule": "True_",
+                                      "options": [],
+                                      "args": {}
+                                    }
+                                  ],
+                                  "_original_ast_type": "helper",
                                   "_converted_from_cc": true
                                 }
                               ]
@@ -10099,10 +9859,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -10333,10 +10091,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -10511,19 +10267,17 @@
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": 4
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": 4
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -10531,19 +10285,15 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_beam_sword",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -10726,10 +10476,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -10884,10 +10632,7 @@
                           "rule": "AST_placement_lookup",
                           "options": [],
                           "args": {
-                            "location": {
-                              "type": "constant",
-                              "value": "Swamp Palace - Big Chest"
-                            },
+                            "location": "Swamp Palace - Big Chest",
                             "_original_ast_type": "placement_lookup"
                           },
                           "_converted_from_cc": true
@@ -11439,10 +11184,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -11515,10 +11258,7 @@
                                   "rule": "AST_placement_lookup",
                                   "options": [],
                                   "args": {
-                                    "location": {
-                                      "type": "constant",
-                                      "value": "Thieves' Town - Big Chest"
-                                    },
+                                    "location": "Thieves' Town - Big Chest",
                                     "_original_ast_type": "placement_lookup"
                                   },
                                   "_converted_from_cc": true
@@ -12191,10 +11931,8 @@
                             {
                               "rule": "can_use_bombs",
                               "options": [],
-                              "args": {
-                                "args": [],
-                                "_original_ast_type": "helper"
-                              },
+                              "args": [],
+                              "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             },
                             {
@@ -12214,10 +11952,7 @@
                               "rule": "AST_placement_lookup",
                               "options": [],
                               "args": {
-                                "location": {
-                                  "type": "constant",
-                                  "value": "Skull Woods - Big Chest"
-                                },
+                                "location": "Skull Woods - Big Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
                               "_converted_from_cc": true
@@ -12454,10 +12189,8 @@
                 {
                   "rule": "has_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -12707,19 +12440,15 @@
                 {
                   "rule": "can_melt_things",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -12746,10 +12475,8 @@
                 {
                   "rule": "can_melt_things",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -12797,10 +12524,8 @@
                     {
                       "rule": "can_melt_things",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -12898,71 +12623,26 @@
                           "rule": "AST_placement_search",
                           "options": [],
                           "args": {
-                            "item": {
-                              "type": "constant",
-                              "value": "Big Key (Ice Palace)"
-                            },
-                            "player": {
-                              "type": "constant",
-                              "value": 1
-                            },
-                            "locations": {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "constant",
-                                      "value": "Ice Palace - Spike Room"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": 1
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "constant",
-                                      "value": "Ice Palace - Hammer Block Key Drop"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": 1
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "constant",
-                                      "value": "Ice Palace - Big Key Chest"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": 1
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "constant",
-                                      "value": "Ice Palace - Map Chest"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": 1
-                                    }
-                                  ]
-                                }
+                            "item": "Big Key (Ice Palace)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ice Palace - Spike Room",
+                                1
+                              ],
+                              [
+                                "Ice Palace - Hammer Block Key Drop",
+                                1
+                              ],
+                              [
+                                "Ice Palace - Big Key Chest",
+                                1
+                              ],
+                              [
+                                "Ice Palace - Map Chest",
+                                1
                               ]
-                            },
+                            ],
                             "_original_ast_type": "placement_search"
                           },
                           "_converted_from_cc": true
@@ -13051,10 +12731,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -13229,10 +12907,8 @@
                 {
                   "rule": "can_lift_rocks",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -13474,19 +13150,15 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_sword",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -13580,10 +13252,7 @@
                           "rule": "AST_placement_lookup",
                           "options": [],
                           "args": {
-                            "location": {
-                              "type": "constant",
-                              "value": "Misery Mire - Big Key Chest"
-                            },
+                            "location": "Misery Mire - Big Key Chest",
                             "_original_ast_type": "placement_lookup"
                           },
                           "_converted_from_cc": true
@@ -13637,10 +13306,7 @@
                           "rule": "AST_placement_lookup",
                           "options": [],
                           "args": {
-                            "location": {
-                              "type": "constant",
-                              "value": "Misery Mire - Compass Chest"
-                            },
+                            "location": "Misery Mire - Compass Chest",
                             "_original_ast_type": "placement_lookup"
                           },
                           "_converted_from_cc": true
@@ -13795,10 +13461,8 @@
                         {
                           "rule": "can_activate_crystal_switch",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -13867,10 +13531,8 @@
                         {
                           "rule": "can_activate_crystal_switch",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -13950,19 +13612,17 @@
                         {
                           "rule": "has_hearts",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": 4
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": 4
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -14094,10 +13754,7 @@
                               "rule": "AST_placement_lookup",
                               "options": [],
                               "args": {
-                                "location": {
-                                  "type": "constant",
-                                  "value": "Misery Mire - Big Key Chest"
-                                },
+                                "location": "Misery Mire - Big Key Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
                               "_converted_from_cc": true
@@ -14141,10 +13798,7 @@
                               "rule": "AST_placement_lookup",
                               "options": [],
                               "args": {
-                                "location": {
-                                  "type": "constant",
-                                  "value": "Misery Mire - Compass Chest"
-                                },
+                                "location": "Misery Mire - Compass Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
                               "_converted_from_cc": true
@@ -14188,10 +13842,7 @@
                               "rule": "AST_placement_lookup",
                               "options": [],
                               "args": {
-                                "location": {
-                                  "type": "constant",
-                                  "value": "Misery Mire - Conveyor Crystal Key Drop"
-                                },
+                                "location": "Misery Mire - Conveyor Crystal Key Drop",
                                 "_original_ast_type": "placement_lookup"
                               },
                               "_converted_from_cc": true
@@ -14297,10 +13948,8 @@
                 {
                   "rule": "has_fire_source",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -14331,10 +13980,8 @@
                 {
                   "rule": "has_fire_source",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -14378,10 +14025,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -14804,31 +14449,22 @@
                   "rule": "AST_placement_search",
                   "options": [],
                   "args": {
-                    "item": {
-                      "type": "constant",
-                      "value": "Big Key (Turtle Rock)"
-                    },
-                    "player": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "locations": {
-                      "type": "constant",
-                      "value": [
-                        [
-                          "Turtle Rock - Compass Chest",
-                          1
-                        ],
-                        [
-                          "Turtle Rock - Roller Room - Left",
-                          1
-                        ],
-                        [
-                          "Turtle Rock - Roller Room - Right",
-                          1
-                        ]
+                    "item": "Big Key (Turtle Rock)",
+                    "player": 1,
+                    "locations": [
+                      [
+                        "Turtle Rock - Compass Chest",
+                        1
+                      ],
+                      [
+                        "Turtle Rock - Roller Room - Left",
+                        1
+                      ],
+                      [
+                        "Turtle Rock - Roller Room - Right",
+                        1
                       ]
-                    },
+                    ],
                     "_original_ast_type": "placement_search"
                   },
                   "_converted_from_cc": true
@@ -14880,19 +14516,17 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 5
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 5
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -14959,45 +14593,9 @@
                   "rule": "AST_placement_search",
                   "options": [],
                   "args": {
-                    "item": {
-                      "type": "constant",
-                      "value": "Big Key (Turtle Rock)"
-                    },
-                    "player": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "locations": {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "front_locked_locations"
-                        },
-                        "attr": "union"
-                      },
-                      "args": [
-                        {
-                          "type": "set",
-                          "elements": [
-                            {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "constant",
-                                  "value": "Turtle Rock - Pokey 1 Key Drop"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": 1
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
+                    "item": "Big Key (Turtle Rock)",
+                    "player": 1,
+                    "locations": [],
                     "_original_ast_type": "placement_search"
                   },
                   "_converted_from_cc": true
@@ -15053,28 +14651,22 @@
                         {
                           "rule": "can_shoot_arrows",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "has_beam_sword",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -15154,28 +14746,24 @@
                     {
                       "rule": "can_bomb_or_bonk",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 10
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 10
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -15211,28 +14799,24 @@
                     {
                       "rule": "can_kill_most_things",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 10
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 10
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -15427,19 +15011,17 @@
                                 {
                                   "rule": "can_kill_most_things",
                                   "options": [],
-                                  "args": {
-                                    "args": [
-                                      {
-                                        "rule": "Constant",
-                                        "options": [],
-                                        "args": {
-                                          "value": 5
-                                        },
-                                        "_converted_from_cc": true
-                                      }
-                                    ],
-                                    "_original_ast_type": "helper"
-                                  },
+                                  "args": [
+                                    {
+                                      "rule": "Constant",
+                                      "options": [],
+                                      "args": {
+                                        "value": 5
+                                      },
+                                      "_converted_from_cc": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "helper",
                                   "_converted_from_cc": true
                                 },
                                 {
@@ -15520,10 +15102,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -15795,10 +15375,8 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -15882,10 +15460,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -16366,19 +15942,15 @@
                 {
                   "rule": "can_bomb_or_bonk",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -16433,10 +16005,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -16455,10 +16025,7 @@
                               "rule": "AST_placement_lookup",
                               "options": [],
                               "args": {
-                                "location": {
-                                  "type": "constant",
-                                  "value": "Palace of Darkness - Big Key Chest"
-                                },
+                                "location": "Palace of Darkness - Big Key Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
                               "_converted_from_cc": true
@@ -16581,10 +16148,8 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -16740,10 +16305,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -16811,10 +16374,7 @@
                           "rule": "AST_placement_lookup",
                           "options": [],
                           "args": {
-                            "location": {
-                              "type": "constant",
-                              "value": "Palace of Darkness - Harmless Hellway"
-                            },
+                            "location": "Palace of Darkness - Harmless Hellway",
                             "_original_ast_type": "placement_lookup"
                           },
                           "_converted_from_cc": true
@@ -17068,10 +16628,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -17315,10 +16873,8 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -17472,39 +17028,30 @@
                           "rule": "AST_placement_search",
                           "options": [],
                           "args": {
-                            "item": {
-                              "type": "constant",
-                              "value": "Big Key (Ganons Tower)"
-                            },
-                            "player": {
-                              "type": "constant",
-                              "value": 1
-                            },
-                            "locations": {
-                              "type": "constant",
-                              "value": [
-                                [
-                                  "Ganons Tower - Compass Room - Top Left",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Compass Room - Top Right",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Compass Room - Bottom Left",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Compass Room - Bottom Right",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Conveyor Star Pits Pot Key",
-                                  1
-                                ]
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
                               ]
-                            },
+                            ],
                             "_original_ast_type": "placement_search"
                           },
                           "_converted_from_cc": true
@@ -17594,39 +17141,30 @@
                       "rule": "AST_placement_search",
                       "options": [],
                       "args": {
-                        "item": {
-                          "type": "constant",
-                          "value": "Big Key (Ganons Tower)"
-                        },
-                        "player": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "locations": {
-                          "type": "constant",
-                          "value": [
-                            [
-                              "Ganons Tower - Bob's Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Chest",
-                              1
-                            ]
+                        "item": "Big Key (Ganons Tower)",
+                        "player": 1,
+                        "locations": [
+                          [
+                            "Ganons Tower - Bob's Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Chest",
+                            1
                           ]
-                        },
+                        ],
                         "_original_ast_type": "placement_search"
                       },
                       "_converted_from_cc": true
@@ -17687,39 +17225,30 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -17748,10 +17277,8 @@
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -17826,39 +17353,30 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -17887,10 +17405,8 @@
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -17965,39 +17481,30 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -18026,10 +17533,8 @@
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -18104,39 +17609,30 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -18165,10 +17661,8 @@
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -18243,39 +17737,30 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -18304,10 +17789,8 @@
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -18374,10 +17857,7 @@
                           "rule": "AST_placement_lookup",
                           "options": [],
                           "args": {
-                            "location": {
-                              "type": "constant",
-                              "value": "Ganons Tower - Map Chest"
-                            },
+                            "location": "Ganons Tower - Map Chest",
                             "_original_ast_type": "placement_lookup"
                           },
                           "_converted_from_cc": true
@@ -18628,10 +18108,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -18727,55 +18205,46 @@
                       "rule": "AST_placement_search",
                       "options": [],
                       "args": {
-                        "item": {
-                          "type": "constant",
-                          "value": "Big Key (Ganons Tower)"
-                        },
-                        "player": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "locations": {
-                          "type": "constant",
-                          "value": [
-                            [
-                              "Ganons Tower - Randomizer Room - Top Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Randomizer Room - Top Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Randomizer Room - Bottom Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Randomizer Room - Bottom Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Bob's Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Chest",
-                              1
-                            ]
+                        "item": "Big Key (Ganons Tower)",
+                        "player": 1,
+                        "locations": [
+                          [
+                            "Ganons Tower - Randomizer Room - Top Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Top Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Bottom Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Bottom Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Bob's Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Chest",
+                            1
                           ]
-                        },
+                        ],
                         "_original_ast_type": "placement_search"
                       },
                       "_converted_from_cc": true
@@ -18836,35 +18305,26 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -18873,32 +18333,14 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Small Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "list",
-                                      "value": [
-                                        {
-                                          "type": "constant",
-                                          "value": "Ganons Tower - Firesnake Room"
-                                        },
-                                        {
-                                          "type": "constant",
-                                          "value": 1
-                                        }
-                                      ]
-                                    }
+                                "item": "Small Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Firesnake Room",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -18974,10 +18416,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -19005,35 +18445,26 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -19089,10 +18520,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -19120,35 +18549,26 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -19204,10 +18624,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -19235,35 +18653,26 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -19319,10 +18728,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -19350,35 +18757,26 @@
                               "rule": "AST_placement_search",
                               "options": [],
                               "args": {
-                                "item": {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                "player": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "locations": {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                },
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_cc": true
@@ -19525,36 +18923,32 @@
                         {
                           "rule": "can_defeat_boss",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": "Ganons Tower - Big Key Room - Left"
-                                },
-                                "_converted_from_cc": true
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": "Ganons Tower - Big Key Room - Left"
                               },
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": "bottom"
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                              "_converted_from_cc": true
+                            },
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": "bottom"
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -19604,36 +18998,32 @@
                         {
                           "rule": "can_defeat_boss",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": "Ganons Tower - Big Key Room - Right"
-                                },
-                                "_converted_from_cc": true
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": "Ganons Tower - Big Key Room - Right"
                               },
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": "bottom"
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                              "_converted_from_cc": true
+                            },
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": "bottom"
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -19683,36 +19073,32 @@
                         {
                           "rule": "can_defeat_boss",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": "Ganons Tower - Big Key Chest"
-                                },
-                                "_converted_from_cc": true
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": "Ganons Tower - Big Key Chest"
                               },
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": "bottom"
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                              "_converted_from_cc": true
+                            },
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": "bottom"
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -19816,28 +19202,24 @@
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 8
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 8
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_fire_source",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -19876,10 +19258,8 @@
                 {
                   "rule": "can_use_bombs",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -19952,10 +19332,8 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -19988,19 +19366,17 @@
                 {
                   "rule": "can_kill_most_things",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 1
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 1
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -20203,10 +19579,8 @@
                 {
                   "rule": "has_beam_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -20239,29 +19613,25 @@
                         {
                           "rule": "GanonDefeatRule",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "has_crystals",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "AST_setting_value",
-                                "options": [],
-                                "args": {
-                                  "setting": "crystals_needed_for_ganon",
-                                  "_original_ast_type": "setting_value"
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "AST_setting_value",
+                              "options": [],
+                              "args": {
+                                "setting": "crystals_needed_for_ganon",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -20381,19 +19751,15 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -20449,19 +19815,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 10
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 10
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -20480,19 +19844,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 16
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 16
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -20511,19 +19873,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 32
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 32
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -20542,19 +19902,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 32
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 32
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -20569,19 +19927,15 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -20632,10 +19986,8 @@
                 {
                   "rule": "has_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -20671,10 +20023,8 @@
             "defeat_rule": {
               "rule": "has_melee_weapon",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
@@ -20725,10 +20075,8 @@
                     "test": {
                       "rule": "has_melee_weapon",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     "if_true": {
@@ -20751,28 +20099,24 @@
                                 {
                                   "rule": "can_extend_magic",
                                   "options": [],
-                                  "args": {
-                                    "args": [
-                                      {
-                                        "rule": "Constant",
-                                        "options": [],
-                                        "args": {
-                                          "value": 12
-                                        },
-                                        "_converted_from_cc": true
-                                      }
-                                    ],
-                                    "_original_ast_type": "helper"
-                                  },
+                                  "args": [
+                                    {
+                                      "rule": "Constant",
+                                      "options": [],
+                                      "args": {
+                                        "value": 12
+                                      },
+                                      "_converted_from_cc": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "helper",
                                   "_converted_from_cc": true
                                 },
                                 {
                                   "rule": "can_shoot_arrows",
                                   "options": [],
-                                  "args": {
-                                    "args": [],
-                                    "_original_ast_type": "helper"
-                                  },
+                                  "args": [],
+                                  "_original_ast_type": "helper",
                                   "_converted_from_cc": true
                                 }
                               ]
@@ -20797,28 +20141,24 @@
                                 {
                                   "rule": "can_extend_magic",
                                   "options": [],
-                                  "args": {
-                                    "args": [
-                                      {
-                                        "rule": "Constant",
-                                        "options": [],
-                                        "args": {
-                                          "value": 16
-                                        },
-                                        "_converted_from_cc": true
-                                      }
-                                    ],
-                                    "_original_ast_type": "helper"
-                                  },
+                                  "args": [
+                                    {
+                                      "rule": "Constant",
+                                      "options": [],
+                                      "args": {
+                                        "value": 16
+                                      },
+                                      "_converted_from_cc": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "helper",
                                   "_converted_from_cc": true
                                 },
                                 {
                                   "rule": "can_shoot_arrows",
                                   "options": [],
-                                  "args": {
-                                    "args": [],
-                                    "_original_ast_type": "helper"
-                                  },
+                                  "args": [],
+                                  "_original_ast_type": "helper",
                                   "_converted_from_cc": true
                                 }
                               ]
@@ -20863,10 +20203,8 @@
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -20915,19 +20253,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 10
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 10
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -20946,19 +20282,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 16
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 16
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -20977,19 +20311,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 16
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 16
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -21004,19 +20336,15 @@
                 {
                   "rule": "can_get_good_bee",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -21053,19 +20381,17 @@
                         {
                           "rule": "can_extend_magic",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": 16
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": 16
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -21100,19 +20426,17 @@
                         {
                           "rule": "can_extend_magic",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": 20
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": 20
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -21127,10 +20451,8 @@
                     {
                       "rule": "has_melee_weapon",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -21150,10 +20472,8 @@
                             {
                               "rule": "has_sword",
                               "options": [],
-                              "args": {
-                                "args": [],
-                                "_original_ast_type": "helper"
-                              },
+                              "args": [],
+                              "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             },
                             {
@@ -21214,28 +20534,24 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 10
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 10
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -21243,28 +20559,24 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [
-                      {
-                        "rule": "Constant",
-                        "options": [],
-                        "args": {
-                          "value": 35
-                        },
-                        "_converted_from_cc": true
-                      }
-                    ],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "options": [],
+                      "args": {
+                        "value": 35
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -21345,19 +20657,17 @@
                         {
                           "rule": "can_extend_magic",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": 16
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": 16
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
@@ -21376,28 +20686,24 @@
                         {
                           "rule": "can_extend_magic",
                           "options": [],
-                          "args": {
-                            "args": [
-                              {
-                                "rule": "Constant",
-                                "options": [],
-                                "args": {
-                                  "value": 32
-                                },
-                                "_converted_from_cc": true
-                              }
-                            ],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "options": [],
+                              "args": {
+                                "value": 32
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "has_sword",
                           "options": [],
-                          "args": {
-                            "args": [],
-                            "_original_ast_type": "helper"
-                          },
+                          "args": [],
+                          "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
                       ]
@@ -21459,19 +20765,15 @@
                     {
                       "rule": "can_shoot_arrows",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_sword",
                       "options": [],
-                      "args": {
-                        "args": [],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
                   ]
@@ -21483,19 +20785,17 @@
                     {
                       "rule": "can_use_bombs",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 5
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 5
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -21539,10 +20839,8 @@
                 {
                   "rule": "has_sword",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -21575,19 +20873,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 10
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 10
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -21606,19 +20902,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 16
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 16
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -21637,19 +20931,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 32
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 32
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -21668,19 +20960,17 @@
                     {
                       "rule": "can_extend_magic",
                       "options": [],
-                      "args": {
-                        "args": [
-                          {
-                            "rule": "Constant",
-                            "options": [],
-                            "args": {
-                              "value": 32
-                            },
-                            "_converted_from_cc": true
-                          }
-                        ],
-                        "_original_ast_type": "helper"
-                      },
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 32
+                          },
+                          "_converted_from_cc": true
+                        }
+                      ],
+                      "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
@@ -21695,19 +20985,15 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -21736,19 +21022,15 @@
                 {
                   "rule": "can_shoot_arrows",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "options": [],
-                  "args": {
-                    "args": [],
-                    "_original_ast_type": "helper"
-                  },
+                  "args": [],
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
@@ -21787,10 +21069,8 @@
             "defeat_rule": {
               "rule": "has_melee_weapon",
               "options": [],
-              "args": {
-                "args": [],
-                "_original_ast_type": "helper"
-              },
+              "args": [],
+              "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
           }
