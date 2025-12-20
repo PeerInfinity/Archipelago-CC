@@ -47,6 +47,7 @@ if __name__ == "__main__":
         normal_settings = {
             'skip_required_files': False,
             'save_rules_json': False,
+            'rules_json_format': 'rule_builder',
             'skip_preset_copy_if_rules_identical': False,
             'save_sphere_log': False,
             'verbose_sphere_log': False,
@@ -60,6 +61,7 @@ if __name__ == "__main__":
         minimal_spoilers_settings = {
             'skip_required_files': True,
             'save_rules_json': True,
+            'rules_json_format': 'rule_builder',
             'skip_preset_copy_if_rules_identical': False,
             'save_sphere_log': True,
             'verbose_sphere_log': False,
@@ -73,6 +75,7 @@ if __name__ == "__main__":
         full_spoilers_settings = {
             'skip_required_files': True,
             'save_rules_json': True,
+            'rules_json_format': 'rule_builder',
             'skip_preset_copy_if_rules_identical': False,
             'save_sphere_log': True,
             'verbose_sphere_log': False,

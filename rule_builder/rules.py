@@ -2941,10 +2941,10 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             if self.body_rule is not None:
                 return self.body_rule.explain_json(state)
 
-            # Tier 2: Use CC format explain
+            # Tier 2: Use AST format explain
             if self.body_data is not None:
-                from rule_builder.cc_explain import explain_cc_rule
-                return explain_cc_rule(self.body_data, state, self.player)
+                from rule_builder.ast_explain import explain_ast_rule
+                return explain_ast_rule(self.body_data, state, self.player)
 
             # Tier 3: Fallback - just show helper name and args
             messages: list[JSONMessagePart] = [
@@ -2974,10 +2974,12 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
+            # Note: body_data is intentionally NOT included here.
+            # Helper bodies should be looked up from the helpers section in the export data.
+            # This avoids duplicating helper bodies at every call site.
             return {
                 "helper_name": self.helper_name,
                 "args": self.args,
-                "body_data": self.body_data,
             }
 
 

@@ -16,11 +16,11 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _ahatintimeworldgen_Difficulty(state: "CollectionState", player: int, value) -> bool:
+def _ahatintimeworldgen_Difficulty(state: "CollectionState", player: int, value = None) -> bool:
     return value
 
 
-def _ahatintimeworldgen_can_clear_required_act(state: "CollectionState", player: int, act_entrance) -> bool:
+def _ahatintimeworldgen_can_clear_required_act(state: "CollectionState", player: int, act_entrance = None) -> bool:
     entrance = state.multiworld.worlds[player].multiworld.get_entrance(act_entrance)
     if not (state.can_reach(entrance.connected_region, 'Region', player)):
         return False
@@ -30,7 +30,7 @@ def _ahatintimeworldgen_can_clear_required_act(state: "CollectionState", player:
     return state.multiworld.worlds[player].multiworld.get_location(name).access_rule()
 
 
-def _ahatintimeworldgen_can_use_hat(state: "CollectionState", player: int, hat) -> bool:
+def _ahatintimeworldgen_can_use_hat(state: "CollectionState", player: int, hat = None) -> bool:
     return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if False else (True if (state.multiworld.worlds[player].hat_yarn_costs[hat] <= 0) else state.has('Yarn', player, _ahatintimeworldgen_get_hat_cost(state, player, hat))))
 
 
@@ -38,7 +38,7 @@ def _ahatintimeworldgen_get_difficulty(state: "CollectionState", player: int) ->
     return _ahatintimeworldgen_Difficulty(state, player, -1)
 
 
-def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat) -> bool:
+def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat = None) -> bool:
     cost = 0
     for h in state.multiworld.worlds[player].hat_craft_order:
         cost += state.multiworld.worlds[player].hat_yarn_costs[h]
@@ -47,12 +47,183 @@ def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat)
     return cost
 
 
-def _ahatintimeworldgen_has_relic_combo(state: "CollectionState", player: int, relic) -> bool:
+def _ahatintimeworldgen_has_relic_combo(state: "CollectionState", player: int, relic = None) -> bool:
     return state.has_group(relic, player, len(state.multiworld.worlds[player].item_name_groups[relic]))
 
 
 def _ahatintimeworldgen_painting_logic(state: "CollectionState", player: int) -> bool:
     return bool(False)
+
+
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'Difficulty': {'body': {'name': 'value', 'type': 'name'}, 'params': ['value']},
+    'can_clear_required_act': {   'body': {   'statements': [   {   'name': 'entrance',
+                                                                    'type': 'assign',
+                                                                    'value': {   'args': [   {   'name': 'act_entrance',
+                                                                                                 'type': 'name'}],
+                                                                                 'function': {   'attr': 'get_entrance',
+                                                                                                 'object': {   'attr': 'multiworld',
+                                                                                                               'object': {   'name': 'world',
+                                                                                                                             'type': 'name'},
+                                                                                                               'type': 'attribute'},
+                                                                                                 'type': 'attribute'},
+                                                                                 'type': 'function_call'}},
+                                                                {   'body': [   {   'type': 'return',
+                                                                                    'value': {   'type': 'constant',
+                                                                                                 'value': False}}],
+                                                                    'test': {   'condition': {   'args': [   {   'attr': 'connected_region',
+                                                                                                                 'object': {   'name': 'entrance',
+                                                                                                                               'type': 'name'},
+                                                                                                                 'type': 'attribute'},
+                                                                                                             {   'type': 'constant',
+                                                                                                                 'value': 'Region'}],
+                                                                                                 'method': 'can_reach',
+                                                                                                 'type': 'state_method'},
+                                                                                'type': 'not'},
+                                                                    'type': 'if_statement'},
+                                                                {   'body': [   {   'type': 'return',
+                                                                                    'value': {   'type': 'constant',
+                                                                                                 'value': True}}],
+                                                                    'test': {   'left': {   'type': 'constant',
+                                                                                            'value': 'Free Roam'},
+                                                                                'op': 'in',
+                                                                                'right': {   'attr': 'name',
+                                                                                             'object': {   'attr': 'connected_region',
+                                                                                                           'object': {   'name': 'entrance',
+                                                                                                                         'type': 'name'},
+                                                                                                           'type': 'attribute'},
+                                                                                             'type': 'attribute'},
+                                                                                'type': 'compare'},
+                                                                    'type': 'if_statement'},
+                                                                {   'name': 'name',
+                                                                    'type': 'assign',
+                                                                    'value': {   'all_simple': True,
+                                                                                 'parts': [   {   'type': 'constant',
+                                                                                                  'value': 'Act '
+                                                                                                           'Completion '
+                                                                                                           '('},
+                                                                                              {   'type': 'formatted_value',
+                                                                                                  'value': {   'attr': 'name',
+                                                                                                               'object': {   'attr': 'connected_region',
+                                                                                                                             'object': {   'name': 'entrance',
+                                                                                                                                           'type': 'name'},
+                                                                                                                             'type': 'attribute'},
+                                                                                                               'type': 'attribute'}},
+                                                                                              {   'type': 'constant',
+                                                                                                  'value': ')'}],
+                                                                                 'type': 'f_string',
+                                                                                 'value': 'Act Completion ({...})'}},
+                                                                {   'type': 'return',
+                                                                    'value': {   'args': [],
+                                                                                 'function': {   'attr': 'access_rule',
+                                                                                                 'object': {   'args': [   {   'name': 'name',
+                                                                                                                               'type': 'name'}],
+                                                                                                               'function': {   'attr': 'get_location',
+                                                                                                                               'object': {   'attr': 'multiworld',
+                                                                                                                                             'object': {   'name': 'world',
+                                                                                                                                                           'type': 'name'},
+                                                                                                                                             'type': 'attribute'},
+                                                                                                                               'type': 'attribute'},
+                                                                                                               'type': 'function_call'},
+                                                                                                 'type': 'attribute'},
+                                                                                 'type': 'function_call'}}],
+                                              'type': 'block'},
+                                  'params': ['act_entrance']},
+    'can_use_hat': {   'body': {   'if_false': {   'count': {   'statements': [   {   'name': '_h1_cost',
+                                                                                      'type': 'assign',
+                                                                                      'value': {   'type': 'constant',
+                                                                                                   'value': 0}},
+                                                                                  {   'body': [   {   'name': '_h1_cost',
+                                                                                                      'op': '+=',
+                                                                                                      'type': 'assign',
+                                                                                                      'value': {   'index': {   'name': 'h',
+                                                                                                                                'type': 'name'},
+                                                                                                                   'type': 'subscript',
+                                                                                                                   'value': {   'attr': 'hat_yarn_costs',
+                                                                                                                                'object': {   'name': 'world',
+                                                                                                                                              'type': 'name'},
+                                                                                                                                'type': 'attribute'}}},
+                                                                                                  {   'body': [   {   'type': 'break'}],
+                                                                                                      'test': {   'left': {   'name': 'h',
+                                                                                                                              'type': 'name'},
+                                                                                                                  'op': '==',
+                                                                                                                  'right': {   'name': 'hat',
+                                                                                                                               'type': 'name'},
+                                                                                                                  'type': 'compare'},
+                                                                                                      'type': 'if_statement'}],
+                                                                                      'iterable': {   'attr': 'hat_craft_order',
+                                                                                                      'object': {   'name': 'world',
+                                                                                                                    'type': 'name'},
+                                                                                                      'type': 'attribute'},
+                                                                                      'type': 'for_iter',
+                                                                                      'var': 'h'},
+                                                                                  {   'type': 'return',
+                                                                                      'value': {   'name': '_h1_cost',
+                                                                                                   'type': 'name'}}],
+                                                                'type': 'block'},
+                                                   'item': 'Yarn',
+                                                   'type': 'item_check'},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {   'index': {'name': 'hat', 'type': 'name'},
+                                                           'type': 'subscript',
+                                                           'value': {   'attr': 'hat_yarn_costs',
+                                                                        'object': {'name': 'world', 'type': 'name'},
+                                                                        'type': 'attribute'}},
+                                               'op': '<=',
+                                               'right': {'type': 'constant', 'value': 0},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                       'params': ['hat']},
+    'get_difficulty': {'setting': 'LogicDifficulty', 'type': 'setting_value'},
+    'get_hat_cost': {   'body': {   'statements': [   {   'name': 'cost',
+                                                          'type': 'assign',
+                                                          'value': {'type': 'constant', 'value': 0}},
+                                                      {   'body': [   {   'name': 'cost',
+                                                                          'op': '+=',
+                                                                          'type': 'assign',
+                                                                          'value': {   'index': {   'name': 'h',
+                                                                                                    'type': 'name'},
+                                                                                       'type': 'subscript',
+                                                                                       'value': {   'attr': 'hat_yarn_costs',
+                                                                                                    'object': {   'name': 'world',
+                                                                                                                  'type': 'name'},
+                                                                                                    'type': 'attribute'}}},
+                                                                      {   'body': [{'type': 'break'}],
+                                                                          'test': {   'left': {   'name': 'h',
+                                                                                                  'type': 'name'},
+                                                                                      'op': '==',
+                                                                                      'right': {   'name': 'hat',
+                                                                                                   'type': 'name'},
+                                                                                      'type': 'compare'},
+                                                                          'type': 'if_statement'}],
+                                                          'iterable': {   'attr': 'hat_craft_order',
+                                                                          'object': {'name': 'world', 'type': 'name'},
+                                                                          'type': 'attribute'},
+                                                          'type': 'for_iter',
+                                                          'var': 'h'},
+                                                      {'type': 'return', 'value': {'name': 'cost', 'type': 'name'}}],
+                                    'type': 'block'},
+                        'params': ['hat']},
+    'has_relic_combo': {   'body': {   'count': {   'args': [   {   'index': {'name': 'relic', 'type': 'name'},
+                                                                    'type': 'subscript',
+                                                                    'value': {   'attr': 'item_name_groups',
+                                                                                 'object': {   'name': 'world',
+                                                                                               'type': 'name'},
+                                                                                 'type': 'attribute'}}],
+                                                    'name': 'len',
+                                                    'type': 'helper'},
+                                       'group': {'name': 'relic', 'type': 'name'},
+                                       'type': 'group_check'},
+                           'params': ['relic']},
+    'painting_logic': {   'args': [{'setting': 'ShuffleSubconPaintings', 'type': 'setting_value'}],
+                          'name': 'bool',
+                          'type': 'helper'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -68,41 +239,36 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Battle of the Birds", player),
-        Has("Time Piece", 17)
+        Has("Time Piece", 5)
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Subcon Forest", player),
-        Has("Time Piece", 12)
+        Has("Time Piece", 17)
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Alpine Skyline", player),
-        Has("Time Piece", 8)
+        Has("Time Piece", 13)
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Time's End", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h1_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h1_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h1_cost'}}]}}}})) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h2_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h2_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h2_cost'}}]}}}})) & (Has("Time Piece", 35))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Time Piece", 35))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h3_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h3_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h3_cost'}}]}}}})) & (Has("Time Piece", 8))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Time Piece", 13))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h4_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h4_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h4_cost'}}]}}}})) & (Has("Time Piece", 17))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (Has("Time Piece", 5))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 6", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 4", player),
+        multiworld.get_entrance("Mafia Town - Act 7", player),
         False_()
     )
 
@@ -112,123 +278,133 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 2", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 7", player),
-        False_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5", player),
         False_()
     )
 
     world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 4", player),
+        False_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 6", player),
+        False_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 2", player),
+        False_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
-        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
+        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
+        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
-        (CanReachRegion("Picture Perfect")) & (True_())
+        (CanReachRegion("The Subcon Well")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player),
-        (CanReachRegion("The Golden Vault")) & (True_())
+        (CanReachRegion("The Big Parade")) & (True_())
     )
 
     world.set_rule(
@@ -238,16 +414,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Finale B", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 5", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 3", player),
         False_()
     )
 
@@ -262,58 +428,58 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        multiworld.get_entrance("Battle of the Birds - Act 3", player),
+        False_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h5_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h5_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h5_cost'}}]}}}})) | (Has("Umbrella"))
+        multiworld.get_entrance("Battle of the Birds - Act 5", player),
+        False_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Finale A: Connection 1", player),
+        ((True_()) & ((HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
-        ((CanReachRegion("Mail Delivery Service")) & (True_())) & ((CanReachRegion("Train Rush")) & (True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
-        ((CanReachRegion("Heating Up Mafia Town")) & (True_())) & (CanReachRegion("Alpine Free Roam"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h6_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h6_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h6_cost'}}]}}}})) | (Has("Umbrella"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h7_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h7_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h7_cost'}}]}}}}))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h8_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h8_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h8_cost'}}]}}}}))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
-        ((CanReachRegion("Heating Up Mafia Town")) & (True_())) & (CanReachRegion("Alpine Free Roam"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
-        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        ((CanReachRegion("Barrel Battle")) & (True_())) & ((CanReachRegion("Down with the Mafia!")) & (True_()))
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
-        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
+        ((CanReachRegion("Dead Bird Studio")) & (True_())) & ((CanReachRegion("Train Rush")) & (True_()))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Finale A: Connection 2", player),
+        ((True_()) & ((HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
+        ((CanReachRegion("Dead Bird Studio")) & (True_())) & ((CanReachRegion("Train Rush")) & (True_()))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 4: Connection 1", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
@@ -327,11 +493,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Act 5", player),
-        Has("Snatcher's Contract - Mail Delivery Service")
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Subcon Forest - Act 3", player),
         Has("Snatcher's Contract - Toilet of Doom")
     )
@@ -342,108 +503,103 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
-        (CanReachRegion("Down with the Mafia!")) & (True_())
+        multiworld.get_entrance("Subcon Forest - Act 5", player),
+        Has("Snatcher's Contract - Mail Delivery Service")
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player),
-        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
+        (CanReachRegion("Murder on the Owl Express")) & (True_())
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
-        (CanReachRegion("Down with the Mafia!")) & (True_())
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
+        (CanReachRegion("Cheating the Race")) & (True_())
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 4: Connection 2", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player),
-        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
+        (CanReachRegion("Murder on the Owl Express")) & (True_())
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
-        (CanReachRegion("Down with the Mafia!")) & (True_())
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
+        (CanReachRegion("Cheating the Race")) & (True_())
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player),
-        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
+        (CanReachRegion("Murder on the Owl Express")) & (True_())
     )
 
     world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h9_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h9_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h9_cost'}}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h10_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h10_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h10_cost'}}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
-        (CanReachRegion("Down with the Mafia!")) & (True_())
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
+        (CanReachRegion("Cheating the Race")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player),
-        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
+        (CanReachRegion("Murder on the Owl Express")) & (True_())
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
-        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
+        (CanReachRegion("Cheating the Race")) & (True_())
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
-        (CanReachRegion("Down with the Mafia!")) & (True_())
+        multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player),
-        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
+        (CanReachRegion("Murder on the Owl Express")) & (True_())
     )
 
     world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h11_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h11_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h11_cost'}}]}}}}))
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h12_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h12_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h12_cost'}}]}}}}))
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
+        (CanReachRegion("Cheating the Race")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
-        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
@@ -463,7 +619,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        ((Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h13_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h13_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h13_cost'}}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}}))
+        ((Conditional(test=Not(False_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
     )
 
     world.set_rule(
@@ -472,8 +628,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
+        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+    )
+
+    world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h14_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h14_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h14_cost'}}]}}}})) & (Has("Hookshot Badge"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -488,17 +649,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h15_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h15_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h15_cost'}}]}}}})) & (Has("Hookshot Badge"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',), body_data={'params': ['relic'], 'body': {'type': 'group_check', 'group': {'type': 'name', 'name': 'relic'}, 'count': {'type': 'helper', 'name': 'len', 'args': [{'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'item_name_groups'}, 'index': {'type': 'name', 'name': 'relic'}}]}}})
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',))
     )
 
     world.set_rule(
         multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player),
-        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))
+        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(False_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))
     )
 
     world.set_rule(
@@ -507,159 +668,159 @@ def set_rules(world: "World") -> None:
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Picture Perfect"),
+        world.get_region("The Subcon Well"),
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("The Golden Vault"),
+        world.get_region("The Big Parade"),
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Mail Delivery Service"),
+        world.get_region("Barrel Battle"),
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Down with the Mafia!"),
+        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dead Bird Studio"),
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("Train Rush"),
-        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Heating Up Mafia Town"),
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Alpine Free Roam"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Heating Up Mafia Town"),
+        world.get_region("Dead Bird Studio"),
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Alpine Free Roam"),
+        world.get_region("Train Rush"),
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
+        world.get_region("Murder on the Owl Express"),
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player)
+        world.get_region("Cheating the Race"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
+        world.get_region("Murder on the Owl Express"),
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player)
+        world.get_region("Cheating the Race"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
+        world.get_region("Murder on the Owl Express"),
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player)
+        world.get_region("Cheating the Race"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
+        world.get_region("Murder on the Owl Express"),
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player)
+        world.get_region("Cheating the Race"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio Basement"),
+        world.get_region("Murder on the Owl Express"),
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Cheating the Race"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player)
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Mafia Boss Shop Item", player),
-        (Has("Time Piece", 12)) & (Has("Time Piece", 17))
+        (Has("Time Piece", 12)) & (Has("Time Piece", 5))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Gallery)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h16_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h16_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h16_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Hallway Brewing Crate", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h17_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h17_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h17_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Secret Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h18_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h18_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h18_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Cheating the Race)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h19_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h19_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h19_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio)", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h20_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h20_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h20_cost'}}]}}}})) | (Has("Umbrella"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
     )
 
     world.set_rule(
         multiworld.get_location("Murder on the Owl Express - Raven Suite Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h21_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h21_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h21_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
@@ -709,17 +870,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h22_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h22_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h22_cost'}}]}}}})) | (Has("Umbrella"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Tepee Chest", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h23_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h23_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h23_cost'}}]}}}})) | (Has("Umbrella"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Conductor Chest", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h24_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h24_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h24_cost'}}]}}}})) | (Has("Umbrella"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
     )
 
     world.set_rule(
@@ -734,27 +895,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic", body_data={'type': 'helper', 'name': 'bool', 'args': [{'type': 'setting_value', 'setting': 'ShuffleSubconPaintings'}]})), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(True_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(True_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h25_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h25_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h25_cost'}}]}}}}))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(False_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(False_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Mail Delivery Service)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h26_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h26_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h26_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h27_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h27_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h27_cost'}}]}}}})) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h28_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h28_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h28_cost'}}]}}}}))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,))) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Twilight Path", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h29_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h29_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h29_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        ((Conditional(test=Not(True_()), if_true=True_(), if_false=((False_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h30_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h30_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h30_cost'}}]}}}}))) | (Has("Umbrella")))) & (Has("AFR Access")) & (Has("Hookshot Badge"))) & (Has("Hookshot Badge"))
+        ((Conditional(test=Not(False_()), if_true=True_(), if_false=((False_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)))) | (Has("Umbrella")))) & (Has("AFR Access")) & (Has("Hookshot Badge"))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -764,7 +925,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h31_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h31_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h31_cost'}}]}}}})) & (Has("Hookshot Badge"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -784,7 +945,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Birdhouse: Dweller Platforms Relic", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h32_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h32_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h32_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
@@ -794,12 +955,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - The Twilight Bell)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h33_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h33_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h33_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Curly Tail Trail)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h34_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h34_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h34_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
@@ -814,12 +975,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Blue Vault Brewing Crate", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h35_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h35_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h35_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Ice Hat Cage", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h36_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h36_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h36_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
@@ -829,17 +990,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Ruined Tower", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h37_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h37_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h37_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Hot Air Balloon", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h38_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h38_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h38_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Secret Cave", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h39_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h39_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h39_cost'}}]}}}})) | (Has("HUMT Access"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("HUMT Access"))
     )
 
     world.set_rule(
@@ -869,7 +1030,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Swamp Gravestone", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h40_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h40_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h40_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
@@ -879,37 +1040,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Long Tree Climb Chest", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h41_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h41_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h41_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Infinite Yarn Bush", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h42_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h42_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h42_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Magnet Badge Bush", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h43_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h43_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h43_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Stump", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h44_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h44_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h44_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Floating Rocks", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h45_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h45_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h45_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Platforming Tree B", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h46_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h46_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h46_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Shack", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h47_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h47_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h47_cost'}}]}}}})
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
@@ -924,15 +1085,15 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Village)", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h48_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h48_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h48_cost'}}]}}}})) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h49_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h49_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h49_cost'}}]}}}})) | (Has("Umbrella"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) | (Has("Umbrella"))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h50_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h50_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h50_cost'}}]}}}})) & (Has("Hookshot Badge"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,), body_data={'params': ['hat'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'hat'}}, 'op': '<=', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'item_check', 'item': 'Yarn', 'count': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h51_cost', 'value': {'type': 'constant', 'value': 0}}, {'type': 'for_iter', 'iterable': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_craft_order'}, 'body': [{'type': 'assign', 'name': '_h51_cost', 'op': '+=', 'value': {'type': 'subscript', 'value': {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'hat_yarn_costs'}, 'index': {'type': 'name', 'name': 'h'}}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'h'}, 'op': '==', 'right': {'type': 'name', 'name': 'hat'}}, 'body': [{'type': 'break'}]}], 'var': 'h'}, {'type': 'return', 'value': {'type': 'name', 'name': '_h51_cost'}}]}}}})) & (Has("Hookshot Badge"))
+        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Hookshot Badge"))
     )
