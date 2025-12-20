@@ -5066,10 +5066,190 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return hasItem ? 1 : 0;
     }
 
-    // Unknown rule type - try to find as a custom helper
+    // CountGroup: get the count of items in a group
+    // Rule Builder: {"rule": "CountGroup", "args": {"group": "Keys"}}
+    case 'CountGroup': {
+      const groupName = args.group;
+      if (!groupName) {
+        log('warn', '[evaluateRuleBuilderRule] CountGroup rule missing group');
+        return 0;
+      }
+      if (typeof context?.countGroup === 'function') {
+        return context.countGroup(groupName) || 0;
+      }
+      // Fallback: delegate to AST evaluator
+      return evaluateRule({ type: 'state_method', method: 'count_group', args: [{ type: 'constant', value: groupName }] }, context, depth + 1, localScope);
+    }
+
+    // CountGroupUnique: get the count of unique items in a group
+    // Rule Builder: {"rule": "CountGroupUnique", "args": {"group": "Keys"}}
+    case 'CountGroupUnique': {
+      const groupName = args.group;
+      if (!groupName) {
+        log('warn', '[evaluateRuleBuilderRule] CountGroupUnique rule missing group');
+        return 0;
+      }
+      if (typeof context?.countGroupUnique === 'function') {
+        return context.countGroupUnique(groupName) || 0;
+      }
+      // Fallback: delegate to AST evaluator
+      return evaluateRule({ type: 'state_method', method: 'count_group_unique', args: [{ type: 'constant', value: groupName }] }, context, depth + 1, localScope);
+    }
+
+    // SettingValue: get a game setting value
+    // Rule Builder: {"rule": "SettingValue", "args": {"setting": "difficulty"}}
+    case 'SettingValue': {
+      const settingName = args.setting;
+      if (!settingName) {
+        log('warn', '[evaluateRuleBuilderRule] SettingValue rule missing setting');
+        return undefined;
+      }
+      // Try to get setting from context
+      if (context.getStaticData || context.staticData) {
+        const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
+        const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+        if (staticData?.settings && staticData.settings[playerId]) {
+          const playerSettings = staticData.settings[playerId];
+
+          // Check direct setting first
+          let settingValue = playerSettings[settingName];
+
+          // If not found, check in options sub-object
+          if (settingValue === undefined && playerSettings.options) {
+            settingValue = playerSettings.options[settingName];
+          }
+
+          if (settingValue !== undefined) {
+            // Convert string booleans to actual booleans
+            if (settingValue === 'true') return true;
+            if (settingValue === 'false') return false;
+            return settingValue;
+          }
+        }
+      }
+      log('debug', `[evaluateRuleBuilderRule] SettingValue: setting '${settingName}' not found`);
+      return undefined;
+    }
+
+    // ItemCheck: complex item check (fallback from converter when item couldn't be resolved)
+    // Rule Builder: {"rule": "ItemCheck", "args": {"item": {...}, "count": ...}}
+    case 'ItemCheck': {
+      const item = args.item;
+      const count = args.count ?? 1;
+      // Try to resolve item to a string
+      let itemName;
+      if (typeof item === 'string') {
+        itemName = item;
+      } else if (item && typeof item === 'object') {
+        // Try to evaluate item expression
+        const resolvedItem = evaluateRule(item, context, depth + 1, localScope);
+        if (typeof resolvedItem === 'string') {
+          itemName = resolvedItem;
+        }
+      }
+      if (!itemName) {
+        log('warn', '[evaluateRuleBuilderRule] ItemCheck could not resolve item', { item });
+        return false;
+      }
+      // Resolve count if it's a complex expression
+      let countValue = count;
+      if (typeof count === 'object') {
+        countValue = evaluateRule(count, context, depth + 1, localScope);
+      }
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'item_check', item: itemName, count: countValue ?? 1 }, context, depth + 1, localScope);
+    }
+
+    // StateMethod: complex state method call (fallback from converter)
+    // Rule Builder: {"rule": "StateMethod", "args": {"method": "...", "args": [...]}}
+    case 'StateMethod': {
+      const method = args.method;
+      const methodArgs = args.args || [];
+      if (!method) {
+        log('warn', '[evaluateRuleBuilderRule] StateMethod missing method');
+        return false;
+      }
+      // Convert args - they may be Rule Builder format
+      const convertedArgs = methodArgs.map(arg => {
+        if (arg && typeof arg === 'object' && arg.rule) {
+          // Evaluate Rule Builder arg to get value
+          return evaluateRule(arg, context, depth + 1, localScope);
+        }
+        return arg;
+      });
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'state_method', method, args: convertedArgs }, context, depth + 1, localScope);
+    }
+
+    // Attribute: complex attribute access (fallback from converter)
+    // Rule Builder: {"rule": "Attribute", "args": {"object": {...}, "attr": "..."}}
+    case 'Attribute': {
+      const obj = args.object;
+      const attr = args.attr;
+      if (!attr) {
+        log('warn', '[evaluateRuleBuilderRule] Attribute missing attr');
+        return undefined;
+      }
+      // Convert object if it's Rule Builder format
+      let convertedObj = obj;
+      if (obj && typeof obj === 'object' && obj.rule) {
+        convertedObj = evaluateRule(obj, context, depth + 1, localScope);
+      }
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'attribute', object: convertedObj, attr }, context, depth + 1, localScope);
+    }
+
+    // Name: variable/name reference (fallback from converter)
+    // Rule Builder: {"rule": "Name", "args": {"name": "..."}}
+    case 'Name': {
+      const name = args.name;
+      if (!name) {
+        log('warn', '[evaluateRuleBuilderRule] Name missing name');
+        return undefined;
+      }
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'name', name }, context, depth + 1, localScope);
+    }
+
+    // Tuple: tuple expression (fallback from converter)
+    // Rule Builder: {"rule": "Tuple", "args": {"value": [...]}}
+    case 'Tuple': {
+      const value = args.value || [];
+      // Evaluate each element
+      return value.map(item => {
+        if (item && typeof item === 'object') {
+          return evaluateRule(item, context, depth + 1, localScope);
+        }
+        return item;
+      });
+    }
+
+    // Unknown rule type - try to find as a custom helper or delegate to AST evaluator
     default: {
-      log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);
-      // Handle converted helper rules (from AST format)
+      log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking options`);
+
+      // Check for _original_ast_type to determine if this should be delegated to AST evaluator
+      const originalAstType = args?._original_ast_type;
+      if (originalAstType && originalAstType !== 'helper') {
+        // This was converted from an AST rule that we should try to evaluate as AST
+        log('debug', `[evaluateRuleBuilderRule] Delegating to AST evaluator for type '${originalAstType}'`);
+
+        // Build AST rule from the args
+        const astRule = { type: originalAstType };
+
+        // Copy non-metadata args to AST rule
+        if (args) {
+          for (const [key, value] of Object.entries(args)) {
+            if (!key.startsWith('_')) {
+              astRule[key] = value;
+            }
+          }
+        }
+
+        return evaluateRule(astRule, context, depth + 1, localScope);
+      }
+
+      // Handle as helper (converted from AST helper or unknown Rule Builder type)
       // New format: {rule: "helper_name", args: [...], _original_ast_type: "helper"}
       // Old format: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
       let helperArgs;

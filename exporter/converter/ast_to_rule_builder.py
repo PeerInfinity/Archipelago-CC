@@ -225,6 +225,31 @@ class ASTToRuleBuilder:
         result['_converted_from_cc'] = True
         return result
 
+    def _extract_constant_value(self, value: Any) -> Tuple[Any, bool]:
+        """
+        Extract the value from a constant wrapper if present.
+
+        Args:
+            value: Either a primitive value or a dict with {type: "constant", value: X}
+
+        Returns:
+            Tuple of (extracted_value, was_constant)
+            - If value is {type: "constant", value: X}, returns (X, True)
+            - Otherwise returns (value, False)
+        """
+        if isinstance(value, dict) and value.get('type') == 'constant':
+            return value.get('value'), True
+        return value, False
+
+    def _try_extract_constant(self, value: Any) -> Any:
+        """
+        Try to extract a constant value, returning the original if not a constant.
+
+        Convenience wrapper around _extract_constant_value.
+        """
+        extracted, _ = self._extract_constant_value(value)
+        return extracted
+
     # -------------------------------------------------------------------------
     # Constant Converters
     # -------------------------------------------------------------------------
@@ -256,19 +281,37 @@ class ASTToRuleBuilder:
 
         AST: {"type": "item_check", "item": "Sword", "count": 2}
         RB: {"rule": "Has", "options": [], "args": {"item_name": "Sword", "count": 2}}
+
+        Also handles wrapped constants:
+        AST: {"type": "item_check", "item": {"type": "constant", "value": "Sword"}}
+        RB: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
         """
         item = rule.get('item', '')
         count = rule.get('count', 1)
 
-        # Handle item as dict (nested rule) vs string
+        # Try to extract constant values
+        item_value, item_was_constant = self._extract_constant_value(item)
+        count_value, count_was_constant = self._extract_constant_value(count)
+
+        # If item resolved to a simple value, use standard Has rule
+        if isinstance(item_value, str):
+            args = {'item_name': item_value}
+            if isinstance(count_value, (int, float)) and count_value != 1:
+                args['count'] = count_value
+            elif isinstance(count, dict) and not count_was_constant:
+                # Count is a complex expression - preserve it
+                args['count'] = self._convert_rule(count)
+            return self._make_rule('Has', args)
+
+        # Complex item reference that couldn't be resolved - preserve as custom rule
         if isinstance(item, dict):
-            # Complex item reference - preserve
             return self._make_custom_rule('ItemCheck', {
-                'item': item,
-                'count': count,
+                'item': self._convert_rule(item),
+                'count': self._convert_rule(count) if isinstance(count, dict) else count,
                 '_original_ast_type': 'item_check'
             })
 
+        # Simple string item
         args = {'item_name': item}
         if count != 1:
             args['count'] = count
@@ -281,15 +324,34 @@ class ASTToRuleBuilder:
 
         AST: {"type": "count_check", "item": "Arrow", "count": 10}
         RB: {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}}
+
+        Also handles wrapped constants:
+        AST: {"type": "count_check", "item": {"type": "constant", "value": "Arrow"}, "count": {"type": "constant", "value": 10}}
+        RB: {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}}
         """
         item = rule.get('item', '')
         count = rule.get('count', 1)
 
-        # Handle complex item/count
+        # Try to extract constant values
+        item_value, item_was_constant = self._extract_constant_value(item)
+        count_value, count_was_constant = self._extract_constant_value(count)
+
+        # If both resolved to simple values, use standard Has rule
+        if isinstance(item_value, str) and isinstance(count_value, (int, float)):
+            return self._make_rule('Has', {'item_name': item_value, 'count': count_value})
+
+        # If item resolved but count is complex
+        if isinstance(item_value, str):
+            return self._make_rule('Has', {
+                'item_name': item_value,
+                'count': self._convert_rule(count) if isinstance(count, dict) else count
+            })
+
+        # Complex item/count that couldn't be fully resolved - preserve as custom rule
         if isinstance(item, dict) or isinstance(count, dict):
             return self._make_custom_rule('CountCheck', {
-                'item': item,
-                'count': count,
+                'item': self._convert_rule(item) if isinstance(item, dict) else item,
+                'count': self._convert_rule(count) if isinstance(count, dict) else count,
                 '_original_ast_type': 'count_check'
             })
 
@@ -380,6 +442,48 @@ class ASTToRuleBuilder:
                 return self._make_rule('CanReachLocation', {'location_name': name})
             else:
                 return self._make_rule('CanReachRegion', {'region_name': name})
+
+        elif method == 'can_reach_region':
+            # can_reach_region state method (direct region name)
+            name = get_arg_value(0, '')
+            if isinstance(name, str):
+                return self._make_rule('CanReachRegion', {'region_name': name})
+            # Fall through to custom rule if name is complex
+
+        elif method == 'can_reach_location':
+            # can_reach_location state method (direct location name)
+            name = get_arg_value(0, '')
+            if isinstance(name, str):
+                return self._make_rule('CanReachLocation', {'location_name': name})
+            # Fall through to custom rule if name is complex
+
+        elif method == 'can_reach_entrance':
+            # can_reach_entrance state method
+            name = get_arg_value(0, '')
+            if isinstance(name, str):
+                return self._make_rule('CanReachEntrance', {'entrance_name': name})
+            # Fall through to custom rule if name is complex
+
+        elif method == 'count':
+            # count state method - returns item count
+            item = get_arg_value(0, '')
+            if isinstance(item, str):
+                return self._make_rule('CountItem', {'item_name': item})
+            # Fall through to custom rule if item is complex
+
+        elif method == 'count_group':
+            # count_group state method - returns group count
+            group = get_arg_value(0, '')
+            if isinstance(group, str):
+                return self._make_rule('CountGroup', {'group': group})
+            # Fall through to custom rule if group is complex
+
+        elif method == 'count_group_unique':
+            # count_group_unique state method - returns unique group count
+            group = get_arg_value(0, '')
+            if isinstance(group, str):
+                return self._make_rule('CountGroupUnique', {'group': group})
+            # Fall through to custom rule if group is complex
 
         # Unknown state method - preserve as custom rule
         self.warnings.append(f"Unknown state method '{method}' preserved as custom rule")
@@ -683,10 +787,41 @@ class ASTToRuleBuilder:
         })
 
     def _convert_attribute(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Convert attribute access rule."""
+        """
+        Convert attribute access rule.
+
+        Handles common patterns:
+        - setting_value.value → SettingValue(setting_name)
+        - options.X → SettingValue(X)
+        - self.options.X → SettingValue(X)
+        """
+        obj = rule.get('object', {})
+        attr = rule.get('attr', '')
+
+        # Pattern 1: setting_value.value → SettingValue
+        # {"type": "attribute", "object": {"type": "setting_value", "setting": "X"}, "attr": "value"}
+        if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
+            setting_name = obj.get('setting', '')
+            return self._make_rule('SettingValue', {'setting': setting_name})
+
+        # Pattern 2: options.X → SettingValue
+        # {"type": "attribute", "object": {"type": "name", "name": "options"}, "attr": "X"}
+        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'options':
+            return self._make_rule('SettingValue', {'setting': attr})
+
+        # Pattern 3: self.options.X → SettingValue (nested attribute)
+        # Need to handle {"type": "attribute", "object": {"type": "attribute", "object": {"type": "name", "name": "self"}, "attr": "options"}, "attr": "X"}
+        if isinstance(obj, dict) and obj.get('type') == 'attribute':
+            inner_obj = obj.get('object', {})
+            inner_attr = obj.get('attr', '')
+            if (isinstance(inner_obj, dict) and inner_obj.get('type') == 'name' and
+                inner_obj.get('name') == 'self' and inner_attr == 'options'):
+                return self._make_rule('SettingValue', {'setting': attr})
+
+        # Default: preserve as custom Attribute rule
         return self._make_custom_rule('Attribute', {
-            'object': rule.get('object'),
-            'attr': rule.get('attr'),
+            'object': self._convert_rule(obj) if isinstance(obj, dict) else obj,
+            'attr': attr,
             '_original_ast_type': 'attribute'
         })
 
