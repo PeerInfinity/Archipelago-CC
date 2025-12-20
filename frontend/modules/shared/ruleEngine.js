@@ -466,7 +466,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
   // Rule Builder format: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
   // CC format: {"type": "item_check", "item": "Sword"}
   if (rule.rule && !rule.type) {
-    return evaluateRuleBuilderRule(rule, context, depth, localScope);
+    let rbResult = evaluateRuleBuilderRule(rule, context, depth, localScope);
+
+    // Handle SMBool objects from SM helpers at depth 0
+    // Convert to boolean based on maxDiff check
+    if (depth === 0 && rbResult && typeof rbResult === 'object' && 'bool' in rbResult && 'difficulty' in rbResult) {
+      let maxDiff = 50; // Default to hardcore for Super Metroid
+      if (typeof context?.getPlayerId === 'function' && typeof context?.resolveName === 'function') {
+        const playerId = context.getPlayerId();
+        const state = context.resolveName('state');
+        if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+          maxDiff = state.smbm[playerId].maxDiff;
+        }
+      }
+      rbResult = rbResult.bool === true && rbResult.difficulty <= maxDiff;
+    }
+
+    return rbResult;
   }
 
   let result;
@@ -4736,22 +4752,57 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     case 'And': {
       if (children.length === 0) return true;
       let hasUndefined = false;
+      let hasSMBool = false;
+      let totalDifficulty = 0;
       for (const childRule of children) {
-        const result = evaluateRule(childRule, context, depth + 1, localScope);
-        if (result === false) return false;
-        if (result === undefined) hasUndefined = true;
+        let result = evaluateRule(childRule, context, depth + 1, localScope);
+        // Handle SMBool objects from SM helpers - extract bool property and accumulate difficulty
+        let boolValue = result;
+        if (result && typeof result === 'object' && 'bool' in result) {
+          boolValue = result.bool;
+          hasSMBool = true;
+          totalDifficulty += result.difficulty || 0;
+        }
+        // Check for falsy values (false, 0, "", null) but not undefined
+        // Use !boolValue to catch all falsy values including 0, not just === false
+        if (!boolValue && boolValue !== undefined) return false;
+        if (boolValue === undefined) hasUndefined = true;
       }
-      return hasUndefined ? undefined : true;
+      if (hasUndefined) return undefined;
+      // If any child was SMBool, return SMBool with accumulated difficulty
+      if (hasSMBool) {
+        return { bool: true, difficulty: totalDifficulty };
+      }
+      return true;
     }
 
     // Composite rules: Or
     case 'Or': {
       if (children.length === 0) return false;
       let hasUndefined = false;
+      let hasSMBool = false;
+      let minDifficulty = Infinity;
       for (const childRule of children) {
-        const result = evaluateRule(childRule, context, depth + 1, localScope);
-        if (result === true) return true;
-        if (result === undefined) hasUndefined = true;
+        let result = evaluateRule(childRule, context, depth + 1, localScope);
+        // Handle SMBool objects from SM helpers - extract bool property and track min difficulty
+        let boolValue = result;
+        if (result && typeof result === 'object' && 'bool' in result) {
+          boolValue = result.bool;
+          hasSMBool = true;
+          // Track min difficulty for truthy SMBool results
+          if (boolValue && (result.difficulty || 0) < minDifficulty) {
+            minDifficulty = result.difficulty || 0;
+          }
+        }
+        // Check for truthy values (not just === true) but exclude undefined
+        if (boolValue && boolValue !== undefined) {
+          // For Or, return immediately with the min difficulty seen so far
+          if (hasSMBool) {
+            return { bool: true, difficulty: minDifficulty };
+          }
+          return true;
+        }
+        if (boolValue === undefined) hasUndefined = true;
       }
       return hasUndefined ? undefined : false;
     }
@@ -5169,16 +5220,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         log('warn', '[evaluateRuleBuilderRule] StateMethod missing method');
         return false;
       }
-      // Convert args - they may be Rule Builder format
-      const convertedArgs = methodArgs.map(arg => {
-        if (arg && typeof arg === 'object' && arg.rule) {
-          // Evaluate Rule Builder arg to get value
-          return evaluateRule(arg, context, depth + 1, localScope);
-        }
-        return arg;
-      });
-      // Delegate to AST evaluator
-      return evaluateRule({ type: 'state_method', method, args: convertedArgs }, context, depth + 1, localScope);
+      // Pass args directly to AST evaluator - it will evaluate them
+      return evaluateRule({ type: 'state_method', method, args: methodArgs }, context, depth + 1, localScope);
     }
 
     // Attribute: complex attribute access (fallback from converter)

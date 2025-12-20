@@ -395,14 +395,35 @@ class ASTToRuleBuilder:
                 return arg
             return default
 
+        # Helper to extract item list from a set or list argument
+        def get_items_from_arg(arg, default=None):
+            if isinstance(arg, list):
+                return arg
+            if isinstance(arg, dict):
+                if arg.get('type') == 'set':
+                    # Extract item values from set elements
+                    elements = arg.get('elements', [])
+                    return [
+                        el.get('value') if isinstance(el, dict) and el.get('type') == 'constant' else el
+                        for el in elements
+                    ]
+                if arg.get('type') == 'list':
+                    # Extract item values from list value
+                    values = arg.get('value', [])
+                    return [
+                        v.get('value') if isinstance(v, dict) and v.get('type') == 'constant' else v
+                        for v in values
+                    ]
+            return default
+
         if method == 'has_all':
-            items = get_arg_value(0, [])
-            if isinstance(items, list):
+            items = get_items_from_arg(get_arg_value(0, []), [])
+            if isinstance(items, list) and len(items) > 0:
                 return self._make_rule('HasAll', {'items': items})
 
         elif method == 'has_any':
-            items = get_arg_value(0, [])
-            if isinstance(items, list):
+            items = get_items_from_arg(get_arg_value(0, []), [])
+            if isinstance(items, list) and len(items) > 0:
                 return self._make_rule('HasAny', {'items': items})
 
         elif method == 'has_all_counts':
