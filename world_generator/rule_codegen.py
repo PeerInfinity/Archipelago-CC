@@ -43,7 +43,7 @@ class RuleCodeGenerator:
         """
         Recursively expand helper references in a rule body.
 
-        This ensures body_data is self-contained and doesn't reference other helpers
+        This ensures helper bodies are self-contained and don't reference other helpers
         or setting values, which allows the frontend to evaluate rules without needing
         helper or settings lookups.
 
@@ -1275,30 +1275,15 @@ class RuleCodeGenerator:
                     # For complex args, try to convert
                     arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
 
-            # Build HelperCall with helper_func reference and body_data for explain
+            # Build HelperCall with helper_func reference
+            # Note: body_data is NOT included here anymore - helper bodies are now
+            # exported via get_helper_definitions() in the Rules.py module, and the
+            # frontend looks them up from the helpers section instead of inlining
+            # them at every call site.
             parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
-
-            # Include body_data if available for explain support
-            # Expand nested helper references so body_data is self-contained
-            if helper_name in self.helper_bodies:
-                body = self.helper_bodies[helper_name]
-                # Expand any nested helper references to their bodies
-                expanded_body = self._expand_helper_refs(body)
-
-                # Include params if available so frontend can map args to param names
-                if helper_name in self.helper_params and self.helper_params[helper_name]:
-                    # Wrap body with params info for proper argument binding
-                    body_with_params = {
-                        'params': self.helper_params[helper_name],
-                        'body': expanded_body
-                    }
-                    parts.append(f'body_data={repr(body_with_params)}')
-                else:
-                    # No params - just use the body directly
-                    parts.append(f'body_data={repr(expanded_body)}')
 
             return f'HelperCall({", ".join(parts)})'
 

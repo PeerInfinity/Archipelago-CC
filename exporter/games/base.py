@@ -914,6 +914,9 @@ class BaseGameExportHandler:
 
         The blacklist (HELPERS_TO_EXPORT_BLACKLIST) excludes helpers from export.
 
+        For worldgen worlds, if the Rules.py module has a get_helper_definitions()
+        function, it will be used instead of analyzing helper functions.
+
         Args:
             world: The world object for this player
 
@@ -921,6 +924,26 @@ class BaseGameExportHandler:
             A dictionary mapping helper names to their rule definitions.
             Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
         """
+        # Check for worldgen worlds first - they have pre-computed helper definitions
+        # in their Rules.py module
+        try:
+            world_module = type(world).__module__
+            if '_worldgen' in world_module:
+                # This is a worldgen world - try to import get_helper_definitions from Rules.py
+                # world_module is like 'worlds.ahit_worldgen' - we need 'worlds.ahit_worldgen.Rules'
+                rules_module_name = world_module + '.Rules'
+                try:
+                    rules_module = importlib.import_module(rules_module_name)
+                    if hasattr(rules_module, 'get_helper_definitions'):
+                        worldgen_helpers = rules_module.get_helper_definitions()
+                        if worldgen_helpers:
+                            logger.debug(f"Loaded {len(worldgen_helpers)} helper definitions from worldgen Rules.py")
+                            return worldgen_helpers
+                except ImportError as e:
+                    logger.debug(f"Could not import worldgen Rules module: {e}")
+        except Exception as e:
+            logger.debug(f"Error checking for worldgen helpers: {e}")
+
         # Import analyze_rule here to avoid circular imports
         from exporter.analyzer import analyze_rule
 

@@ -688,6 +688,16 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       return getStaticGameData(sm);
     },
     getStaticData: () => getStaticGameData(sm),
+    // Get item placed at a location (for placement_lookup rules)
+    getLocationItem: (locationName) => {
+      // Get location from StateManager's locations Map
+      const location = sm.locations.get(locationName);
+      if (!location || !location.item) return undefined;
+      return {
+        name: location.item.name,
+        player: location.item.player || sm.playerId
+      };
+    },
     // Resolve attributes with special handling for parent_region
     resolveAttribute: (baseObject, attributeName) => {
       if (
@@ -720,6 +730,59 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           }
         }
 
+        return undefined;
+      }
+
+      // Handle region.dungeon -> get actual dungeon object (not just the name)
+      // Note: The rule engine tries direct property access first, which returns the string dungeon name
+      // We need to intercept this to return the actual dungeon object
+      if (attributeName === 'dungeon' && baseObject && typeof baseObject.dungeon === 'string') {
+        const dungeonName = baseObject.dungeon;
+        // Look up the actual dungeon object from sm.dungeons
+        if (sm.dungeons && sm.dungeons instanceof Map && sm.dungeons.has(dungeonName)) {
+          return sm.dungeons.get(dungeonName);
+        }
+        // Also try plain object access if not a Map
+        if (sm.dungeons && !(sm.dungeons instanceof Map) && sm.dungeons[dungeonName]) {
+          return sm.dungeons[dungeonName];
+        }
+        return undefined;
+      }
+
+      // Handle dungeonString.boss -> treat string as dungeon name and look up boss
+      // This handles the case where region.dungeon returns a string instead of a dungeon object
+      if (attributeName === 'boss' && typeof baseObject === 'string') {
+        // baseObject is a dungeon name string, look up the dungeon first
+        let dungeon = null;
+        if (sm.dungeons && sm.dungeons instanceof Map && sm.dungeons.has(baseObject)) {
+          dungeon = sm.dungeons.get(baseObject);
+        } else if (sm.dungeons && !(sm.dungeons instanceof Map) && sm.dungeons[baseObject]) {
+          dungeon = sm.dungeons[baseObject];
+        }
+        if (dungeon && dungeon.bosses) {
+          // Return the main boss (keyed by "None" or first available)
+          if (dungeon.bosses['None']) {
+            return dungeon.bosses['None'];
+          }
+          const bossKeys = Object.keys(dungeon.bosses);
+          if (bossKeys.length > 0) {
+            return dungeon.bosses[bossKeys[0]];
+          }
+        }
+        return undefined;
+      }
+
+      // Handle dungeon.boss -> get the main boss object (when dungeon is already an object)
+      if (attributeName === 'boss' && baseObject && typeof baseObject === 'object' && baseObject.bosses) {
+        // Return the "None" keyed boss (main boss) or the first boss if "None" doesn't exist
+        if (baseObject.bosses['None']) {
+          return baseObject.bosses['None'];
+        }
+        // Fallback: return the first boss
+        const bossKeys = Object.keys(baseObject.bosses);
+        if (bossKeys.length > 0) {
+          return baseObject.bosses[bossKeys[0]];
+        }
         return undefined;
       }
 

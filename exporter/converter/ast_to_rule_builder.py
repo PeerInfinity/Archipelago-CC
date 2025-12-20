@@ -103,6 +103,10 @@ class ASTToRuleBuilder:
             'name': self._convert_name,
             'list': self._convert_list,
             'tuple': self._convert_tuple,
+
+            # ALTTP-specific types
+            'placement_search': self._convert_placement_search,
+            'placement_lookup': self._convert_placement_lookup,
         }
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
@@ -598,7 +602,16 @@ class ASTToRuleBuilder:
         Convert helper rule.
 
         If the helper was originally converted from Rule Builder format,
-        restore it. Otherwise, preserve as custom rule.
+        restore it. Otherwise, convert to Rule Builder format with flattened args.
+
+        Output format:
+            {
+                "rule": "helper_name",
+                "options": [],
+                "args": [arg1, arg2, ...],  # Flattened list, not nested
+                "_original_ast_type": "helper",
+                "_converted_from_cc": true
+            }
         """
         helper_name = rule.get('name', 'Unknown')
         args = rule.get('args', [])
@@ -607,12 +620,20 @@ class ASTToRuleBuilder:
         if rule.get('_converted_from_rule_builder'):
             return self._restore_from_round_trip(rule)
 
-        # Preserve as custom rule
-        self.warnings.append(f"Helper '{helper_name}' preserved as custom rule")
-        return self._make_custom_rule(helper_name, {
-            'args': [self._convert_rule(arg) if isinstance(arg, dict) else arg for arg in args],
-            '_original_ast_type': 'helper'
-        })
+        # Convert args (they may be nested rule dicts)
+        converted_args = [
+            self._convert_rule(arg) if isinstance(arg, dict) else arg
+            for arg in args
+        ]
+
+        # Build flattened structure - args is a list at top level, not nested in a dict
+        return {
+            'rule': helper_name,
+            'options': [],
+            'args': converted_args,
+            '_original_ast_type': 'helper',
+            '_converted_from_cc': True
+        }
 
     # -------------------------------------------------------------------------
     # Expression Converters (Limited Support)
@@ -699,6 +720,153 @@ class ASTToRuleBuilder:
             'value': converted_value,
             '_original_ast_type': 'tuple'
         })
+
+    # -------------------------------------------------------------------------
+    # Placement Converters (ALTTP-specific)
+    # -------------------------------------------------------------------------
+
+    def _flatten_locations(self, locations: Any) -> List[List[Any]]:
+        """
+        Flatten location list to simple [[name, player], ...] format.
+
+        Handles various input formats:
+        - {"type": "constant", "value": [[loc1, 1], [loc2, 1]]}
+        - {"type": "list", "value": [{"type": "list", "value": [...]}]}
+        - Direct list: [[loc1, 1], [loc2, 1]]
+        """
+        if not locations:
+            return []
+
+        # Already a simple list
+        if isinstance(locations, list):
+            result = []
+            for item in locations:
+                if isinstance(item, list) and len(item) >= 2:
+                    # Already [name, player] format
+                    result.append(item)
+                elif isinstance(item, dict):
+                    # Nested structure - extract values
+                    flattened = self._flatten_single_location(item)
+                    if flattened:
+                        result.append(flattened)
+            return result
+
+        if not isinstance(locations, dict):
+            return []
+
+        loc_type = locations.get('type')
+        value = locations.get('value')
+
+        if loc_type == 'constant' and isinstance(value, list):
+            # Pre-evaluated constant - value is already [[name, player], ...]
+            return value
+
+        if loc_type == 'list' and isinstance(value, list):
+            # Nested list structure - recursively flatten
+            result = []
+            for item in value:
+                if isinstance(item, dict):
+                    if item.get('type') == 'list':
+                        # Inner list - extract [name, player]
+                        inner = item.get('value', [])
+                        flattened = self._flatten_inner_list(inner)
+                        if flattened:
+                            result.append(flattened)
+                    elif item.get('type') == 'constant':
+                        # Constant value
+                        inner_val = item.get('value')
+                        if isinstance(inner_val, list):
+                            result.append(inner_val)
+                elif isinstance(item, list):
+                    result.append(item)
+            return result
+
+        return []
+
+    def _flatten_inner_list(self, inner: List[Any]) -> Optional[List[Any]]:
+        """Flatten an inner list [name_obj, player_obj] to [name, player]."""
+        if len(inner) < 2:
+            return None
+
+        name = inner[0]
+        player = inner[1]
+
+        # Extract name
+        if isinstance(name, dict) and name.get('type') == 'constant':
+            name = name.get('value')
+
+        # Extract player
+        if isinstance(player, dict) and player.get('type') == 'constant':
+            player = player.get('value')
+
+        return [name, player]
+
+    def _flatten_single_location(self, item: Dict[str, Any]) -> Optional[List[Any]]:
+        """Flatten a single location entry."""
+        if item.get('type') == 'list':
+            return self._flatten_inner_list(item.get('value', []))
+        elif item.get('type') == 'constant':
+            val = item.get('value')
+            if isinstance(val, list) and len(val) >= 2:
+                return val
+        return None
+
+    def _convert_placement_search(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert placement_search rule.
+
+        AST: {"type": "placement_search", "item": {...}, "player": {...}, "locations": {...}}
+        RB: {"rule": "AST_placement_search", "args": {"item": "X", "player": 1, "locations": [[loc, player], ...]}}
+        """
+        item = rule.get('item', '')
+        player = rule.get('player', {'type': 'constant', 'value': 1})
+        locations = rule.get('locations', [])
+
+        # Extract item value if constant
+        if isinstance(item, dict) and item.get('type') == 'constant':
+            item = item.get('value')
+
+        # Extract player value if constant
+        if isinstance(player, dict) and player.get('type') == 'constant':
+            player = player.get('value')
+
+        # Flatten locations to simple format
+        flattened_locations = self._flatten_locations(locations)
+
+        return {
+            'rule': 'AST_placement_search',
+            'options': [],
+            'args': {
+                'item': item,
+                'player': player,
+                'locations': flattened_locations,
+                '_original_ast_type': 'placement_search'
+            },
+            '_converted_from_cc': True
+        }
+
+    def _convert_placement_lookup(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert placement_lookup rule.
+
+        AST: {"type": "placement_lookup", "location": "LocationName"}
+        RB: {"rule": "AST_placement_lookup", "args": {"location": "LocationName"}}
+        """
+        location = rule.get('location', '')
+
+        # Extract location value if constant
+        if isinstance(location, dict) and location.get('type') == 'constant':
+            location = location.get('value')
+
+        return {
+            'rule': 'AST_placement_lookup',
+            'options': [],
+            'args': {
+                'location': location,
+                '_original_ast_type': 'placement_lookup'
+            },
+            '_converted_from_cc': True
+        }
 
     # -------------------------------------------------------------------------
     # Unknown Type Handler

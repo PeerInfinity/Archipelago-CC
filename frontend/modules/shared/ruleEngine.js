@@ -1279,10 +1279,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
             if (!hasBoss && hasBosses) {
               // Use the new bosses format - default to "None" entry
-              return baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+              const boss = baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+              return boss;
             }
           }
-          
+
           // Special handling for dungeon attribute - resolve string to actual dungeon object
           if (rule.attr === 'dungeon') {
             const hasDungeon = baseObject.dungeon !== undefined;
@@ -1361,6 +1362,18 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           if (rule.attr === 'value' && baseObject !== undefined && baseObject !== null) {
             return baseObject;
           }
+
+          // Special case: Allow resolveAttribute to handle string baseObjects
+          // This is needed for cases like region.dungeon.boss where:
+          // - region.dungeon returns a string dungeon name "Tower of Hera"
+          // - We then need to resolve .boss on that string by looking up the dungeon object
+          if (typeof baseObject === 'string' && typeof context.resolveAttribute === 'function') {
+            const resolvedValue = context.resolveAttribute(baseObject, rule.attr);
+            if (resolvedValue !== undefined) {
+              return resolvedValue;
+            }
+          }
+
           return undefined;
         }
       }
@@ -1566,7 +1579,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Look for patterns:
           // 1. location.parent_region.dungeon.boss.can_defeat
           // 2. location.parent_region.dungeon.bosses["index"].can_defeat (subscript pattern)
-          
+
           // First check if immediate parent is a subscript accessing bosses
           if (current && current.type === 'subscript') {
             // Check if the subscript is accessing a bosses attribute
@@ -1579,7 +1592,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               subscriptValue = subscriptValue.object;
             }
           }
-          
+
           // Also check the standard attribute chain
           while (current && current.type === 'attribute') {
             if (current.attr === 'boss' || current.attr === 'bosses') {
@@ -4466,6 +4479,133 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     case 'False_':
       return false;
 
+    // Constant value (from converted AST format)
+    case 'Constant':
+      return args.value;
+
+    // List value (from converted AST format)
+    case 'List': {
+      const listValue = args.value || [];
+      // Evaluate each element in the list
+      return listValue.map(item => evaluateRule(item, context, depth + 1, localScope));
+    }
+
+    // CountCheck (from converted AST format) - check if player has at least N of an item
+    case 'CountCheck': {
+      const itemName = args.item;
+      let count = args.count;
+      // Evaluate count if it's a rule object
+      if (count && typeof count === 'object' && (count.type || count.rule)) {
+        count = evaluateRule(count, context, depth + 1, localScope);
+      }
+      count = count ?? 1;
+      return evaluateRule({ type: 'count_check', item: itemName, count }, context, depth + 1, localScope);
+    }
+
+    // AST_placement_lookup (from converted AST format) - look up what item is at a location
+    case 'AST_placement_lookup': {
+      let locationName = args.location;
+      // Evaluate location if it's a rule object
+      if (locationName && typeof locationName === 'object' && (locationName.type || locationName.rule)) {
+        locationName = evaluateRule(locationName, context, depth + 1, localScope);
+      } else if (locationName && typeof locationName === 'object' && locationName.type === 'constant') {
+        locationName = locationName.value;
+      }
+      // Get the item placed at this location
+      if (typeof context?.getLocationItem === 'function') {
+        const item = context.getLocationItem(locationName);
+        if (item) {
+          // Return [item_name, player] tuple for comparison
+          return [item.name || item.item, item.player || 1];
+        }
+      }
+      return undefined;
+    }
+
+    // AST_placement_search (from converted AST format) - search for an item at specific locations
+    // Returns true if the item is found at any of the locations, false otherwise
+    case 'AST_placement_search': {
+      // Evaluate item name
+      let searchItem = args.item;
+      if (searchItem && typeof searchItem === 'object' && (searchItem.type || searchItem.rule)) {
+        searchItem = evaluateRule(searchItem, context, depth + 1, localScope);
+      }
+
+      // Evaluate player
+      let searchPlayer = args.player;
+      if (searchPlayer && typeof searchPlayer === 'object' && (searchPlayer.type || searchPlayer.rule)) {
+        searchPlayer = evaluateRule(searchPlayer, context, depth + 1, localScope);
+      }
+      searchPlayer = searchPlayer ?? 1;
+
+      // Evaluate locations list
+      let locations = args.locations;
+      if (locations && typeof locations === 'object') {
+        if (locations.type === 'constant') {
+          locations = locations.value;
+        } else if (locations.type === 'list' && Array.isArray(locations.value)) {
+          // Recursively evaluate list items
+          locations = locations.value.map(item => {
+            if (item && typeof item === 'object' && (item.type || item.rule)) {
+              return evaluateRule(item, context, depth + 1, localScope);
+            }
+            return item;
+          });
+        } else if (locations.type || locations.rule) {
+          locations = evaluateRule(locations, context, depth + 1, localScope);
+        }
+      }
+
+      if (!Array.isArray(locations) || !searchItem) {
+        return undefined;
+      }
+
+      // Search each location for the item
+      for (const locEntry of locations) {
+        let locName, locPlayer;
+        if (Array.isArray(locEntry)) {
+          [locName, locPlayer] = locEntry;
+        } else if (locEntry && typeof locEntry === 'object') {
+          locName = locEntry.location || locEntry.name;
+          locPlayer = locEntry.player ?? 1;
+        } else {
+          continue;
+        }
+
+        locPlayer = locPlayer ?? 1;
+
+        // Get the item at this location
+        if (typeof context?.getLocationItem === 'function') {
+          const foundItem = context.getLocationItem(locName);
+          if (foundItem) {
+            const itemName = foundItem.name || foundItem.item;
+            const itemPlayer = foundItem.player || 1;
+            // Check if this matches what we're searching for
+            if (itemName === searchItem && itemPlayer === searchPlayer) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+
+    // AST_function_call (from converted AST format) - evaluate a function call like boss.can_defeat()
+    case 'AST_function_call': {
+      // Convert Rule Builder format to legacy function_call format
+      // Structure: { rule: 'AST_function_call', args: { function: {...}, args: [...], _original_ast_type: 'function_call' } }
+      const funcExpr = args.function;
+      const funcArgs = args.args || [];
+
+      // Build the legacy format and evaluate it
+      return evaluateRule({
+        type: 'function_call',
+        function: funcExpr,
+        args: funcArgs
+      }, context, depth + 1, localScope);
+    }
+
     // Item check: Has(item_name, count)
     case 'Has': {
       const itemName = args.item_name;
@@ -4648,13 +4788,35 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // Wrapper rules: Not (inverts child)
     case 'Not': {
-      if (!child) {
-        log('warn', '[evaluateRuleBuilderRule] Not rule missing child');
+      // Support both 'child' key and 'args.condition' (from converted AST format)
+      const notChild = child || args.condition;
+      if (!notChild) {
+        log('warn', '[evaluateRuleBuilderRule] Not rule missing child/condition');
         return undefined;
       }
-      const result = evaluateRule(child, context, depth + 1, localScope);
+      const result = evaluateRule(notChild, context, depth + 1, localScope);
       if (result === undefined) return undefined;
       return !result;
+    }
+
+    // Setting value lookup (from converted AST format)
+    case 'AST_setting_value': {
+      const settingName = args.setting;
+      if (typeof context?.getSetting === 'function') {
+        return context.getSetting(settingName);
+      }
+      return undefined;
+    }
+
+    // Location rule reference (from converted AST format) - evaluate another location's access rule
+    case 'AST_location_rule_ref': {
+      const locationName = args.location;
+      // Check if the location is accessible
+      if (typeof context?.isLocationAccessible === 'function') {
+        const result = context.isLocationAccessible(locationName);
+        return result === 'reachable' || result === true;
+      }
+      return undefined;
     }
 
     // Reachability rules
@@ -4907,8 +5069,24 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     // Unknown rule type - try to find as a custom helper
     default: {
       log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);
-      // Try evaluating as a CC helper
-      return evaluateRule({ type: 'helper', name: ruleName, args: Object.values(args) }, context, depth + 1, localScope);
+      // Handle converted helper rules (from AST format)
+      // New format: {rule: "helper_name", args: [...], _original_ast_type: "helper"}
+      // Old format: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
+      let helperArgs;
+      if (Array.isArray(args)) {
+        // New flattened format - args is directly an array
+        helperArgs = args;
+      } else if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+        // Old nested format - args.args contains the helper arguments
+        helperArgs = args.args;
+      } else {
+        // For simpler Rule Builder rules, use all arg values (excluding metadata keys)
+        helperArgs = Object.entries(args)
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([, value]) => value);
+      }
+      // Try evaluating as an AST helper
+      return evaluateRule({ type: 'helper', name: ruleName, args: helperArgs }, context, depth + 1, localScope);
     }
   }
 }
