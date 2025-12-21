@@ -489,7 +489,10 @@ class RuleCodeGenerator:
         return self._convert_rule(rule)
 
     def _convert_rule(self, rule: Dict[str, Any]) -> str:
-        """Internal recursive rule converter."""
+        """Internal recursive rule converter.
+
+        Handles both AST format (uses 'type' key) and Rule Builder format (uses 'rule' key).
+        """
         if not isinstance(rule, dict):
             # Primitive value
             if rule is True:
@@ -499,10 +502,11 @@ class RuleCodeGenerator:
             else:
                 return repr(rule)
 
+        # First try AST format (uses 'type' key)
         rule_type = rule.get('type', '')
 
-        # Dispatch based on rule type
-        converters = {
+        # Dispatch based on AST rule type
+        ast_converters = {
             'constant': self._convert_constant,
             'item_check': self._convert_item_check,
             'count_check': self._convert_count_check,
@@ -527,13 +531,186 @@ class RuleCodeGenerator:
             'setting_value': self._convert_setting_value,
         }
 
-        converter = converters.get(rule_type)
+        converter = ast_converters.get(rule_type)
         if converter:
             return converter(rule)
+
+        # Try Rule Builder format (uses 'rule' key)
+        # This format is used by the rule_builder module's to_dict() serialization
+        rule_name = rule.get('rule', '')
+
+        # Map Rule Builder names to converters
+        rule_builder_converters = {
+            'True_': self._convert_rule_builder_true,
+            'False_': self._convert_rule_builder_false,
+            'Has': self._convert_rule_builder_has,
+            'HasAll': self._convert_rule_builder_has_all,
+            'HasAny': self._convert_rule_builder_has_any,
+            'HasGroup': self._convert_rule_builder_has_group,
+            'And': self._convert_rule_builder_and,
+            'Or': self._convert_rule_builder_or,
+            'Not': self._convert_rule_builder_not,
+            'CanReach': self._convert_rule_builder_can_reach,
+        }
+
+        rb_converter = rule_builder_converters.get(rule_name)
+        if rb_converter:
+            return rb_converter(rule)
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
         return 'True_()'
+
+    # --- Rule Builder format converters ---
+
+    def _convert_rule_builder_true(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder True_ to code."""
+        self.required_imports.add('True_')
+        return 'True_()'
+
+    def _convert_rule_builder_false(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder False_ to code."""
+        self.required_imports.add('False_')
+        return 'False_()'
+
+    def _convert_rule_builder_has(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder Has to code.
+
+        Rule Builder format: {"rule": "Has", "options": [], "args": {"item_name": "Sword", "count": 1}}
+        """
+        args = rule.get('args', {})
+        item_name = args.get('item_name', '')
+        count = args.get('count', 1)
+
+        if not item_name:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        self.required_imports.add('Has')
+        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+        if count > 1:
+            return f'Has("{item_escaped}", {count})'
+        return f'Has("{item_escaped}")'
+
+    def _convert_rule_builder_has_all(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder HasAll to code.
+
+        Rule Builder format: {"rule": "HasAll", "options": [], "args": {"items": ["Sword", "Shield"]}}
+        """
+        args = rule.get('args', {})
+        items = args.get('items', [])
+
+        if not items:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        self.required_imports.add('HasAll')
+        items_escaped = [item.replace('\\', '\\\\').replace('"', '\\"') for item in items]
+        items_str = ', '.join(f'"{item}"' for item in items_escaped)
+        return f'HasAll([{items_str}])'
+
+    def _convert_rule_builder_has_any(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder HasAny to code.
+
+        Rule Builder format: {"rule": "HasAny", "options": [], "args": {"items": ["Sword", "Shield"]}}
+        """
+        args = rule.get('args', {})
+        items = args.get('items', [])
+
+        if not items:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        self.required_imports.add('HasAny')
+        items_escaped = [item.replace('\\', '\\\\').replace('"', '\\"') for item in items]
+        items_str = ', '.join(f'"{item}"' for item in items_escaped)
+        return f'HasAny([{items_str}])'
+
+    def _convert_rule_builder_has_group(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder HasGroup to code.
+
+        Rule Builder format: {"rule": "HasGroup", "options": [], "args": {"group_name": "Keys", "count": 1}}
+        """
+        args = rule.get('args', {})
+        group_name = args.get('group_name', '')
+        count = args.get('count', 1)
+
+        if not group_name:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        self.required_imports.add('HasGroup')
+        group_escaped = group_name.replace('\\', '\\\\').replace('"', '\\"')
+        if count > 1:
+            return f'HasGroup("{group_escaped}", {count})'
+        return f'HasGroup("{group_escaped}")'
+
+    def _convert_rule_builder_and(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder And to code.
+
+        Rule Builder format: {"rule": "And", "options": [], "children": [...]}
+        """
+        children = rule.get('children', [])
+
+        if not children:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if len(children) == 1:
+            return self._convert_rule(children[0])
+
+        child_codes = [self._convert_rule(child) for child in children]
+        self.required_imports.add('And')
+        return f'And({", ".join(child_codes)})'
+
+    def _convert_rule_builder_or(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder Or to code.
+
+        Rule Builder format: {"rule": "Or", "options": [], "children": [...]}
+        """
+        children = rule.get('children', [])
+
+        if not children:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if len(children) == 1:
+            return self._convert_rule(children[0])
+
+        child_codes = [self._convert_rule(child) for child in children]
+        self.required_imports.add('Or')
+        return f'Or({", ".join(child_codes)})'
+
+    def _convert_rule_builder_not(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder Not to code.
+
+        Rule Builder format: {"rule": "Not", "options": [], "child": {...}}
+        """
+        child = rule.get('child', {})
+
+        if not child:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        child_code = self._convert_rule(child)
+        self.required_imports.add('Not')
+        return f'Not({child_code})'
+
+    def _convert_rule_builder_can_reach(self, rule: Dict[str, Any]) -> str:
+        """Convert Rule Builder CanReach to code.
+
+        Rule Builder format: {"rule": "CanReach", "options": [], "args": {"region_name": "Dungeon"}}
+        """
+        args = rule.get('args', {})
+        region_name = args.get('region_name', '')
+
+        if not region_name:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        self.required_imports.add('CanReach')
+        region_escaped = region_name.replace('\\', '\\\\').replace('"', '\\"')
+        return f'CanReach("{region_escaped}")'
 
     def _convert_name(self, rule: Dict[str, Any]) -> str:
         """Convert a name reference to a constant.
@@ -1358,12 +1535,19 @@ def cc_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:
 
 
 def is_trivial_rule(rule: Optional[Dict[str, Any]]) -> bool:
-    """Check if a rule is trivial (constant true)."""
+    """Check if a rule is trivial (constant true).
+
+    Handles both AST format and Rule Builder format.
+    """
     if rule is None:
         return True
     if not isinstance(rule, dict):
         return rule is True
+    # AST format: {"type": "constant", "value": True}
     if rule.get('type') == 'constant' and rule.get('value') is True:
+        return True
+    # Rule Builder format: {"rule": "True_", ...}
+    if rule.get('rule') == 'True_':
         return True
     return False
 
