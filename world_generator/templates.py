@@ -971,11 +971,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 match = re.match(rule["pattern"], item.name)
                 if match:
                     if rule["extract_value"]:
-                        group = match.group(1)
-                        if group:
-                            value = int(group)
-                        else:
-                            value = rule.get("default_value", 1)
+                        value = int(match.group(1))
                     else:
                         value = 1
                     state.prog_items[item.player][rule["target"]] += value
@@ -991,11 +987,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 match = re.match(rule["pattern"], item.name)
                 if match:
                     if rule["extract_value"]:
-                        group = match.group(1)
-                        if group:
-                            value = int(group)
-                        else:
-                            value = rule.get("default_value", 1)
+                        value = int(match.group(1))
                     else:
                         value = 1
                     state.prog_items[item.player][rule["target"]] -= value
