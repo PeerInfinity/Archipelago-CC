@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-20 07:21:07
+**Generated:** 2025-12-20 23:28:34
 
-**Source Data Created:** 2025-12-20T06:41:23.720608
+**Source Data Created:** 2025-12-20T22:48:46.339148
 
-**Source Data Last Updated:** 2025-12-20T06:41:23.720612
+**Source Data Last Updated:** 2025-12-20T22:48:46.339153
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 69 (94.5%)
-- **Failed:** 4 (5.5%)
+- **Passed:** 71 (97.3%)
+- **Failed:** 2 (2.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 27/69 (39.1% of passed)
-- **Passing with Generic Logic:** 62/69 (89.9% of passed)
-- **Passing with Both Generic:** 27/69 (39.1% of passed)
+- **Passing with Generic Exporter:** 27/71 (38.0% of passed)
+- **Passing with Generic Logic:** 63/71 (88.7% of passed)
+- **Passing with Both Generic:** 27/71 (38.0% of passed)
 
 ## Test Results
 
@@ -87,7 +87,7 @@
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ❌ Failed | 0 | 0 | 7.3 | 🔴 0.0% | 73.6KB | 114.6KB |
+| Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 73.6KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 19.3KB | ✅ |
@@ -95,7 +95,7 @@
 | The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 11.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 28.4KB | ✅ |
-| Timespinner | ❌ Failed | 0 | 3.5 | 7.3 | 🟡 47.9% | 4.0KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 4.0KB | ✅ |
 | Undertale | ❌ Failed | 0 | 3.4 | 5.1 | 🟡 66.7% | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.6KB | ✅ |

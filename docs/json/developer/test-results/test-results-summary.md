@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-20 07:21:07
+**Generated:** 2025-12-20 23:28:34
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,33 +18,33 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 69/73 passed (94.5%)
-- **Full Test:** 69/73 passed (94.5%)
+- **Minimal Test:** 71/73 passed (97.3%)
+- **Full Test:** 71/73 passed (97.3%)
 - **Multiclient Test:** 71/73 passed (97.3%)
-- **Multiworld Test:** 68/73 passed (93.2%)
+- **Multiworld Test:** 71/73 passed (97.3%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 - **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 68/73 (93.2%)
-- **Templates passing 3 tests:** 1/73 (1.4%)
+- **Templates passing all 4 tests:** 71/73 (97.3%)
+- **Templates passing 3 tests:** 0/73 (0.0%)
 - **Templates passing 2 tests:** 0/73 (0.0%)
-- **Templates passing 1 test:** 2/73 (2.7%)
+- **Templates passing 1 test:** 0/73 (0.0%)
 - **Templates passing 0 tests:** 2/73 (2.7%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 68 templates passing all 4 tests:
+Of the 71 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 27/68 (39.7%)
-- **Passing with Generic Logic:** 62/68 (91.2%)
-- **Passing with Both Generic:** 27/68 (39.7%)
+- **Passing with Generic Exporter:** 27/71 (38.0%)
+- **Passing with Generic Logic:** 63/71 (88.7%)
+- **Passing with Both Generic:** 27/71 (38.0%)
 
 **Combined Custom Code Size:**
 
@@ -84,10 +84,10 @@ Of the 68 templates passing all 4 tests:
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 101.0KB |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 83.0KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 57.9KB | 5.6KB | 897.5KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 33.8KB | 105.3KB | 1452.9KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 33.8KB | 105.3KB | 1452.9KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | 9.0KB | 1151.3KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.1KB | ✅ | 242.1KB |
-| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 41.4KB | 10.7KB | 720.7KB |
+| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 41.4KB | 10.7KB | 720.8KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 17.5KB | ✅ | 655.5KB |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 125.2KB |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.4KB | ✅ | 387.9KB |
@@ -113,7 +113,7 @@ Of the 68 templates passing all 4 tests:
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ | 96.5KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 926.6KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 182.6KB |
-| Super Metroid | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 73.6KB | 114.6KB | 513.8KB |
+| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 73.6KB | 114.6KB | 709.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 107.1KB |
 | TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 106.8KB |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.3KB | ✅ | 285.7KB |
@@ -121,7 +121,7 @@ Of the 68 templates passing all 4 tests:
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.2KB | ✅ | 234.5KB |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 220.2KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.4KB | ✅ | 322.4KB |
-| Timespinner | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 4.0KB | ✅ | 256.5KB |
+| Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 272.3KB |
 | Undertale | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 64.2KB |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 24.7KB |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.6KB | ✅ | 45.0KB |

@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-20 07:21:07
+**Generated:** 2025-12-20 23:28:34
 
-**Source Data Created:** 2025-12-20T06:31:30.259125
+**Source Data Created:** 2025-12-20T22:38:37.596874
 
-**Source Data Last Updated:** 2025-12-20T06:31:30.259130
+**Source Data Last Updated:** 2025-12-20T22:38:37.596879
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 69 (94.5%)
-- **Failed:** 4 (5.5%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 71 (97.3%)
+- **Failed:** 2 (2.7%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 27/69 (39.1% of passed)
-- **Passing with Generic Logic:** 62/69 (89.9% of passed)
-- **Passing with Both Generic:** 27/69 (39.1% of passed)
+- **Passing with Generic Exporter:** 27/71 (38.0% of passed)
+- **Passing with Generic Logic:** 63/71 (88.7% of passed)
+- **Passing with Both Generic:** 27/71 (38.0% of passed)
 
 ## Test Results
 
@@ -87,7 +87,7 @@
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ❌ Failed | 0 | 0 | 8.3 | 🔴 0.0% | 73.6KB | 114.6KB |
+| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 73.6KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.3KB | ✅ |
@@ -95,7 +95,7 @@
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 11.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 28.4KB | ✅ |
-| Timespinner | ❌ Failed | 0 | 3.1 | 7.1 | 🟡 43.7% | 4.0KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.0KB | ✅ |
 | Undertale | ❌ Failed | 0 | 3.2 | 4.3 | 🟡 74.4% | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.6KB | ✅ |
@@ -103,6 +103,15 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 0.9KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Celeste 64 | 1 | 2025-12-20 22:36 | Previously failed, now passing |
+
 
 ## Notes
 
