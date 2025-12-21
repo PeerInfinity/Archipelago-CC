@@ -21,10 +21,6 @@ class SavingPrincessGameExportHandler(GenericGameExportHandler):
     from the item_dict definitions rather than the placed items.
     """
 
-    # Enable collecting all items for rules, not just progression items.
-    # This ensures all items are tracked in prog_items for Has() rules.
-    COLLECT_ALL_ITEMS_FOR_RULES = True
-
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return Saving Princess item data with correct base classifications.
 

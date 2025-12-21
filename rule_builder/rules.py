@@ -52,11 +52,6 @@ class RuleWorldMixin(World):
     rule_caching_enabled: ClassVar[bool] = True
     """Enable or disable the rule result caching system"""
 
-    collect_all_items_for_rules: ClassVar[bool] = False
-    """When True, all items are collected into prog_items (not just progression items).
-    This allows Has() rules to check for useful/filler items.
-    Use this for games where items marked as 'useful' or 'filler' are used in access rules."""
-
     def __init__(self, multiworld: MultiWorld, player: int) -> None:
         super().__init__(multiworld, player)
         self.rules_by_hash = {}
@@ -76,14 +71,14 @@ class RuleWorldMixin(World):
     def rule_from_dict(cls, data: Mapping[str, Any]) -> "Rule[Self]":
         """Create a rule instance from a serialized dict representation.
 
-        Supports both Rule Builder format and CC (Archipelago-CC) format:
+        Supports both Rule Builder format and AST format:
         - Rule Builder: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
-        - CC format: {"type": "item_check", "item": "Sword"}
+        - AST format: {"type": "item_check", "item": "Sword"}
         """
-        # Check if this is CC format (has 'type' key, no 'rule' key)
+        # Check if this is AST format (has 'type' key, no 'rule' key)
         if 'type' in data and 'rule' not in data:
-            from rule_builder.cc_format import parse_cc_rule
-            return parse_cc_rule(data, cls)
+            from rule_builder.ast_format import parse_ast_rule
+            return parse_ast_rule(data, cls)
 
         # Standard Rule Builder format
         name = data.get("rule", "")
@@ -386,13 +381,8 @@ class RuleWorldMixin(World):
     def collect_item(self, state: CollectionState, item: Item, remove: bool = False) -> str | None:
         """Collect an item name into state.
 
-        When collect_all_items_for_rules is True, all items are collected into prog_items
-        (not just progression items). This allows Has() rules to work with useful/filler items.
+        Only collects progression items (items with advancement=True) into state.
         """
-        if self.collect_all_items_for_rules:
-            # Collect all items regardless of classification
-            return item.name
-        # Default behavior: only collect progression items
         if item.advancement:
             return item.name
         return None
@@ -2203,34 +2193,34 @@ class CanReachEntrance(Rule[TWorld], game="Archipelago"):
 
 
 # =============================================================================
-# CC Format Support Classes
+# AST Format Support Classes
 # =============================================================================
 
 
 @dataclasses.dataclass()
-class CCRule(Rule[TWorld], game="Archipelago"):
+class ASTRule(Rule[TWorld], game="Archipelago"):
     """
-    Wraps a CC format rule that can't be converted to a native Rule Builder class.
+    Wraps an AST format rule that can't be converted to a native Rule Builder class.
 
-    This class provides explain support for complex CC format rules while
+    This class provides explain support for complex AST format rules while
     delegating evaluation to either a pre-computed value or returning True
     as a fallback.
     """
     rule_data: dict = dataclasses.field(default_factory=dict)
-    """The original CC format rule data"""
+    """The original AST format rule data"""
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         return self.Resolved(
             self.rule_data,
             player=world.player,
-            caching_enabled=False,  # Bypass caching for CC rules
+            caching_enabled=False,  # Bypass caching for AST rules
         )
 
     @override
     def __str__(self) -> str:
         rule_type = self.rule_data.get('type', 'unknown')
-        return f"CCRule({rule_type})"
+        return f"ASTRule({rule_type})"
 
     class Resolved(Rule.Resolved):
         rule_data: dict
@@ -2238,24 +2228,24 @@ class CCRule(Rule[TWorld], game="Archipelago"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            # CC rules currently return True as fallback
-            # Future enhancement: implement CC rule evaluation
+            # AST rules currently return True as fallback
+            # Future enhancement: implement AST rule evaluation
             return True
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
-            from rule_builder.cc_explain import explain_cc_rule
-            return explain_cc_rule(self.rule_data, state, self.player)
+            from rule_builder.ast_explain import explain_ast_rule
+            return explain_ast_rule(self.rule_data, state, self.player)
 
         @override
         def explain_str(self, state: CollectionState | None = None) -> str:
             rule_type = self.rule_data.get('type', 'unknown')
-            return f"[CC:{rule_type}]"
+            return f"[AST:{rule_type}]"
 
         @override
         def __str__(self) -> str:
             rule_type = self.rule_data.get('type', 'unknown')
-            return f"CCRule({rule_type})"
+            return f"ASTRule({rule_type})"
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
@@ -2373,10 +2363,11 @@ class Compare(Rule[TWorld], game="Archipelago"):
     """
     Comparison between two values/rules.
 
-    Supports operators: ==, !=, <, >, <=, >=
+    Supports operators: ==, !=, <, >, <=, >=, in, not in
 
     Usage:
         rule = Compare(CountItem("Key"), ">=", 3)
+        rule = Compare(['Item', 1], "in", [['Item', 1], ['Other', 1]])
     """
     left: "Rule[TWorld] | int | float | str" = dataclasses.field(default_factory=lambda: True_())
     op: str = "=="
@@ -2445,6 +2436,10 @@ class Compare(Rule[TWorld], game="Archipelago"):
                 return left_val <= right_val
             elif self.op == '>=':
                 return left_val >= right_val
+            elif self.op == 'in':
+                return left_val in right_val
+            elif self.op == 'not in':
+                return left_val not in right_val
             else:
                 return False
 
@@ -2644,6 +2639,136 @@ class Arithmetic(Rule[TWorld], game="Archipelago"):
 
 
 @dataclasses.dataclass()
+class MinValue(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the minimum of two numeric values/rules.
+
+    Used in arithmetic expressions where a cap is needed.
+    Returns the minimum value via get_value().
+
+    Usage:
+        # Cap item contribution at 9
+        rule = MinValue(CountItem("Orichalcum"), 9)
+
+        # Combined with Arithmetic for complex rules
+        rule = Compare(
+            Arithmetic(MinValue(CountItem("Orichalcum"), 9), "+", MinValue(CountItem("Mythril"), 9)),
+            ">=", 15
+        )
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"min({self.left}, {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the minimum of the two operands."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+            return min(left_val, right_val)
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "min("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": ", "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"min({left_str}, {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
+
+        @override
+        def __str__(self) -> str:
+            return f"min({self.left}, {self.right})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"left": self.left, "right": self.right}
+
+
+@dataclasses.dataclass()
 class Conditional(Rule[TWorld], game="Archipelago"):
     """
     Conditional (ternary) rule: if test then if_true else if_false.
@@ -2816,10 +2941,10 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             if self.body_rule is not None:
                 return self.body_rule.explain_json(state)
 
-            # Tier 2: Use CC format explain
+            # Tier 2: Use AST format explain
             if self.body_data is not None:
-                from rule_builder.cc_explain import explain_cc_rule
-                return explain_cc_rule(self.body_data, state, self.player)
+                from rule_builder.ast_explain import explain_ast_rule
+                return explain_ast_rule(self.body_data, state, self.player)
 
             # Tier 3: Fallback - just show helper name and args
             messages: list[JSONMessagePart] = [
@@ -2849,10 +2974,12 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
+            # Note: body_data is intentionally NOT included here.
+            # Helper bodies should be looked up from the helpers section in the export data.
+            # This avoids duplicating helper bodies at every call site.
             return {
                 "helper_name": self.helper_name,
                 "args": self.args,
-                "body_data": self.body_data,
             }
 
 

@@ -22,6 +22,41 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # All helpers now exported via computed definitions or other mechanisms
     HELPERS_TO_EXPORT_BLACKLIST = set()
 
+    # Helpers that MUST be exported as definitions (whitelist)
+    # For WorldGen worlds, helpers aren't discovered during AST analysis since rules
+    # are already Rule Builder objects. This whitelist ensures all ALTTP helpers
+    # are exported for both original and WorldGen worlds.
+    HELPERS_TO_EXPORT_WHITELIST = {
+        'GanonDefeatRule',
+        'basement_key_rule',
+        'bottle_count',
+        'can_activate_crystal_switch',
+        'can_bomb_or_bonk',
+        'can_extend_magic',
+        'can_get_good_bee',
+        'can_hold_arrows',
+        'can_kill_most_things',
+        'can_lift_heavy_rocks',
+        'can_lift_rocks',
+        'can_melt_things',
+        'can_retrieve_tablet',
+        'can_shoot_arrows',
+        'can_use_bombs',
+        'cross_peg_bridge',
+        'has_beam_sword',
+        'has_crystals',
+        'has_fire_source',
+        'has_hearts',
+        'has_melee_weapon',
+        'has_misery_mire_medallion',
+        'has_sword',
+        'has_turtle_rock_medallion',
+        'heart_count',
+        'is_not_bunny',
+        # can_buy, can_buy_unlimited, can_defeat_boss are computed helpers
+        # defined in get_helper_definitions(), not from StateHelpers
+    }
+
     # Helpers that should be preserved as helper calls (not inlined by generic pattern matching)
     # These are either:
     # - Complex helpers that are exported as definitions via get_helper_definitions()

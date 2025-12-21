@@ -142,9 +142,9 @@ python Generate.py --weights_file_path "Templates/Game Name WorldGen.yaml" --mul
 
 ## Test Spoiler Failures
 
-These occur when the `_worldgen` world generates a seed successfully, but the spoiler test fails.
+These occur when the `_worldgen` world generates a seed successfully, but its own spoiler test fails.
 
-**Cause**: The generated rules don't match the original world's logic - locations that should be accessible aren't, or vice versa.
+**Cause**: The generated rules have internal inconsistencies - the worldgen world's sphere log doesn't validate against its own rules.
 
 ### Debugging Steps
 
@@ -200,6 +200,138 @@ python scripts/test/test-world-generator.py --include-list "Game Name WorldGen.y
 
 # Or run just the spoiler test
 npm test -- --mode=test-spoilers --game=presets/<game>_worldgen/AP_14089154938208861744 --seed=1
+```
+
+---
+
+## Cross-Validation Failures
+
+These occur when the `_worldgen` world passes its own spoiler test, but fails when validated against the **original** world's sphere log.
+
+**Cause**: The worldgen world produces different accessibility logic than the original world. Both worlds work internally, but they disagree about when locations become accessible.
+
+This is the most common failure mode - it indicates the rule translation from Python to the worldgen format has subtle differences.
+
+### Understanding Cross-Validation
+
+The cross-validation test:
+1. Takes the **original** game's sphere log (actual item accessibility order from the original Archipelago world)
+2. Copies it to the `_worldgen` world's test location
+3. Runs the spoiler test using that sphere log against the `_worldgen` world's rules
+4. If it fails, the worldgen rules unlock locations at different times than the original
+
+### Debugging Steps
+
+1. **Compare sphere logs** to find where they diverge:
+   ```bash
+   # View original sphere log
+   head -30 frontend/presets/<game>/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl
+
+   # View worldgen sphere log
+   head -30 frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl
+
+   # Quick diff of location names per sphere (requires jq)
+   diff <(cat frontend/presets/<game>/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl | jq -r '.location' | sort) \
+        <(cat frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl | jq -r '.location' | sort)
+   ```
+
+2. **Run the cross-validation test manually** to see the exact failure:
+   ```bash
+   # First, backup the worldgen sphere log
+   cp frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl \
+      frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl.bak
+
+   # Copy original sphere log to worldgen location
+   cp frontend/presets/<game>/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl \
+      frontend/presets/<game>_worldgen/AP_14089154938208861744/
+
+   # Run spoiler test
+   npm test -- --mode=test-spoilers --game=presets/<game>_worldgen/AP_14089154938208861744 --seed=1
+   npm run test:analyze
+   cat playwright-analysis.txt
+
+   # Restore worldgen sphere log
+   mv frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl.bak \
+      frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl
+   ```
+
+3. **Identify the first divergent location**:
+   ```bash
+   python -c "
+   import json
+
+   def load_sphere_log(path):
+       locations = []
+       with open(path) as f:
+           for line in f:
+               entry = json.loads(line)
+               locations.append((entry.get('sphere', 0), entry.get('location', '')))
+       return sorted(locations)
+
+   original = load_sphere_log('frontend/presets/<game>/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl')
+   worldgen = load_sphere_log('frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl')
+
+   # Find locations in different spheres
+   orig_dict = {loc: sphere for sphere, loc in original}
+   wgen_dict = {loc: sphere for sphere, loc in worldgen}
+
+   for loc in orig_dict:
+       if loc in wgen_dict and orig_dict[loc] != wgen_dict[loc]:
+           print(f'{loc}: original sphere {orig_dict[loc]}, worldgen sphere {wgen_dict[loc]}')
+   "
+   ```
+
+4. **Check the specific location's rule** in both rules.json files:
+   ```bash
+   # Compare rules for a specific location
+   python -c "
+   import json
+
+   def find_location_rule(rules_path, location_name):
+       with open(rules_path) as f:
+           data = json.load(f)
+       regions = data.get('regions', {}).get('1', {})
+       for region_name, region in regions.items():
+           for loc in region.get('locations', []):
+               if loc.get('name') == location_name:
+                   return {'region': region_name, 'rule': loc.get('rule')}
+       return None
+
+   loc_name = 'LOCATION_NAME_HERE'
+   orig = find_location_rule('frontend/presets/<game>/AP_14089154938208861744/AP_14089154938208861744_rules.json', loc_name)
+   wgen = find_location_rule('frontend/presets/<game>_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json', loc_name)
+
+   print('Original:', json.dumps(orig, indent=2))
+   print('WorldGen:', json.dumps(wgen, indent=2))
+   "
+   ```
+
+### Common Causes
+
+1. **Helper function translation differences**: A helper function's logic was translated differently
+2. **Item group handling**: Item groups (e.g., "Progressive Sword") resolved differently
+3. **Region connection rules**: Entry requirements for regions differ
+4. **State method variations**: Methods like `has_all`, `has_any`, `count` behave subtly differently
+5. **Option-dependent rules**: Rules that depend on game options may evaluate differently
+
+### Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Run the full worldgen test (includes cross-validation)
+python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --canonical-seed1
+
+# Check test results
+python -c "
+import json
+with open('scripts/output/world-generator/test-results-canonical.json') as f:
+    data = json.load(f)
+result = data['results'].get('Game Name', {})
+cv = result.get('test_world', {}).get('cross_validation', {})
+print(f'Cross-validation: {cv.get(\"pass_fail\")}')
+print(f'Error: {cv.get(\"error\")}')
+"
 ```
 
 ---

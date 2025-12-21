@@ -369,23 +369,24 @@ class KH2GameExportHandler(BaseGameExportHandler):
             }
 
             # Build the full conditional based on FinalFormLogic setting
-            # FinalFormLogic options: 0=no_light_and_darkness, 1=light_and_darkness, 2=just_a_form
+            # FinalFormLogic options: 'no_light_and_darkness', 'light_and_darkness', 'just_a_form'
+            # Note: Settings are exported as string keys (e.g., "light_and_darkness"), not integer values
             return {
                 'type': 'conditional',
                 'test': {
                     'type': 'comparison',
                     'op': '!=',  # ruleEngine uses 'op' not 'operator'
                     'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
-                    'right': {'type': 'constant', 'value': 0}  # no_light_and_darkness
+                    'right': {'type': 'constant', 'value': 'no_light_and_darkness'}
                 },
                 'if_true': {
-                    # FinalFormLogic is either light_and_darkness (1) or just_a_form (2)
+                    # FinalFormLogic is either 'light_and_darkness' or 'just_a_form'
                     'type': 'conditional',
                     'test': {
                         'type': 'comparison',
                         'op': '==',  # ruleEngine uses 'op' not 'operator'
                         'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
-                        'right': {'type': 'constant', 'value': 1}  # light_and_darkness
+                        'right': {'type': 'constant', 'value': 'light_and_darkness'}
                     },
                     'if_true': ld_check,
                     'if_false': just_form_check
@@ -604,8 +605,17 @@ class KH2GameExportHandler(BaseGameExportHandler):
         for setting_name in kh2_settings:
             if hasattr(world, 'options') and hasattr(world.options, setting_name):
                 option = getattr(world.options, setting_name)
-                # Get the value (could be an integer option or boolean)
-                if hasattr(option, 'value'):
+                # For Choice options (which have name_lookup mapping values to string keys),
+                # use the string key (e.g., "easy", "normal", "hard") since helper dicts
+                # use string keys. For other options (Range, etc.), use raw value.
+                # Note: dict/list values are unhashable so we catch TypeError.
+                try:
+                    use_string_key = hasattr(option, 'name_lookup') and hasattr(option, 'value') and option.value in option.name_lookup
+                except TypeError:
+                    use_string_key = False
+                if use_string_key:
+                    settings_dict[setting_name] = option.current_key
+                elif hasattr(option, 'value'):
                     settings_dict[setting_name] = option.value
                 else:
                     settings_dict[setting_name] = option

@@ -396,6 +396,11 @@ class CommonUI {
       evaluationResult = undefined; // No interface means unknown
     }
 
+    // Detect Rule Builder format: has 'rule' key but no 'type' key
+    if (rule.rule && !rule.type) {
+      return this._renderRuleBuilderTree(rule, useColorblind, stateSnapshotInterface, evaluationResult, root);
+    }
+
     const isValueNode =
       rule.type === 'constant' || rule.type === 'name' || rule.type === 'value';
 
@@ -1264,6 +1269,600 @@ class CommonUI {
     }
 
     // Ensure the root element is always returned
+    return root;
+  }
+
+  /**
+   * Renders a logic tree from a Rule Builder format rule object
+   * @param {Object} rule - The Rule Builder format rule object
+   * @param {boolean} useColorblind - Whether to show colorblind indicators
+   * @param {object} stateSnapshotInterface - The interface providing state access methods
+   * @param {*} evaluationResult - Pre-computed evaluation result (true, false, or undefined)
+   * @param {HTMLElement} root - The root element to append to
+   * @returns {HTMLElement} - The rendered logic tree
+   * @private
+   */
+  _renderRuleBuilderTree(rule, useColorblind, stateSnapshotInterface, evaluationResult, root) {
+    const ruleName = rule.rule;
+    const args = rule.args || {};
+    const children = rule.children || [];
+    const child = rule.child;
+
+    // Rule Builder rules are typically boolean-like (not value nodes)
+    const isValueNode = ruleName === 'Count' || ruleName === 'CountItem' || ruleName === 'Arithmetic' || ruleName === 'MinValue';
+
+    // Apply pass/fail styling
+    if (evaluationResult === undefined) {
+      this.unknownEvaluationCount++;
+      root.classList.add('logic-node-unknown');
+    } else if (!isValueNode) {
+      if (evaluationResult === true) {
+        root.classList.add('pass');
+      } else if (evaluationResult === false) {
+        root.classList.add('fail');
+      } else {
+        root.classList.add('logic-node-unknown');
+      }
+    }
+
+    // Add colorblind symbol if enabled
+    if (useColorblind) {
+      const symbolSpan = document.createElement('span');
+      symbolSpan.classList.add('colorblind-symbol');
+
+      if (evaluationResult === undefined) {
+        symbolSpan.textContent = '? ';
+        symbolSpan.classList.add('unknown');
+        root.appendChild(symbolSpan);
+      } else if (!isValueNode) {
+        if (evaluationResult === true) {
+          symbolSpan.textContent = '✓ ';
+          symbolSpan.classList.add('accessible');
+          root.appendChild(symbolSpan);
+        } else if (evaluationResult === false) {
+          symbolSpan.textContent = '✗ ';
+          symbolSpan.classList.add('inaccessible');
+          root.appendChild(symbolSpan);
+        }
+      }
+    }
+
+    // Create label
+    const label = document.createElement('div');
+    label.classList.add('logic-label');
+    label.textContent = `Rule: ${ruleName}`;
+    root.appendChild(label);
+
+    // Handle each Rule Builder type
+    switch (ruleName) {
+      // Boolean literals
+      case 'True_':
+        root.appendChild(document.createTextNode(' (always true)'));
+        break;
+
+      case 'False_':
+        root.appendChild(document.createTextNode(' (always false)'));
+        break;
+
+      // Constant value (from converted AST format)
+      case 'Constant':
+        root.appendChild(document.createTextNode(` value: ${args.value}`));
+        break;
+
+      // Item check: Has(item_name, count)
+      case 'Has': {
+        const itemName = args.item_name;
+        const count = args.count ?? 1;
+        root.appendChild(document.createTextNode(` item: ${itemName}`));
+        if (count > 1) {
+          root.appendChild(document.createTextNode(` (need ${count})`));
+        }
+        break;
+      }
+
+      // HasAll: all items required
+      case 'HasAll': {
+        const items = args.items || args.item_names || [];
+        root.appendChild(document.createTextNode(` all of: [${items.join(', ')}]`));
+        break;
+      }
+
+      // HasAny: any item required
+      case 'HasAny': {
+        const items = args.items || args.item_names || [];
+        root.appendChild(document.createTextNode(` any of: [${items.join(', ')}]`));
+        break;
+      }
+
+      // HasAllCounts: items with specific counts
+      case 'HasAllCounts': {
+        const itemCounts = args.items || args.item_counts || {};
+        const countsList = Object.entries(itemCounts).map(([item, count]) => `${item}×${count}`).join(', ');
+        root.appendChild(document.createTextNode(` all with counts: [${countsList}]`));
+        break;
+      }
+
+      // HasAnyCount: any item with specific count
+      case 'HasAnyCount': {
+        const itemCounts = args.items || args.item_counts || {};
+        const countsList = Object.entries(itemCounts).map(([item, count]) => `${item}×${count}`).join(', ');
+        root.appendChild(document.createTextNode(` any with count: [${countsList}]`));
+        break;
+      }
+
+      // HasFromList: N items from list
+      case 'HasFromList': {
+        const items = args.items || args.item_names || [];
+        const count = args.count ?? 1;
+        root.appendChild(document.createTextNode(` ${count} from: [${items.join(', ')}]`));
+        break;
+      }
+
+      // HasFromListUnique: N unique items from list
+      case 'HasFromListUnique': {
+        const items = args.items || args.item_names || [];
+        const count = args.count ?? 1;
+        root.appendChild(document.createTextNode(` ${count} unique from: [${items.join(', ')}]`));
+        break;
+      }
+
+      // HasGroup: items from group
+      case 'HasGroup': {
+        const groupName = args.group || args.item_name_group;
+        const count = args.count ?? 1;
+        root.appendChild(document.createTextNode(` group: ${groupName}`));
+        if (count > 1) {
+          root.appendChild(document.createTextNode(` (need ${count})`));
+        }
+        break;
+      }
+
+      // HasGroupUnique: unique items from group
+      case 'HasGroupUnique': {
+        const groupName = args.group || args.item_name_group;
+        const count = args.count ?? 1;
+        root.appendChild(document.createTextNode(` unique from group: ${groupName}`));
+        if (count > 1) {
+          root.appendChild(document.createTextNode(` (need ${count})`));
+        }
+        break;
+      }
+
+      // Composite: And
+      case 'And': {
+        const conditionsContainer = document.createElement('div');
+        conditionsContainer.classList.add('logic-conditions');
+        conditionsContainer.style.marginLeft = '10px';
+
+        if (children.length === 0) {
+          root.appendChild(document.createTextNode(' (empty - always true)'));
+        } else {
+          children.forEach((childRule, index) => {
+            const conditionLabel = document.createElement('div');
+            conditionLabel.textContent = `Condition #${index + 1}:`;
+            conditionsContainer.appendChild(conditionLabel);
+
+            conditionsContainer.appendChild(
+              this.renderLogicTree(childRule, useColorblind, stateSnapshotInterface)
+            );
+          });
+          root.appendChild(conditionsContainer);
+        }
+        break;
+      }
+
+      // Composite: Or
+      case 'Or': {
+        const conditionsContainer = document.createElement('div');
+        conditionsContainer.classList.add('logic-conditions');
+        conditionsContainer.style.marginLeft = '10px';
+
+        if (children.length === 0) {
+          root.appendChild(document.createTextNode(' (empty - always false)'));
+        } else {
+          children.forEach((childRule, index) => {
+            const conditionLabel = document.createElement('div');
+            conditionLabel.textContent = `Option #${index + 1}:`;
+            conditionsContainer.appendChild(conditionLabel);
+
+            conditionsContainer.appendChild(
+              this.renderLogicTree(childRule, useColorblind, stateSnapshotInterface)
+            );
+          });
+          root.appendChild(conditionsContainer);
+        }
+        break;
+      }
+
+      // Wrapper: Not
+      case 'Not': {
+        root.appendChild(document.createTextNode(' (negation)'));
+        if (child) {
+          const childContainer = document.createElement('div');
+          childContainer.style.marginLeft = '10px';
+          childContainer.appendChild(
+            this.renderLogicTree(child, useColorblind, stateSnapshotInterface)
+          );
+          root.appendChild(childContainer);
+        }
+        break;
+      }
+
+      // Conditional
+      case 'Conditional': {
+        const conditionalDetails = document.createElement('div');
+        conditionalDetails.classList.add('logic-conditional-details');
+        conditionalDetails.style.marginLeft = '10px';
+
+        if (args.test) {
+          const testLabel = document.createElement('div');
+          testLabel.textContent = 'Test Condition:';
+          conditionalDetails.appendChild(testLabel);
+
+          const testNode = document.createElement('div');
+          testNode.style.marginLeft = '10px';
+          testNode.appendChild(
+            this.renderLogicTree(args.test, useColorblind, stateSnapshotInterface)
+          );
+          conditionalDetails.appendChild(testNode);
+        }
+
+        if (args.if_true) {
+          const trueLabel = document.createElement('div');
+          trueLabel.textContent = 'If True:';
+          conditionalDetails.appendChild(trueLabel);
+
+          const trueNode = document.createElement('div');
+          trueNode.style.marginLeft = '10px';
+          trueNode.appendChild(
+            this.renderLogicTree(args.if_true, useColorblind, stateSnapshotInterface)
+          );
+          conditionalDetails.appendChild(trueNode);
+        }
+
+        if (args.if_false) {
+          const falseLabel = document.createElement('div');
+          falseLabel.textContent = 'If False:';
+          conditionalDetails.appendChild(falseLabel);
+
+          const falseNode = document.createElement('div');
+          falseNode.style.marginLeft = '10px';
+          falseNode.appendChild(
+            this.renderLogicTree(args.if_false, useColorblind, stateSnapshotInterface)
+          );
+          conditionalDetails.appendChild(falseNode);
+        }
+
+        root.appendChild(conditionalDetails);
+        break;
+      }
+
+      // Filtered wrapper
+      case 'Filtered': {
+        const options = rule.options || [];
+        if (options.length > 0) {
+          root.appendChild(document.createTextNode(` options: [${options.join(', ')}]`));
+        }
+        if (child) {
+          const childContainer = document.createElement('div');
+          childContainer.style.marginLeft = '10px';
+          childContainer.appendChild(
+            this.renderLogicTree(child, useColorblind, stateSnapshotInterface)
+          );
+          root.appendChild(childContainer);
+        }
+        break;
+      }
+
+      // Reachability: CanReachRegion
+      case 'CanReachRegion': {
+        const regionName = args.region_name;
+        root.appendChild(document.createTextNode(` region: ${regionName}`));
+        break;
+      }
+
+      // Reachability: CanReachLocation
+      case 'CanReachLocation': {
+        const locationName = args.location_name;
+        root.appendChild(document.createTextNode(` location: ${locationName}`));
+        break;
+      }
+
+      // Reachability: CanReachEntrance
+      case 'CanReachEntrance': {
+        const entranceName = args.entrance_name;
+        root.appendChild(document.createTextNode(` entrance: ${entranceName}`));
+        break;
+      }
+
+      // HelperCall
+      case 'HelperCall': {
+        const helperName = args.helper_name;
+        const helperArgs = args.args || [];
+        root.appendChild(document.createTextNode(` helper: ${helperName}`));
+
+        if (helperArgs.length > 0) {
+          const argsText = helperArgs.map(arg => {
+            if (typeof arg === 'string' || typeof arg === 'number') {
+              return arg;
+            } else if (arg && arg.type === 'constant') {
+              return arg.value;
+            } else if (arg && arg.rule) {
+              return `(${arg.rule})`;
+            } else {
+              return '(complex)';
+            }
+          }).join(', ');
+          root.appendChild(document.createTextNode(`, args: [${argsText}]`));
+        }
+
+        // If body_data is present, show it can be expanded
+        const bodyData = args.body_data;
+        if (bodyData) {
+          const bodyContainer = document.createElement('div');
+          bodyContainer.style.marginLeft = '10px';
+          bodyContainer.style.marginTop = '4px';
+
+          const expandBtn = document.createElement('button');
+          expandBtn.textContent = '[+] Show body';
+          expandBtn.style.fontSize = '12px';
+          expandBtn.style.padding = '0 4px';
+          expandBtn.style.cursor = 'pointer';
+          expandBtn.style.border = '1px solid #666';
+          expandBtn.style.backgroundColor = '#333';
+          expandBtn.style.color = '#ccc';
+
+          let isExpanded = false;
+          const bodyTreeContainer = document.createElement('div');
+          bodyTreeContainer.style.display = 'none';
+          bodyTreeContainer.style.marginTop = '4px';
+
+          expandBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+              expandBtn.textContent = '[-] Hide body';
+              bodyTreeContainer.style.display = 'block';
+              // Render body on first expand
+              if (bodyTreeContainer.children.length === 0) {
+                const bodyRule = bodyData.body || bodyData;
+                bodyTreeContainer.appendChild(
+                  this.renderLogicTree(bodyRule, useColorblind, stateSnapshotInterface)
+                );
+              }
+            } else {
+              expandBtn.textContent = '[+] Show body';
+              bodyTreeContainer.style.display = 'none';
+            }
+          });
+
+          bodyContainer.appendChild(expandBtn);
+          bodyContainer.appendChild(bodyTreeContainer);
+          root.appendChild(bodyContainer);
+        }
+        break;
+      }
+
+      // Compare
+      case 'Compare': {
+        const op = args.op || '==';
+        root.appendChild(document.createTextNode(` (${op})`));
+
+        const compareDetails = document.createElement('div');
+        compareDetails.classList.add('logic-compare-details');
+        compareDetails.style.marginLeft = '10px';
+
+        if (args.left) {
+          const leftLabel = document.createElement('div');
+          leftLabel.textContent = 'Left Operand:';
+          compareDetails.appendChild(leftLabel);
+
+          const leftNode = document.createElement('div');
+          leftNode.style.marginLeft = '10px';
+          leftNode.appendChild(
+            this.renderLogicTree(args.left, useColorblind, stateSnapshotInterface)
+          );
+          compareDetails.appendChild(leftNode);
+        }
+
+        const opLabel = document.createElement('div');
+        opLabel.textContent = `Operator: ${op}`;
+        compareDetails.appendChild(opLabel);
+
+        if (args.right !== undefined) {
+          const rightLabel = document.createElement('div');
+          rightLabel.textContent = 'Right Operand:';
+          compareDetails.appendChild(rightLabel);
+
+          const rightNode = document.createElement('div');
+          rightNode.style.marginLeft = '10px';
+          if (args.right && typeof args.right === 'object' && (args.right.type || args.right.rule)) {
+            rightNode.appendChild(
+              this.renderLogicTree(args.right, useColorblind, stateSnapshotInterface)
+            );
+          } else {
+            rightNode.textContent = JSON.stringify(args.right);
+          }
+          compareDetails.appendChild(rightNode);
+        }
+
+        root.appendChild(compareDetails);
+        break;
+      }
+
+      // Arithmetic
+      case 'Arithmetic': {
+        const op = args.op || '+';
+        root.appendChild(document.createTextNode(` (${op})`));
+
+        const arithmeticDetails = document.createElement('div');
+        arithmeticDetails.classList.add('logic-arithmetic-details');
+        arithmeticDetails.style.marginLeft = '10px';
+
+        if (args.left) {
+          const leftLabel = document.createElement('div');
+          leftLabel.textContent = 'Left Operand:';
+          arithmeticDetails.appendChild(leftLabel);
+
+          const leftNode = document.createElement('div');
+          leftNode.style.marginLeft = '10px';
+          leftNode.appendChild(
+            this.renderLogicTree(args.left, useColorblind, stateSnapshotInterface)
+          );
+          arithmeticDetails.appendChild(leftNode);
+        }
+
+        if (args.right !== undefined) {
+          const rightLabel = document.createElement('div');
+          rightLabel.textContent = 'Right Operand:';
+          arithmeticDetails.appendChild(rightLabel);
+
+          const rightNode = document.createElement('div');
+          rightNode.style.marginLeft = '10px';
+          if (args.right && typeof args.right === 'object' && (args.right.type || args.right.rule)) {
+            rightNode.appendChild(
+              this.renderLogicTree(args.right, useColorblind, stateSnapshotInterface)
+            );
+          } else {
+            rightNode.textContent = JSON.stringify(args.right);
+          }
+          arithmeticDetails.appendChild(rightNode);
+        }
+
+        root.appendChild(arithmeticDetails);
+        break;
+      }
+
+      // MinValue
+      case 'MinValue': {
+        root.appendChild(document.createTextNode(' min()'));
+
+        const minDetails = document.createElement('div');
+        minDetails.style.marginLeft = '10px';
+
+        if (args.left) {
+          const leftLabel = document.createElement('div');
+          leftLabel.textContent = 'Value 1:';
+          minDetails.appendChild(leftLabel);
+
+          const leftNode = document.createElement('div');
+          leftNode.style.marginLeft = '10px';
+          leftNode.appendChild(
+            this.renderLogicTree(args.left, useColorblind, stateSnapshotInterface)
+          );
+          minDetails.appendChild(leftNode);
+        }
+
+        if (args.right !== undefined) {
+          const rightLabel = document.createElement('div');
+          rightLabel.textContent = 'Value 2:';
+          minDetails.appendChild(rightLabel);
+
+          const rightNode = document.createElement('div');
+          rightNode.style.marginLeft = '10px';
+          if (args.right && typeof args.right === 'object' && (args.right.type || args.right.rule)) {
+            rightNode.appendChild(
+              this.renderLogicTree(args.right, useColorblind, stateSnapshotInterface)
+            );
+          } else {
+            rightNode.textContent = JSON.stringify(args.right);
+          }
+          minDetails.appendChild(rightNode);
+        }
+
+        root.appendChild(minDetails);
+        break;
+      }
+
+      // Count/CountItem
+      case 'Count':
+      case 'CountItem': {
+        const itemName = args.item_name;
+        root.appendChild(document.createTextNode(` count of: ${itemName}`));
+        break;
+      }
+
+      // ASTRule wrapper - contains AST format in body_data
+      case 'ASTRule': {
+        const bodyData = args.body_data;
+        if (bodyData) {
+          root.appendChild(document.createTextNode(' (AST wrapper)'));
+          const bodyContainer = document.createElement('div');
+          bodyContainer.style.marginLeft = '10px';
+          bodyContainer.appendChild(
+            this.renderLogicTree(bodyData, useColorblind, stateSnapshotInterface)
+          );
+          root.appendChild(bodyContainer);
+        } else {
+          root.appendChild(document.createTextNode(' (empty AST wrapper)'));
+        }
+        break;
+      }
+
+      // Unknown Rule Builder type - likely a converted helper call
+      default: {
+        // Check if this is a converted helper rule
+        if (args._original_ast_type === 'helper' || args._converted_from_cc) {
+          // This is a helper call converted from AST format
+          // Display as: helper: <name>(args)
+          const helperArgs = args.args || [];
+          if (helperArgs.length > 0) {
+            const argsText = helperArgs.map(arg => {
+              if (typeof arg === 'string' || typeof arg === 'number') {
+                return arg;
+              } else if (arg && arg.type === 'constant') {
+                return arg.value;
+              } else if (arg && arg.rule === 'Constant') {
+                return arg.args?.value;
+              } else if (arg && arg.rule) {
+                return `(${arg.rule})`;
+              } else {
+                return '(complex)';
+              }
+            }).join(', ');
+            root.appendChild(document.createTextNode(` (${argsText})`));
+          } else {
+            root.appendChild(document.createTextNode(' ()'));
+          }
+        } else {
+          root.appendChild(document.createTextNode(' [unhandled Rule Builder type]'));
+          // Show args if any
+          if (Object.keys(args).length > 0) {
+            const argsText = JSON.stringify(args);
+            if (argsText.length < 100) {
+              root.appendChild(document.createTextNode(` args: ${argsText}`));
+            }
+          }
+        }
+        // Show children if any
+        if (children.length > 0) {
+          const childrenContainer = document.createElement('div');
+          childrenContainer.style.marginLeft = '10px';
+          children.forEach((childRule, index) => {
+            const childLabel = document.createElement('div');
+            childLabel.textContent = `Child #${index + 1}:`;
+            childrenContainer.appendChild(childLabel);
+            childrenContainer.appendChild(
+              this.renderLogicTree(childRule, useColorblind, stateSnapshotInterface)
+            );
+          });
+          root.appendChild(childrenContainer);
+        }
+        // Show child if present
+        if (child) {
+          const childContainer = document.createElement('div');
+          childContainer.style.marginLeft = '10px';
+          childContainer.appendChild(
+            this.renderLogicTree(child, useColorblind, stateSnapshotInterface)
+          );
+          root.appendChild(childContainer);
+        }
+        if (!args._original_ast_type && !args._converted_from_cc) {
+          log('debug', `[commonUI] Unhandled Rule Builder type: ${ruleName}`, rule);
+        }
+      }
+    }
+
     return root;
   }
 

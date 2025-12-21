@@ -132,6 +132,7 @@ function register(registrationApi) {
 
   // Register events published by the StateManagerProxy on the EventBus
   registrationApi.registerEventBusPublisher('stateManager:rulesLoaded'); // Confirms worker loaded initial rules and sent snapshot
+  registrationApi.registerEventBusPublisher('stateManager:rawJsonDataLoaded'); // Raw JSON data loaded and available for other modules
   registrationApi.registerEventBusPublisher('stateManager:ready'); // Confirms worker is ready
   registrationApi.registerEventBusPublisher('stateManager:snapshotUpdated'); // Indicates a new state snapshot is available in the proxy cache
   registrationApi.registerEventBusPublisher('stateManager:computationProgress'); // Progress updates during long computations

@@ -445,11 +445,19 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.params
     }
 
+    # Build helper defaults dict for default parameter values
+    helper_defaults = {
+        name: helper_data.defaults
+        for name, helper_data in data.helpers.items()
+        if helper_data.defaults
+    }
+
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
-    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params)
+    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
     helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
     helper_generator.set_known_helpers(set(data.helpers.keys()))
+    helper_generator.set_placements(data.original_placements)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
@@ -585,6 +593,39 @@ def generate_rules_py(data: ExtractedData) -> str:
     if helper_generator.uses_math:
         math_import = 'import math\n'
 
+    # Build helper definitions dict for exporter
+    # This stores helper bodies so they can be looked up by name instead of inlined at every call site
+    helper_definitions_section = ''
+    if helper_bodies:
+        helper_defs = {}
+        for helper_name, body in helper_bodies.items():
+            # Expand nested helper references so body is self-contained
+            expanded_body = rule_builder_generator._expand_helper_refs(body)
+            # Include params if available for proper argument binding
+            if helper_name in helper_params and helper_params[helper_name]:
+                helper_defs[helper_name] = {
+                    'params': helper_params[helper_name],
+                    'body': expanded_body
+                }
+            else:
+                helper_defs[helper_name] = expanded_body
+
+        # Format as Python dict literal using repr() for valid Python syntax
+        # (json.dumps produces JSON false/true/null, we need Python False/True/None)
+        import pprint
+        helper_defs_str = pprint.pformat(helper_defs, indent=4, width=120)
+        helper_definitions_section = f'''
+
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {helper_defs_str}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+'''
+
     return f'''"""
 Access rules for {game_name}.
 
@@ -597,7 +638,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
-{helpers_section}
+{helpers_section}{helper_definitions_section}
 
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
@@ -669,6 +710,8 @@ class {class_name}(Toggle):
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
     if isinstance(default_value, int):
+        # Handle negative defaults by adjusting range_start
+        range_start = min(0, default_value)
         if default_value <= 10:
             range_end = max(100, default_value * 2)
         elif default_value <= 100:
@@ -680,7 +723,7 @@ class {class_name}(Toggle):
 class {class_name}(Range):
     """Option for {display_name}."""
     display_name = "{display_name}"
-    range_start = 0
+    range_start = {range_start}
     range_end = {range_end}
     default = {default_value}
 '''
@@ -889,7 +932,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     if data.accumulator_rules:
         rules_items = []
         for rule in data.accumulator_rules:
-            pattern_escaped = rule['pattern'].replace('\\', '\\\\').replace('"', '\\"')
+            # Use raw string for pattern - don't escape backslashes since r"..." preserves them
+            pattern_escaped = rule['pattern'].replace('"', '\\"')
             target_escaped = rule['target'].replace('\\', '\\\\').replace('"', '\\"')
             rules_items.append(
                 f'        {{"pattern": r"{pattern_escaped}", "extract_value": {rule["extract_value"]}, '
@@ -907,6 +951,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         prog_items_init_content = '\n'.join(init_entries)
 
     # Generate accumulator_rules section (for state counter patterns like coins)
+    collect_remove_section = ''
     if accumulator_rules_content:
         accumulator_rules_section = f'''
     # Accumulator rules for state counters (e.g., coins)
@@ -914,6 +959,40 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     accumulator_rules: ClassVar[list] = [
 {accumulator_rules_content}
     ]
+'''
+        # Generate collect/remove methods for accumulator rules
+        collect_remove_section = '''
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        """Collect item and track cumulative counters from accumulator rules."""
+        import re
+        change = super().collect(state, item)
+        if change:
+            for rule in self.accumulator_rules:
+                match = re.match(rule["pattern"], item.name)
+                if match:
+                    if rule["extract_value"]:
+                        value = int(match.group(1))
+                    else:
+                        value = 1
+                    state.prog_items[item.player][rule["target"]] += value
+                    break
+        return change
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        """Remove item and update cumulative counters from accumulator rules."""
+        import re
+        change = super().remove(state, item)
+        if change:
+            for rule in self.accumulator_rules:
+                match = re.match(rule["pattern"], item.name)
+                if match:
+                    if rule["extract_value"]:
+                        value = int(match.group(1))
+                    else:
+                        value = 1
+                    state.prog_items[item.player][rule["target"]] -= value
+                    break
+        return change
 '''
     else:
         accumulator_rules_section = ''
@@ -984,6 +1063,29 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 '''
     else:
         canonical_placements_section = ''
+
+    # Generate __init__ method for world_attributes (game-specific instance attributes)
+    init_section = ''
+    if data.world_attributes:
+        init_attrs = []
+        for attr_name, attr_value in data.world_attributes.items():
+            # Format the value appropriately
+            if isinstance(attr_value, dict):
+                # Format dict with integer keys properly (e.g., hat_yarn_costs)
+                dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())
+                init_attrs.append(f'        self.{attr_name} = {{{dict_items}}}')
+            elif isinstance(attr_value, list):
+                init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
+            else:
+                init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
+
+        init_attrs_content = '\n'.join(init_attrs)
+        init_section = f'''
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+{init_attrs_content}
+'''
 
     # Build itempool_counts dictionary
     # When canonical_placements is available, we use the full itempool_counts
@@ -1090,14 +1192,6 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         use_auto_indirect_conditions_section = ''
 
-    # Build collect_all_items_for_rules section
-    # When True, all items are collected into prog_items (not just progression)
-    # This allows Has() rules to work with useful/filler items
-    if data.metadata.collect_all_items_for_rules:
-        collect_all_items_section = '\n    collect_all_items_for_rules: ClassVar[bool] = True'
-    else:
-        collect_all_items_section = ''
-
     # Build fill_slot_data content
     # Check if slot_data fields match option names - if so, generate dynamic references
     # NOTE: We only dynamically reference 'randomize_items' since that's the only option
@@ -1143,10 +1237,13 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 Auto-generated by world_generator.
 """
 
-from typing import ClassVar, Dict, Any
+from typing import ClassVar, Dict, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
+
+if TYPE_CHECKING:
+    from BaseClasses import CollectionState, MultiWorld
 
 from .Items import item_table, {class_name}Item
 from .Locations import location_table, {class_name}Location
@@ -1188,7 +1285,6 @@ class {world_class}(RuleWorldMixin, World):
 {base_id_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}
-{collect_all_items_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.id for name, data in item_table.items() if data.id is not None
@@ -1202,7 +1298,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -1210,7 +1306,7 @@ class {world_class}(RuleWorldMixin, World):
     def set_rules(self) -> None:
         """Set access rules."""
         set_rules(self)
-{create_items_section}        """Create randomized item pool."""
+{collect_remove_section}{create_items_section}        """Create randomized item pool."""
         # First, place any locked items
         self._place_locked_items()
 

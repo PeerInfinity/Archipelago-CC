@@ -1,16 +1,16 @@
 """
-Unit tests for Rule Builder to Archipelago-CC format converter.
+Unit tests for Rule Builder to AST format converter.
 """
 
 import unittest
-from .rule_builder_to_cc import RuleBuilderToCC, convert_rule_builder_to_cc, convert_rules_file_to_cc
+from .rule_builder_to_ast import RuleBuilderToAST, convert_rule_builder_to_ast, convert_rules_file_to_ast
 
 
 class TestBooleanRules(unittest.TestCase):
     """Test conversion of boolean rules."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_true_rule(self):
         """Test True_ rule conversion."""
@@ -33,7 +33,7 @@ class TestItemRules(unittest.TestCase):
     """Test conversion of item-related rules."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_has_simple(self):
         """Test Has rule with default count."""
@@ -181,7 +181,7 @@ class TestCompositeRules(unittest.TestCase):
     """Test conversion of composite rules (And, Or)."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_and_simple(self):
         """Test And rule with simple children."""
@@ -322,7 +322,7 @@ class TestReachabilityRules(unittest.TestCase):
     """Test conversion of reachability rules."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_can_reach_region(self):
         """Test CanReachRegion rule conversion."""
@@ -365,7 +365,7 @@ class TestOptionFilters(unittest.TestCase):
     """Test conversion of rules with option filters."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_rule_with_option_eq(self):
         """Test rule with equality option filter."""
@@ -403,7 +403,7 @@ class TestUnknownRules(unittest.TestCase):
     """Test conversion of unknown/custom rules."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_unknown_rule(self):
         """Test unknown rule type is preserved as helper."""
@@ -422,7 +422,7 @@ class TestUnknownRules(unittest.TestCase):
         self.assertIn("Unknown rule type", result.warnings[0])
 
     def test_already_cc_format(self):
-        """Test that rules already in CC format are passed through."""
+        """Test that rules already in AST format are passed through."""
         rule = {"type": "item_check", "item": "Sword"}
         result = self.converter.convert(rule)
 
@@ -433,15 +433,15 @@ class TestUnknownRules(unittest.TestCase):
 class TestConvenienceFunctions(unittest.TestCase):
     """Test convenience functions."""
 
-    def test_convert_rule_builder_to_cc(self):
+    def test_convert_rule_builder_to_ast(self):
         """Test the single-rule convenience function."""
         rule = {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
-        converted, warnings = convert_rule_builder_to_cc(rule)
+        converted, warnings = convert_rule_builder_to_ast(rule)
 
         self.assertEqual(converted, {"type": "item_check", "item": "Sword"})
         self.assertEqual(len(warnings), 0)
 
-    def test_convert_rules_file_to_cc(self):
+    def test_convert_rules_file_to_ast(self):
         """Test the full file conversion function."""
         data = {
             "schema_version": 3,
@@ -474,7 +474,7 @@ class TestConvenienceFunctions(unittest.TestCase):
             }
         }
 
-        converted, warnings = convert_rules_file_to_cc(data)
+        converted, warnings = convert_rules_file_to_ast(data)
 
         self.assertEqual(converted["schema_version"], 3)
         exit_rule = converted["regions"]["1"]["TestRegion"]["exits"][0]["access_rule"]
@@ -488,7 +488,7 @@ class TestEdgeCases(unittest.TestCase):
     """Test edge cases and error handling."""
 
     def setUp(self):
-        self.converter = RuleBuilderToCC()
+        self.converter = RuleBuilderToAST()
 
     def test_none_rule(self):
         """Test handling of None values."""

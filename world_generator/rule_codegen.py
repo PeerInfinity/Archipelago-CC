@@ -5,6 +5,7 @@ This module transforms JSON rule definitions into Python source code
 that uses the Rule Builder pattern.
 """
 
+import copy
 from typing import Any, Dict, List, Set, Tuple, Optional
 
 
@@ -20,29 +21,39 @@ class RuleCodeGenerator:
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> CC format body
+        self._inline_counter: int = 0  # Counter for generating unique variable prefixes
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
+        self._inline_counter = 0
 
     def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
-                     helper_params: Dict[str, List[str]] = None) -> None:
-        """Set known helpers and optionally their bodies and params for explain support."""
+                     helper_params: Dict[str, List[str]] = None,
+                     helper_defaults: Dict[str, Dict[str, Any]] = None,
+                     placements: Dict[str, str] = None) -> None:
+        """Set known helpers and optionally their bodies, params, defaults, and placements for explain support."""
         self.known_helpers = helper_names
         self.helper_bodies = helper_bodies or {}
         self.helper_params = helper_params or {}  # helper_name -> list of param names
+        self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
+        self.placements = placements or {}  # location_name -> item_name
 
-    def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None) -> Dict[str, Any]:
+    def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
         Recursively expand helper references in a rule body.
 
-        This ensures body_data is self-contained and doesn't reference other helpers
+        This ensures helper bodies are self-contained and don't reference other helpers
         or setting values, which allows the frontend to evaluate rules without needing
         helper or settings lookups.
+
+        Note: Nested helpers (depth > 0) are NOT expanded to avoid creating overly complex
+        rules. The frontend will look them up from the helpers dict instead.
 
         Args:
             rule: Rule dict in CC format
             visited: Set of helper names already visited (for cycle detection)
+            depth: Current expansion depth. Only expand at depth 0 (top level).
 
         Returns:
             Rule dict with helper references and setting_value references expanded
@@ -55,16 +66,47 @@ class RuleCodeGenerator:
 
         rule_type = rule.get('type', '')
 
-        # If this is a helper reference, expand it
+        # If this is a helper reference, expand it (only at top level to avoid overly complex rules)
         if rule_type == 'helper':
             helper_name = rule.get('name', '')
             if helper_name in visited:
                 # Circular reference - return as-is to avoid infinite loop
                 return rule
-            if helper_name in self.helper_bodies:
+            # Only expand helpers at depth 0 (top level rules)
+            # Nested helpers (depth > 0) are left as references for frontend lookup
+            if depth == 0 and helper_name in self.helper_bodies:
                 # Expand the helper body, marking this helper as visited
                 new_visited = visited | {helper_name}
-                return self._expand_helper_refs(self.helper_bodies[helper_name], new_visited)
+                # Use depth + 1 so nested helper references won't be expanded
+                expanded_body = self._expand_helper_refs(self.helper_bodies[helper_name], new_visited, depth + 1)
+
+                # Rename local variables to avoid collision with outer scope
+                # This is critical when inlining nested helpers that use the same
+                # variable names (e.g., both outer and inner helper use 'depth')
+                self._inline_counter += 1
+                prefix = f"_h{self._inline_counter}_"
+                expanded_body = self._rename_local_variables(expanded_body, prefix)
+
+                # If this helper has parameters, substitute parameter names with argument expressions
+                if helper_name in self.helper_params:
+                    params = self.helper_params[helper_name]
+                    args = rule.get('args', [])
+                    defaults = self.helper_defaults.get(helper_name, {})
+                    if params:
+                        # Create a mapping from parameter names to argument expressions
+                        # Use provided args first, then fall back to defaults
+                        param_to_arg = {}
+                        for i, param in enumerate(params):
+                            if i < len(args):
+                                param_to_arg[param] = args[i]
+                            elif param in defaults:
+                                # Convert default value to CC format constant
+                                param_to_arg[param] = {'type': 'constant', 'value': defaults[param]}
+                        # Substitute parameter references in the expanded body
+                        if param_to_arg:
+                            expanded_body = self._substitute_names(expanded_body, param_to_arg)
+
+                return expanded_body
             # Unknown helper - return as-is
             return rule
 
@@ -73,7 +115,13 @@ class RuleCodeGenerator:
         if rule_type == 'setting_value':
             setting_name = rule.get('setting', '')
             if setting_name in self.settings:
-                return {'type': 'constant', 'value': self.settings[setting_name]}
+                value = self.settings[setting_name]
+                # Handle indexed access into list settings (e.g., required_medallions[0])
+                if 'index' in rule and isinstance(value, list):
+                    index = rule['index']
+                    if 0 <= index < len(value):
+                        value = value[index]
+                return {'type': 'constant', 'value': value}
             # Unknown setting - return as-is (will evaluate to undefined in frontend)
             return rule
 
@@ -92,16 +140,317 @@ class RuleCodeGenerator:
                 if attr in self.settings:
                     return {'type': 'constant', 'value': self.settings[attr]}
 
+        # If this is a placement_lookup, resolve it using the known placements
+        # This is critical because worldgen presets don't have item data in locations
+        if rule_type == 'placement_lookup':
+            location_rule = rule.get('location', {})
+            # Evaluate the location name if it's a constant
+            if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+                location_name = location_rule.get('value', '')
+                if location_name and location_name in self.placements:
+                    item_name = self.placements[location_name]
+                    # Return the placement as [item_name, player] tuple (player is always 1 for worldgen)
+                    return {
+                        'type': 'list',
+                        'value': [
+                            {'type': 'constant', 'value': item_name},
+                            {'type': 'constant', 'value': 1}
+                        ]
+                    }
+            # Location not found in placements - return null constant
+            # This allows the conditional to properly branch to if_false
+            return {'type': 'constant', 'value': None}
+
+        # For conditional rules, try to statically evaluate the test after expansion
+        # ONLY if the test is a placement_lookup comparison (to avoid JavaScript array comparison issues)
+        # Be conservative - don't optimize away complex runtime logic
+        if rule_type == 'conditional':
+            expanded_test = self._expand_helper_refs(rule.get('test', {}), visited, depth)
+            expanded_if_true = self._expand_helper_refs(rule.get('if_true', {}), visited, depth)
+            expanded_if_false = self._expand_helper_refs(rule.get('if_false', {}), visited, depth)
+
+            # First check if test is a constant boolean - simplify if so
+            if isinstance(expanded_test, dict) and expanded_test.get('type') == 'constant':
+                test_value = expanded_test.get('value')
+                if test_value is True:
+                    return expanded_if_true
+                elif test_value is False:
+                    return expanded_if_false
+
+            # Only try static evaluation for placement_lookup comparisons
+            # These need to be evaluated statically because JS can't compare arrays by value
+            if self._is_placement_comparison(expanded_test):
+                static_result = self._try_static_eval(expanded_test)
+                if static_result is True:
+                    return expanded_if_true
+                elif static_result is False:
+                    return expanded_if_false
+            # Can't statically evaluate - return the expanded conditional
+            return {
+                'type': 'conditional',
+                'test': expanded_test,
+                'if_true': expanded_if_true,
+                'if_false': expanded_if_false
+            }
+
         # For other rule types, recursively expand any nested rules
         result = dict(rule)
         for key, value in rule.items():
             if isinstance(value, dict):
-                result[key] = self._expand_helper_refs(value, visited)
+                result[key] = self._expand_helper_refs(value, visited, depth)
             elif isinstance(value, list):
                 result[key] = [
-                    self._expand_helper_refs(item, visited) if isinstance(item, dict) else item
+                    self._expand_helper_refs(item, visited, depth) if isinstance(item, dict) else item
                     for item in value
                 ]
+        return result
+
+    def _is_placement_comparison(self, rule: Dict[str, Any]) -> bool:
+        """
+        Check if a rule is a comparison involving placement data (list constants).
+
+        Placement lookups get resolved to list constants like [item_name, player].
+        These need static evaluation because JavaScript can't compare arrays by value.
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        if rule.get('type') != 'compare':
+            return False
+
+        left = rule.get('left', {})
+        right = rule.get('right', {})
+
+        # Check if either side is a list constant (from resolved placement_lookup)
+        def is_list_constant(r):
+            return isinstance(r, dict) and r.get('type') == 'list'
+
+        return is_list_constant(left) or is_list_constant(right)
+
+    def _try_static_eval(self, rule: Dict[str, Any]) -> Optional[bool]:
+        """
+        Try to statically evaluate a rule to a boolean value.
+
+        This is used to optimize conditionals at worldgen time when the test
+        can be fully evaluated. Returns True, False, or None if can't evaluate.
+
+        Args:
+            rule: Rule dict to evaluate
+
+        Returns:
+            True, False, or None if the rule can't be statically evaluated
+        """
+        if not isinstance(rule, dict):
+            return None
+
+        rule_type = rule.get('type', '')
+
+        if rule_type == 'constant':
+            value = rule.get('value')
+            if isinstance(value, bool):
+                return value
+            return None
+
+        if rule_type == 'compare':
+            left = self._try_static_value(rule.get('left', {}))
+            right = self._try_static_value(rule.get('right', {}))
+            op = rule.get('op', '==')
+
+            if left is None or right is None:
+                return None
+
+            # Do deep comparison for lists/tuples
+            if op == '==':
+                return self._deep_equals(left, right)
+            elif op == '!=':
+                return not self._deep_equals(left, right)
+
+            return None
+
+        return None
+
+    def _try_static_value(self, rule: Dict[str, Any]) -> Any:
+        """
+        Try to extract a static value from a rule.
+
+        Returns the value or None if not statically evaluable.
+        """
+        if not isinstance(rule, dict):
+            return None
+
+        rule_type = rule.get('type', '')
+
+        if rule_type == 'constant':
+            return rule.get('value')
+
+        if rule_type == 'list':
+            values = []
+            for item in rule.get('value', []):
+                val = self._try_static_value(item)
+                if val is None:
+                    return None
+                values.append(val)
+            return values
+
+        return None
+
+    def _deep_equals(self, a: Any, b: Any) -> bool:
+        """Deep equality comparison that works with lists."""
+        if type(a) != type(b):
+            return False
+        if isinstance(a, list):
+            if len(a) != len(b):
+                return False
+            return all(self._deep_equals(x, y) for x, y in zip(a, b))
+        return a == b
+
+    def _substitute_names(self, rule: Dict[str, Any], name_map: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Substitute name references in a rule with the corresponding expressions.
+
+        This is used when inlining helper functions to replace parameter names
+        with the actual argument expressions.
+
+        Args:
+            rule: Rule dict to process
+            name_map: Mapping from name strings to their replacement expressions
+
+        Returns:
+            Rule dict with name references substituted
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type', '')
+
+        # If this is a name reference and it's in our map, replace it
+        if rule_type == 'name':
+            name = rule.get('name', '')
+            if name in name_map:
+                # Return a deep copy of the replacement to avoid shared references
+                return copy.deepcopy(name_map[name])
+            return rule
+
+        # For other rule types, recursively substitute in nested rules
+        result = dict(rule)
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                result[key] = self._substitute_names(value, name_map)
+            elif isinstance(value, list):
+                result[key] = [
+                    self._substitute_names(item, name_map) if isinstance(item, dict) else item
+                    for item in value
+                ]
+        return result
+
+    def _find_assigned_names(self, rule: Dict[str, Any]) -> Set[str]:
+        """
+        Find all variable names that are assigned in a rule.
+
+        This is used when inlining helpers to identify local variables
+        that need to be renamed to avoid collision with the outer scope.
+
+        Args:
+            rule: Rule dict to scan
+
+        Returns:
+            Set of variable names that are assigned
+        """
+        assigned = set()
+
+        if not isinstance(rule, dict):
+            return assigned
+
+        rule_type = rule.get('type', '')
+
+        # Check for assign statements
+        if rule_type == 'assign':
+            var_name = rule.get('var') or rule.get('name')
+            if var_name:
+                assigned.add(var_name)
+
+        # Recursively scan nested rules
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                assigned.update(self._find_assigned_names(value))
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        assigned.update(self._find_assigned_names(item))
+
+        return assigned
+
+    def _rename_local_variables(self, rule: Dict[str, Any], prefix: str) -> Dict[str, Any]:
+        """
+        Rename all local variables in a rule to avoid collisions when inlining.
+
+        This finds all assigned variable names and renames both the assignments
+        and all references to those variables.
+
+        Args:
+            rule: Rule dict to process
+            prefix: Unique prefix to add to variable names
+
+        Returns:
+            Rule dict with renamed variables
+        """
+        # Find all assigned variable names
+        assigned_names = self._find_assigned_names(rule)
+
+        if not assigned_names:
+            return rule
+
+        # Create rename map
+        rename_map = {name: f"{prefix}{name}" for name in assigned_names}
+
+        # Apply renaming to both assignments and references
+        return self._apply_rename(rule, rename_map)
+
+    def _apply_rename(self, rule: Dict[str, Any], rename_map: Dict[str, str]) -> Dict[str, Any]:
+        """
+        Apply variable renaming to a rule.
+
+        Args:
+            rule: Rule dict to process
+            rename_map: Mapping from old names to new names
+
+        Returns:
+            Rule dict with renamed variables
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type', '')
+        result = dict(rule)
+
+        # Handle assign statements - rename the target variable
+        if rule_type == 'assign':
+            var_name = result.get('var') or result.get('name')
+            if var_name and var_name in rename_map:
+                if 'var' in result:
+                    result['var'] = rename_map[var_name]
+                if 'name' in result:
+                    result['name'] = rename_map[var_name]
+
+        # Handle name references
+        if rule_type == 'name':
+            name = result.get('name', '')
+            if name in rename_map:
+                result['name'] = rename_map[name]
+
+        # Recursively process nested rules
+        for key, value in rule.items():
+            if key in ('var', 'name') and rule_type in ('assign', 'name'):
+                # Already handled above
+                continue
+            if isinstance(value, dict):
+                result[key] = self._apply_rename(value, rename_map)
+            elif isinstance(value, list):
+                result[key] = [
+                    self._apply_rename(item, rename_map) if isinstance(item, dict) else item
+                    for item in value
+                ]
+
         return result
 
     def get_function_name(self, helper_name: str) -> str:
@@ -156,6 +505,7 @@ class RuleCodeGenerator:
         converters = {
             'constant': self._convert_constant,
             'item_check': self._convert_item_check,
+            'count_check': self._convert_count_check,
             'group_check': self._convert_group_check,
             'and': self._convert_and,
             'or': self._convert_or,
@@ -170,6 +520,11 @@ class RuleCodeGenerator:
             'comparison': self._convert_compare,
             'conditional': self._convert_conditional,
             'name': self._convert_name,
+            'placement_lookup': self._convert_placement_lookup,
+            'list': self._convert_list,
+            'binary_op': self._convert_binary_op,
+            'sum': self._convert_sum,
+            'setting_value': self._convert_setting_value,
         }
 
         converter = converters.get(rule_type)
@@ -218,6 +573,30 @@ class RuleCodeGenerator:
             self.required_imports.add('False_')
             return 'False_()'
 
+    def _convert_list(self, rule: Dict[str, Any]) -> str:
+        """Convert list rule to Python list literal.
+
+        List rules are used for things like 'in' comparisons where we need
+        to check if a value is in a list of expected values.
+        """
+        items = rule.get('value', [])
+        converted_items = []
+        for item in items:
+            if isinstance(item, dict):
+                item_type = item.get('type', '')
+                if item_type == 'constant':
+                    converted_items.append(repr(item.get('value')))
+                elif item_type == 'list':
+                    # Nested list - recursively convert
+                    converted_items.append(self._convert_list(item))
+                else:
+                    # Other rule types - convert recursively
+                    converted_items.append(self._convert_rule(item))
+            else:
+                # Raw value
+                converted_items.append(repr(item))
+        return f'[{", ".join(converted_items)}]'
+
     def _extract_constant_value(self, value: Any, default: Any = None) -> Any:
         """
         Extract a constant value from either a raw value or a constant rule dict.
@@ -237,6 +616,27 @@ class RuleCodeGenerator:
 
     def _convert_item_check(self, rule: Dict[str, Any]) -> str:
         """Convert item_check to Has()."""
+        self.required_imports.add('Has')
+
+        item_raw = rule.get('item', '')
+        item = self._extract_constant_value(item_raw, '')
+        count_raw = rule.get('count', 1)
+        count = self._extract_constant_value(count_raw, 1)
+
+        # Escape item name for Python string
+        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+
+        if count == 1:
+            return f'Has("{item_escaped}")'
+        else:
+            return f'Has("{item_escaped}", {count})'
+
+    def _convert_count_check(self, rule: Dict[str, Any]) -> str:
+        """Convert count_check to Has().
+
+        count_check is similar to item_check but typically has a count > 1.
+        Common in dungeon key checks like 'has 5 small keys'.
+        """
         self.required_imports.add('Has')
 
         item_raw = rule.get('item', '')
@@ -501,6 +901,29 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
+        # Check if this is a comparison between list constants (resolved placement lookups)
+        # JavaScript can't compare arrays by value, so we must statically evaluate these
+        left_list_val = self._get_list_constant_value(left)
+        right_list_val = self._get_list_constant_value(right)
+
+        if left_list_val is not None and right_list_val is not None:
+            # Both sides are list constants - statically evaluate
+            if op in ('==', 'eq'):
+                static_result = left_list_val == right_list_val
+            elif op in ('!=', 'ne'):
+                static_result = left_list_val != right_list_val
+            else:
+                # Unsupported comparison for lists - fall through to Compare
+                static_result = None
+
+            if static_result is not None:
+                if static_result:
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                else:
+                    self.required_imports.add('False_')
+                    return 'False_()'
+
         # Use Compare class for all other patterns
         # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
         self.required_imports.add('Compare')
@@ -508,6 +931,40 @@ class RuleCodeGenerator:
         right_code = self._convert_compare_operand(right)
 
         return f'Compare({left_code}, "{op}", {right_code})'
+
+    def _get_list_constant_value(self, operand: Any) -> Optional[list]:
+        """
+        Extract a list constant value from an operand for static comparison.
+        Returns None if the operand is not a resolvable list constant.
+        """
+        if not isinstance(operand, dict):
+            return None
+
+        op_type = operand.get('type', '')
+
+        if op_type == 'list':
+            # Extract values from list type
+            value_list = operand.get('value', [])
+            result = []
+            for item in value_list:
+                if isinstance(item, dict) and item.get('type') == 'constant':
+                    result.append(item.get('value'))
+                else:
+                    # Non-constant item in list - can't statically evaluate
+                    return None
+            return result
+
+        if op_type == 'placement_lookup':
+            # Resolve placement lookup to list value
+            location_rule = operand.get('location', {})
+            if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+                location_name = location_rule.get('value', '')
+                if location_name and location_name in self.placements:
+                    item_name = self.placements[location_name]
+                    return [item_name, 1]  # [item_name, player]
+            return None  # Unknown location
+
+        return None
 
     def _convert_compare_operand(self, operand: Any) -> str:
         """Convert a compare operand to Python code."""
@@ -540,6 +997,9 @@ class RuleCodeGenerator:
 
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
+
+        if op_type == 'min':
+            return self._convert_min(operand)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
@@ -595,8 +1055,95 @@ class RuleCodeGenerator:
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
 
+        if op_type == 'min':
+            return self._convert_min(operand)
+
         # Fall back to converting as a rule
         return self._convert_rule(operand)
+
+    def _convert_min(self, operand: Dict[str, Any]) -> str:
+        """Convert a min() operation to MinValue rule."""
+        self.required_imports.add('MinValue')
+
+        args = operand.get('args', [])
+        if len(args) < 2:
+            # Not enough arguments, return as-is with default
+            return 'MinValue(0, 0)'
+
+        left = args[0]
+        right = args[1]
+
+        left_code = self._convert_arithmetic_operand(left)
+        right_code = self._convert_arithmetic_operand(right)
+
+        return f'MinValue({left_code}, {right_code})'
+
+    def _convert_sum(self, rule: Dict[str, Any]) -> str:
+        """Convert a sum rule to an Arithmetic addition chain.
+
+        A sum rule adds up boolean checks (treated as 0 or 1) for items.
+        Example: sum of [has(Valor Form), has(Wisdom Form), ...]
+        becomes: Arithmetic(Arithmetic(..., "+", Has("Valor Form")), "+", Has("Wisdom Form"))
+        """
+        # Get the iterable to sum over
+        iterable = rule.get('iterable', {})
+
+        # If it's a list, convert each element and chain with Arithmetic
+        if iterable.get('type') == 'list':
+            items = iterable.get('value', [])
+            if not items:
+                return '0'  # Empty sum is 0
+
+            # Convert each item in the list
+            item_exprs = [self._convert_rule(item) for item in items]
+
+            if len(item_exprs) == 1:
+                # Single item - wrap in conditional to convert bool to int
+                self.required_imports.add('Conditional')
+                return f'Conditional(test={item_exprs[0]}, if_true=1, if_false=0)'
+
+            # Multiple items - chain with Arithmetic additions
+            # Each Has() evaluates to True/False which Python treats as 1/0 in arithmetic
+            self.required_imports.add('Arithmetic')
+            result = item_exprs[0]
+            for expr in item_exprs[1:]:
+                result = f'Arithmetic({result}, "+", {expr})'
+            return result
+
+        # For other iterable types, try to convert
+        return self._convert_rule(iterable)
+
+    def _convert_setting_value(self, rule: Dict[str, Any]) -> str:
+        """Convert a setting_value reference to its resolved value.
+
+        Settings are resolved at generation time since worldgen worlds
+        don't have access to the original game options at runtime.
+        """
+        setting = rule.get('setting', '')
+
+        # Look up the setting value in our resolved settings
+        if setting in self.settings:
+            value = self.settings[setting]
+            # Handle boolean values
+            if isinstance(value, bool):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
+            # Handle string 'true'/'false' which are boolean-like
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif value.lower() == 'false':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # For other strings (like 'normal', 'light_and_darkness'), return as string literal
+                return repr(value)
+            else:
+                return repr(value)
+
+        # Setting not found - return False as safe default
+        self.required_imports.add('False_')
+        return 'False_()'
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any
@@ -728,36 +1275,40 @@ class RuleCodeGenerator:
                     # For complex args, try to convert
                     arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
 
-            # Build HelperCall with helper_func reference and body_data for explain
+            # Build HelperCall with helper_func reference
+            # Note: body_data is NOT included here anymore - helper bodies are now
+            # exported via get_helper_definitions() in the Rules.py module, and the
+            # frontend looks them up from the helpers section instead of inlining
+            # them at every call site.
             parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
-
-            # Include body_data if available for explain support
-            # Expand nested helper references so body_data is self-contained
-            if helper_name in self.helper_bodies:
-                body = self.helper_bodies[helper_name]
-                # Expand any nested helper references to their bodies
-                expanded_body = self._expand_helper_refs(body)
-
-                # Include params if available so frontend can map args to param names
-                if helper_name in self.helper_params and self.helper_params[helper_name]:
-                    # Wrap body with params info for proper argument binding
-                    body_with_params = {
-                        'params': self.helper_params[helper_name],
-                        'body': expanded_body
-                    }
-                    parts.append(f'body_data={repr(body_with_params)}')
-                else:
-                    # No params - just use the body directly
-                    parts.append(f'body_data={repr(expanded_body)}')
 
             return f'HelperCall({", ".join(parts)})'
 
         # Unknown helper - return True_() as placeholder
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
+        """Convert placement_lookup to resolved placement data.
+
+        Placement lookups check what item is at a specific location.
+        We resolve these at code generation time using the known placements.
+        """
+        location_rule = rule.get('location', {})
+
+        # Get the location name
+        if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+            location_name = location_rule.get('value', '')
+            if location_name and location_name in self.placements:
+                item_name = self.placements[location_name]
+                # Return as a Python list [item_name, player] - player is always 1 for worldgen
+                return f'[{repr(item_name)}, 1]'
+
+        # Location not found - return None which will make comparisons fail correctly
+        return 'None'
 
     def _convert_conditional(self, rule: Dict[str, Any]) -> str:
         """Convert conditional rule to Conditional()."""
@@ -843,10 +1394,15 @@ class HelperCodeGenerator:
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
         self.uses_math: bool = False  # Track if math functions are used
+        self.placements: Dict[str, str] = {}  # location_name -> item_name
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
         self.known_helpers = helper_names
+
+    def set_placements(self, placements: Dict[str, str]) -> None:
+        """Set the placement data for resolving placement_lookup rules."""
+        self.placements = placements or {}
 
     def get_function_name(self, helper_name: str) -> str:
         """
@@ -900,7 +1456,9 @@ class HelperCodeGenerator:
                 else:
                     sig_params.append(f'{param} = {repr(default_val)}')
             else:
-                sig_params.append(param)
+                # No default provided - use None as default so callers can omit this arg
+                # This is needed when helper body is hardcoded/expanded and doesn't use the param
+                sig_params.append(f'{param} = None')
 
         # Determine return type based on body structure
         return_type = "bool"
@@ -1148,6 +1706,9 @@ class HelperCodeGenerator:
             'min': self._expr_min,
             'max': self._expr_max,
             'block': self._expr_block,
+            'placement_lookup': self._expr_placement_lookup,
+            'f_string': self._expr_f_string,
+            'formatted_value': self._expr_formatted_value,
         }
 
         handler = handlers.get(expr_type)
@@ -1164,6 +1725,11 @@ class HelperCodeGenerator:
         # If the setting was captured during export, use its value
         if setting in self.settings:
             value = self.settings[setting]
+            # Handle indexed access into list settings (e.g., required_medallions[0])
+            if 'index' in expr and isinstance(value, list):
+                index = expr['index']
+                if 0 <= index < len(value):
+                    value = value[index]
             if isinstance(value, bool):
                 return 'True' if value else 'False'
             elif isinstance(value, str):
@@ -1173,6 +1739,25 @@ class HelperCodeGenerator:
         # If not found in settings, default to False for safety
         # This prevents inaccessible regions from being created with always-True rules
         return 'False'
+
+    def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
+        """Resolve a placement_lookup to the actual item at that location.
+
+        Placement lookups check what item is at a specific location.
+        We resolve these at code generation time using the known placements.
+        """
+        location_rule = expr.get('location', {})
+
+        # Get the location name
+        if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
+            location_name = location_rule.get('value', '')
+            if location_name and location_name in self.placements:
+                item_name = self.placements[location_name]
+                # Return as a Python list [item_name, player] - player is always 1 for worldgen
+                return f'[{repr(item_name)}, 1]'
+
+        # Location not found - return None which will make comparisons fail correctly
+        return 'None'
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
@@ -1429,6 +2014,27 @@ class HelperCodeGenerator:
         # Returning True makes the location always accessible, which is safer than crashing
         return 'True'
 
+    def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
+        """Get argument expression - handles both constants and variable references.
+
+        For variable references (name type), returns the variable name.
+        For constants, returns repr() of the value.
+        """
+        if isinstance(arg, dict):
+            arg_type = arg.get('type', '')
+            # Handle name type (variable reference)
+            if arg_type == 'name':
+                return arg.get('name', str(default))
+            # Handle constant type
+            if arg_type == 'constant':
+                value = arg.get('value', default)
+                return repr(value)
+            if arg_type == 'value':
+                value = arg.get('value', default)
+                return repr(value)
+        # Raw value
+        return repr(arg) if arg is not None else repr(default)
+
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""
         method = expr.get('method', '')
@@ -1437,61 +2043,76 @@ class HelperCodeGenerator:
         # Map methods to their Python equivalents
         if method == 'has':
             if len(args) >= 1:
-                item = self._extract_constant(args[0], '')
+                item_expr = self._get_arg_expr(args[0], '')
                 count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
                 if count == 1:
-                    return f'state.has({repr(item)}, player)'
-                return f'state.has({repr(item)}, player, {count})'
+                    return f'state.has({item_expr}, player)'
+                return f'state.has({item_expr}, player, {count})'
 
         elif method == 'has_all':
             if len(args) >= 1:
+                # has_all expects a tuple/list of item names
                 items = self._extract_constant(args[0], [])
                 items_repr = repr(tuple(items)) if items else '()'
                 return f'state.has_all({items_repr}, player)'
 
         elif method == 'has_any':
             if len(args) >= 1:
+                # has_any expects a tuple/list of item names
                 items = self._extract_constant(args[0], [])
                 items_repr = repr(tuple(items)) if items else '()'
                 return f'state.has_any({items_repr}, player)'
 
         elif method == 'count':
             if len(args) >= 1:
-                item = self._extract_constant(args[0], '')
-                return f'state.count({repr(item)}, player)'
+                item_expr = self._get_arg_expr(args[0], '')
+                return f'state.count({item_expr}, player)'
 
         elif method == 'count_group':
             if len(args) >= 1:
-                group = self._extract_constant(args[0], '')
-                return f'state.count_group({repr(group)}, player)'
+                group_expr = self._get_arg_expr(args[0], '')
+                return f'state.count_group({group_expr}, player)'
 
         elif method == 'has_group':
             if len(args) >= 1:
-                group = self._extract_constant(args[0], '')
+                group_expr = self._get_arg_expr(args[0], '')
                 count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
                 if count == 1:
-                    return f'state.has_group({repr(group)}, player)'
-                return f'state.has_group({repr(group)}, player, {count})'
+                    return f'state.has_group({group_expr}, player)'
+                return f'state.has_group({group_expr}, player, {count})'
 
         elif method == 'has_group_unique':
             if len(args) >= 1:
-                group = self._extract_constant(args[0], '')
+                group_expr = self._get_arg_expr(args[0], '')
                 count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
                 if count == 1:
-                    return f'state.has_group_unique({repr(group)}, player)'
-                return f'state.has_group_unique({repr(group)}, player, {count})'
+                    return f'state.has_group_unique({group_expr}, player)'
+                return f'state.has_group_unique({group_expr}, player, {count})'
 
         elif method == 'can_reach':
             if len(args) >= 1:
-                target = self._extract_constant(args[0], '')
+                # First try to get a constant value
+                target = self._extract_constant(args[0], None)
+                if target is not None:
+                    # It's a constant, use repr
+                    target_expr = repr(target)
+                else:
+                    # It's a dynamic expression (like entrance.connected_region)
+                    target_expr = self._generate_expression(args[0])
                 # Second arg specifies reach type: "Region" or "Location"
                 reach_type = self._extract_constant(args[1], 'Region') if len(args) > 1 else 'Region'
-                return f'state.can_reach({repr(target)}, {repr(reach_type)}, player)'
+                return f'state.can_reach({target_expr}, {repr(reach_type)}, player)'
 
         elif method == 'can_reach_location':
             if len(args) >= 1:
-                location = self._extract_constant(args[0], '')
-                return f'state.can_reach_location({repr(location)}, player)'
+                # First try to get a constant value
+                location = self._extract_constant(args[0], None)
+                if location is not None:
+                    location_expr = repr(location)
+                else:
+                    # It's a dynamic expression
+                    location_expr = self._generate_expression(args[0])
+                return f'state.can_reach_location({location_expr}, player)'
 
         # Generic fallback
         arg_exprs = [self._generate_expression(a) for a in args]
@@ -1745,3 +2366,47 @@ class HelperCodeGenerator:
 
             return default
         return value if value is not None else default
+
+    def _expr_f_string(self, expr: Dict[str, Any]) -> str:
+        """Generate Python f-string expression.
+
+        Handles f-string expressions like f"Act Completion ({entrance.connected_region.name})"
+        """
+        parts = expr.get('parts', [])
+        if not parts:
+            return "''"
+
+        # Build the f-string content
+        f_string_parts = []
+        for part in parts:
+            if isinstance(part, dict):
+                part_type = part.get('type', '')
+                if part_type == 'constant':
+                    # Literal string part
+                    value = part.get('value', '')
+                    # Escape any braces in the literal part
+                    value = str(value).replace('{', '{{').replace('}', '}}')
+                    f_string_parts.append(value)
+                elif part_type == 'formatted_value':
+                    # Expression to be interpolated
+                    inner_value = part.get('value', {})
+                    inner_expr = self._generate_expression(inner_value)
+                    f_string_parts.append('{' + inner_expr + '}')
+                else:
+                    # Fallback - treat as expression
+                    inner_expr = self._generate_expression(part)
+                    f_string_parts.append('{' + inner_expr + '}')
+            else:
+                # Simple string part
+                str_part = str(part).replace('{', '{{').replace('}', '}}')
+                f_string_parts.append(str_part)
+
+        return 'f"' + ''.join(f_string_parts) + '"'
+
+    def _expr_formatted_value(self, expr: Dict[str, Any]) -> str:
+        """Generate expression for a formatted value in an f-string.
+
+        This is used when a formatted_value appears standalone (rare).
+        """
+        value = expr.get('value', {})
+        return self._generate_expression(value)

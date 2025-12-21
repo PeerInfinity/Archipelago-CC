@@ -204,7 +204,7 @@ function log(level, message, ...data) {
 // Helper function to get game-specific helper functions
 function getHelperFunctions(gameName) {
   if (!gameName) {
-    return genericLogic; // Default to generic
+    return genericLogic; // Default to generic (genericLogic IS the helperFunctions object)
   }
 
   const gameLogic = getGameLogic(gameName);

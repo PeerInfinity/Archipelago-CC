@@ -208,25 +208,21 @@ export async function testJSONPanelImportFromText(testController) {
       throw new Error('Editor panel not found in DOM after export');
     }
 
-    // Wait for textarea and dropdown to be ready
+    // Wait for textarea and dropdown to be ready with correct value
     let editorTextarea = null;
     let editorDropdown = null;
     if (!(await testController.pollForCondition(
       () => {
         editorTextarea = editorPanelElement.querySelector('textarea');
         editorDropdown = editorPanelElement.querySelector('select');
-        return editorTextarea !== null && editorDropdown !== null;
+        return editorTextarea !== null && editorDropdown !== null && editorDropdown.value === 'dataForExport';
       },
-      'Editor textarea and dropdown',
-      3000,
+      'Editor textarea and dropdown set to dataForExport',
+      5000,
       250
     ))) {
-      throw new Error('Editor textarea or dropdown not found');
-    }
-
-    // Verify dropdown is set to "Data for Export"
-    if (editorDropdown.value !== 'dataForExport') {
-      throw new Error(`Editor dropdown not set to dataForExport, current value: ${editorDropdown.value}`);
+      const currentValue = editorDropdown ? editorDropdown.value : 'not found';
+      throw new Error(`Editor textarea or dropdown not ready for export data (dropdown value: ${currentValue})`);
     }
     testController.reportCondition('Editor dropdown set to Data for Export', true);
 

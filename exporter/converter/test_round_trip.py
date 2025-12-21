@@ -1,23 +1,23 @@
 """
-Round-trip conversion tests for Rule Builder <-> Archipelago-CC format converters.
+Round-trip conversion tests for Rule Builder <-> AST format converters.
 
 Tests that:
 - B → A → B produces identical results for Rule Builder input
-- A → B → A produces identical results for Archipelago-CC input (where possible)
+- A → B → A produces identical results for AST input (where possible)
 """
 
 import unittest
 import json
-from .rule_builder_to_cc import RuleBuilderToCC, convert_rule_builder_to_cc
-from .cc_to_rule_builder import CCToRuleBuilder, convert_cc_to_rule_builder
+from .rule_builder_to_ast import RuleBuilderToAST, convert_rule_builder_to_ast
+from .ast_to_rule_builder import ASTToRuleBuilder, convert_ast_to_rule_builder
 
 
 class TestRoundTripBtoAtoB(unittest.TestCase):
-    """Test that Rule Builder → CC → Rule Builder produces identical output."""
+    """Test that Rule Builder → AST → Rule Builder produces identical output."""
 
     def setUp(self):
-        self.b_to_a = RuleBuilderToCC()
-        self.a_to_b = CCToRuleBuilder()
+        self.b_to_a = RuleBuilderToAST()
+        self.a_to_b = ASTToRuleBuilder()
 
     def _round_trip_b_a_b(self, rule_b):
         """Convert B → A → B and return result."""
@@ -166,11 +166,11 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
 
 
 class TestRoundTripAtoBtoA(unittest.TestCase):
-    """Test that CC → Rule Builder → CC produces identical/equivalent output."""
+    """Test that AST → Rule Builder → AST produces identical/equivalent output."""
 
     def setUp(self):
-        self.a_to_b = CCToRuleBuilder()
-        self.b_to_a = RuleBuilderToCC()
+        self.a_to_b = ASTToRuleBuilder()
+        self.b_to_a = RuleBuilderToAST()
 
     def _round_trip_a_b_a(self, rule_a):
         """Convert A → B → A and return result."""
@@ -291,11 +291,11 @@ class TestRoundTripAtoBtoA(unittest.TestCase):
         self.assertEqual(result["method"], "has_any")
 
 
-class TestCCToRuleBuilder(unittest.TestCase):
+class TestASTToRuleBuilder(unittest.TestCase):
     """Test individual A → B conversions."""
 
     def setUp(self):
-        self.converter = CCToRuleBuilder()
+        self.converter = ASTToRuleBuilder()
 
     def test_constant_true(self):
         """Test constant true conversion."""

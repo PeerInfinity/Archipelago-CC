@@ -68,11 +68,6 @@ class BaseGameExportHandler:
     # Required for games that need items in prog_items before evaluating rules
     ADD_SPHERE_ITEMS_UPFRONT: bool = False
 
-    # When True, Has() rules check all collected items, not just progression items.
-    # Use for games where items marked as 'useful' or 'filler' are used in access rules.
-    # This causes all items to be added to prog_items when collected.
-    COLLECT_ALL_ITEMS_FOR_RULES: bool = False
-
     # When True, use auto sweep algorithm for indirect region dependencies.
     # Use for games with custom Rules.py that sets access_rule directly on entrances
     # without registering indirect_connections via RuleBuilder.set_rule().
@@ -634,12 +629,6 @@ class BaseGameExportHandler:
         if self.ADD_SPHERE_ITEMS_UPFRONT:
             settings_dict['add_sphere_items_upfront'] = True
 
-        # Add collect_all_items_for_rules setting from class attribute
-        # When true, all items are collected into prog_items (not just progression)
-        # This allows Has() rules to check for useful/filler items
-        if self.COLLECT_ALL_ITEMS_FOR_RULES:
-            settings_dict['collect_all_items_for_rules'] = True
-
         # Add use_auto_indirect_conditions setting from class attribute
         # When true, use auto sweep for indirect region dependencies
         if self.USE_AUTO_INDIRECT_CONDITIONS:
@@ -656,7 +645,19 @@ class BaseGameExportHandler:
                     option = getattr(world.options, option_name)
                     # Check if it's an Option object with a value attribute
                     if hasattr(option, 'value'):
-                        value = option.value
+                        # For Choice options (which have name_lookup mapping values to string keys),
+                        # use the string key since helpers often use dict subscript with string
+                        # keys like 'easy', 'normal', 'hard'. For other options (Range, etc.),
+                        # use raw value since they don't have named options.
+                        # Note: dict/list values are unhashable so we catch TypeError.
+                        try:
+                            use_string_key = hasattr(option, 'name_lookup') and option.value in option.name_lookup
+                        except TypeError:
+                            use_string_key = False
+                        if use_string_key:
+                            value = option.current_key
+                        else:
+                            value = option.value
                         # Only export simple types (int, bool, str, list, dict)
                         if isinstance(value, (int, bool, str, list, dict)):
                             options_dict[option_name] = value
@@ -913,6 +914,9 @@ class BaseGameExportHandler:
 
         The blacklist (HELPERS_TO_EXPORT_BLACKLIST) excludes helpers from export.
 
+        For worldgen worlds, if the Rules.py module has a get_helper_definitions()
+        function, it will be used instead of analyzing helper functions.
+
         Args:
             world: The world object for this player
 
@@ -920,6 +924,26 @@ class BaseGameExportHandler:
             A dictionary mapping helper names to their rule definitions.
             Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
         """
+        # Check for worldgen worlds first - they have pre-computed helper definitions
+        # in their Rules.py module
+        try:
+            world_module = type(world).__module__
+            if '_worldgen' in world_module:
+                # This is a worldgen world - try to import get_helper_definitions from Rules.py
+                # world_module is like 'worlds.ahit_worldgen' - we need 'worlds.ahit_worldgen.Rules'
+                rules_module_name = world_module + '.Rules'
+                try:
+                    rules_module = importlib.import_module(rules_module_name)
+                    if hasattr(rules_module, 'get_helper_definitions'):
+                        worldgen_helpers = rules_module.get_helper_definitions()
+                        if worldgen_helpers:
+                            logger.debug(f"Loaded {len(worldgen_helpers)} helper definitions from worldgen Rules.py")
+                            return worldgen_helpers
+                except ImportError as e:
+                    logger.debug(f"Could not import worldgen Rules module: {e}")
+        except Exception as e:
+            logger.debug(f"Error checking for worldgen helpers: {e}")
+
         # Import analyze_rule here to avoid circular imports
         from exporter.analyzer import analyze_rule
 

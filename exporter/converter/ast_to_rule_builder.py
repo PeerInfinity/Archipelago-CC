@@ -1,7 +1,7 @@
 """
-Converter from Archipelago-CC format to Rule Builder format (PR #5048).
+Converter from AST format to Rule Builder format (PR #5048).
 
-Archipelago-CC Format (A):
+AST Format (A):
     {
         "type": "item_check",
         "item": "Sword",
@@ -38,9 +38,9 @@ class ConversionResult:
         return len(self.errors) == 0
 
 
-class CCToRuleBuilder:
+class ASTToRuleBuilder:
     """
-    Converter from Archipelago-CC format to Rule Builder format.
+    Converter from AST format to Rule Builder format.
 
     Handles conversion of:
     - Constants (true/false)
@@ -56,7 +56,7 @@ class CCToRuleBuilder:
     - Uses `_original_args` to restore original Rule Builder format
     """
 
-    # Mapping of CC types to converter methods
+    # Mapping of AST types to converter methods
     TYPE_CONVERTERS = {}
 
     def __init__(self):
@@ -103,14 +103,18 @@ class CCToRuleBuilder:
             'name': self._convert_name,
             'list': self._convert_list,
             'tuple': self._convert_tuple,
+
+            # ALTTP-specific types
+            'placement_search': self._convert_placement_search,
+            'placement_lookup': self._convert_placement_lookup,
         }
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
         """
-        Convert an Archipelago-CC format rule to Rule Builder format.
+        Convert an AST format rule to Rule Builder format.
 
         Args:
-            rule: Rule in Archipelago-CC format
+            rule: Rule in AST format
 
         Returns:
             ConversionResult with converted rule and any warnings/errors
@@ -138,7 +142,7 @@ class CCToRuleBuilder:
         Internal method to convert a single rule.
 
         Args:
-            rule: Rule in Archipelago-CC format
+            rule: Rule in AST format
 
         Returns:
             Rule in Rule Builder format
@@ -216,10 +220,35 @@ class CCToRuleBuilder:
         }
 
     def _make_custom_rule(self, rule_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
-        """Create a custom rule that preserves CC format data for round-trip."""
+        """Create a custom rule that preserves AST format data for round-trip."""
         result = self._make_rule(rule_name, args)
         result['_converted_from_cc'] = True
         return result
+
+    def _extract_constant_value(self, value: Any) -> Tuple[Any, bool]:
+        """
+        Extract the value from a constant wrapper if present.
+
+        Args:
+            value: Either a primitive value or a dict with {type: "constant", value: X}
+
+        Returns:
+            Tuple of (extracted_value, was_constant)
+            - If value is {type: "constant", value: X}, returns (X, True)
+            - Otherwise returns (value, False)
+        """
+        if isinstance(value, dict) and value.get('type') == 'constant':
+            return value.get('value'), True
+        return value, False
+
+    def _try_extract_constant(self, value: Any) -> Any:
+        """
+        Try to extract a constant value, returning the original if not a constant.
+
+        Convenience wrapper around _extract_constant_value.
+        """
+        extracted, _ = self._extract_constant_value(value)
+        return extracted
 
     # -------------------------------------------------------------------------
     # Constant Converters
@@ -229,7 +258,7 @@ class CCToRuleBuilder:
         """
         Convert constant rule.
 
-        CC: {"type": "constant", "value": true}
+        AST: {"type": "constant", "value": true}
         RB: {"rule": "True_", "options": [], "args": {}}
         """
         value = rule.get('value')
@@ -250,21 +279,39 @@ class CCToRuleBuilder:
         """
         Convert item_check rule.
 
-        CC: {"type": "item_check", "item": "Sword", "count": 2}
+        AST: {"type": "item_check", "item": "Sword", "count": 2}
         RB: {"rule": "Has", "options": [], "args": {"item_name": "Sword", "count": 2}}
+
+        Also handles wrapped constants:
+        AST: {"type": "item_check", "item": {"type": "constant", "value": "Sword"}}
+        RB: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
         """
         item = rule.get('item', '')
         count = rule.get('count', 1)
 
-        # Handle item as dict (nested rule) vs string
+        # Try to extract constant values
+        item_value, item_was_constant = self._extract_constant_value(item)
+        count_value, count_was_constant = self._extract_constant_value(count)
+
+        # If item resolved to a simple value, use standard Has rule
+        if isinstance(item_value, str):
+            args = {'item_name': item_value}
+            if isinstance(count_value, (int, float)) and count_value != 1:
+                args['count'] = count_value
+            elif isinstance(count, dict) and not count_was_constant:
+                # Count is a complex expression - preserve it
+                args['count'] = self._convert_rule(count)
+            return self._make_rule('Has', args)
+
+        # Complex item reference that couldn't be resolved - preserve as custom rule
         if isinstance(item, dict):
-            # Complex item reference - preserve
             return self._make_custom_rule('ItemCheck', {
-                'item': item,
-                'count': count,
-                '_original_cc_type': 'item_check'
+                'item': self._convert_rule(item),
+                'count': self._convert_rule(count) if isinstance(count, dict) else count,
+                '_original_ast_type': 'item_check'
             })
 
+        # Simple string item
         args = {'item_name': item}
         if count != 1:
             args['count'] = count
@@ -275,18 +322,37 @@ class CCToRuleBuilder:
         """
         Convert count_check rule.
 
-        CC: {"type": "count_check", "item": "Arrow", "count": 10}
+        AST: {"type": "count_check", "item": "Arrow", "count": 10}
+        RB: {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}}
+
+        Also handles wrapped constants:
+        AST: {"type": "count_check", "item": {"type": "constant", "value": "Arrow"}, "count": {"type": "constant", "value": 10}}
         RB: {"rule": "Has", "options": [], "args": {"item_name": "Arrow", "count": 10}}
         """
         item = rule.get('item', '')
         count = rule.get('count', 1)
 
-        # Handle complex item/count
+        # Try to extract constant values
+        item_value, item_was_constant = self._extract_constant_value(item)
+        count_value, count_was_constant = self._extract_constant_value(count)
+
+        # If both resolved to simple values, use standard Has rule
+        if isinstance(item_value, str) and isinstance(count_value, (int, float)):
+            return self._make_rule('Has', {'item_name': item_value, 'count': count_value})
+
+        # If item resolved but count is complex
+        if isinstance(item_value, str):
+            return self._make_rule('Has', {
+                'item_name': item_value,
+                'count': self._convert_rule(count) if isinstance(count, dict) else count
+            })
+
+        # Complex item/count that couldn't be fully resolved - preserve as custom rule
         if isinstance(item, dict) or isinstance(count, dict):
             return self._make_custom_rule('CountCheck', {
-                'item': item,
-                'count': count,
-                '_original_cc_type': 'count_check'
+                'item': self._convert_rule(item) if isinstance(item, dict) else item,
+                'count': self._convert_rule(count) if isinstance(count, dict) else count,
+                '_original_ast_type': 'count_check'
             })
 
         return self._make_rule('Has', {'item_name': item, 'count': count})
@@ -295,7 +361,7 @@ class CCToRuleBuilder:
         """
         Convert group_check rule.
 
-        CC: {"type": "group_check", "group": "Keys", "count": 3}
+        AST: {"type": "group_check", "group": "Keys", "count": 3}
         RB: {"rule": "HasGroup", "options": [], "args": {"group": "Keys", "count": 3}}
         """
         group = rule.get('group', '')
@@ -329,14 +395,35 @@ class CCToRuleBuilder:
                 return arg
             return default
 
+        # Helper to extract item list from a set or list argument
+        def get_items_from_arg(arg, default=None):
+            if isinstance(arg, list):
+                return arg
+            if isinstance(arg, dict):
+                if arg.get('type') == 'set':
+                    # Extract item values from set elements
+                    elements = arg.get('elements', [])
+                    return [
+                        el.get('value') if isinstance(el, dict) and el.get('type') == 'constant' else el
+                        for el in elements
+                    ]
+                if arg.get('type') == 'list':
+                    # Extract item values from list value
+                    values = arg.get('value', [])
+                    return [
+                        v.get('value') if isinstance(v, dict) and v.get('type') == 'constant' else v
+                        for v in values
+                    ]
+            return default
+
         if method == 'has_all':
-            items = get_arg_value(0, [])
-            if isinstance(items, list):
+            items = get_items_from_arg(get_arg_value(0, []), [])
+            if isinstance(items, list) and len(items) > 0:
                 return self._make_rule('HasAll', {'items': items})
 
         elif method == 'has_any':
-            items = get_arg_value(0, [])
-            if isinstance(items, list):
+            items = get_items_from_arg(get_arg_value(0, []), [])
+            if isinstance(items, list) and len(items) > 0:
                 return self._make_rule('HasAny', {'items': items})
 
         elif method == 'has_all_counts':
@@ -374,15 +461,59 @@ class CCToRuleBuilder:
             reach_type = get_arg_value(1, 'Region')
             if reach_type == 'Location':
                 return self._make_rule('CanReachLocation', {'location_name': name})
+            elif reach_type == 'Entrance':
+                return self._make_rule('CanReachEntrance', {'entrance_name': name})
             else:
                 return self._make_rule('CanReachRegion', {'region_name': name})
+
+        elif method == 'can_reach_region':
+            # can_reach_region state method (direct region name)
+            name = get_arg_value(0, '')
+            if isinstance(name, str):
+                return self._make_rule('CanReachRegion', {'region_name': name})
+            # Fall through to custom rule if name is complex
+
+        elif method == 'can_reach_location':
+            # can_reach_location state method (direct location name)
+            name = get_arg_value(0, '')
+            if isinstance(name, str):
+                return self._make_rule('CanReachLocation', {'location_name': name})
+            # Fall through to custom rule if name is complex
+
+        elif method == 'can_reach_entrance':
+            # can_reach_entrance state method
+            name = get_arg_value(0, '')
+            if isinstance(name, str):
+                return self._make_rule('CanReachEntrance', {'entrance_name': name})
+            # Fall through to custom rule if name is complex
+
+        elif method == 'count':
+            # count state method - returns item count
+            item = get_arg_value(0, '')
+            if isinstance(item, str):
+                return self._make_rule('CountItem', {'item_name': item})
+            # Fall through to custom rule if item is complex
+
+        elif method == 'count_group':
+            # count_group state method - returns group count
+            group = get_arg_value(0, '')
+            if isinstance(group, str):
+                return self._make_rule('CountGroup', {'group': group})
+            # Fall through to custom rule if group is complex
+
+        elif method == 'count_group_unique':
+            # count_group_unique state method - returns unique group count
+            group = get_arg_value(0, '')
+            if isinstance(group, str):
+                return self._make_rule('CountGroupUnique', {'group': group})
+            # Fall through to custom rule if group is complex
 
         # Unknown state method - preserve as custom rule
         self.warnings.append(f"Unknown state method '{method}' preserved as custom rule")
         return self._make_custom_rule('StateMethod', {
             'method': method,
             'args': args,
-            '_original_cc_type': 'state_method'
+            '_original_ast_type': 'state_method'
         })
 
     # -------------------------------------------------------------------------
@@ -393,7 +524,7 @@ class CCToRuleBuilder:
         """
         Convert and rule.
 
-        CC: {"type": "and", "conditions": [...]}
+        AST: {"type": "and", "conditions": [...]}
         RB: {"rule": "And", "options": [], "children": [...]}
         """
         conditions = rule.get('conditions', [])
@@ -412,7 +543,7 @@ class CCToRuleBuilder:
         """
         Convert or rule.
 
-        CC: {"type": "or", "conditions": [...]}
+        AST: {"type": "or", "conditions": [...]}
         RB: {"rule": "Or", "options": [], "children": [...]}
         """
         conditions = rule.get('conditions', [])
@@ -431,7 +562,7 @@ class CCToRuleBuilder:
         """
         Convert not rule.
 
-        CC: {"type": "not", "condition": {...}}
+        AST: {"type": "not", "condition": {...}}
         RB: No direct equivalent - preserve as custom rule
         """
         condition = rule.get('condition', {})
@@ -440,7 +571,7 @@ class CCToRuleBuilder:
         self.warnings.append("'not' rule has no direct Rule Builder equivalent, preserved as custom rule")
         return self._make_custom_rule('Not', {
             'condition': converted_condition,
-            '_original_cc_type': 'not'
+            '_original_ast_type': 'not'
         })
 
     # -------------------------------------------------------------------------
@@ -451,7 +582,7 @@ class CCToRuleBuilder:
         """
         Convert can_reach rule.
 
-        CC: {"type": "can_reach", "region": "Castle"}
+        AST: {"type": "can_reach", "region": "Castle"}
         RB: {"rule": "CanReachRegion", "options": [], "args": {"region_name": "Castle"}}
         """
         region = rule.get('region', '')
@@ -461,7 +592,7 @@ class CCToRuleBuilder:
         """
         Convert location_check rule.
 
-        CC: {"type": "location_check", "location": "Chest1"}
+        AST: {"type": "location_check", "location": "Chest1"}
         RB: {"rule": "CanReachLocation", "options": [], "args": {"location_name": "Chest1"}}
         """
         location = rule.get('location', '')
@@ -471,7 +602,7 @@ class CCToRuleBuilder:
         """
         Convert can_reach_entrance rule.
 
-        CC: {"type": "can_reach_entrance", "entrance": "Door1"}
+        AST: {"type": "can_reach_entrance", "entrance": "Door1"}
         RB: {"rule": "CanReachEntrance", "options": [], "args": {"entrance_name": "Door1"}}
         """
         entrance = rule.get('entrance', '')
@@ -485,7 +616,7 @@ class CCToRuleBuilder:
         """
         Convert conditional rule (typically from option filter).
 
-        CC: {"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}
+        AST: {"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}
         RB: Rule with options array (if test is an option comparison)
         """
         test = rule.get('test', {})
@@ -515,7 +646,7 @@ class CCToRuleBuilder:
             'test': self._convert_rule(test) if isinstance(test, dict) else test,
             'if_true': self._convert_rule(if_true) if isinstance(if_true, dict) else if_true,
             'if_false': self._convert_rule(if_false) if isinstance(if_false, dict) else if_false,
-            '_original_cc_type': 'conditional'
+            '_original_ast_type': 'conditional'
         })
 
     def _extract_options_from_test(self, test: Dict[str, Any]) -> Optional[List[Dict]]:
@@ -598,7 +729,16 @@ class CCToRuleBuilder:
         Convert helper rule.
 
         If the helper was originally converted from Rule Builder format,
-        restore it. Otherwise, preserve as custom rule.
+        restore it. Otherwise, convert to Rule Builder format with flattened args.
+
+        Output format:
+            {
+                "rule": "helper_name",
+                "options": [],
+                "args": [arg1, arg2, ...],  # Flattened list, not nested
+                "_original_ast_type": "helper",
+                "_converted_from_cc": true
+            }
         """
         helper_name = rule.get('name', 'Unknown')
         args = rule.get('args', [])
@@ -607,12 +747,20 @@ class CCToRuleBuilder:
         if rule.get('_converted_from_rule_builder'):
             return self._restore_from_round_trip(rule)
 
-        # Preserve as custom rule
-        self.warnings.append(f"Helper '{helper_name}' preserved as custom rule")
-        return self._make_custom_rule(helper_name, {
-            'args': [self._convert_rule(arg) if isinstance(arg, dict) else arg for arg in args],
-            '_original_cc_type': 'helper'
-        })
+        # Convert args (they may be nested rule dicts)
+        converted_args = [
+            self._convert_rule(arg) if isinstance(arg, dict) else arg
+            for arg in args
+        ]
+
+        # Build flattened structure - args is a list at top level, not nested in a dict
+        return {
+            'rule': helper_name,
+            'options': [],
+            'args': converted_args,
+            '_original_ast_type': 'helper',
+            '_converted_from_cc': True
+        }
 
     # -------------------------------------------------------------------------
     # Expression Converters (Limited Support)
@@ -622,7 +770,7 @@ class CCToRuleBuilder:
         """
         Convert compare rule.
 
-        CC: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
+        AST: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
         RB: No direct equivalent - preserve as custom rule
         """
         left = rule.get('left', {})
@@ -634,14 +782,14 @@ class CCToRuleBuilder:
             'left': self._convert_rule(left) if isinstance(left, dict) else left,
             'op': op,
             'right': self._convert_rule(right) if isinstance(right, dict) else right,
-            '_original_cc_type': 'compare'
+            '_original_ast_type': 'compare'
         })
 
     def _convert_binary_op(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert binary_op rule to Arithmetic.
 
-        CC: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
+        AST: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
         RB: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
         """
         left = rule.get('left', {})
@@ -662,18 +810,49 @@ class CCToRuleBuilder:
         })
 
     def _convert_attribute(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Convert attribute access rule."""
+        """
+        Convert attribute access rule.
+
+        Handles common patterns:
+        - setting_value.value → SettingValue(setting_name)
+        - options.X → SettingValue(X)
+        - self.options.X → SettingValue(X)
+        """
+        obj = rule.get('object', {})
+        attr = rule.get('attr', '')
+
+        # Pattern 1: setting_value.value → SettingValue
+        # {"type": "attribute", "object": {"type": "setting_value", "setting": "X"}, "attr": "value"}
+        if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
+            setting_name = obj.get('setting', '')
+            return self._make_rule('SettingValue', {'setting': setting_name})
+
+        # Pattern 2: options.X → SettingValue
+        # {"type": "attribute", "object": {"type": "name", "name": "options"}, "attr": "X"}
+        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'options':
+            return self._make_rule('SettingValue', {'setting': attr})
+
+        # Pattern 3: self.options.X → SettingValue (nested attribute)
+        # Need to handle {"type": "attribute", "object": {"type": "attribute", "object": {"type": "name", "name": "self"}, "attr": "options"}, "attr": "X"}
+        if isinstance(obj, dict) and obj.get('type') == 'attribute':
+            inner_obj = obj.get('object', {})
+            inner_attr = obj.get('attr', '')
+            if (isinstance(inner_obj, dict) and inner_obj.get('type') == 'name' and
+                inner_obj.get('name') == 'self' and inner_attr == 'options'):
+                return self._make_rule('SettingValue', {'setting': attr})
+
+        # Default: preserve as custom Attribute rule
         return self._make_custom_rule('Attribute', {
-            'object': rule.get('object'),
-            'attr': rule.get('attr'),
-            '_original_cc_type': 'attribute'
+            'object': self._convert_rule(obj) if isinstance(obj, dict) else obj,
+            'attr': attr,
+            '_original_ast_type': 'attribute'
         })
 
     def _convert_name(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Convert name reference rule."""
         return self._make_custom_rule('Name', {
             'name': rule.get('name'),
-            '_original_cc_type': 'name'
+            '_original_ast_type': 'name'
         })
 
     def _convert_list(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -685,7 +864,7 @@ class CCToRuleBuilder:
         ]
         return self._make_custom_rule('List', {
             'value': converted_value,
-            '_original_cc_type': 'list'
+            '_original_ast_type': 'list'
         })
 
     def _convert_tuple(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -697,57 +876,204 @@ class CCToRuleBuilder:
         ]
         return self._make_custom_rule('Tuple', {
             'value': converted_value,
-            '_original_cc_type': 'tuple'
+            '_original_ast_type': 'tuple'
         })
+
+    # -------------------------------------------------------------------------
+    # Placement Converters (ALTTP-specific)
+    # -------------------------------------------------------------------------
+
+    def _flatten_locations(self, locations: Any) -> List[List[Any]]:
+        """
+        Flatten location list to simple [[name, player], ...] format.
+
+        Handles various input formats:
+        - {"type": "constant", "value": [[loc1, 1], [loc2, 1]]}
+        - {"type": "list", "value": [{"type": "list", "value": [...]}]}
+        - Direct list: [[loc1, 1], [loc2, 1]]
+        """
+        if not locations:
+            return []
+
+        # Already a simple list
+        if isinstance(locations, list):
+            result = []
+            for item in locations:
+                if isinstance(item, list) and len(item) >= 2:
+                    # Already [name, player] format
+                    result.append(item)
+                elif isinstance(item, dict):
+                    # Nested structure - extract values
+                    flattened = self._flatten_single_location(item)
+                    if flattened:
+                        result.append(flattened)
+            return result
+
+        if not isinstance(locations, dict):
+            return []
+
+        loc_type = locations.get('type')
+        value = locations.get('value')
+
+        if loc_type == 'constant' and isinstance(value, list):
+            # Pre-evaluated constant - value is already [[name, player], ...]
+            return value
+
+        if loc_type == 'list' and isinstance(value, list):
+            # Nested list structure - recursively flatten
+            result = []
+            for item in value:
+                if isinstance(item, dict):
+                    if item.get('type') == 'list':
+                        # Inner list - extract [name, player]
+                        inner = item.get('value', [])
+                        flattened = self._flatten_inner_list(inner)
+                        if flattened:
+                            result.append(flattened)
+                    elif item.get('type') == 'constant':
+                        # Constant value
+                        inner_val = item.get('value')
+                        if isinstance(inner_val, list):
+                            result.append(inner_val)
+                elif isinstance(item, list):
+                    result.append(item)
+            return result
+
+        return []
+
+    def _flatten_inner_list(self, inner: List[Any]) -> Optional[List[Any]]:
+        """Flatten an inner list [name_obj, player_obj] to [name, player]."""
+        if len(inner) < 2:
+            return None
+
+        name = inner[0]
+        player = inner[1]
+
+        # Extract name
+        if isinstance(name, dict) and name.get('type') == 'constant':
+            name = name.get('value')
+
+        # Extract player
+        if isinstance(player, dict) and player.get('type') == 'constant':
+            player = player.get('value')
+
+        return [name, player]
+
+    def _flatten_single_location(self, item: Dict[str, Any]) -> Optional[List[Any]]:
+        """Flatten a single location entry."""
+        if item.get('type') == 'list':
+            return self._flatten_inner_list(item.get('value', []))
+        elif item.get('type') == 'constant':
+            val = item.get('value')
+            if isinstance(val, list) and len(val) >= 2:
+                return val
+        return None
+
+    def _convert_placement_search(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert placement_search rule.
+
+        AST: {"type": "placement_search", "item": {...}, "player": {...}, "locations": {...}}
+        RB: {"rule": "AST_placement_search", "args": {"item": "X", "player": 1, "locations": [[loc, player], ...]}}
+        """
+        item = rule.get('item', '')
+        player = rule.get('player', {'type': 'constant', 'value': 1})
+        locations = rule.get('locations', [])
+
+        # Extract item value if constant
+        if isinstance(item, dict) and item.get('type') == 'constant':
+            item = item.get('value')
+
+        # Extract player value if constant
+        if isinstance(player, dict) and player.get('type') == 'constant':
+            player = player.get('value')
+
+        # Flatten locations to simple format
+        flattened_locations = self._flatten_locations(locations)
+
+        return {
+            'rule': 'AST_placement_search',
+            'options': [],
+            'args': {
+                'item': item,
+                'player': player,
+                'locations': flattened_locations,
+                '_original_ast_type': 'placement_search'
+            },
+            '_converted_from_cc': True
+        }
+
+    def _convert_placement_lookup(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert placement_lookup rule.
+
+        AST: {"type": "placement_lookup", "location": "LocationName"}
+        RB: {"rule": "AST_placement_lookup", "args": {"location": "LocationName"}}
+        """
+        location = rule.get('location', '')
+
+        # Extract location value if constant
+        if isinstance(location, dict) and location.get('type') == 'constant':
+            location = location.get('value')
+
+        return {
+            'rule': 'AST_placement_lookup',
+            'options': [],
+            'args': {
+                'location': location,
+                '_original_ast_type': 'placement_lookup'
+            },
+            '_converted_from_cc': True
+        }
 
     # -------------------------------------------------------------------------
     # Unknown Type Handler
     # -------------------------------------------------------------------------
 
     def _convert_unknown(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle unknown CC types by preserving them as custom rules."""
+        """Handle unknown AST types by preserving them as custom rules."""
         rule_type = rule.get('type', 'unknown')
-        self.warnings.append(f"Unknown CC type '{rule_type}' preserved as custom rule")
+        self.warnings.append(f"Unknown AST type '{rule_type}' preserved as custom rule")
 
         # Preserve all fields except 'type'
         args = {k: v for k, v in rule.items() if k != 'type'}
-        args['_original_cc_type'] = rule_type
+        args['_original_ast_type'] = rule_type
 
-        return self._make_custom_rule(f'CC_{rule_type}', args)
+        return self._make_custom_rule(f'AST_{rule_type}', args)
 
 
 # -------------------------------------------------------------------------
 # Convenience Functions
 # -------------------------------------------------------------------------
 
-def convert_cc_to_rule_builder(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+def convert_ast_to_rule_builder(rule: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Convert a single rule from Archipelago-CC format to Rule Builder format.
+    Convert a single rule from AST format to Rule Builder format.
 
     Args:
-        rule: Rule in Archipelago-CC format
+        rule: Rule in AST format
 
     Returns:
         Tuple of (converted_rule, warnings)
     """
-    converter = CCToRuleBuilder()
+    converter = ASTToRuleBuilder()
     result = converter.convert(rule)
     return result.rule, result.warnings + result.errors
 
 
 def convert_rules_file_to_rule_builder(data: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Convert an entire rules file from Archipelago-CC format to Rule Builder format.
+    Convert an entire rules file from AST format to Rule Builder format.
 
     This handles the full file structure including regions, locations, etc.
 
     Args:
-        data: Full rules file data in Archipelago-CC format
+        data: Full rules file data in AST format
 
     Returns:
         Tuple of (converted_data, all_warnings)
     """
-    converter = CCToRuleBuilder()
+    converter = ASTToRuleBuilder()
     all_warnings = []
 
     def convert_access_rule(rule):

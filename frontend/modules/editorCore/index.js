@@ -30,7 +30,7 @@ export const moduleInfo = {
 
 /**
  * Registration function for the Editor Core module.
- * Registers event publishers and initializes the data service.
+ * Registers event publishers.
  */
 export function register(registrationApi) {
   log('info', '[Editor Core Module] Registering...');
@@ -39,15 +39,20 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('editor:contentResponse');
 
-  // Subscribe to app ready event to initialize the data service
-  const readyHandler = () => {
-    log('info', '[Editor Core Module] App ready, initializing data service...');
-    editorDataService.initialize();
-    eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
-  };
-  eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler, 'editorCore');
-
   log('info', '[Editor Core Module] Registered successfully');
+}
+
+/**
+ * Initialization function for the Editor Core module.
+ * Called after all modules are registered.
+ */
+export function initialize(moduleId, priorityIndex, initializationApi) {
+  log('info', `[Editor Core Module] Initializing (${moduleId}, priority ${priorityIndex})...`);
+
+  // Initialize the data service - this sets up all event subscriptions
+  editorDataService.initialize();
+
+  log('info', '[Editor Core Module] Initialized successfully');
 }
 
 // Re-export for consumers

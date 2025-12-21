@@ -59,19 +59,20 @@ from .rules import (
     CanReachLocation,
     CanReachRegion,
     CanReachEntrance,
-    # CC format support
-    CCRule,
+    # AST format support
+    ASTRule,
     Not,
     CountItem,
     Compare,
     Arithmetic,
+    MinValue,
     Conditional,
     HelperCall,
 )
 
-from .cc_format import (
-    is_cc_format,
-    parse_cc_rule,
+from .ast_format import (
+    is_ast_format,
+    parse_ast_rule,
 )
 
 __all__ = [
@@ -105,15 +106,16 @@ __all__ = [
     'CanReachLocation',
     'CanReachRegion',
     'CanReachEntrance',
-    # CC format support classes
-    'CCRule',
+    # AST format support classes
+    'ASTRule',
     'Not',
     'CountItem',
     'Compare',
     'Arithmetic',
+    'MinValue',
     'Conditional',
     'HelperCall',
-    # CC format support functions
-    'is_cc_format',
-    'parse_cc_rule',
+    # AST format support functions
+    'is_ast_format',
+    'parse_ast_rule',
 ]
