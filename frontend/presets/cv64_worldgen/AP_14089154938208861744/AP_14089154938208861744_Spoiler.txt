@@ -243,30 +243,38 @@ Playthrough:
 
 }
 1: {
-  Castle Center: Behind the seal: Crystal
+  Forest of Silence: Dirge maiden crypt - Upper: Left Tower Key
+}
+2: {
+  Castle Wall: Left tower child ledge: Mandragora
+  Villa: Dining room rose vase: Special1
+  Villa: Foyer sofa: Special1
+  Villa: Front yard cross grave near gates: Special1
+  Villa: Front yard cross grave near porch: Science Key1
+  Villa: Midnight fountain - Front-right: Special1
+  Villa: Rose garden staircase bottom: Magical Nitro
+}
+3: {
   Castle Center: Broken staircase knight: Mandragora
   Castle Center: Butler bros. room near door: Special1
   Castle Center: Magical Nitro shelf - Heinrich side: Execution Key
   Castle Center: Magical Nitro shelf - Invention side: Special1
   Castle Center: Maid sisters room inner table: Chamber Key
   Castle Center: Maid sisters room outer table: Science Key2
-  Castle Center: Mandragora shelf - Left: Copper Key
   Castle Center: Nitro room crates: Garden Key
-  Castle Wall: Left tower child ledge: Mandragora
-  Clock Tower: Bone Pillar chasm room - Front-left: Special1
-  Dracula: The Count Downed
-  Forest of Silence: Dirge maiden crypt - Upper: Left Tower Key
   Room of Clocks: Right from entrance hallway: Magical Nitro
+  Underground Waterway: Near entrance corridor: Clocktower Key3
+}
+4: {
+  Castle Center: Behind the seal: Crystal
+  Castle Center: Mandragora shelf - Left: Copper Key
+  Clock Tower: Bone Pillar chasm room - Front-left: Special1
+  Villa: Front maze garden - Malus's hiding bush: Science Key3
+}
+5: {
+  Dracula: The Count Downed
   Tunnel: Gondola rock crusher sun door - Middle: Archives Key
   Tunnel: Gondola transfer point: Storeroom Key
-  Underground Waterway: Near entrance corridor: Clocktower Key3
   Villa: Crypt - Right wall: Clocktower Key1
   Villa: Crypt bridge upstream: Clocktower Key2
-  Villa: Dining room rose vase: Special1
-  Villa: Foyer sofa: Special1
-  Villa: Front maze garden - Malus's hiding bush: Science Key3
-  Villa: Front yard cross grave near gates: Special1
-  Villa: Front yard cross grave near porch: Science Key1
-  Villa: Midnight fountain - Front-right: Special1
-  Villa: Rose garden staircase bottom: Magical Nitro
 }

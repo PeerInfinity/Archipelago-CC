@@ -292,24 +292,18 @@ Playthrough:
   Beat Breakout: Beat Breakout
   Beat Cutthroat (Terran): Beat Cutthroat (Terran)
   Beat Devil's Playground (Terran): Beat Devil's Playground (Terran)
-  Beat Engine of Destruction (Terran): Beat Engine of Destruction (Terran)
   Beat Evacuation (Terran): Beat Evacuation (Terran)
   Beat Gates of Hell (Terran): Beat Gates of Hell (Terran)
   Beat Ghost of a Chance: Beat Ghost of a Chance
   Beat Haven's Fall (Terran): Beat Haven's Fall (Terran)
-  Beat Liberation Day: Beat Liberation Day
-  Beat Maw of the Void (Terran): Beat Maw of the Void (Terran)
   Beat Media Blitz (Terran): Beat Media Blitz (Terran)
   Beat Outbreak (Terran): Beat Outbreak (Terran)
-  Beat Piercing the Shroud: Beat Piercing the Shroud
   Beat Safe Haven (Terran): Beat Safe Haven (Terran)
   Beat Shatter the Sky (Terran): Beat Shatter the Sky (Terran)
   Beat Smash and Grab (Terran): Beat Smash and Grab (Terran)
   Beat Supernova (Terran): Beat Supernova (Terran)
   Beat The Dig (Terran): Beat The Dig (Terran)
-  Beat The Great Train Robbery (Terran): Beat The Great Train Robbery (Terran)
   Beat The Moebius Factor (Terran): Beat The Moebius Factor (Terran)
-  Beat The Outlaws (Terran): Beat The Outlaws (Terran)
   Beat Welcome to the Jungle (Terran): Beat Welcome to the Jungle (Terran)
   Beat Zero Hour (Terran): Beat Zero Hour (Terran)
   Belly of the Beast: Second Group Rescued: Smart Servos (Siege Tank)
@@ -320,26 +314,14 @@ Playthrough:
   Breakout: Second Checkpoint: Magrail Munitions (Marine)
   Breakout: Victory: ATX Laser Battery (Battlecruiser)
   Cutthroat (Terran): Mid Relic: Orbital Depots (Terran)
-  Cutthroat (Terran): Mira Han: Resource Efficiency (Reaper)
-  Cutthroat (Terran): North Command Center: Liberator
-  Cutthroat (Terran): North Relic: Winged Nightmares
-  Cutthroat (Terran): Southwest Relic: Valkyrie
   Devil's Playground (Terran): Middle Reapers: Ghost
   Devil's Playground (Terran): Southwest Reapers: Jump Jets (Siege Tank)
   Devil's Playground (Terran): Tosh's Miners: Nano Projectors (Firebat)
   Devil's Playground (Terran): Victory: Medivac
-  Engine of Destruction (Terran): Lab Devourer: Progressive Regenerative Bio-Steel (Terran)
-  Engine of Destruction (Terran): Loki: Spartan Company
-  Engine of Destruction (Terran): North Devourer: Enhanced Cluster Launchers (Valkyrie)
-  Engine of Destruction (Terran): Northeast Base: Marine
-  Engine of Destruction (Terran): Northwest Base: Progressive Terran Ship Armor
-  Engine of Destruction (Terran): Odin: Battlecruiser
-  Engine of Destruction (Terran): Southeast Devourer: Hunter-Seeker Weapon (Raven)
   Evacuation (Terran): Eastern Zerg Base: Diamondback
   Evacuation (Terran): North Chrysalis: Marauder
   Evacuation (Terran): Reach Hanson: Wraith
   Evacuation (Terran): Secret Resource Stash: Spectre
-  Evacuation (Terran): West Chrysalis: Advanced Laser Technology (Wraith)
   Gates of Hell (Terran): 2 Drop Pods: Progressive Stimpack (Firebat)
   Gates of Hell (Terran): 8 Drop Pods: Progressive Terran Vehicle Armor
   Gates of Hell (Terran): Large Army: Argus Amplifier (Hive Mind Emulator)
@@ -354,17 +336,6 @@ Playthrough:
   Haven's Fall (Terran): Southeast Gas Pickups: Progressive Terran Vehicle Armor
   Haven's Fall (Terran): Southwest Gas Pickups: Raid Artillery (Liberator)
   Haven's Fall (Terran): Victory: Reaper
-  Liberation Day: Fourth Statue: Progressive Terran Infantry Weapon
-  Liberation Day: Second Statue: Jackson's Revenge
-  Liberation Day: Special Delivery: Progressive Terran Vehicle Weapon
-  Liberation Day: Third Statue: Psionic Lash (Spectre)
-  Liberation Day: Transport: Progressive Terran Infantry Armor
-  Liberation Day: Victory: Thor
-  Maw of the Void (Terran): Middle Rip Field Generator: Cyclone
-  Maw of the Void (Terran): South Far Prisoners: Progressive Terran Infantry Armor
-  Maw of the Void (Terran): Southeast Rip Field Generator: Viking
-  Maw of the Void (Terran): Stargate Rip Field Generator: Progressive Terran Ship Weapon
-  Maw of the Void (Terran): Victory: Progressive Fast Delivery (Terran)
   Media Blitz (Terran): All Barracks: Progressive Terran Ship Weapon
   Media Blitz (Terran): All Starports: Shaped Hull (Banshee)
   Media Blitz (Terran): Science Facility: Progressive High Impact Payload (Thor)
@@ -373,8 +344,6 @@ Playthrough:
   Outbreak (Terran): North Bar: Lockdown (Ghost)
   Outbreak (Terran): North Infested Command Center: Hammer Securities
   Outbreak (Terran): South Infested Command Center: Graduating Range (Siege Tank)
-  Piercing the Shroud: Holding Cell Relic: Dusk Wings
-  Piercing the Shroud: Victory: Hellion
   Safe Haven (Terran): First Terror Fleet: Progressive Terran Infantry Armor
   Safe Haven (Terran): North Nexus: Progressive Defensive Matrix (Battlecruiser)
   Shatter the Sky (Terran): East Hatchery: Progressive Terran Infantry Weapon
@@ -392,21 +361,9 @@ Playthrough:
   The Dig (Terran): Door Outer Layer: Combat Shield (Marine)
   The Dig (Terran): Eastern Protoss Base: Devil Dogs
   The Dig (Terran): Right Ground Relic: Progressive Regenerative Bio-Steel (Terran)
-  The Great Train Robbery (Terran): 2 Trains Destroyed: Hive Mind Emulator
-  The Great Train Robbery (Terran): 4 Trains Destroyed: Progressive Transport Hook (Siege Tank)
-  The Great Train Robbery (Terran): 6 Trains Destroyed: Progressive Terran Ship Armor
-  The Great Train Robbery (Terran): Flawless: Progressive High Impact Payload (Thor)
-  The Great Train Robbery (Terran): North Diamondback: Targeting Optics (Cyclone)
-  The Great Train Robbery (Terran): Southeast Diamondback: Flechette Missiles (Valkyrie)
-  The Great Train Robbery (Terran): Southwest Diamondback: Progressive Regenerative Bio-Steel (Terran)
-  The Great Train Robbery (Terran): Victory: Progressive Terran Infantry Weapon
   The Moebius Factor (Terran): Alive Inside Rescue: Juggernaut Plating (Firebat)
   The Moebius Factor (Terran): Nydus Roof Rescue: Jotun
   The Moebius Factor (Terran): Victory: Automated Refinery (Terran)
-  The Outlaws (Terran): Bunker: Bunker
-  The Outlaws (Terran): North Resource Pickups: Brynhilds
-  The Outlaws (Terran): Rebel Base: MULE (Command Center)
-  The Outlaws (Terran): Victory: Progressive Terran Vehicle Armor
   Welcome to the Jungle (Terran): Close Relic: Vulture
   Welcome to the Jungle (Terran): Middle Base: Hel's Angels
   Welcome to the Jungle (Terran): No Terrazine Nodes Sealed: Demolition Payload (Widow Mine)
@@ -419,4 +376,49 @@ Playthrough:
   Zero Hour (Terran): Second Hatchery: Progressive Terran Ship Weapon
   Zero Hour (Terran): Third Hatchery: Laser Targeting System (Marine)
   Zero Hour (Terran): Victory: Progressive Defensive Matrix (Battlecruiser)
+}
+2: {
+  Beat Engine of Destruction (Terran): Beat Engine of Destruction (Terran)
+  Beat Liberation Day: Beat Liberation Day
+  Beat Maw of the Void (Terran): Beat Maw of the Void (Terran)
+  Beat Piercing the Shroud: Beat Piercing the Shroud
+  Beat The Great Train Robbery (Terran): Beat The Great Train Robbery (Terran)
+  Beat The Outlaws (Terran): Beat The Outlaws (Terran)
+  Cutthroat (Terran): Mira Han: Resource Efficiency (Reaper)
+  Cutthroat (Terran): North Command Center: Liberator
+  Cutthroat (Terran): North Relic: Winged Nightmares
+  Cutthroat (Terran): Southwest Relic: Valkyrie
+  Engine of Destruction (Terran): Lab Devourer: Progressive Regenerative Bio-Steel (Terran)
+  Engine of Destruction (Terran): Loki: Spartan Company
+  Engine of Destruction (Terran): North Devourer: Enhanced Cluster Launchers (Valkyrie)
+  Engine of Destruction (Terran): Northeast Base: Marine
+  Engine of Destruction (Terran): Northwest Base: Progressive Terran Ship Armor
+  Engine of Destruction (Terran): Odin: Battlecruiser
+  Engine of Destruction (Terran): Southeast Devourer: Hunter-Seeker Weapon (Raven)
+  Evacuation (Terran): West Chrysalis: Advanced Laser Technology (Wraith)
+  Liberation Day: Fourth Statue: Progressive Terran Infantry Weapon
+  Liberation Day: Second Statue: Jackson's Revenge
+  Liberation Day: Special Delivery: Progressive Terran Vehicle Weapon
+  Liberation Day: Third Statue: Psionic Lash (Spectre)
+  Liberation Day: Transport: Progressive Terran Infantry Armor
+  Liberation Day: Victory: Thor
+  Maw of the Void (Terran): Middle Rip Field Generator: Cyclone
+  Maw of the Void (Terran): South Far Prisoners: Progressive Terran Infantry Armor
+  Maw of the Void (Terran): Southeast Rip Field Generator: Viking
+  Maw of the Void (Terran): Stargate Rip Field Generator: Progressive Terran Ship Weapon
+  Maw of the Void (Terran): Victory: Progressive Fast Delivery (Terran)
+  Piercing the Shroud: Holding Cell Relic: Dusk Wings
+  Piercing the Shroud: Victory: Hellion
+  The Great Train Robbery (Terran): 2 Trains Destroyed: Hive Mind Emulator
+  The Great Train Robbery (Terran): 4 Trains Destroyed: Progressive Transport Hook (Siege Tank)
+  The Great Train Robbery (Terran): 6 Trains Destroyed: Progressive Terran Ship Armor
+  The Great Train Robbery (Terran): Flawless: Progressive High Impact Payload (Thor)
+  The Great Train Robbery (Terran): North Diamondback: Targeting Optics (Cyclone)
+  The Great Train Robbery (Terran): Southeast Diamondback: Flechette Missiles (Valkyrie)
+  The Great Train Robbery (Terran): Southwest Diamondback: Progressive Regenerative Bio-Steel (Terran)
+  The Great Train Robbery (Terran): Victory: Progressive Terran Infantry Weapon
+  The Outlaws (Terran): Bunker: Bunker
+  The Outlaws (Terran): North Resource Pickups: Brynhilds
+  The Outlaws (Terran): Rebel Base: MULE (Command Center)
+  The Outlaws (Terran): Victory: Progressive Terran Vehicle Armor
 }

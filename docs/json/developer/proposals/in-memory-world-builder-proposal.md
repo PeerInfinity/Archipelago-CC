@@ -8,7 +8,7 @@ This proposal describes a system to enable the Rule Builder's "explain" feature 
 
 The Rule Builder's explain feature provides detailed rule explanations via `explain_json()` and `explain_str()` methods on Rule objects. However, this only works for worlds that use Rule Builder natively. For other worlds:
 
-1. The JSON exporter captures rules as CC format JSON from Python lambda functions
+1. The JSON exporter captures rules as AST format JSON from Python lambda functions
 2. This JSON accurately represents rules at the specific moment of export
 3. The Universal Tracker cannot explain these rules because they're plain lambda functions
 
@@ -27,7 +27,7 @@ JSON Export
 │                                                              │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐  │
 │  │ JSON Loader │ -> │ Extractor   │ -> │ Rule Parser     │  │
-│  │             │    │ (existing)  │    │ (cc_format.py)  │  │
+│  │             │    │ (existing)  │    │ (ast_format.py) │  │
 │  └─────────────┘    └─────────────┘    └─────────────────┘  │
 │                                                ↓             │
 │                                    ┌─────────────────────┐  │
@@ -133,9 +133,9 @@ class MinimalWorldContext:
         return self._unknown_rules.copy()
 ```
 
-#### 3. Enhanced cc_format Parser
+#### 3. Enhanced ast_format Parser
 
-Update `rule_builder/cc_format.py` to support unknown/partial resolution:
+Update `rule_builder/ast_format.py` to support unknown/partial resolution:
 
 ```python
 class UnknownRule(Rule):
@@ -155,8 +155,8 @@ class UnknownRule(Rule):
     def explain_str(self, state) -> str:
         return f"[Unknown: {self.reason}]"
 
-def parse_cc_rule(data: dict, context: MinimalWorldContext) -> Rule:
-    """Parse CC format JSON to Rule object.
+def parse_ast_rule(data: dict, context: MinimalWorldContext) -> Rule:
+    """Parse AST format JSON to Rule object.
 
     Returns UnknownRule for unsupported rule types instead of
     defaulting to True.
@@ -276,11 +276,11 @@ class MinimalWorldContext:
 ### Phase 1: Core Infrastructure
 - Create `JSONWorldBuilder` class
 - Create `MinimalWorldContext` class
-- Add `UnknownRule` class to cc_format.py
+- Add `UnknownRule` class to ast_format.py
 - Add schema version to exports
 
 ### Phase 2: Rule Resolution
-- Update cc_format parser to use MinimalWorldContext
+- Update ast_format parser to use MinimalWorldContext
 - Implement unknown rule tracking
 - Add helper function resolution stubs
 
@@ -348,7 +348,7 @@ class RuleCache:
 ## References
 
 - `rule_builder/rules.py` - Rule Builder implementation
-- `rule_builder/cc_format.py` - CC format JSON parser
+- `rule_builder/ast_format.py` - AST format JSON parser
 - `world_generator/extractors.py` - JSON extraction logic
 - `worlds/tracker/TrackerClient.py` - Tracker explain command
 - `frontend/modules/pathAnalyzer/pathAnalyzerLogic.js` - Frontend path analyzer

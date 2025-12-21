@@ -137,18 +137,32 @@ Playthrough:
 
 }
 1: {
-  Alpha Cache 13: Shield Boost
   Alpha Cache 3: PSI Key 3
-  Ataraxia Defeat: Ataraxia Defeated
+  PSI Key Storage 1: Circuit Booster
+}
+2: {
+  Meridian Defeat: Meridian Defeated
+}
+3: {
   Beta Cache 8: PSI Key 2
   Gamma Cache 12: Dodge Enhancer
-  Gamma Cache 18: PSI Key 1
-  Meridian Defeat: Meridian Defeated
-  Merodach Defeat: Merodach Defeated
-  PSI Key Storage 1: Circuit Booster
-  Place of Power: Cursed Seal
   Reward Chest 8: Metabolism
+}
+4: {
+  Ataraxia Defeat: Ataraxia Defeated
+}
+5: {
+  Alpha Cache 13: Shield Boost
+  Gamma Cache 18: PSI Key 1
+}
+6: {
+  Merodach Defeat: Merodach Defeated
+}
+7: {
+  Place of Power: Cursed Seal
   The Last Place You'll Look: Agate Knife
+}
+8: {
   Wervyn Anixil: Victory
   Wervyn Anixil?: Full Victory
 }

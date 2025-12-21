@@ -526,8 +526,8 @@ Act Completion (The Illness has Spread)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread
 Act Completion (The Lava Cake)
         Menu -> Save File -> Spaceship
@@ -594,7 +594,9 @@ Act Completion (Time Rift - The Twilight Bell)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Time Rift - Bazaar Portal - Entrance 2
+   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Golden Vault -> Time Rift - Bazaar Portal - Entrance 7
    =>   Time Rift - The Twilight Bell
 Act Completion (Time Rift - Village)
         Menu -> Save File -> Spaceship
@@ -616,8 +618,8 @@ Act Completion (Train Rush)
 Act Completion (Welcome to Mafia Town)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Down with the Mafia! -> Subcon Forest - Finale: Connection 4
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
    =>   Welcome to Mafia Town
 Act Completion (Your Contract has Expired)
         Menu -> Save File -> Spaceship
@@ -627,30 +629,21 @@ Act Completion (Your Contract has Expired)
    =>   Your Contract has Expired - Post Fight
 Alpine Skyline (Rift) - Page: Below Aqueduct
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Lonely Birdhouse Top
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Alpine Skyline - Ember Summit
         Menu -> Save File -> Spaceship
@@ -658,8 +651,8 @@ Alpine Skyline - Ember Summit
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Goat Village: Below Hookpoint
@@ -668,8 +661,8 @@ Alpine Skyline - Goat Village: Below Hookpoint
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Goat Village: Hidden Branch
@@ -678,8 +671,8 @@ Alpine Skyline - Goat Village: Hidden Branch
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Mystifying Time Mesa: Zipline
@@ -1016,15 +1009,13 @@ Mafia of Cooks - Page: Below Dock
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
    =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Down with the Mafia! -> Subcon Forest - Finale: Connection 4
-   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Down with the Mafia! -> Time Rift - Mafia of Cooks Portal - Entrance 4
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
    =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Down with the Mafia! -> Subcon Forest - Finale: Connection 4
-   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Down with the Mafia! -> Time Rift - Mafia of Cooks Portal - Entrance 4
    =>   Time Rift - Mafia of Cooks
 Murder on the Owl Express - Cafeteria
         Menu -> Save File -> Spaceship
@@ -1061,45 +1052,39 @@ Queen Vanessa's Manor - Cellar
    =>   Queen Vanessa's Manor
 Sleepy Subcon - Page: Behind 3rd Rift Gate
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Time Rift - Sleepy Subcon Portal - Entrance 3
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Behind Entrance Area
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Time Rift - Sleepy Subcon Portal - Entrance 3
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Frozen Tree
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Time Rift - Sleepy Subcon Portal - Entrance 3
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Rotating Platform
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Time Rift - Sleepy Subcon Portal - Entrance 3
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Secret Library
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Time Rift - Sleepy Subcon Portal - Entrance 3
    =>   Time Rift - Sleepy Subcon
 Sleepy Subcon - Page: Wrecked Treehouse
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Time Rift - Sleepy Subcon Portal - Entrance 3
    =>   Time Rift - Sleepy Subcon
 Snatcher's Contract - Queen Vanessa's Manor
         Menu -> Save File -> Spaceship
@@ -1262,8 +1247,8 @@ TIHS Access
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
-   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
+   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
+   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
    =>   The Illness has Spread
 TOD Access
         Menu -> Save File -> Spaceship

@@ -725,19 +725,14 @@ Playthrough:
   Church Black Paint Can: Barn Key
   Church Scraps 11: Timed Dynamite
   East House Scraps 7: Breaker
-  Final Boss: Victory
   Haunted House Scraps 4: Jar of Pickles
   Junkyard Area Scraps 9: Page Drawing
   Lighthouse Breaker 2: Bug Spray
   Lighthouse Scraps 4: Mountain Ruin Key
   Military Base Scraps 5: Box of Rockets
-  Mine Shaft Chest Scraps 4: Red Egg
-  Mine Shaft Chest Scraps 5: Page Drawing
   Mob Camp Scraps 4: Candice's Key
   Morse Bunker Scraps 3: Employment Contracts
-  Mountain Ruin Inside Scraps 11: Remote Explosive x8
   Mountain Ruin Outside Scraps 13: Mob Camp Key
-  Museum Paul Mission End: Lockpicks
   North Beach Scraps 9: South Mine Key
   Pickle Val Scraps 7: Breaker
   Prism Temple Scraps 11: North Mine Key
@@ -745,14 +740,27 @@ Playthrough:
   Rockets Testing Ground Scraps 7: Broken Bob
   Rockets Testing Ground Scraps 9: Breaker
   Shrine Near Temple Scraps 1: Temple Key
-  South House Chest Scraps 6: Journal
   South House Scraps 3: Blue Egg
   Swamp Edges Scraps 21: Page Drawing
   Swamp Edges Scraps 7: Page Drawing
   Towers Scraps 18: Breaker
   Towers Scraps 8: Dead Fish
-  Tutorial House Scraps 3: Page Drawing
-  Tutorial House Scraps 5: Blue Box
   West Beach Scraps 3: Green Egg
   West Cottage Scraps 4: Page Drawing
+}
+2: {
+  Mountain Ruin Inside Scraps 11: Remote Explosive x8
+  Tutorial House Scraps 3: Page Drawing
+  Tutorial House Scraps 5: Blue Box
+}
+3: {
+  Museum Paul Mission End: Lockpicks
+}
+4: {
+  Mine Shaft Chest Scraps 4: Red Egg
+  Mine Shaft Chest Scraps 5: Page Drawing
+  South House Chest Scraps 6: Journal
+}
+5: {
+  Final Boss: Victory
 }

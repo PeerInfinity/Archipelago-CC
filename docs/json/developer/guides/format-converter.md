@@ -165,7 +165,7 @@ optional arguments:
 ### Examples
 
 ```bash
-# Convert a Rule Builder file to Archipelago-CC format
+# Convert a Rule Builder file to AST format
 python -m exporter.converter rules_rb.json -o rules_cc.json --format cc
 
 # Convert with verbose output to see all warnings
@@ -262,7 +262,7 @@ Both converters preserve metadata to enable lossless round-trip conversions wher
 # Original Rule Builder rule
 original = {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
 
-# Convert to CC format
+# Convert to AST format
 cc_rule, _ = convert_rule_builder_to_cc(original)
 # {"type": "item_check", "item": "Sword"}
 
@@ -318,7 +318,7 @@ cc_restored, _ = convert_rule_builder_to_cc(rb_result)
 
 ## Option Filters
 
-Rule Builder supports `options` arrays for conditional rule application. These are converted to/from `conditional` rules in CC format.
+Rule Builder supports `options` arrays for conditional rule application. These are converted to/from `conditional` rules in AST format.
 
 ### Rule Builder with Options
 
@@ -332,7 +332,7 @@ Rule Builder supports `options` arrays for conditional rule application. These a
 }
 ```
 
-### Converted to CC Format
+### Converted to AST Format
 
 ```json
 {

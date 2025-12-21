@@ -64,11 +64,19 @@ Playthrough:
 
 }
 1: {
-  Boss: Ancient key
-  Chest access 11-15: Progressive chest access
-  Chest access 16-20: Progressive chest access
-  Chest access 21-25: Progressive chest access
   Chest access 6-10: Progressive chest access
+}
+2: {
+  Chest access 11-15: Progressive chest access
+}
+3: {
+  Chest access 16-20: Progressive chest access
+}
+4: {
+  Chest access 21-25: Progressive chest access
+}
+5: {
+  Boss: Ancient key
   Final Floor reached: Final Floor access
   Iris treasure 1: Iris sword
   Iris treasure 2: Iris shield

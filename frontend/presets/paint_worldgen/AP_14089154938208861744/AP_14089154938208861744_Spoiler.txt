@@ -170,30 +170,54 @@ Playthrough:
   Progressive Color Depth (Red)
 }
 1: {
-  Similarity: 13.0%: Pick Color
-  Similarity: 16.0%: Progressive Color Depth (Red)
-  Similarity: 17.0%: Progressive Color Depth (Red)
-  Similarity: 18.0%: Progressive Color Depth (Blue)
-  Similarity: 19.0%: Progressive Canvas Width
-  Similarity: 22.0%: Progressive Color Depth (Blue)
-  Similarity: 25.0%: Progressive Canvas Height
-  Similarity: 28.0%: Progressive Canvas Height
-  Similarity: 29.0%: Progressive Canvas Height
   Similarity: 3.0%: Progressive Color Depth (Green)
   Similarity: 4.0%: Progressive Color Depth (Blue)
+  Similarity: 9.0%: Progressive Canvas Width
+}
+2: {
+  Similarity: 13.0%: Pick Color
+  Similarity: 16.0%: Progressive Color Depth (Red)
+}
+3: {
+  Similarity: 17.0%: Progressive Color Depth (Red)
+  Similarity: 18.0%: Progressive Color Depth (Blue)
+}
+4: {
+  Similarity: 19.0%: Progressive Canvas Width
+}
+5: {
+  Similarity: 22.0%: Progressive Color Depth (Blue)
+}
+6: {
+  Similarity: 25.0%: Progressive Canvas Height
+}
+7: {
+  Similarity: 28.0%: Progressive Canvas Height
+  Similarity: 29.0%: Progressive Canvas Height
+}
+8: {
   Similarity: 47.0%: Progressive Color Depth (Green)
+}
+9: {
   Similarity: 53.0%: Progressive Color Depth (Red)
   Similarity: 53.5%: Progressive Canvas Width
+}
+10: {
   Similarity: 58.0%: Progressive Canvas Width
   Similarity: 60.0%: Progressive Color Depth (Green)
+}
+11: {
   Similarity: 67.0%: Progressive Color Depth (Red)
   Similarity: 69.0%: Progressive Color Depth (Red)
   Similarity: 70.25%: Progressive Color Depth (Green)
   Similarity: 73.0%: Progressive Color Depth (Red)
   Similarity: 74.5%: Progressive Color Depth (Green)
   Similarity: 75.25%: Progressive Color Depth (Green)
+}
+12: {
   Similarity: 76.25%: Progressive Color Depth (Blue)
   Similarity: 76.5%: Progressive Color Depth (Blue)
+}
+13: {
   Similarity: 78.25%: Progressive Color Depth (Blue)
-  Similarity: 9.0%: Progressive Canvas Width
 }

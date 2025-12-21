@@ -17,6 +17,8 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Dk Coins For Gyrocopter:         30
+Krematoa Bonus Coin Cost:        15
 
 
 Locations:
@@ -210,25 +212,51 @@ Playthrough:
 1: {
   Arich's Ambush: DK Coin
   Arich's Hoard: DK Coin
+  Barrel Shield Bust-Up - DK Coin: DK Coin
+  Barrel Shield Bust-Up - Flag: Bonus Coin
+  Belcha's Barn: Bonus Coin
+  Bobbing Barrel Brawl - Bonus 2: Bonus Coin
+  Bobbing Barrel Brawl - DK Coin: DK Coin
+  Bobbing Barrel Brawl - Flag: Bonus Coin
+  Doorstop Dash - Bonus 2: Bonus Coin
+  Doorstop Dash - DK Coin: Bonus Coin
+  Doorstop Dash - Flag: DK Coin
+  Lakeside Limbo - Bonus 2: DK Coin
+  Lakeside Limbo - DK Coin: DK Coin
+  Murky Mill - Bonus 2: Bonus Coin
+  Murky Mill - Flag: Bonus Coin
+  Riverside Race - Bonus 2: DK Coin
+  Riverside Race - DK Coin: Bonus Coin
+  Skidda's Row - Bonus 1: DK Coin
+  Skidda's Row - Bonus 2: Bonus Coin
+  Skidda's Row - DK Coin: Bonus Coin
+  Skidda's Row - Flag: Bonus Coin
+  Springin' Spiders - Bonus 1: DK Coin
+  Springin' Spiders - Bonus 2: Bonus Coin
+  Springin' Spiders - Flag: Bonus Coin
+  Squeals On Wheels - Bonus 1: Bonus Coin
+  Squeals On Wheels - Bonus 2: Bonus Coin
+  Squeals On Wheels - DK Coin: Progressive Boat Upgrade
+  Squeals On Wheels - Flag: Progressive Boat Upgrade
+  Tidal Trouble - Bonus 1: DK Coin
+  Tidal Trouble - Bonus 2: Progressive Boat Upgrade
+  Tidal Trouble - DK Coin: Bonus Coin
+  Tidal Trouble - Flag: Bonus Coin
+}
+2: {
   Barbos's Barrier: DK Coin
   Barrel Drop Bounce - Bonus 2: DK Coin
   Barrel Drop Bounce - DK Coin: DK Coin
   Barrel Drop Bounce - Flag: Bonus Coin
-  Barrel Shield Bust-Up - DK Coin: DK Coin
-  Barrel Shield Bust-Up - Flag: Bonus Coin
   Bazza's Blockade - Bonus 2: DK Coin
   Bazza's Blockade - DK Coin: Bonus Coin
   Bazza's Blockade - Flag: Krematoa Cog
-  Belcha's Barn: Bonus Coin
   Belcha's Burrow: Bonus Coin
   Blazing Bazukas - Bonus 1: DK Coin
   Blazing Bazukas - Bonus 2: Krematoa Cog
   Blazing Bazukas - DK Coin: DK Coin
   Blazing Bazukas - Flag: Bonus Coin
   Bleak's House: DK Coin
-  Bobbing Barrel Brawl - Bonus 2: Bonus Coin
-  Bobbing Barrel Brawl - DK Coin: DK Coin
-  Bobbing Barrel Brawl - Flag: Bonus Coin
   Bounty Bay: Bonus Coin
   Buzzer Barrage - Bonus 1: Bonus Coin
   Buzzer Barrage - Bonus 2: Bonus Coin
@@ -244,9 +272,6 @@ Playthrough:
   Criss Kross Cliffs - Flag: Bonus Coin
   Demolition Drain-Pipe - Bonus 1: Bonus Coin
   Demolition Drain-Pipe - DK Coin: Bonus Coin
-  Doorstop Dash - Bonus 2: Bonus Coin
-  Doorstop Dash - DK Coin: Bonus Coin
-  Doorstop Dash - Flag: DK Coin
   Fire-Ball Frenzy - Bonus 2: Bonus Coin
   Fire-Ball Frenzy - DK Coin: Bonus Coin
   Fish Food Frenzy - Bonus 1: Bonus Coin
@@ -258,7 +283,6 @@ Playthrough:
   Glacial Grotto: DK Coin
   Hill-Top Hoard: DK Coin
   KAOS Karnage: DK Coin
-  Kastle KAOS: Donkey Kong
   Knautilus: DK Coin
   Koindozer Klamber - Bonus 1: DK Coin
   Koindozer Klamber - Bonus 2: DK Coin
@@ -281,8 +305,6 @@ Playthrough:
   Krevice Kreepers - Bonus 1: Bonus Coin
   Krevice Kreepers - Bonus 2: DK Coin
   Krevice Kreepers - Flag: Bonus Coin
-  Lakeside Limbo - Bonus 2: DK Coin
-  Lakeside Limbo - DK Coin: DK Coin
   Lemguin Lunge - DK Coin: Bonus Coin
   Lemguin Lunge - Flag: DK Coin
   Lightning Lookout - Bonus 1: Bonus Coin
@@ -291,8 +313,6 @@ Playthrough:
   Low-G Labyrinth - Bonus 1: Bonus Coin
   Low-G Labyrinth - DK Coin: Bonus Coin
   Low-G Labyrinth - Flag: DK Coin
-  Murky Mill - Bonus 2: Bonus Coin
-  Murky Mill - Flag: Bonus Coin
   Poisonous Pipeline - Bonus 1: DK Coin
   Poisonous Pipeline - Bonus 2: Bonus Coin
   Poisonous Pipeline - Flag: Bonus Coin
@@ -303,24 +323,11 @@ Playthrough:
   Ripsaw Rage - Bonus 1: Bonus Coin
   Ripsaw Rage - Bonus 2: Bonus Coin
   Ripsaw Rage - Flag: Bonus Coin
-  Riverside Race - Bonus 2: DK Coin
-  Riverside Race - DK Coin: Bonus Coin
   Rocket Barrel Ride - Bonus 1: Bonus Coin
   Rocket Rush - Flag: Krematoa Cog
   Ropey Rumpus - Bonus 2: DK Coin
   Ropey Rumpus - Flag: Bonus Coin
   Sewer Stockpile: DK Coin
-  Skidda's Row - Bonus 1: DK Coin
-  Skidda's Row - Bonus 2: Bonus Coin
-  Skidda's Row - DK Coin: Bonus Coin
-  Skidda's Row - Flag: Bonus Coin
-  Springin' Spiders - Bonus 1: DK Coin
-  Springin' Spiders - Bonus 2: Bonus Coin
-  Springin' Spiders - Flag: Bonus Coin
-  Squeals On Wheels - Bonus 1: Bonus Coin
-  Squeals On Wheels - Bonus 2: Bonus Coin
-  Squeals On Wheels - DK Coin: Progressive Boat Upgrade
-  Squeals On Wheels - Flag: Progressive Boat Upgrade
   Squirt's Showdown: DK Coin
   Stampede Sprint - Bonus 3: Bonus Coin
   Stampede Sprint - DK Coin: DK Coin
@@ -333,14 +340,13 @@ Playthrough:
   Tearaway Toboggan - Bonus 1: Bonus Coin
   Tearaway Toboggan - Bonus 2: DK Coin
   Tearaway Toboggan - DK Coin: Bonus Coin
-  Tidal Trouble - Bonus 1: DK Coin
-  Tidal Trouble - Bonus 2: Progressive Boat Upgrade
-  Tidal Trouble - DK Coin: Bonus Coin
-  Tidal Trouble - Flag: Bonus Coin
   Tracker Barrel Trek - Bonus 2: Bonus Coin
   Tracker Barrel Trek - DK Coin: Bonus Coin
   Tyrant Twin Tussle - Bonus 1: DK Coin
   Tyrant Twin Tussle - Bonus 2: Bonus Coin
   Tyrant Twin Tussle - Bonus 3: Bonus Coin
   Undercover Cove: DK Coin
+}
+3: {
+  Kastle KAOS: Donkey Kong
 }

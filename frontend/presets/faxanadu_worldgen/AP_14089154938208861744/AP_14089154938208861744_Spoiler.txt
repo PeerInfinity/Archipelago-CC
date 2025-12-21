@@ -142,25 +142,20 @@ Playthrough:
 
 }
 1: {
-  Apolune Deluge: Red Potion
-  Apolune Hand Dagger: Red Potion
-  Branches Hidden Hourglass: Deluge
-  Branches Hidden Ointment: Red Potion
-  Branches Poison: Red Potion
-  Conflate Giant Blade: Red Potion
-  Conflate Guru: Progressive Sword
-  Conflate Magic Shield: Progressive Sword
-  Conflate Red Potion: Red Potion
-  Daybreak Giant Blade: Red Potion
-  Daybreak Key Queen: Demons Ring
-  Daybreak Red Potion: Red Potion
-  Eolis Elixir: Black Onyx
   Eolis Guru: Progressive Sword
+}
+2: {
+  Eolis Elixir: Black Onyx
   Eolis Hand Dagger: Key King
   Eolis Red Potion: Key Jack
-  Evil Fortress Poison 2: Red Potion
-  Evil Fortress Poison 3: Progressive Armor
-  Evil One: Killed Evil One
+}
+3: {
+  Apolune Deluge: Red Potion
+  Apolune Hand Dagger: Red Potion
+  Path to Apolune Magic Shield: Unlock Wingboots
+  Tower of Trunk Boss Mattock: Mattock
+}
+4: {
   Forepaw Key Jack: Red Potion
   Forepaw Key Queen: Red Potion
   Forepaw Long Sword: Ring of Ruby
@@ -168,37 +163,60 @@ Playthrough:
   Forepaw Small Shield: Key Queen
   Forepaw Studded Mail: Red Potion
   Forepaw Wingboots: Red Potion
-  Fraternal Castle Guru: Red Potion
-  Fraternal Castle Poison 1: Red Potion
-  Fraternal Castle Shop Hidden Ointment: Red Potion
+  Sky Spring: Sky Spring Flow
+  Tower of Fortress Elixir: Red Potion
+  Tower of Fortress Poison 1: Key Joker
+  Tower of Fortress Poison 2: Spring Elixir
+  Trunk Hidden Ointment: Red Potion
+  Trunk Hidden Red Potion: Red Potion
+  Trunk Red Potion: Red Potion
+}
+5: {
   Joker Spring: Joker Spring Flow
+  Tower of Fortress Guru: Progressive Sword
+  Tower of Fortress Spring: Tower of Fortress Spring Flow
+}
+6: {
   Mascon Key Jack: Key Ace
   Mascon Large Shield: Red Potion
   Mascon Mattock: Red Potion
   Mist Hidden Poison 1: Red Potion
   Mist Hidden Poison 2: Red Potion
-  Misty Doctor Office: Red Potion
-  Path to Apolune Magic Shield: Unlock Wingboots
-  Path to Daybreak Hidden Wingboots 1: Red Potion
-  Sky Spring: Sky Spring Flow
-  Tower of Fortress Elixir: Red Potion
-  Tower of Fortress Guru: Progressive Sword
-  Tower of Fortress Poison 1: Key Joker
-  Tower of Fortress Poison 2: Spring Elixir
-  Tower of Fortress Spring: Tower of Fortress Spring Flow
   Tower of Mist Black Onyx: Red Potion
   Tower of Mist Elixir: Red Potion
   Tower of Mist Hidden Ointment: Red Potion
   Tower of Red Potion: Ring of Dworf
   Tower of Suffer Hidden Wingboots: Progressive Armor
   Tower of Suffer Pendant: Red Potion
-  Tower of Trunk Boss Mattock: Mattock
-  Trunk Hidden Ointment: Red Potion
-  Trunk Hidden Red Potion: Red Potion
-  Trunk Red Potion: Red Potion
   Useless Tower: Red Potion
   Victim Full Plate: Red Potion
   Victim Key Queen: Progressive Armor
   Victim Red Potion: Red Potion
   Victim Tavern: Red Potion
+}
+7: {
+  Branches Hidden Hourglass: Deluge
+  Branches Hidden Ointment: Red Potion
+  Branches Poison: Red Potion
+  Conflate Giant Blade: Red Potion
+  Conflate Magic Shield: Progressive Sword
+  Conflate Red Potion: Red Potion
+  Daybreak Giant Blade: Red Potion
+  Daybreak Key Queen: Demons Ring
+  Daybreak Red Potion: Red Potion
+  Fraternal Castle Poison 1: Red Potion
+  Path to Daybreak Hidden Wingboots 1: Red Potion
+}
+8: {
+  Evil Fortress Poison 2: Red Potion
+  Evil Fortress Poison 3: Progressive Armor
+  Evil One: Killed Evil One
+  Fraternal Castle Shop Hidden Ointment: Red Potion
+  Misty Doctor Office: Red Potion
+}
+9: {
+  Conflate Guru: Progressive Sword
+}
+10: {
+  Fraternal Castle Guru: Red Potion
 }

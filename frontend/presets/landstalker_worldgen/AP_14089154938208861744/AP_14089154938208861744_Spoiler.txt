@@ -326,7 +326,57 @@ Playthrough:
 
 }
 1: {
+  Gumi: Inn item #1: EkeEke
+  Gumi: chest on top of bed in house: Safety Pass
+  Gumi: item on furniture in elder's house: Life Stock
+  Massan: Shop item #1: EkeEke
+  Massan: Shop item #2: Lantern
+  Massan: Shop item #3: Gola's Horn
+  Massan: chest in house farthest from elder house: Lithograph
+  Massan: chest in house nearest to elder house: Life Stock
+  Massan: chest in middle house: Life Stock
+  Massan: chest triggered by dog statue: Life Stock
+  Route between Gumi and Ryuma: Swordsman Kado reward: Life Stock
+  Route between Gumi and Ryuma: chest on the way to Swordsman Kado: EkeEke
+  Route between Massan and Gumi: chest on cliff: Life Stock
+  Ryuma: Inn item: EkeEke
+  Ryuma: chest in mayor's house: Life Stock
+  Thieves Hideout: chest under water in entrance room: Casino Ticket
+  Thieves Hideout: left chest in Pockets cell: Life Stock
+  Tibor: left chest on 2 chest group: Life Stock
+  Tibor: reward chest after boss: Buyer Card
+  Tibor: right chest on 2 chest group: EkeEke
+  Waterfall Shrine: chest on right branch of biggest room: Life Stock
+  Waterfall Shrine: upstairs chest: EkeEke
+  event_visited_massan: event_visited_massan
+}
+2: {
   Crypt: reward chest: EkeEke
+  Mercator Dungeon (-1F): chest in Moralis's cell: Life Stock
+  Mercator Dungeon (-1F): right chest in undeground double chest room: EkeEke
+  Mercator Dungeon (4F): chest in topmost tower room: EkeEke
+  Mercator: Arthur reward (in castle throne room): EkeEke
+  Mercator: Shop item #1: EkeEke
+  Mercator: Shop item #5: Life Stock
+  Mercator: Special shop item #1: Red Jewel
+  Mercator: Special shop item #2: EkeEke
+  Mercator: Special shop item #3: Life Stock
+  Mercator: castle kitchen chest: Life Stock
+  Mercator: chest in Greenpea's house: EkeEke
+  Mercator: chest in castle tower (ladder revealed by slashing armor): Life Stock
+  Mercator: falling item in castle court: Einstein Whistle
+  Mercator: hidden casino chest: Life Stock
+  Route between Mercator and Verla: chest near Twinkle village: Life Stock
+  Route between Mercator and Verla: chest on cliff next to blocked cave: EkeEke
+  Route to Mir Tower: chest on cliff accessed by pressing hidden switch: Sun Stone
+  Twinkle Village: first item on ground: Blue Jewel
+  Twinkle Village: second item on ground: EkeEke
+  Twinkle Village: third item on ground: Life Stock
+}
+3: {
+  event_visited_ryuma_lighthouse_repaired: event_visited_ryuma_lighthouse_repaired
+}
+4: {
   Destel Well (1F): chest on small stairs: Life Stock
   Destel Well (2F): chest in falling platforms room: Axe Magic
   Destel Well (2F): chest in ghosts room: EkeEke
@@ -338,7 +388,31 @@ Playthrough:
   Destel Well (4F): top chest in room before boss: Life Stock
   Destel Well: item on platform revealed after beating Quake: Purple Jewel
   Destel: Inn item: EkeEke
-  End: King Nole's Treasure
+  Mercator: Docks shop item #1: EkeEke
+  Mercator: Docks shop item #2: Life Stock
+  Route after Destel: chest on tiny cliff: EkeEke
+  Route from Verla to Destel: Kelketo shop item #2: EkeEke
+  Route from Verla to Destel: Kelketo shop item #3: Gola's Nail
+  Route from Verla to Destel: Kelketo shop item #4: Life Stock
+  Route to Destel: hidden chest in map right before Destel: Life Stock
+  Route to Lake Shrine: Greedly's shop item #1: EkeEke
+  Route to Lake Shrine: Greedly's shop item #3: Life Stock
+  Route to Lake Shrine: chest on long cliff in crossroads map: EkeEke
+  Route to Lake Shrine: right chest in volcano: Key
+  Verla Mines: Dex reward chest: Life Stock
+  Verla Mines: Slasher reward chest: Garlic
+  Verla Mines: item in the corner of lava filled room: Life Stock
+  Verla Mines: left chest in button room near elevator shaft leading to Marley: Logs
+  Verla Mines: left chest in double chest room near entrance: Life Stock
+  Verla Mines: right chest in button room near elevator shaft leading to Marley: Sword of Gaia
+  Verla Mines: right chest in double chest room near entrance: Life Stock
+  Verla Shore: chest behind cabin: Life Stock
+  Verla Shore: chest on corner cliff after Verla tunnel: Life Stock
+  Verla: Shop item #1: EkeEke
+  Verla: Shop item #4: Life Stock
+  event_visited_verla_mines: event_visited_verla_mines
+}
+5: {
   Greenmaze: Cutter reward for saving Einstein: Life Stock
   Greenmaze: chest between Sunstone and Massan shortcut: Life Stock
   Greenmaze: chest on path to Cutter: Idol Stone
@@ -346,36 +420,6 @@ Playthrough:
   Greenmaze: left chest in elbow cave: Life Stock
   Greenmaze: left chest in hidden room behind waterfall: Life Stock
   Greenmaze: right chest in hidden room behind waterfall: Life Stock
-  Gumi: Inn item #1: EkeEke
-  Gumi: chest on top of bed in house: Safety Pass
-  Gumi: item on furniture in elder's house: Life Stock
-  Kazalt: Shop item #1: EkeEke
-  Kazalt: Shop item #5: Life Stock
-  King Nole's Cave: boulder chase hallway chest: EkeEke
-  King Nole's Cave: chest in crate room: EkeEke
-  King Nole's Cave: chest in isolated room: Life Stock
-  King Nole's Cave: chest in second room: Life Stock
-  King Nole's Cave: first chest in third room: Life Stock
-  King Nole's Labyrinth (-1F): chest in 3-chest dark room (right side): EkeEke
-  King Nole's Labyrinth (-1F): chest in ice shortcut room: Life Stock
-  King Nole's Labyrinth (-1F): item on ground in ninjas room: EkeEke
-  King Nole's Labyrinth (-1F): lower chest in lantern room: Life Stock
-  King Nole's Labyrinth (-2F): Left item dropped by sacred tree: EkeEke
-  King Nole's Labyrinth (-2F): Right item dropped by sacred tree: Life Stock
-  King Nole's Labyrinth (-2F): chest in four buttons room: Life Stock
-  King Nole's Labyrinth (-3F): First item on ground before Firedemon: EkeEke
-  King Nole's Labyrinth (-3F): chest in room after Spinner: EkeEke
-  King Nole's Labyrinth (-3F): chest in room before Miro: Life Stock
-  King Nole's Labyrinth (-3F): item on ground behind waterfall after beating Spinner: EkeEke
-  King Nole's Labyrinth (-3F): item on ground climbing back from Firedemon: Life Stock
-  King Nole's Labyrinth (-3F): reward chest for beating Firedemon: Life Stock
-  King Nole's Labyrinth (-3F): right chest in room before Spinner: EkeEke
-  King Nole's Labyrinth (-3F): second chest before Firedemon: EkeEke
-  King Nole's Labyrinth (0F): chest in exterior room: Garlic
-  King Nole's Labyrinth (0F): chest in spike balls room: Snow Spikes
-  King Nole's Labyrinth (0F): right chest in room after key door: Life Stock
-  King Nole's Palace: chest along central pit: EkeEke
-  King Nole's Palace: chest at entrance: EkeEke
   Lake Shrine (-1F): chest in crate room near green golem spinner: Fireproof
   Lake Shrine (-1F): chest in hallway with hole leading downstairs: Life Stock
   Lake Shrine (-2F): lower chest in throne room: Life Stock
@@ -392,30 +436,47 @@ Playthrough:
   Massan Cave: item on ground in treasure room: Life Stock
   Massan Cave: left chest: EkeEke
   Massan Cave: right chest: EkeEke
+  Mountainous Area cave: item on ground behind hidden path: Life Stock
+  Mountainous Area: Zak reward after fighting: Life Stock
+  Mountainous Area: chest hidden under rocky arch: Life Stock
+  Mountainous Area: chest on right side of map before the bridge: Iron Boots
+  Mountainous Area: left chest in map before Zak arena: Life Stock
+  Mountainous Area: left chest on wall in bridge map: Life Stock
+  Route to Lake Shrine: chest on middle cliff in crossroads map (reached from Mountainous Area): Life Stock
+  Route to Mir Tower: chest behind first sacred tree: Gola's Eye
+  Thieves Hideout (back): chest #1 in boss reward room: EkeEke
+  Thieves Hideout (back): chest #3 in boss reward room: Life Stock
+  Thieves Hideout (back): chest #5 in boss reward room: EkeEke
+  Thieves Hideout (back): chest in falling platforms room: Life Stock
+  Thieves Hideout (back): chest in moving platforms room: EkeEke
+  Thieves Hideout (back): left chest in room before boss: EkeEke
+  Thieves Hideout (back): reward chest after moving balls room: Life Stock
+  Thieves Hideout (back): right chest after teal knight mini-boss: Life Stock
+  Thieves Hideout (back): right chest in room before boss: EkeEke
+  Thieves Hideout (back): second chest in hallway after quick climb trial: EkeEke
+  Verla: Shop item #5 (extra item after saving town): Life Stock
+  Verla: chest in well after beating Marley: EkeEke
+  event_visited_thieves_hideout_post_key: event_visited_thieves_hideout_post_key
+}
+6: {
+  King Nole's Cave: boulder chase hallway chest: EkeEke
+  King Nole's Cave: chest in crate room: EkeEke
+  King Nole's Cave: chest in isolated room: Life Stock
+  King Nole's Cave: chest in second room: Life Stock
+  King Nole's Cave: first chest in third room: Life Stock
+  Ryuma: Mayor's first reward: Life Stock
+  Ryuma: Mayor's second reward: EkeEke
+  Ryuma: Shop item #4: EkeEke
+  Swamp Shrine (0F): chest in left hallway (accessed by falling from upstairs): Armlet
+  Swamp Shrine (0F): chest in room to the right: EkeEke
+  Swamp Shrine (0F): chest in room visible from second entrance: Oracle Stone
+  Swamp Shrine (0F): falling chest after beating orc: Life Stock
+  Swamp Shrine (2F): upper chest in wooden bridges room: EkeEke
+  Swamp Shrine (3F): chest in boss arena: EkeEke
+  event_visited_swamp_shrine: event_visited_swamp_shrine
+}
+7: {
   Massan: Elder reward after freeing Fara in Swamp Shrine: EkeEke
-  Massan: Shop item #1: EkeEke
-  Massan: Shop item #2: Lantern
-  Massan: Shop item #3: Gola's Horn
-  Massan: chest in house farthest from elder house: Lithograph
-  Massan: chest in house nearest to elder house: Life Stock
-  Massan: chest in middle house: Life Stock
-  Massan: chest triggered by dog statue: Life Stock
-  Mercator Dungeon (-1F): chest in Moralis's cell: Life Stock
-  Mercator Dungeon (-1F): right chest in undeground double chest room: EkeEke
-  Mercator Dungeon (4F): chest in topmost tower room: EkeEke
-  Mercator: Arthur reward (in castle throne room): EkeEke
-  Mercator: Docks shop item #1: EkeEke
-  Mercator: Docks shop item #2: Life Stock
-  Mercator: Shop item #1: EkeEke
-  Mercator: Shop item #5: Life Stock
-  Mercator: Special shop item #1: Red Jewel
-  Mercator: Special shop item #2: EkeEke
-  Mercator: Special shop item #3: Life Stock
-  Mercator: castle kitchen chest: Life Stock
-  Mercator: chest in Greenpea's house: EkeEke
-  Mercator: chest in castle tower (ladder revealed by slashing armor): Life Stock
-  Mercator: falling item in castle court: Einstein Whistle
-  Mercator: hidden casino chest: Life Stock
   Mir Tower: Priest room item #2: Yellow Jewel
   Mir Tower: Priest room item #3: Life Stock
   Mir Tower: chest after mimic room: EkeEke
@@ -428,77 +489,34 @@ Playthrough:
   Mir Tower: left chest in reward room: Life Stock
   Mir Tower: mimic room chest #4: EkeEke
   Mir Tower: reward chest: Gola's Fang
-  Mountainous Area cave: item on ground behind hidden path: Life Stock
-  Mountainous Area: Zak reward after fighting: Life Stock
-  Mountainous Area: chest hidden under rocky arch: Life Stock
-  Mountainous Area: chest on right side of map before the bridge: Iron Boots
-  Mountainous Area: left chest in map before Zak arena: Life Stock
-  Mountainous Area: left chest on wall in bridge map: Life Stock
-  Route after Destel: chest on tiny cliff: EkeEke
-  Route between Gumi and Ryuma: Swordsman Kado reward: Life Stock
-  Route between Gumi and Ryuma: chest on the way to Swordsman Kado: EkeEke
-  Route between Massan and Gumi: chest on cliff: Life Stock
-  Route between Mercator and Verla: chest near Twinkle village: Life Stock
-  Route between Mercator and Verla: chest on cliff next to blocked cave: EkeEke
-  Route from Verla to Destel: Kelketo shop item #2: EkeEke
-  Route from Verla to Destel: Kelketo shop item #3: Gola's Nail
-  Route from Verla to Destel: Kelketo shop item #4: Life Stock
-  Route to Destel: hidden chest in map right before Destel: Life Stock
-  Route to Lake Shrine: Greedly's shop item #1: EkeEke
-  Route to Lake Shrine: Greedly's shop item #3: Life Stock
-  Route to Lake Shrine: chest on long cliff in crossroads map: EkeEke
-  Route to Lake Shrine: chest on middle cliff in crossroads map (reached from Mountainous Area): Life Stock
-  Route to Lake Shrine: right chest in volcano: Key
-  Route to Mir Tower: chest behind first sacred tree: Gola's Eye
-  Route to Mir Tower: chest on cliff accessed by pressing hidden switch: Sun Stone
-  Ryuma: Inn item: EkeEke
-  Ryuma: Mayor's first reward: Life Stock
-  Ryuma: Mayor's second reward: EkeEke
-  Ryuma: Shop item #4: EkeEke
-  Ryuma: chest in mayor's house: Life Stock
-  Swamp Shrine (0F): chest in left hallway (accessed by falling from upstairs): Armlet
-  Swamp Shrine (0F): chest in room to the right: EkeEke
-  Swamp Shrine (0F): chest in room visible from second entrance: Oracle Stone
-  Swamp Shrine (0F): falling chest after beating orc: Life Stock
-  Swamp Shrine (2F): upper chest in wooden bridges room: EkeEke
-  Swamp Shrine (3F): chest in boss arena: EkeEke
-  Thieves Hideout (back): chest #1 in boss reward room: EkeEke
-  Thieves Hideout (back): chest #3 in boss reward room: Life Stock
-  Thieves Hideout (back): chest #5 in boss reward room: EkeEke
-  Thieves Hideout (back): chest in falling platforms room: Life Stock
-  Thieves Hideout (back): chest in moving platforms room: EkeEke
-  Thieves Hideout (back): left chest in room before boss: EkeEke
-  Thieves Hideout (back): reward chest after moving balls room: Life Stock
-  Thieves Hideout (back): right chest after teal knight mini-boss: Life Stock
-  Thieves Hideout (back): right chest in room before boss: EkeEke
-  Thieves Hideout (back): second chest in hallway after quick climb trial: EkeEke
-  Thieves Hideout: chest under water in entrance room: Casino Ticket
-  Thieves Hideout: left chest in Pockets cell: Life Stock
-  Tibor: left chest on 2 chest group: Life Stock
-  Tibor: reward chest after boss: Buyer Card
-  Tibor: right chest on 2 chest group: EkeEke
-  Twinkle Village: first item on ground: Blue Jewel
-  Twinkle Village: second item on ground: EkeEke
-  Twinkle Village: third item on ground: Life Stock
-  Verla Mines: Dex reward chest: Life Stock
-  Verla Mines: Slasher reward chest: Garlic
-  Verla Mines: item in the corner of lava filled room: Life Stock
-  Verla Mines: left chest in button room near elevator shaft leading to Marley: Logs
-  Verla Mines: left chest in double chest room near entrance: Life Stock
-  Verla Mines: right chest in button room near elevator shaft leading to Marley: Sword of Gaia
-  Verla Mines: right chest in double chest room near entrance: Life Stock
-  Verla Shore: chest behind cabin: Life Stock
-  Verla Shore: chest on corner cliff after Verla tunnel: Life Stock
-  Verla: Shop item #1: EkeEke
-  Verla: Shop item #4: Life Stock
-  Verla: Shop item #5 (extra item after saving town): Life Stock
-  Verla: chest in well after beating Marley: EkeEke
-  Waterfall Shrine: chest on right branch of biggest room: Life Stock
-  Waterfall Shrine: upstairs chest: EkeEke
+}
+8: {
+  Kazalt: Shop item #1: EkeEke
+  Kazalt: Shop item #5: Life Stock
+  King Nole's Labyrinth (-1F): chest in 3-chest dark room (right side): EkeEke
+  King Nole's Labyrinth (-1F): chest in ice shortcut room: Life Stock
+  King Nole's Labyrinth (-1F): item on ground in ninjas room: EkeEke
+  King Nole's Labyrinth (-1F): lower chest in lantern room: Life Stock
+  King Nole's Labyrinth (-2F): chest in four buttons room: Life Stock
+  King Nole's Labyrinth (-3F): First item on ground before Firedemon: EkeEke
+  King Nole's Labyrinth (-3F): item on ground climbing back from Firedemon: Life Stock
+  King Nole's Labyrinth (-3F): reward chest for beating Firedemon: Life Stock
+  King Nole's Labyrinth (-3F): second chest before Firedemon: EkeEke
+  King Nole's Labyrinth (0F): chest in exterior room: Garlic
+  King Nole's Labyrinth (0F): chest in spike balls room: Snow Spikes
+  King Nole's Labyrinth (0F): right chest in room after key door: Life Stock
+}
+9: {
+  End: King Nole's Treasure
+  King Nole's Labyrinth (-3F): chest in room after Spinner: EkeEke
+  King Nole's Labyrinth (-3F): chest in room before Miro: Life Stock
+  King Nole's Labyrinth (-3F): item on ground behind waterfall after beating Spinner: EkeEke
+  King Nole's Labyrinth (-3F): right chest in room before Spinner: EkeEke
+  King Nole's Palace: chest along central pit: EkeEke
+  King Nole's Palace: chest at entrance: EkeEke
   event_visited_king_nole_labyrinth_raft_entrance: event_visited_king_nole_labyrinth_raft_entrance
-  event_visited_massan: event_visited_massan
-  event_visited_ryuma_lighthouse_repaired: event_visited_ryuma_lighthouse_repaired
-  event_visited_swamp_shrine: event_visited_swamp_shrine
-  event_visited_thieves_hideout_post_key: event_visited_thieves_hideout_post_key
-  event_visited_verla_mines: event_visited_verla_mines
+}
+10: {
+  King Nole's Labyrinth (-2F): Left item dropped by sacred tree: EkeEke
+  King Nole's Labyrinth (-2F): Right item dropped by sacred tree: Life Stock
 }

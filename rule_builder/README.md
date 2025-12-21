@@ -55,6 +55,6 @@ It will only work when running within the Archipelago environment.
 
 ## Related
 
-- [Format Converter](exporter/converter/README.md) - Convert between Rule Builder and Archipelago-CC formats
+- [Format Converter](exporter/converter/README.md) - Convert between Rule Builder and Archipelago-CC AST formats
 - [Format Converter Docs](docs/json/developer/guides/format-converter.md) - Full documentation
 - [Rule Exporter Comparison](docs/json/developer/comparison/rule-exporter-comparison.md) - Comparison of approaches

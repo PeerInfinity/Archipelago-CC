@@ -112,7 +112,7 @@ Rule Builder provides a clean, Python-first API for defining game logic rules th
 **Files:**
 -   **`rule_builder/rules.py`**: Core rule classes (`Has`, `HasAll`, `HasAny`, `CanReachRegion`, etc.)
 -   **`rule_builder/__init__.py`**: Module exports and `RuleWorldMixin` for integrating with Archipelago worlds
--   **`rule_builder/cc_format.py`**: Conversion between Rule Builder and Archipelago-CC JSON formats
+-   **`rule_builder/ast_format.py`**: Conversion between Rule Builder and Archipelago-CC JSON formats
 -   **`rule_builder/cc_explain.py`**: Human-readable rule explanations
 
 For more details, see [rule_builder/README.md](../rule_builder/README.md).
@@ -125,7 +125,7 @@ The World Generator automates the process of converting a JSON rules file (expor
 
 **Key features:**
 -   Generates complete Archipelago world structure from JSON
--   Converts Archipelago-CC format rules to Rule Builder syntax
+-   Converts Archipelago-CC AST format rules to Rule Builder syntax
 -   Supports canonical placement mode for testing
 -   Creates Items.py, Locations.py, Regions.py, Rules.py, and Options.py
 
@@ -137,7 +137,7 @@ python -m world_generator path/to/rules.json --output worlds/mygame/
 **Files:**
 -   **`world_generator/generator.py`**: Main `WorldGenerator` class
 -   **`world_generator/extractors.py`**: JSON data extraction
--   **`world_generator/rule_codegen.py`**: CC rules → Python code generation
+-   **`world_generator/rule_codegen.py`**: AST rules → Python code generation
 -   **`world_generator/templates.py`**: File content templates
 -   **`world_generator/cli.py`**: Command-line interface
 

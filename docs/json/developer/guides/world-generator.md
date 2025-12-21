@@ -238,11 +238,11 @@ for loc_name, loc_data in generator.data.locations.items():
 
 ## Rule Conversion
 
-The generator converts Archipelago-CC format rules to Rule Builder Python code.
+The generator converts Archipelago-CC AST format rules to Rule Builder Python code.
 
 ### Supported Conversions
 
-| CC Rule Type | Generated Python |
+| AST Rule Type | Generated Python |
 |--------------|------------------|
 | `{"type": "constant", "value": true}` | `True_()` |
 | `{"type": "constant", "value": false}` | `False_()` |
