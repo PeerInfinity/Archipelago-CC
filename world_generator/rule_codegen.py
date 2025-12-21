@@ -516,8 +516,9 @@ class RuleCodeGenerator:
                     'HasAny': 'group_check',
                     'HasGroup': 'group_check',
                     'Count': 'count_check',
-                    'CanReach': 'can_reach',
+                    'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
+                    'CanReachEntrance': 'entrance_check',
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
@@ -577,13 +578,18 @@ class RuleCodeGenerator:
 
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
+            count = args.get('count', 1)
             self.required_imports.add('Has')
+            if count > 1:
+                return f'Has({repr(item_name)}, {count})'
             return f'Has({repr(item_name)})'
 
         if rb_rule == 'And':
             if not children:
                 self.required_imports.add('True_')
                 return 'True_()'
+            if len(children) == 1:
+                return self._convert_rule(children[0])
             child_exprs = [self._convert_rule(child) for child in children]
             self.required_imports.add('And')
             return f'And({", ".join(child_exprs)})'
@@ -592,6 +598,8 @@ class RuleCodeGenerator:
             if not children:
                 self.required_imports.add('False_')
                 return 'False_()'
+            if len(children) == 1:
+                return self._convert_rule(children[0])
             child_exprs = [self._convert_rule(child) for child in children]
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'
@@ -632,15 +640,20 @@ class RuleCodeGenerator:
             self.required_imports.add('HasGroup')
             return f'HasGroup({repr(group)})'
 
-        if rb_rule == 'CanReach':
-            region = args.get('region', '')
-            self.required_imports.add('CanReach')
-            return f'CanReach({repr(region)})'
+        if rb_rule == 'CanReachRegion':
+            region = args.get('region_name', '')
+            self.required_imports.add('CanReachRegion')
+            return f'CanReachRegion({repr(region)})'
 
         if rb_rule == 'CanReachLocation':
-            location = args.get('location', '')
+            location = args.get('location_name', '')
             self.required_imports.add('CanReachLocation')
             return f'CanReachLocation({repr(location)})'
+
+        if rb_rule == 'CanReachEntrance':
+            entrance = args.get('entrance_name', '')
+            self.required_imports.add('CanReachEntrance')
+            return f'CanReachEntrance({repr(entrance)})'
 
         if rb_rule == 'Helper':
             # Convert to the format expected by _convert_helper
