@@ -97,12 +97,9 @@
             "name": "Artificer's Portal",
             "connected_region": "Corrupted Future",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Demon King Crown",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -118,19 +115,9 @@
             "name": "Shrink Down",
             "connected_region": "Music Box",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Key of Chaos",
-                  "Key of Courage",
-                  "Key of Hope",
-                  "Key of Love",
-                  "Key of Strength",
-                  "Key of Symbiosis",
-                  "Rope Dart"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -139,12 +126,9 @@
             "name": "Money Wrench",
             "id": 11391111,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 4566
-              }
+              "args": {}
             },
             "item": {
               "name": "Rope Dart",
@@ -163,26 +147,9 @@
             "name": "Money Sink",
             "connected_region": "The Craftsman's Corner",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Shards",
-                    "count": 4566
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Money Wrench",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -191,12 +158,9 @@
             "name": "The Shop - Karuta Plates",
             "id": 11391079,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 27
-              }
+              "args": {}
             },
             "item": {
               "name": "Wingsuit",
@@ -210,12 +174,9 @@
             "name": "The Shop - Serendipitous Bodies",
             "id": 11391080,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 318
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -229,12 +190,9 @@
             "name": "The Shop - Path of Resilience",
             "id": 11391081,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 467
-              }
+              "args": {}
             },
             "item": {
               "name": "Aerobatics Warrior",
@@ -248,12 +206,9 @@
             "name": "The Shop - Kusari Jacket",
             "id": 11391082,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 675
-              }
+              "args": {}
             },
             "item": {
               "name": "Candle",
@@ -267,12 +222,9 @@
             "name": "The Shop - Energy Shuriken",
             "id": 11391083,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 92
-              }
+              "args": {}
             },
             "item": {
               "name": "Focused Power Sense",
@@ -286,12 +238,9 @@
             "name": "The Shop - Serendipitous Minds",
             "id": 11391084,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 201
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -305,12 +254,9 @@
             "name": "The Shop - Prepared Mind",
             "id": 11391085,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 546
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -324,12 +270,9 @@
             "name": "The Shop - Meditation",
             "id": 11391086,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 1368
-              }
+              "args": {}
             },
             "item": {
               "name": "Key of Strength",
@@ -343,12 +286,9 @@
             "name": "The Shop - Rejuvenative Spirit",
             "id": 11391087,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 1881
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -362,12 +302,9 @@
             "name": "The Shop - Centered Mind",
             "id": 11391088,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 2140
-              }
+              "args": {}
             },
             "item": {
               "name": "Key of Love",
@@ -381,12 +318,9 @@
             "name": "The Shop - Strike of the Ninja",
             "id": 11391089,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 67
-              }
+              "args": {}
             },
             "item": {
               "name": "Power Sense",
@@ -400,12 +334,9 @@
             "name": "The Shop - Second Wind",
             "id": 11391090,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 237
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -419,12 +350,9 @@
             "name": "The Shop - Currents Master",
             "id": 11391091,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 743
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -438,12 +366,9 @@
             "name": "The Shop - Aerobatics Warrior",
             "id": 11391092,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 1124
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (10)",
@@ -457,12 +382,9 @@
             "name": "The Shop - Demon's Bane",
             "id": 11391093,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 3532
-              }
+              "args": {}
             },
             "item": {
               "name": "Power Thistle",
@@ -476,12 +398,9 @@
             "name": "The Shop - Devil's Due",
             "id": 11391094,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 56
-              }
+              "args": {}
             },
             "item": {
               "name": "Currents Master",
@@ -495,12 +414,9 @@
             "name": "The Shop - Time Sense",
             "id": 11391095,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 142
-              }
+              "args": {}
             },
             "item": {
               "name": "Claustro",
@@ -514,12 +430,9 @@
             "name": "The Shop - Power Sense",
             "id": 11391096,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 621
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -533,12 +446,9 @@
             "name": "The Shop - Focused Power Sense",
             "id": 11391097,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Shards",
-                "count": 1034
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -772,12 +682,9 @@
             "name": "Corrupted Future - Key of Courage",
             "id": 11390977,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Magic Firefly",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (500)",
@@ -853,11 +760,9 @@
             "name": "Ninja Village - Candle",
             "id": 11390988,
             "access_rule": {
-              "rule": "CanReachLocation",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "location_name": "Searing Crags - Astral Tea Leaves"
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -887,12 +792,9 @@
             "name": "Ninja Village Seal - Tree House",
             "id": 11391000,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -992,14 +894,9 @@
             "name": "Autumn Hills - Portal -> Autumn Hills - Dimension Climb Shop",
             "connected_region": "Autumn Hills - Dimension Climb Shop",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -1038,12 +935,9 @@
             "name": "Autumn Hills - Climbing Claws Shop -> Autumn Hills - Hope Path Shop",
             "connected_region": "Autumn Hills - Hope Path Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -1059,7 +953,7 @@
             "name": "Autumn Hills - Climbing Claws Shop -> Autumn Hills - Key of Hope Checkpoint",
             "connected_region": "Autumn Hills - Key of Hope Checkpoint",
             "access_rule": {
-              "rule": "False_",
+              "rule": "True_",
               "options": [],
               "args": {}
             }
@@ -1086,12 +980,9 @@
             "name": "Autumn Hills Seal - Trip Saws",
             "id": 11391001,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -1110,72 +1001,27 @@
             "name": "Autumn Hills - Hope Path Shop -> Autumn Hills - Climbing Claws Shop",
             "connected_region": "Autumn Hills - Climbing Claws Shop",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Second Wind",
-                      "Rope Dart"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Autumn Hills - Hope Path Shop -> Autumn Hills - Hope Latch Checkpoint",
             "connected_region": "Autumn Hills - Hope Latch Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Autumn Hills - Hope Path Shop -> Autumn Hills - Lakeside Checkpoint",
             "connected_region": "Autumn Hills - Lakeside Checkpoint",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Second Wind",
-                      "Rope Dart"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1197,14 +1043,9 @@
             "name": "Autumn Hills - Dimension Climb Shop -> Autumn Hills - Portal",
             "connected_region": "Autumn Hills - Portal",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           },
           {
@@ -1267,42 +1108,18 @@
             "name": "Autumn Hills - Hope Latch Checkpoint -> Autumn Hills - Hope Path Shop",
             "connected_region": "Autumn Hills - Hope Path Shop",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Second Wind",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Autumn Hills - Hope Latch Checkpoint -> Autumn Hills - Key of Hope Checkpoint",
             "connected_region": "Autumn Hills - Key of Hope Checkpoint",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -1409,14 +1226,9 @@
             "name": "Autumn Hills Seal - Double Swing Saws",
             "id": 11391002,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (10)",
@@ -1471,14 +1283,9 @@
             "name": "Autumn Hills Seal - Spike Ball Darts",
             "id": 11391004,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Aerobatics Warrior",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -1587,16 +1394,9 @@
             "name": "Forlorn Temple - Outside Shop -> Forlorn Temple - Entrance Shop",
             "connected_region": "Forlorn Temple - Entrance Shop",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Acro",
-                  "Claustro",
-                  "Necro",
-                  "Pyro"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -1609,54 +1409,18 @@
             "name": "Forlorn Temple - Entrance Shop -> Forlorn Temple - Outside Shop",
             "connected_region": "Forlorn Temple - Outside Shop",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Acro",
-                  "Claustro",
-                  "Necro",
-                  "Pyro"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "Forlorn Temple - Entrance Shop -> Forlorn Temple - Sunny Day Checkpoint",
             "connected_region": "Forlorn Temple - Sunny Day Checkpoint",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Second Wind",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1702,56 +1466,9 @@
             "name": "Forlorn Temple - Rocket Sunset Shop -> Forlorn Temple - Descent Shop",
             "connected_region": "Forlorn Temple - Descent Shop",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "options": [],
-                          "args": {
-                            "items": [
-                              "Meditation",
-                              "Path of Resilience"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Second Wind",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Wingsuit",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Rope Dart",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1805,14 +1522,9 @@
             "name": "Forlorn Temple - Saw Gauntlet Shop -> Forlorn Temple - Demon King Shop",
             "connected_region": "Forlorn Temple - Demon King Shop",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -1825,14 +1537,9 @@
             "name": "Forlorn Temple - Demon King Shop -> Forlorn Temple - Saw Gauntlet Shop",
             "connected_region": "Forlorn Temple - Saw Gauntlet Shop",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           },
           {
@@ -1871,14 +1578,9 @@
             "name": "Forlorn Temple - Sunny Day Checkpoint -> Forlorn Temple - Rocket Maze Checkpoint",
             "connected_region": "Forlorn Temple - Rocket Maze Checkpoint",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -1902,14 +1604,9 @@
             "name": "Forlorn Temple Seal - Rocket Maze",
             "id": 11391034,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -2444,56 +2141,9 @@
             "name": "Bamboo Creek - Claustro",
             "id": 11390998,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "options": [],
-                          "args": {
-                            "items": [
-                              "Meditation",
-                              "Path of Resilience"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Second Wind",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Rope Dart",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Wingsuit",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "Lightfoot Tabi",
@@ -2523,12 +2173,9 @@
             "name": "Bamboo Creek Seal - Spike Ball Pits",
             "id": 11391009,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Devil's Due",
@@ -2676,12 +2323,9 @@
             "name": "Howling Grotto - Portal -> Howling Grotto - Crushing Pits Shop",
             "connected_region": "Howling Grotto - Crushing Pits Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -2720,24 +2364,18 @@
             "name": "Howling Grotto - Wingsuit Shop -> Howling Grotto - Left",
             "connected_region": "Howling Grotto - Left",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Howling Grotto - Wingsuit Shop -> Howling Grotto - Lost Woods Checkpoint",
             "connected_region": "Howling Grotto - Lost Woods Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2762,12 +2400,9 @@
             "name": "Howling Grotto Seal - Windy Saws and Balls",
             "id": 11391011,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -2795,42 +2430,9 @@
             "name": "Howling Grotto - Crushing Pits Shop -> Howling Grotto - Portal",
             "connected_region": "Howling Grotto - Portal",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Second Wind",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Wingsuit",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
@@ -2857,14 +2459,9 @@
             "name": "Howling Grotto Seal - Crushing Pits",
             "id": 11391012,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Meditation",
@@ -2892,12 +2489,9 @@
             "name": "Howling Grotto - Emerald Golem Shop -> Howling Grotto - Right",
             "connected_region": "Howling Grotto - Right",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2906,12 +2500,9 @@
             "name": "Howling Grotto - Emerald Golem",
             "id": 11391077,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -2948,12 +2539,9 @@
             "name": "Howling Grotto - Lost Woods Checkpoint -> Howling Grotto - Bottom",
             "connected_region": "Howling Grotto - Bottom",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Seashell",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2966,56 +2554,18 @@
             "name": "Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Crushing Pits Shop",
             "connected_region": "Howling Grotto - Crushing Pits Shop",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Second Wind",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Strike of the Ninja",
-                      "Wingsuit"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Emerald Golem Shop",
             "connected_region": "Howling Grotto - Emerald Golem Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3454,12 +3004,9 @@
             "name": "Searing Crags - Bottom -> Searing Crags - Portal",
             "connected_region": "Searing Crags - Portal",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -3481,14 +3028,9 @@
             "name": "Searing Crags - Right -> Searing Crags - Portal",
             "connected_region": "Searing Crags - Portal",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Lightfoot Tabi",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           },
           {
@@ -3519,36 +3061,27 @@
             "name": "Searing Crags - Portal -> Searing Crags - Right",
             "connected_region": "Searing Crags - Right",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Searing Crags - Portal -> Searing Crags - Before Final Climb Shop",
             "connected_region": "Searing Crags - Before Final Climb Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Searing Crags - Portal -> Searing Crags - Colossuses Shop",
             "connected_region": "Searing Crags - Colossuses Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -3566,12 +3099,9 @@
             "name": "Searing Crags - Pyro",
             "id": 11390997,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -3615,14 +3145,9 @@
             "name": "Searing Crags - Rope Dart Shop -> Searing Crags - Triple Ball Spinner Checkpoint",
             "connected_region": "Searing Crags - Triple Ball Spinner Checkpoint",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -3661,12 +3186,9 @@
             "name": "Searing Crags - Falling Rocks Shop -> Searing Crags - Searing Mega Shard Shop",
             "connected_region": "Searing Crags - Searing Mega Shard Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3679,33 +3201,25 @@
             "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Falling Rocks Shop",
             "connected_region": "Searing Crags - Falling Rocks Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Before Final Climb Shop",
             "connected_region": "Searing Crags - Before Final Climb Shop",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Strike of the Ninja"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Shop",
             "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
-              "rule": "False_",
+              "rule": "True_",
               "options": [],
               "args": {}
             }
@@ -3738,12 +3252,9 @@
             "name": "Searing Crags - Before Final Climb Shop -> Searing Crags - Colossuses Shop",
             "connected_region": "Searing Crags - Colossuses Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3765,42 +3276,9 @@
             "name": "Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop",
             "connected_region": "Searing Crags - Key of Strength Shop",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Strike of the Ninja",
-                          "Wingsuit"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Rope Dart",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Power Thistle",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
@@ -3859,11 +3337,9 @@
             "name": "Searing Crags - Astral Tea Leaves",
             "id": 11390987,
             "access_rule": {
-              "rule": "CanReachLocation",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "location_name": "Ninja Village - Astral Seed"
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -3934,28 +3410,9 @@
             "name": "Searing Crags Seal - Triple Ball Spinner",
             "id": 11391017,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Second Wind",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "Karuta Plates",
@@ -4039,25 +3496,9 @@
             "name": "Glacial Peak - Left -> Elemental Skylands - Air Shmup",
             "connected_region": "Elemental Skylands - Air Shmup",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "options": [],
-                  "args": {
-                    "location_name": "Quillshroom Marsh - Queen of Quills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Magic Firefly",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
@@ -4112,14 +3553,9 @@
             "name": "Glacial Peak - Portal -> Glacial Peak - Tower Entrance Shop",
             "connected_region": "Glacial Peak - Tower Entrance Shop",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           },
           {
@@ -4178,12 +3614,9 @@
             "name": "Glacial Peak Seal - Ice Climbers",
             "id": 11391020,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -4226,12 +3659,9 @@
             "name": "Glacial Peak - Tower Entrance Shop -> Glacial Peak - Top",
             "connected_region": "Glacial Peak - Top",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Ruxxtin's Amulet",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -4271,44 +3701,9 @@
             "name": "Glacial Peak - Projectile Spike Pit Checkpoint -> Glacial Peak - Left",
             "connected_region": "Glacial Peak - Left",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Second Wind",
-                          "Wingsuit"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Rope Dart",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -4317,12 +3712,9 @@
             "name": "Glacial Peak Seal - Projectile Spike Pit",
             "id": 11391021,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Strike of the Ninja",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Acro",
@@ -4406,12 +3798,9 @@
             "name": "Tower of Time - Left -> Tower of Time - Final Chance Shop",
             "connected_region": "Tower of Time - Final Chance Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4465,12 +3854,9 @@
             "name": "Tower of Time Seal - Time Waster",
             "id": 11391023,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Key of Hope",
@@ -4489,56 +3875,9 @@
             "name": "Tower of Time - Second Checkpoint -> Tower of Time - Third Checkpoint",
             "connected_region": "Tower of Time - Third Checkpoint",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "options": [],
-                          "args": {
-                            "items": [
-                              "Meditation",
-                              "Path of Resilience"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Second Wind",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Rope Dart",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Wingsuit",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -4551,42 +3890,9 @@
             "name": "Tower of Time - Third Checkpoint -> Tower of Time - Fourth Checkpoint",
             "connected_region": "Tower of Time - Fourth Checkpoint",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Second Wind",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Wingsuit",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -4599,14 +3905,9 @@
             "name": "Tower of Time - Fourth Checkpoint -> Tower of Time - Fifth Checkpoint",
             "connected_region": "Tower of Time - Fifth Checkpoint",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -4636,12 +3937,9 @@
             "name": "Tower of Time - Fifth Checkpoint -> Tower of Time - Sixth Checkpoint",
             "connected_region": "Tower of Time - Sixth Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4719,12 +4017,9 @@
             "name": "Cloud Ruins - Cloud Entrance Shop -> Cloud Ruins - Spike Float Checkpoint",
             "connected_region": "Cloud Ruins - Spike Float Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4737,101 +4032,27 @@
             "name": "Cloud Ruins - Pillar Glide Shop -> Cloud Ruins - Spike Float Checkpoint",
             "connected_region": "Cloud Ruins - Spike Float Checkpoint",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience",
-                      "Second Wind"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Cloud Ruins - Pillar Glide Shop -> Cloud Ruins - Ghost Pit Checkpoint",
             "connected_region": "Cloud Ruins - Ghost Pit Checkpoint",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "Cloud Ruins - Pillar Glide Shop -> Cloud Ruins - Crushers' Descent Shop",
             "connected_region": "Cloud Ruins - Crushers' Descent Shop",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "options": [],
-                          "args": {
-                            "items": [
-                              "Meditation",
-                              "Path of Resilience"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Second Wind",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Rope Dart",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Wingsuit",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -4877,12 +4098,9 @@
             "name": "Cloud Ruins - Seeing Spikes Shop -> Cloud Ruins - Sliding Spikes Shop",
             "connected_region": "Cloud Ruins - Sliding Spikes Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4895,26 +4113,18 @@
             "name": "Cloud Ruins - Sliding Spikes Shop -> Cloud Ruins - Seeing Spikes Shop",
             "connected_region": "Cloud Ruins - Seeing Spikes Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Cloud Ruins - Sliding Spikes Shop -> Cloud Ruins - Saw Pit Checkpoint",
             "connected_region": "Cloud Ruins - Saw Pit Checkpoint",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -4936,14 +4146,9 @@
             "name": "Cloud Ruins - Final Flight Shop -> Cloud Ruins - Manfred's Shop",
             "connected_region": "Cloud Ruins - Manfred's Shop",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -4973,30 +4178,9 @@
             "name": "Cloud Ruins - Manfred's Shop -> Cloud Ruins - Final Flight Shop",
             "connected_region": "Cloud Ruins - Final Flight Shop",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Second Wind",
-                      "Wingsuit"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5026,88 +4210,18 @@
             "name": "Cloud Ruins - Spike Float Checkpoint -> Cloud Ruins - Cloud Entrance Shop",
             "connected_region": "Cloud Ruins - Cloud Entrance Shop",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Second Wind",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Cloud Ruins - Spike Float Checkpoint -> Cloud Ruins - Pillar Glide Shop",
             "connected_region": "Cloud Ruins - Pillar Glide Shop",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Second Wind",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5131,14 +4245,9 @@
             "name": "Cloud Ruins Seal - Ghost Pit",
             "id": 11391026,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Second Wind",
@@ -5166,14 +4275,9 @@
             "name": "Cloud Ruins - Toothbrush Alley Checkpoint -> Cloud Ruins - Seeing Spikes Shop",
             "connected_region": "Cloud Ruins - Seeing Spikes Shop",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5182,12 +4286,9 @@
             "name": "Cloud Ruins Seal - Toothbrush Alley",
             "id": 11391027,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -5226,14 +4327,9 @@
             "name": "Cloud Ruins Seal - Saw Pit",
             "id": 11391028,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -5252,12 +4348,9 @@
             "name": "Underworld - Left -> Underworld - Left Shop",
             "connected_region": "Underworld - Left Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -5279,12 +4372,9 @@
             "name": "Underworld - Left Shop -> Underworld - Left",
             "connected_region": "Underworld - Left",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -5302,12 +4392,9 @@
             "name": "Underworld Seal - Sharp and Windy Climb",
             "id": 11391030,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -5335,16 +4422,9 @@
             "name": "Underworld - Fireball Wave Shop -> Underworld - Long Climb Shop",
             "connected_region": "Underworld - Long Climb Shop",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit",
-                  "Lightfoot Tabi",
-                  "Strike of the Ninja"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5369,14 +4449,9 @@
             "name": "Underworld Seal - Fireball Wave",
             "id": 11391032,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Aerobatics Warrior",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (300)",
@@ -5404,88 +4479,9 @@
             "name": "Underworld - Long Climb Shop -> Underworld - Hot Tub Checkpoint",
             "connected_region": "Underworld - Hot Tub Checkpoint",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "And",
-                          "options": [],
-                          "children": [
-                            {
-                              "rule": "HasAny",
-                              "options": [],
-                              "args": {
-                                "items": [
-                                  "Meditation",
-                                  "Path of Resilience"
-                                ]
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "options": [],
-                              "args": {
-                                "item_name": "Second Wind",
-                                "count": 1
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "HasAny",
-                          "options": [],
-                          "args": {
-                            "items": [
-                              "Rope Dart",
-                              "Strike of the Ninja"
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Wingsuit",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Strike of the Ninja",
-                          "Wingsuit"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Lightfoot Tabi",
-                        "count": 1
-                      }
-                    }
-                  ]
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5553,12 +4549,9 @@
             "name": "Underworld - Hot Dip Checkpoint -> Underworld - Lava Run Checkpoint",
             "connected_region": "Underworld - Lava Run Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -5571,30 +4564,9 @@
             "name": "Underworld - Hot Tub Checkpoint -> Underworld - Long Climb Shop",
             "connected_region": "Underworld - Long Climb Shop",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Lightfoot Tabi",
-                      "Strike of the Ninja"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
@@ -5612,12 +4584,9 @@
             "name": "Underworld Seal - Rising Fanta",
             "id": 11391033,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -5669,14 +4638,9 @@
             "name": "Dark Cave - Right -> Dark Cave - Left",
             "connected_region": "Dark Cave - Left",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Candle",
-                  "Rope Dart"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5769,28 +4733,9 @@
             "name": "Riviere Turquoise - Waterfall Shop -> Riviere Turquoise - Flower Flight Checkpoint",
             "connected_region": "Riviere Turquoise - Flower Flight Checkpoint",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Strike of the Ninja",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Rope Dart",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5799,28 +4744,9 @@
             "name": "Riviere Turquoise Seal - Bounces and Balls",
             "id": 11391039,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Second Wind",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "Time Shard (100)",
@@ -5839,30 +4765,9 @@
             "name": "Riviere Turquoise - Launch of Faith Shop -> Riviere Turquoise - Flower Flight Checkpoint",
             "connected_region": "Riviere Turquoise - Flower Flight Checkpoint",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Meditation",
-                      "Path of Resilience"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Second Wind",
-                      "Rope Dart"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
@@ -5880,14 +4785,9 @@
             "name": "Riviere Turquoise Seal - Launch of Faith",
             "id": 11391040,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Rope Dart",
-                  "Wingsuit"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Magic Firefly",
@@ -5990,7 +4890,7 @@
             "name": "Riviere Turquoise - Flower Flight Checkpoint -> Riviere Turquoise - Waterfall Shop",
             "connected_region": "Riviere Turquoise - Waterfall Shop",
             "access_rule": {
-              "rule": "False_",
+              "rule": "True_",
               "options": [],
               "args": {}
             }
@@ -6029,24 +4929,18 @@
             "name": "Elemental Skylands - Air Intro Shop -> Elemental Skylands - Air Seal Checkpoint",
             "connected_region": "Elemental Skylands - Air Seal Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Elemental Skylands - Air Intro Shop -> Elemental Skylands - Air Generator Shop",
             "connected_region": "Elemental Skylands - Air Generator Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -6079,12 +4973,9 @@
             "name": "Elemental Skylands Seal - Air",
             "id": 11391042,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wingsuit",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (10)",
@@ -6189,14 +5080,9 @@
             "name": "Elemental Skylands Seal - Water",
             "id": 11391043,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Currents Master",
-                  "Rope Dart"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Key of Symbiosis",
@@ -6256,16 +5142,9 @@
             "name": "Elemental Skylands Seal - Fire",
             "id": 11391044,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Aerobatics Warrior",
-                  "Wingsuit",
-                  "Rope Dart",
-                  "Strike of the Ninja"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard",
@@ -6310,12 +5189,9 @@
             "name": "Elemental Skylands - Key of Symbiosis",
             "id": 11390979,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Rope Dart",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (10)",
@@ -6376,24 +5252,18 @@
             "name": "Sunken Shrine - Portal -> Sunken Shrine - Sun Path Shop",
             "connected_region": "Sunken Shrine - Sun Path Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Sunken Shrine - Portal -> Sunken Shrine - Moon Path Shop",
             "connected_region": "Sunken Shrine - Moon Path Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -6411,14 +5281,9 @@
             "name": "Sunken Shrine - Key of Love",
             "id": 11390976,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Moon Crest",
-                  "Sun Crest"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Serendipitous Bodies",
@@ -6542,42 +5407,9 @@
             "name": "Sunken Shrine - Tabi Gauntlet Shop -> Sunken Shrine - Sun Path Shop",
             "connected_region": "Sunken Shrine - Sun Path Shop",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Second Wind",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Rope Dart",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
@@ -6595,12 +5427,9 @@
             "name": "Sunken Shrine Seal - Tabi Gauntlet",
             "id": 11391038,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -6628,12 +5457,9 @@
             "name": "Sunken Shrine - Moon Path Shop -> Sunken Shrine - Waterfall Paradise Checkpoint",
             "connected_region": "Sunken Shrine - Waterfall Paradise Checkpoint",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -6719,12 +5545,9 @@
             "name": "Sunken Shrine - Waterfall Paradise Checkpoint -> Sunken Shrine - Moon Path Shop",
             "connected_region": "Sunken Shrine - Moon Path Shop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
@@ -6742,12 +5565,9 @@
             "name": "Sunken Shrine Seal - Waterfall Paradise",
             "id": 11391037,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Lightfoot Tabi",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Time Shard (50)",
@@ -7850,6 +6670,17 @@
       "name": "The Messenger WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "accumulator_rules": [
+        {
+          "pattern": "^Time\\ Shard(?: \\((\\d+)\\))?$",
+          "extract_value": true,
+          "target": "Shards",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "Shards": 0
       },
       "web_theme": "ocean",
       "web_tutorials": [

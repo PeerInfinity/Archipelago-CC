@@ -16,7 +16,7 @@
       ],
       "last_updated": "2025-12-20T22:38:37.596882"
     },
-    "last_updated": "2025-12-21T02:56:13.207191",
+    "last_updated": "2025-12-21T18:49:28.698348",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3689,30 +3689,30 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.62,
+        "processing_time_seconds": 6.3,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/messenger_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 233455,
-        "size_mb": 0.22
+        "size_bytes": 199569,
+        "size_mb": 0.19
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 5,
+        "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 17.16,
+        "processing_time_seconds": 12.99,
         "return_code": 0,
-        "sphere_reached": 6.3,
+        "sphere_reached": 0.71,
         "success": true,
-        "total_spheres": 6.3,
+        "total_spheres": 0.71,
         "warning_count": 0
       },
       "template_filename": "The Messenger WorldGen.yaml",
-      "timestamp": "2025-12-21T02:55:48.888325",
+      "timestamp": "2025-12-21T18:49:08.970485",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
