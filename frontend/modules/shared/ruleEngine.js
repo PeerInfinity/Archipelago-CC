@@ -1191,7 +1191,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'attribute': {
-        const baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
+        // Check if object is already a plain value (not a rule to evaluate)
+        // This happens when evaluateRuleBuilderRule passes an already-evaluated object
+        // Plain objects have no 'type' (CC format) or 'rule' (Rule Builder format) key
+        let baseObject;
+        if (rule.object && typeof rule.object === 'object' &&
+            !rule.object.type && !rule.object.rule && !Array.isArray(rule.object)) {
+          // Object is already evaluated, use directly
+          baseObject = rule.object;
+        } else {
+          baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
+        }
 
         // Special case: if baseObject is undefined and the object was "self",
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
