@@ -19,16 +19,18 @@
             "name": "New Game",
             "connected_region": "Hub",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "??? Exit",
             "connected_region": "???",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -46,40 +48,55 @@
             "name": "Ruins Hub",
             "connected_region": "Ruins",
             "access_rule": {
-              "type": "item_check",
-              "item": "Ruins Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Ruins Key"
+              }
             }
           },
           {
             "name": "Snowdin Hub",
             "connected_region": "Snowdin Forest",
             "access_rule": {
-              "type": "item_check",
-              "item": "Snowdin Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Snowdin Key"
+              }
             }
           },
           {
             "name": "Waterfall Hub",
             "connected_region": "Waterfall",
             "access_rule": {
-              "type": "item_check",
-              "item": "Waterfall Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Waterfall Key"
+              }
             }
           },
           {
             "name": "Hotland Hub",
             "connected_region": "Hotland",
             "access_rule": {
-              "type": "item_check",
-              "item": "Hotland Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Hotland Key"
+              }
             }
           },
           {
             "name": "Core Hub",
             "connected_region": "Core",
             "access_rule": {
-              "type": "item_check",
-              "item": "Core Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Core Key"
+              }
             }
           }
         ],
@@ -92,8 +109,9 @@
             "name": "Ruins Exit",
             "connected_region": "Old Home",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -102,8 +120,9 @@
             "name": "Candy 1",
             "id": 79014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Spider Cider",
@@ -117,8 +136,9 @@
             "name": "Candy 2",
             "id": 79015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Old Tutu",
@@ -132,8 +152,9 @@
             "name": "Candy 3",
             "id": 79016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "temy armor",
@@ -147,8 +168,9 @@
             "name": "Candy 4",
             "id": 79017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Snowdin Key",
@@ -162,8 +184,9 @@
             "name": "Donut Sale",
             "id": 79018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Stained Apron",
@@ -177,8 +200,9 @@
             "name": "Cider Sale",
             "id": 79019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Punch Card",
@@ -192,8 +216,9 @@
             "name": "Ribbon Cracks",
             "id": 79020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Torn Notebook",
@@ -207,8 +232,9 @@
             "name": "Toy Knife Edge",
             "id": 79021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Burnt Pan",
@@ -222,8 +248,9 @@
             "name": "B.Scotch Pie Given",
             "id": 79022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Instant Noodles",
@@ -247,8 +274,9 @@
             "name": "Snowdin Forest Exit",
             "connected_region": "Snowdin Town",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -257,18 +285,11 @@
             "name": "Snowman",
             "id": 79100,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Snowdin Town"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Nice Cream",
@@ -282,18 +303,11 @@
             "name": "Nicecream Snowdin",
             "id": 79001,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Snowdin Town"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Legendary Hero",
@@ -312,8 +326,9 @@
             "name": "Papyrus\" Home Entrance",
             "connected_region": "Papyrus\" Home",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -322,18 +337,11 @@
             "name": "Bunny 1",
             "id": 79034,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Snowdin Town"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Cloudy Glasses",
@@ -347,18 +355,11 @@
             "name": "Bunny 2",
             "id": 79035,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Snowdin Town"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Waterfall Key",
@@ -372,18 +373,11 @@
             "name": "Bunny 3",
             "id": 79036,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Snowdin Town"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Toy Knife",
@@ -397,18 +391,11 @@
             "name": "Bunny 4",
             "id": 79037,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Snowdin Town"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Snowdin Town"
+              }
             },
             "item": {
               "name": "Punch Card",
@@ -428,8 +415,9 @@
             "name": "Papyrus Date",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Papyrus Date",
@@ -448,8 +436,9 @@
             "name": "Undyne\"s Home Entrance",
             "connected_region": "Undyne\"s Home",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -458,18 +447,11 @@
             "name": "Nicecream Waterfall",
             "id": 79002,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Snowman Piece",
@@ -483,28 +465,22 @@
             "name": "Nicecream Punch Card",
             "id": 79003,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Waterfall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Waterfall"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Punch Card",
-                  "count": {
-                    "type": "constant",
-                    "value": 3
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Punch Card",
+                    "count": 3
                   }
                 }
               ]
@@ -522,18 +498,11 @@
             "name": "Quiche Bench",
             "id": 79004,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Tough Glove",
@@ -547,18 +516,11 @@
             "name": "Tutu Hidden",
             "id": 79005,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Hotland Key",
@@ -572,18 +534,11 @@
             "name": "Card Reward",
             "id": 79006,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Heart Locket",
@@ -597,18 +552,11 @@
             "name": "Grass Shoes",
             "id": 79007,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Starfait",
@@ -622,18 +570,11 @@
             "name": "Astro 1",
             "id": 79023,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Spider Donut",
@@ -647,18 +588,11 @@
             "name": "Astro 2",
             "id": 79024,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Mettaton Plush",
@@ -672,18 +606,11 @@
             "name": "Gerson 1",
             "id": 79038,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Butterscotch Pie",
@@ -697,18 +624,11 @@
             "name": "Gerson 2",
             "id": 79039,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Crab Apple",
@@ -722,18 +642,11 @@
             "name": "Gerson 3",
             "id": 79040,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Empty Gun",
@@ -747,18 +660,11 @@
             "name": "Gerson 4",
             "id": 79041,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Ballet Shoes",
@@ -772,18 +678,11 @@
             "name": "TemmieShop 1",
             "id": 79050,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Astronaut Food",
@@ -797,18 +696,11 @@
             "name": "TemmieShop 2",
             "id": 79051,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "500G",
@@ -822,18 +714,11 @@
             "name": "TemmieShop 3",
             "id": 79052,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Waterfall"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Waterfall"
+              }
             },
             "item": {
               "name": "Astronaut Food",
@@ -847,28 +732,22 @@
             "name": "TemmieShop 4",
             "id": 79053,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Waterfall"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Waterfall"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "1000G",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "1000G",
+                    "count": 2
                   }
                 }
               ]
@@ -891,8 +770,9 @@
             "name": "Undyne Date",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Undyne Date",
@@ -911,16 +791,18 @@
             "name": "Cooking Show Entrance",
             "connected_region": "Cooking Show",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Lab Elevator",
             "connected_region": "True Lab",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -929,18 +811,11 @@
             "name": "Noodles Fridge",
             "id": 79008,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hotland"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Hotland"
+              }
             },
             "item": {
               "name": "500G",
@@ -954,18 +829,11 @@
             "name": "Pan Hidden",
             "id": 79009,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hotland"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Hotland"
+              }
             },
             "item": {
               "name": "Faded Ribbon",
@@ -979,18 +847,11 @@
             "name": "Apron Hidden",
             "id": 79010,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Cooking Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Cooking Show"
+              }
             },
             "item": {
               "name": "Cinnamon Bun",
@@ -1004,18 +865,11 @@
             "name": "Bratty Catty 1",
             "id": 79042,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Abandoned Quiche",
@@ -1029,18 +883,11 @@
             "name": "Bratty Catty 2",
             "id": 79043,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Core Key",
@@ -1054,18 +901,11 @@
             "name": "Bratty Catty 3",
             "id": 79044,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Sea Tea",
@@ -1079,18 +919,11 @@
             "name": "Bratty Catty 4",
             "id": 79045,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Bisicle",
@@ -1104,18 +937,11 @@
             "name": "Burgerpants 1",
             "id": 79046,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Worn Dagger",
@@ -1129,18 +955,11 @@
             "name": "Burgerpants 2",
             "id": 79047,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Spider Donut",
@@ -1154,18 +973,11 @@
             "name": "Burgerpants 3",
             "id": 79048,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Punch Card",
@@ -1179,18 +991,11 @@
             "name": "Burgerpants 4",
             "id": 79049,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "News Show"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "News Show"
+              }
             },
             "item": {
               "name": "Right Home Key",
@@ -1204,8 +1009,9 @@
             "name": "Alphys Date",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Alphys Date",
@@ -1224,8 +1030,9 @@
             "name": "News Show Entrance",
             "connected_region": "News Show",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1248,14 +1055,20 @@
             "name": "Core Exit",
             "connected_region": "New Home",
             "access_rule": {
-              "type": "helper",
-              "name": "_undertale_has_plot",
+              "rule": "_undertale_has_plot",
+              "options": [],
               "args": [
                 {
-                  "type": "constant",
-                  "value": "Mettaton Plush"
+                  "rule": "Constant",
+                  "options": [],
+                  "args": {
+                    "value": "Mettaton Plush"
+                  },
+                  "_converted_from_cc": true
                 }
-              ]
+              ],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -1264,18 +1077,11 @@
             "name": "Trash Burger",
             "id": 79011,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Core"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Core"
+              }
             },
             "item": {
               "name": "1000G",
@@ -1289,18 +1095,11 @@
             "name": "Mettaton Plot",
             "id": 79062,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Core Exit"
-                },
-                {
-                  "type": "constant",
-                  "value": "Entrance"
-                }
-              ]
+              "rule": "CanReachEntrance",
+              "options": [],
+              "args": {
+                "entrance_name": "Core Exit"
+              }
             },
             "item": {
               "name": "1000G",
@@ -1319,31 +1118,41 @@
             "name": "New Home Exit",
             "connected_region": "Last Corridor",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Left Home Key"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Left Home Key"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Right Home Key"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Right Home Key"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Key Piece",
-                  "count": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "setting_value",
-                      "setting": "key_pieces"
-                    },
-                    "attr": "value"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Key Piece",
+                    "count": {
+                      "rule": "SettingValue",
+                      "options": [],
+                      "args": {
+                        "setting": "key_pieces"
+                      }
+                    }
                   }
                 }
               ]
@@ -1355,18 +1164,11 @@
             "name": "Present Knife",
             "id": 79012,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "New Home"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Cowboy Hat",
@@ -1380,18 +1182,11 @@
             "name": "Present Locket",
             "id": 79013,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "New Home"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Left Home Key",
@@ -1405,18 +1200,11 @@
             "name": "Left New Home Key",
             "id": 79064,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "New Home"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Face Steak",
@@ -1430,18 +1218,11 @@
             "name": "Right New Home Key",
             "id": 79065,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "New Home"
-                },
-                {
-                  "type": "constant",
-                  "value": "Region"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "New Home"
+              }
             },
             "item": {
               "name": "Manly Bandanna",
@@ -1460,8 +1241,9 @@
             "name": "Last Corridor Exit",
             "connected_region": "Barrier",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2533,29 +2315,29 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
-        "key_hunt": 0,
+        "key_hunt": "false",
         "key_pieces": 5,
         "local_items": [],
-        "no_equips": 0,
+        "no_equips": "false",
         "non_local_items": [],
-        "only_flakes": 0,
+        "only_flakes": "false",
         "plando_items": [],
         "priority_locations": [],
-        "prog_armor": 0,
-        "prog_weapons": 0,
+        "prog_armor": "false",
+        "prog_weapons": "false",
         "progression_balancing": 50,
-        "rando_item_button": 0,
-        "rando_love": 0,
-        "rando_stats": 0,
-        "route_required": 0,
+        "rando_item_button": "false",
+        "rando_love": "false",
+        "rando_stats": "false",
+        "route_required": "neutral",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "starting_area": 0,
-        "temy_include": 1
+        "starting_area": "ruins",
+        "temy_include": "true"
       },
       "world_directory": "undertale"
     }

@@ -16,7 +16,7 @@
       ],
       "last_updated": "2025-12-20T22:38:37.596882"
     },
-    "last_updated": "2025-12-20T22:38:37.596879",
+    "last_updated": "2025-12-21T00:33:23.262781",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3920,47 +3920,35 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "5bb2e3a165213535f0b0a4f52baa888c6c6c5d79bcdfed52e84060d241520f4d",
-          "new_sphere_log_hash": "01fdf597f989f97df024cf4abf24e1ad242ccc124d733e6b06dc51416e782a63",
-          "original_rules_hash": "5bb2e3a165213535f0b0a4f52baa888c6c6c5d79bcdfed52e84060d241520f4d",
-          "original_sphere_log_hash": "01fdf597f989f97df024cf4abf24e1ad242ccc124d733e6b06dc51416e782a63",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-20T22:37:12.928206"
-        }
-      },
       "game_name_from_filename": "undertale",
       "game_name_from_yaml": "Undertale",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.41,
+        "processing_time_seconds": 6.43,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 59903,
+        "size_bytes": 59907,
         "size_mb": 0.06
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.32,
-        "return_code": 1,
-        "sphere_reached": 3.2,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.37,
+        "return_code": 0,
+        "sphere_reached": 4.3,
+        "success": true,
         "total_spheres": 4.3,
         "warning_count": 0
       },
       "template_filename": "Undertale.yaml",
-      "timestamp": "2025-12-20T22:36:20.376237",
+      "timestamp": "2025-12-21T00:33:08.056185",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
