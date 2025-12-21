@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-20 23:28:34
+**Generated:** 2025-12-21 03:25:28
 
-**Source Data Created:** 2025-12-20T22:48:46.339148
+**Source Data Created:** 2025-12-21T02:52:03.095502
 
-**Source Data Last Updated:** 2025-12-20T22:48:46.339153
+**Source Data Last Updated:** 2025-12-21T02:52:03.095509
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 71 (97.3%)
-- **Failed:** 2 (2.7%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 27/71 (38.0% of passed)
-- **Passing with Generic Logic:** 63/71 (88.7% of passed)
-- **Passing with Both Generic:** 27/71 (38.0% of passed)
+- **Passing with Generic Exporter:** 28/73 (38.4% of passed)
+- **Passing with Generic Logic:** 64/73 (87.7% of passed)
+- **Passing with Both Generic:** 28/73 (38.4% of passed)
 
 ## Test Results
 
@@ -61,7 +61,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 33.8KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.1KB | ✅ |
-| Lingo | ❌ Failed | 0 | 0 | 6.12 | 🔴 0.0% | 41.4KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 41.4KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | 0.4KB | ✅ |
@@ -96,7 +96,7 @@
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 4.0KB | ✅ |
-| Undertale | ❌ Failed | 0 | 3.4 | 5.1 | 🟡 66.7% | ✅ | ✅ |
+| Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |

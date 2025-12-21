@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-20 23:28:34
+**Generated:** 2025-12-21 03:25:28
 
-**Source Data Created:** 2025-12-20T22:38:37.596874
+**Source Data Created:** 2025-12-21T02:42:26.380436
 
-**Source Data Last Updated:** 2025-12-20T22:38:37.596879
+**Source Data Last Updated:** 2025-12-21T02:42:26.380442
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 71 (97.3%)
-- **Failed:** 2 (2.7%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 1
 - **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 27/71 (38.0% of passed)
-- **Passing with Generic Logic:** 63/71 (88.7% of passed)
-- **Passing with Both Generic:** 27/71 (38.0% of passed)
+- **Passing with Generic Exporter:** 28/73 (38.4% of passed)
+- **Passing with Generic Logic:** 64/73 (87.7% of passed)
+- **Passing with Both Generic:** 28/73 (38.4% of passed)
 
 ## Test Results
 
@@ -61,7 +61,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.8KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 9.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.1KB | ✅ |
-| Lingo | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | 41.4KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 41.4KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.4KB | ✅ |
@@ -96,7 +96,7 @@
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.0KB | ✅ |
-| Undertale | ❌ Failed | 0 | 3.2 | 4.3 | 🟡 74.4% | ✅ | ✅ |
+| Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -110,7 +110,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Celeste 64 | 1 | 2025-12-20 22:36 | Previously failed, now passing |
+| Landstalker - The Treasures of King Nole | 1 | 2025-12-21 02:41 | Previously failed, now passing |
 
 
 ## Notes

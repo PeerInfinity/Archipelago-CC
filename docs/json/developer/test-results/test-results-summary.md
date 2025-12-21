@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-20 23:28:34
+**Generated:** 2025-12-21 03:25:28
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,10 +18,10 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 71/73 passed (97.3%)
-- **Full Test:** 71/73 passed (97.3%)
-- **Multiclient Test:** 71/73 passed (97.3%)
-- **Multiworld Test:** 71/73 passed (97.3%)
+- **Minimal Test:** 73/73 passed (100.0%)
+- **Full Test:** 73/73 passed (100.0%)
+- **Multiclient Test:** 73/73 passed (100.0%)
+- **Multiworld Test:** 73/73 passed (100.0%)
 
 ### Intermittent Failures
 
@@ -32,19 +32,19 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 71/73 (97.3%)
+- **Templates passing all 4 tests:** 73/73 (100.0%)
 - **Templates passing 3 tests:** 0/73 (0.0%)
 - **Templates passing 2 tests:** 0/73 (0.0%)
 - **Templates passing 1 test:** 0/73 (0.0%)
-- **Templates passing 0 tests:** 2/73 (2.7%)
+- **Templates passing 0 tests:** 0/73 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 71 templates passing all 4 tests:
+Of the 73 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 27/71 (38.0%)
-- **Passing with Generic Logic:** 63/71 (88.7%)
-- **Passing with Both Generic:** 27/71 (38.0%)
+- **Passing with Generic Exporter:** 28/73 (38.4%)
+- **Passing with Generic Logic:** 64/73 (87.7%)
+- **Passing with Both Generic:** 28/73 (38.4%)
 
 **Combined Custom Code Size:**
 
@@ -87,7 +87,7 @@ Of the 71 templates passing all 4 tests:
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 33.8KB | 105.3KB | 1452.9KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | 9.0KB | 1151.3KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.1KB | ✅ | 242.1KB |
-| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 41.4KB | 10.7KB | 720.8KB |
+| Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 41.4KB | 10.7KB | 720.8KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 17.5KB | ✅ | 655.5KB |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 125.2KB |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.4KB | ✅ | 387.9KB |
@@ -122,7 +122,7 @@ Of the 71 templates passing all 4 tests:
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 220.2KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.4KB | ✅ | 322.4KB |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 272.3KB |
-| Undertale | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 64.2KB |
+| Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 64.2KB |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 24.7KB |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.6KB | ✅ | 45.0KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 55.2KB |

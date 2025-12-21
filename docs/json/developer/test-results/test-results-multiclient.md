@@ -6,21 +6,21 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-20 23:28:34
+**Generated:** 2025-12-21 03:25:28
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 71 (97.3%)
-- **Failed:** 2 (2.7%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 27/71 (38.0% of passed)
-- **Passing with Generic Logic:** 63/71 (88.7% of passed)
-- **Passing with Both Generic:** 27/71 (38.0% of passed)
+- **Passing with Generic Exporter:** 28/73 (38.4% of passed)
+- **Passing with Generic Logic:** 64/73 (87.7% of passed)
+- **Passing with Both Generic:** 28/73 (38.4% of passed)
 
 ## Test Results
 
@@ -57,7 +57,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 33.8KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.1KB | ✅ |
-| Lingo | ❌ Failed | 0 | ❌ | 0/156 | 0/155 | 0/1 | ❌ | 0/156 | 41.4KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 41.4KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 17.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.4KB | ✅ |
@@ -92,7 +92,7 @@
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 4.0KB | ✅ |
-| Undertale | ❌ Failed | 0 | ❌ | 49/51 | 46/48 | 3/3 | ❌ | 45/51 | ✅ | ✅ |
+| Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
