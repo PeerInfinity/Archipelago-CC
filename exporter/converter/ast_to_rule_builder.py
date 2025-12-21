@@ -461,6 +461,8 @@ class ASTToRuleBuilder:
             reach_type = get_arg_value(1, 'Region')
             if reach_type == 'Location':
                 return self._make_rule('CanReachLocation', {'location_name': name})
+            elif reach_type == 'Entrance':
+                return self._make_rule('CanReachEntrance', {'entrance_name': name})
             else:
                 return self._make_rule('CanReachRegion', {'region_name': name})
 
