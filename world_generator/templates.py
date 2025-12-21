@@ -315,11 +315,11 @@ def generate_regions_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Build region list - always include Menu (required by Archipelago)
-    # Preserve original order from JSON (Menu first if not already present)
+    # Build region list - preserve exactly what's in the original data
+    # Note: We no longer add "Menu" automatically. Instead, if the original world
+    # doesn't have Menu, we set origin_region_name in the world class to point
+    # to the actual start region (see generate_init_py).
     region_names = list(data.regions.keys())
-    if "Menu" not in region_names:
-        region_names.insert(0, "Menu")
     # Escape quotes in region names
     region_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in region_names)
 
@@ -335,12 +335,7 @@ def generate_regions_py(data: ExtractedData) -> str:
     # Build entrance connections
     entrance_lines = []
 
-    # Add entrance from Menu to start region if Menu wasn't in original data
-    if "Menu" not in data.regions:
-        start_region = data.start_region.replace('"', '\\"')
-        entrance_lines.append(
-            f'    _create_entrance(regions["Menu"], regions["{start_region}"], "MenuToStart")'
-        )
+    # Note: We no longer add MenuToStart entrance. The world uses origin_region_name instead.
 
     for exit_name, exit_data in data.exits.items():
         source = exit_data.source_region.replace('"', '\\"')
@@ -1184,7 +1179,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     # Build origin_region_name section
     # This specifies the true starting region for the exporter, even when Menu is added
     if data.start_region and data.start_region != "Menu":
-        origin_region_name_section = f'\n    origin_region_name: str = "{data.start_region}"'
+        start_region_escaped = data.start_region.replace('\\', '\\\\').replace('"', '\\"')
+        origin_region_name_section = f'\n    origin_region_name: str = "{start_region_escaped}"'
     else:
         origin_region_name_section = ''
 
