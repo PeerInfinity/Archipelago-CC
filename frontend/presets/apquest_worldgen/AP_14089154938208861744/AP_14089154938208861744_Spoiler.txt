@@ -36,15 +36,9 @@ Playthrough:
 
 }
 1: {
-  Top Middle Chest: Sword
-}
-2: {
+  Final Boss Defeated: Victory
   Right Room Enemy Drop: Key
-}
-3: {
   Top Left Room Button: Top Left Room Button Pressed
   Top Left Room Chest: Shield
-}
-4: {
-  Final Boss Defeated: Victory
+  Top Middle Chest: Sword
 }

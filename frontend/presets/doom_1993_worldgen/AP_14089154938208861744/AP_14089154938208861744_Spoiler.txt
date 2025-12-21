@@ -384,143 +384,107 @@ Playthrough:
   Hell Keep (E3M1)
 }
 1: {
-  Deimos Anomaly (E2M1) - Blue keycard: Shotgun
-  Deimos Anomaly (E2M1) - Red keycard: Tower of Babel (E2M8)
-  Hangar (E1M1) - Exit: Hangar (E1M1) - Complete
-}
-2: {
-  Hell Keep (E3M1) - Exit: Hell Keep (E3M1) - Complete
-  Hell Keep (E3M1) - Rocket launcher: Computer Station (E1M7)
-  Tower of Babel (E2M8) - Mega Armor: Toxin Refinery (E1M3)
-}
-3: {
-  Computer Station (E1M7) - Shotgun 2: Unholy Cathedral (E3M5) - Blue skull key
-  Toxin Refinery (E1M3) - Armor 2: Fortress of Mystery (E2M9) - Blue skull key
-  Toxin Refinery (E1M3) - Chaingun: Chaingun
-  Toxin Refinery (E1M3) - Rocket launcher: Phobos Lab (E1M5)
-}
-4: {
-  Phobos Lab (E1M5) - Mega Armor: Refinery (E2M3)
-  Phobos Lab (E1M5) - Shotgun 2: Command Center (E2M5)
-}
-5: {
-  Refinery (E2M3) - Armor: Refinery (E2M3) - Blue keycard
-  Refinery (E2M3) - Blue keycard: BFG9000
-  Refinery (E2M3) - Chaingun: Unholy Cathedral (E3M5) - Yellow skull key
-  Refinery (E2M3) - Mega Armor: Containment Area (E2M2) - Red keycard
-  Refinery (E2M3) - Plasma gun: Phobos Lab (E1M5) - Yellow keycard
-}
-6: {
-  Phobos Lab (E1M5) - Chaingun: Fortress of Mystery (E2M9) - Yellow skull key
-  Phobos Lab (E1M5) - Computer area map: Military Base (E1M9) - Blue keycard
-  Refinery (E2M3) - Exit: Refinery (E2M3) - Complete
-  Tower of Babel (E2M8) - Exit: Tower of Babel (E2M8) - Complete
-  Tower of Babel (E2M8) - Rocket launcher: Fortress of Mystery (E2M9) - Red skull key
-  Tower of Babel (E2M8) - Supercharge: Nuclear Plant (E1M2)
-}
-7: {
-  Nuclear Plant (E1M2) - Shotgun: Computer Station (E1M7) - Yellow keycard
-  Nuclear Plant (E1M2) - Supercharge: Rocket launcher
-}
-8: {
-  Computer Station (E1M7) - Armor: Containment Area (E2M2) - Yellow keycard
-  Computer Station (E1M7) - Armor 2: Deimos Lab (E2M4) - Blue keycard
-  Computer Station (E1M7) - Computer area map: Command Control (E1M4)
-  Computer Station (E1M7) - Mega Armor: Pandemonium (E3M3) - Blue skull key
-}
-9: {
-  Command Control (E1M4) - Blue keycard: Mt. Erebus (E3M6)
-}
-10: {
-  Mt. Erebus (E3M6) - Armor: Nuclear Plant (E1M2) - Red keycard
-  Mt. Erebus (E3M6) - Blue skull key: Spawning Vats (E2M7)
-  Mt. Erebus (E3M6) - Plasma gun: Limbo (E3M7) - Blue skull key
-  Mt. Erebus (E3M6) - Supercharge 2: Toxin Refinery (E1M3) - Yellow keycard
-}
-11: {
-  Nuclear Plant (E1M2) - Backpack 2: Spawning Vats (E2M7) - Red keycard
-  Nuclear Plant (E1M2) - Exit: Nuclear Plant (E1M2) - Complete
-  Nuclear Plant (E1M2) - Mega Armor: Plasma gun
-}
-12: {
-  Command Center (E2M5) - Armor 2: Halls of the Damned (E2M6) - Blue skull key
-  Command Center (E2M5) - Berserk: Central Processing (E1M6) - Blue keycard
-  Command Center (E2M5) - Chaingun: Pandemonium (E3M3)
-  Command Center (E2M5) - Exit: Command Center (E2M5) - Complete
-  Spawning Vats (E2M7) - Blue keycard: Halls of the Damned (E2M6) - Red skull key
-  Spawning Vats (E2M7) - Exit: Spawning Vats (E2M7) - Complete
-  Spawning Vats (E2M7) - Plasma gun: Deimos Lab (E2M4)
-  Spawning Vats (E2M7) - Rocket launcher: Spawning Vats (E2M7) - Yellow keycard
-}
-13: {
-  Deimos Lab (E2M4) - Armor: Central Processing (E1M6) - Red keycard
-  Deimos Lab (E2M4) - Berserk: Central Processing (E1M6) - Yellow keycard
-  Deimos Lab (E2M4) - Partial invisibility: Toxin Refinery (E1M3) - Blue keycard
-  Deimos Lab (E2M4) - Yellow keycard: Command Control (E1M4) - Blue keycard
-  Pandemonium (E3M3) - Armor: Central Processing (E1M6)
-  Pandemonium (E3M3) - BFG9000: Slough of Despair (E3M2) - Blue skull key
-  Pandemonium (E3M3) - Berserk: House of Pain (E3M4) - Blue skull key
-  Pandemonium (E3M3) - Exit: Pandemonium (E3M3) - Complete
-  Pandemonium (E3M3) - Invulnerability: Phobos Anomaly (E1M8)
-  Pandemonium (E3M3) - Shotgun: Warrens (E3M9)
-}
-14: {
   Central Processing (E1M6) - Armor 2: Limbo (E3M7) - Red skull key
   Central Processing (E1M6) - Armor 4: Warrens (E3M9) - Blue skull key
   Central Processing (E1M6) - Exit: Central Processing (E1M6) - Complete
   Central Processing (E1M6) - Partial invisibility: Deimos Anomaly (E2M1) - Blue keycard
+  Command Center (E2M5) - Armor 2: Halls of the Damned (E2M6) - Blue skull key
+  Command Center (E2M5) - Berserk: Central Processing (E1M6) - Blue keycard
+  Command Center (E2M5) - Chaingun: Pandemonium (E3M3)
+  Command Center (E2M5) - Exit: Command Center (E2M5) - Complete
+  Command Control (E1M4) - Blue keycard: Mt. Erebus (E3M6)
   Command Control (E1M4) - Exit: Command Control (E1M4) - Complete
-  Phobos Anomaly (E1M8) - Chaingun: Containment Area (E2M2)
-  Phobos Anomaly (E1M8) - Exit: Phobos Anomaly (E1M8) - Complete
-  Phobos Anomaly (E1M8) - Shotgun: Computer Station (E1M7) - Blue keycard
-  Toxin Refinery (E1M3) - Exit: Toxin Refinery (E1M3) - Complete
-}
-15: {
+  Computer Station (E1M7) - Armor: Containment Area (E2M2) - Yellow keycard
+  Computer Station (E1M7) - Armor 2: Deimos Lab (E2M4) - Blue keycard
+  Computer Station (E1M7) - Computer area map: Command Control (E1M4)
   Computer Station (E1M7) - Exit: Computer Station (E1M7) - Complete
+  Computer Station (E1M7) - Mega Armor: Pandemonium (E3M3) - Blue skull key
+  Computer Station (E1M7) - Shotgun 2: Unholy Cathedral (E3M5) - Blue skull key
   Containment Area (E2M2) - Berserk: Slough of Despair (E3M2)
   Containment Area (E2M2) - Chaingun: Limbo (E3M7)
   Containment Area (E2M2) - Computer area map: Unholy Cathedral (E3M5)
   Containment Area (E2M2) - Exit: Containment Area (E2M2) - Complete
   Containment Area (E2M2) - Rocket launcher: Fortress of Mystery (E2M9)
   Containment Area (E2M2) - Yellow keycard: Mt. Erebus (E3M6) - Blue skull key
+  Deimos Anomaly (E2M1) - Blue keycard: Shotgun
   Deimos Anomaly (E2M1) - Exit: Deimos Anomaly (E2M1) - Complete
-  Warrens (E3M9) - Chaingun: Halls of the Damned (E2M6)
-}
-16: {
+  Deimos Anomaly (E2M1) - Red keycard: Tower of Babel (E2M8)
+  Deimos Lab (E2M4) - Armor: Central Processing (E1M6) - Red keycard
+  Deimos Lab (E2M4) - Berserk: Central Processing (E1M6) - Yellow keycard
+  Deimos Lab (E2M4) - Exit: Deimos Lab (E2M4) - Complete
+  Deimos Lab (E2M4) - Partial invisibility: Toxin Refinery (E1M3) - Blue keycard
+  Deimos Lab (E2M4) - Yellow keycard: Command Control (E1M4) - Blue keycard
+  Dis (E3M8) - Exit: Dis (E3M8) - Complete
   Fortress of Mystery (E2M9) - Exit: Fortress of Mystery (E2M9) - Complete
   Fortress of Mystery (E2M9) - Shotgun: Phobos Lab (E1M5) - Blue keycard
   Halls of the Damned (E2M6) - Armor: Deimos Lab (E2M4) - Yellow keycard
+  Halls of the Damned (E2M6) - Exit: Halls of the Damned (E2M6) - Complete
   Halls of the Damned (E2M6) - Partial invisibility: Limbo (E3M7) - Yellow skull key
+  Halls of the Damned (E2M6) - Partial invisibility 2: Command Control (E1M4) - Yellow keycard
+  Hangar (E1M1) - Exit: Hangar (E1M1) - Complete
+  Hell Keep (E3M1) - Exit: Hell Keep (E3M1) - Complete
+  Hell Keep (E3M1) - Rocket launcher: Computer Station (E1M7)
+  House of Pain (E3M4) - Armor: Halls of the Damned (E2M6) - Yellow skull key
+  House of Pain (E3M4) - Exit: House of Pain (E3M4) - Complete
+  Limbo (E3M7) - Exit: Limbo (E3M7) - Complete
   Limbo (E3M7) - Mega Armor: Military Base (E1M9) - Red keycard
   Limbo (E3M7) - Plasma gun: Chainsaw
   Limbo (E3M7) - Supercharge: Spawning Vats (E2M7) - Blue keycard
-  Mt. Erebus (E3M6) - Exit: Mt. Erebus (E3M6) - Complete
-  Slough of Despair (E3M2) - Blue skull key: House of Pain (E3M4) - Red skull key
-  Slough of Despair (E3M2) - Exit: Slough of Despair (E3M2) - Complete
-  Slough of Despair (E3M2) - Plasma gun: House of Pain (E3M4) - Yellow skull key
-  Slough of Despair (E3M2) - Rocket launcher: Computer Station (E1M7) - Red keycard
-  Unholy Cathedral (E3M5) - Chaingun: Military Base (E1M9) - Yellow keycard
-  Unholy Cathedral (E3M5) - Exit: Unholy Cathedral (E3M5) - Complete
-  Unholy Cathedral (E3M5) - Plasma gun: Military Base (E1M9)
-  Unholy Cathedral (E3M5) - Rocket launcher: Warrens (E3M9) - Red skull key
-}
-17: {
-  Deimos Lab (E2M4) - Exit: Deimos Lab (E2M4) - Complete
-  Limbo (E3M7) - Exit: Limbo (E3M7) - Complete
   Military Base (E1M9) - Armor: Dis (E3M8)
   Military Base (E1M9) - Exit: Military Base (E1M9) - Complete
   Military Base (E1M9) - Red keycard: Deimos Anomaly (E2M1) - Red keycard
   Military Base (E1M9) - Yellow keycard: House of Pain (E3M4)
+  Mt. Erebus (E3M6) - Armor: Nuclear Plant (E1M2) - Red keycard
+  Mt. Erebus (E3M6) - Blue skull key: Spawning Vats (E2M7)
+  Mt. Erebus (E3M6) - Exit: Mt. Erebus (E3M6) - Complete
+  Mt. Erebus (E3M6) - Plasma gun: Limbo (E3M7) - Blue skull key
+  Mt. Erebus (E3M6) - Supercharge 2: Toxin Refinery (E1M3) - Yellow keycard
+  Nuclear Plant (E1M2) - Backpack 2: Spawning Vats (E2M7) - Red keycard
+  Nuclear Plant (E1M2) - Exit: Nuclear Plant (E1M2) - Complete
+  Nuclear Plant (E1M2) - Mega Armor: Plasma gun
+  Nuclear Plant (E1M2) - Shotgun: Computer Station (E1M7) - Yellow keycard
+  Nuclear Plant (E1M2) - Supercharge: Rocket launcher
+  Pandemonium (E3M3) - Armor: Central Processing (E1M6)
+  Pandemonium (E3M3) - BFG9000: Slough of Despair (E3M2) - Blue skull key
+  Pandemonium (E3M3) - Berserk: House of Pain (E3M4) - Blue skull key
+  Pandemonium (E3M3) - Exit: Pandemonium (E3M3) - Complete
+  Pandemonium (E3M3) - Invulnerability: Phobos Anomaly (E1M8)
+  Pandemonium (E3M3) - Shotgun: Warrens (E3M9)
+  Phobos Anomaly (E1M8) - Chaingun: Containment Area (E2M2)
+  Phobos Anomaly (E1M8) - Exit: Phobos Anomaly (E1M8) - Complete
+  Phobos Anomaly (E1M8) - Shotgun: Computer Station (E1M7) - Blue keycard
+  Phobos Lab (E1M5) - Chaingun: Fortress of Mystery (E2M9) - Yellow skull key
+  Phobos Lab (E1M5) - Computer area map: Military Base (E1M9) - Blue keycard
   Phobos Lab (E1M5) - Exit: Phobos Lab (E1M5) - Complete
+  Phobos Lab (E1M5) - Mega Armor: Refinery (E2M3)
+  Phobos Lab (E1M5) - Shotgun 2: Command Center (E2M5)
+  Refinery (E2M3) - Armor: Refinery (E2M3) - Blue keycard
+  Refinery (E2M3) - Blue keycard: BFG9000
+  Refinery (E2M3) - Chaingun: Unholy Cathedral (E3M5) - Yellow skull key
+  Refinery (E2M3) - Exit: Refinery (E2M3) - Complete
+  Refinery (E2M3) - Mega Armor: Containment Area (E2M2) - Red keycard
+  Refinery (E2M3) - Plasma gun: Phobos Lab (E1M5) - Yellow keycard
+  Slough of Despair (E3M2) - Blue skull key: House of Pain (E3M4) - Red skull key
+  Slough of Despair (E3M2) - Exit: Slough of Despair (E3M2) - Complete
+  Slough of Despair (E3M2) - Plasma gun: House of Pain (E3M4) - Yellow skull key
+  Slough of Despair (E3M2) - Rocket launcher: Computer Station (E1M7) - Red keycard
+  Spawning Vats (E2M7) - Blue keycard: Halls of the Damned (E2M6) - Red skull key
   Spawning Vats (E2M7) - Chaingun: Containment Area (E2M2) - Blue keycard
+  Spawning Vats (E2M7) - Exit: Spawning Vats (E2M7) - Complete
+  Spawning Vats (E2M7) - Plasma gun: Deimos Lab (E2M4)
+  Spawning Vats (E2M7) - Rocket launcher: Spawning Vats (E2M7) - Yellow keycard
+  Tower of Babel (E2M8) - Exit: Tower of Babel (E2M8) - Complete
+  Tower of Babel (E2M8) - Mega Armor: Toxin Refinery (E1M3)
+  Tower of Babel (E2M8) - Rocket launcher: Fortress of Mystery (E2M9) - Red skull key
+  Tower of Babel (E2M8) - Supercharge: Nuclear Plant (E1M2)
+  Toxin Refinery (E1M3) - Armor 2: Fortress of Mystery (E2M9) - Blue skull key
+  Toxin Refinery (E1M3) - Chaingun: Chaingun
+  Toxin Refinery (E1M3) - Exit: Toxin Refinery (E1M3) - Complete
+  Toxin Refinery (E1M3) - Rocket launcher: Phobos Lab (E1M5)
+  Unholy Cathedral (E3M5) - Chaingun: Military Base (E1M9) - Yellow keycard
+  Unholy Cathedral (E3M5) - Exit: Unholy Cathedral (E3M5) - Complete
+  Unholy Cathedral (E3M5) - Plasma gun: Military Base (E1M9)
+  Unholy Cathedral (E3M5) - Rocket launcher: Warrens (E3M9) - Red skull key
+  Warrens (E3M9) - Chaingun: Halls of the Damned (E2M6)
   Warrens (E3M9) - Exit: Warrens (E3M9) - Complete
-}
-18: {
-  Dis (E3M8) - Exit: Dis (E3M8) - Complete
-  House of Pain (E3M4) - Armor: Halls of the Damned (E2M6) - Yellow skull key
-  House of Pain (E3M4) - Exit: House of Pain (E3M4) - Complete
-}
-19: {
-  Halls of the Damned (E2M6) - Exit: Halls of the Damned (E2M6) - Complete
-  Halls of the Damned (E2M6) - Partial invisibility 2: Command Control (E1M4) - Yellow keycard
 }

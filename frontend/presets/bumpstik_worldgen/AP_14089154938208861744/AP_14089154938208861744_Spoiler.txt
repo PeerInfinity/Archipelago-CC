@@ -128,6 +128,7 @@ Playthrough:
 
 }
 1: {
+  Bonus Booster 5: Treasure Bumper
   Level 1 - 1000 Level Points: Treasure Bumper
   Level 1 - 1000 Points: Treasure Bumper
   Level 1 - 1500 Level Points: Hazard Bumper
@@ -138,14 +139,6 @@ Playthrough:
   Level 1 - 75 Level Bumpers: Booster Bumper
   Level 1 - 750 Points: Booster Bumper
   Level 1 - Combo 5: Treasure Bumper
-}
-2: {
-  Treasure Bumper 1: Treasure Bumper
-  Treasure Bumper 2: Treasure Bumper
-  Treasure Bumper 3: Treasure Bumper
-  Treasure Bumper 4: Treasure Bumper
-}
-3: {
   Level 2 - 100 Level Bumpers: Treasure Bumper
   Level 2 - 1000 Level Points: Treasure Bumper
   Level 2 - 1000 Points: Hazard Bumper
@@ -156,10 +149,6 @@ Playthrough:
   Level 2 - 3000 Level Points: Hazard Bumper
   Level 2 - 4000 Level Points: Hazard Bumper
   Level 2 - Combo 5: Hazard Bumper
-  Treasure Bumper 6: Booster Bumper
-  Treasure Bumper 9: Treasure Bumper
-}
-4: {
   Level 3 - 100 Level Bumpers: Treasure Bumper
   Level 3 - 125 Level Bumpers: Hazard Bumper
   Level 3 - 1600 Points: Treasure Bumper
@@ -174,17 +163,6 @@ Playthrough:
   Level 3 - Chain x2: Hazard Bumper
   Level 3 - Combo 5: Hazard Bumper
   Level 3 - Combo 7: Hazard Bumper
-  Treasure Bumper 13: Treasure Bumper
-  Treasure Bumper 14: Booster Bumper
-  Treasure Bumper 15: Hazard Bumper
-}
-5: {
-  Treasure Bumper 17: Treasure Bumper
-  Treasure Bumper 21: Hazard Bumper
-  Treasure Bumper 22: Booster Bumper
-}
-6: {
-  Bonus Booster 5: Treasure Bumper
   Level 4 - 125 Level Bumpers: Hazard Bumper
   Level 4 - 150 Level Bumpers: Hazard Bumper
   Level 4 - 1500 Points: Treasure Bumper
@@ -193,18 +171,24 @@ Playthrough:
   Level 4 - 9000 Level Points: Treasure Bumper
   Level 4 - Combo 5: Treasure Bumper
   Level 4 - Combo 7: Hazard Bumper
-}
-7: {
+  Level 5 - 50,000+ Total Points: Treasure Bumper
+  Treasure Bumper 1: Treasure Bumper
+  Treasure Bumper 13: Treasure Bumper
+  Treasure Bumper 14: Booster Bumper
+  Treasure Bumper 15: Hazard Bumper
+  Treasure Bumper 17: Treasure Bumper
+  Treasure Bumper 2: Treasure Bumper
+  Treasure Bumper 21: Hazard Bumper
+  Treasure Bumper 22: Booster Bumper
   Treasure Bumper 25: Treasure Bumper
   Treasure Bumper 26: Treasure Bumper
   Treasure Bumper 27: Hazard Bumper
   Treasure Bumper 28: Treasure Bumper
-}
-8: {
   Treasure Bumper 29: Hazard Bumper
+  Treasure Bumper 3: Treasure Bumper
   Treasure Bumper 31: Treasure Bumper
-}
-9: {
-  Level 5 - 50,000+ Total Points: Treasure Bumper
   Treasure Bumper 32: Hazard Bumper
+  Treasure Bumper 4: Treasure Bumper
+  Treasure Bumper 6: Booster Bumper
+  Treasure Bumper 9: Treasure Bumper
 }

@@ -805,6 +805,8 @@ Playthrough:
   (HB2) Postern AP Boost: Rising Dragon
   (HB2) Postern Castle Perimeter Map: Peter Pan
   (HB2) Postern Gull Wing: Air Combo Plus
+  (HB2) Proof of Peace: Decisive Pumpkin
+  (HB2) Winner's Proof: Dodge Roll
   (HT) Candy Cane Lane Mythril Stone: Star Seeker
   (HT) Hinterlands Mythril Stone: Guardian Soul
   (HT) Oogie Boogie Bonus: Goofy Slot 1: Lucky Emblem
@@ -866,6 +868,8 @@ Playthrough:
   (Post PL2: Peak) Data Saix: Ultimate Mushroom
   (Post SP2: Central Computer Core) Data Larxene: Aerial Dive
   (Post TR:Hall of the Cornerstone) AS Marluxia: Limit Form
+  (Post TR:Hall of the Cornerstone) Lingering Will Bonus: Sora Slot 1: Reflect Element
+  (Post TR:Hall of the Cornerstone) Lingering Will Proof of Connection: Second Chance
   (Post TWTNW3: The Altar of Naught) Data Xemnas: Berserk Charge
   (SP) Canyon Dark Crystal: Auto Valor
   (SP) Hallway Power Crystal: Lucky Emblem
@@ -942,6 +946,7 @@ Playthrough:
   Data Xemnas Event Location: Data Xemnas Event
   Data Xigbar Event Location: Data Xigbar Event
   Data Zexion Event Location: Data Zexion Event
+  Final Xemnas Event Location: Victory
   Final level 5: Fire Element
   Final level 6: Lucky Emblem
   Final level 7: Hero's Crest
@@ -974,11 +979,13 @@ Playthrough:
   Limit level 7: Proof of Connection
   Luxord Event Location: Luxord Event
   Master Control Program Event Location: Master Control Program Event
+  Mushroom 13 Event Location: Mushroom 13 Event
   Old Pete Event Location: Old Pete Event
   Olympus Coliseum Hade's Paradox Event Location: Olympus Coliseum Hade's Paradox Event
   Olympus Pete Event Location: Olympus Pete Event
   Oogie Boogie Event Location: Oogie Boogie Event
   Pain and Panic Cup Event Location: Pain and Panic Cup Event
+  Premium Mushroom Slot: Donald Fantasia
   Prison Keeper Event Location: Prison Keeper Event
   Roxas Event Location: Roxas Event
   Saix Event Location: Saix Event
@@ -987,6 +994,7 @@ Playthrough:
   Sephiroth Event Location: Sephiroth Event
   Shan Yu Event Location: Shan Yu Event
   Storm Rider Event Location: Storm Rider Event
+  Terra Event Location: Terra Event
   The Experiment Event Location: The Experiment Event
   Thousand Heartless Event Location: Thousand Heartless Event
   Thresholder Event Location: Thresholder Event
@@ -1003,14 +1011,4 @@ Playthrough:
   Xaldin Event Location: Xaldin Event
   Xemnas Event Location: Xemnas Event
   Xigbar Event Location: Xigbar Event
-}
-2: {
-  (HB2) Proof of Peace: Decisive Pumpkin
-  (HB2) Winner's Proof: Dodge Roll
-  (Post TR:Hall of the Cornerstone) Lingering Will Bonus: Sora Slot 1: Reflect Element
-  (Post TR:Hall of the Cornerstone) Lingering Will Proof of Connection: Second Chance
-  Final Xemnas Event Location: Victory
-  Mushroom 13 Event Location: Mushroom 13 Event
-  Premium Mushroom Slot: Donald Fantasia
-  Terra Event Location: Terra Event
 }

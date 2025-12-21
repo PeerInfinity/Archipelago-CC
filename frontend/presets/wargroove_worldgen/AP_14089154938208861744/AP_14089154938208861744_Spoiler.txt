@@ -69,40 +69,22 @@ Playthrough:
 1: {
   A Knight's Folly: Caesar: Merfolk
   A Knight's Folly: Victory: Warship
-  Best Friendssss: Victory: Dragon
-  Humble Beginnings: Caesar: Ballista
-  Humble Beginnings: Chest 1: Final Bridges
-}
-2: {
-  Corrupted Inlet: Victory: Eastern Bridges
-  Mage Mayhem: Victory: Southern Walls
-}
-3: {
-  Endless Knight: Victory: Knight
-}
-4: {
   Archery Lessons: Chest: Harpoon Ship
-}
-5: {
-  The Churning Sea: Victory: Spearman
-}
-6: {
-  Rebel Village: Victory (Red): Archer
-}
-7: {
-  Frigid Archery: Light the Torch: Mage
-  Frigid Archery: Victory: Rifleman
-}
-8: {
+  Best Friendssss: Victory: Dragon
+  Corrupted Inlet: Victory: Eastern Bridges
   Darkest Knight: Victory: Harpy
   Deep Thicket: Find Sedge: Turtle
   Dragon Freeway: Victory: Barge
+  Endless Knight: Victory: Knight
+  Frigid Archery: Light the Torch: Mage
+  Frigid Archery: Victory: Rifleman
+  Humble Beginnings: Caesar: Ballista
+  Humble Beginnings: Chest 1: Final Bridges
+  Mage Mayhem: Victory: Southern Walls
   Open Season: Caesar: Final Walls
+  Rebel Village: Victory (Red): Archer
   Surrounded: Caesar: Thief
-}
-9: {
   Tenri's Fall: Victory: Final Sickle
-}
-10: {
+  The Churning Sea: Victory: Spearman
   Wargroove Finale: Victory: Wargroove Victory
 }

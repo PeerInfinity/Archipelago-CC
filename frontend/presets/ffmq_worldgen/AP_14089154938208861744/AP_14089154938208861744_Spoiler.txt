@@ -332,32 +332,50 @@ Playthrough:
   Bomb
 }
 1: {
-  Level Forest - Southeast Box: Mega Grenade
-  Long Spine: Long Spine Bombed
-  Old Man Barrel: Barrel Pushed
-  Tristam Companion: Tristam
-}
-2: {
+  Bomb Libra Block: Spencer Cave Libra Block Bombed
   Bone Dungeon B1 - Ribcage Waterway Box: Libra Crest
   Bone Dungeon B1 - Tristam: Dragon Claw
-  Short Spine: Short Spine Bombed
-  Tristam Bone Dungeon Item Given: Tristam Bone Item Given
-}
-3: {
-  Skull 1: Skull 1 Bombed
-}
-4: {
-  Bone Dungeon B2 - Lone Room Box: Axe
-  Skull 2: Skull 2 Bombed
-}
-5: {
   Bone Dungeon B2 - Flamerus Rex Chest: Sun Coin
-  Flamerus Rex: Flamerus Rex
-}
-6: {
+  Bone Dungeon B2 - Lone Room Box: Axe
+  Captain Mac: Ship Loaned
+  Collapse Spencer's Cave: Ship Liberated
+  Dark King: Dark King
+  Doom Castle 6F - West Box: Wakewater
   Doom Castle B2 - Sun Door Chest: Multi Key
+  Dualhead Hydra: Dualhead Hydra
+  Dullahan: Dullahan
+  Flamerus Rex: Flamerus Rex
+  Freezer Crab: Freezer Crab
   Giant Tree 2F - Mushroom Tunnel West Box: Gemini Crest
   Giant Tree 4F - West Slime Room Box: River Coin
+  Gidrah: Gidrah
+  Ice Golem: Ice Golem
+  Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
+  Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
+  Ice Pyramid 4F - Chest: Sky Coin
+  Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
+  Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
+  Ice Pyramid B1 - West Box: Jumbo Bomb
+  Jinn: Jinn
+  Kaeli 2: Kaeli 2
+  Kaeli Companion: Kaeli 1
+  Lava Dome - Exterior Dead End Caldera Box: Giant's Axe
+  Lava Dome - Hydra Room Northwest Box: Cat Claw
+  Lava Dome - U-Bend Room North Box: Charm Claw
+  Lava Dome Plate: Lava Dome Plate
+  Level Forest - Southeast Box: Mega Grenade
+  Long Spine: Long Spine Bombed
+  Mac Ship Steering Wheel: Ship Steering Wheel
+  Medusa: Medusa
+  Mine - Cliff Northeast Box: Elixir
+  Mine - Crescent Room Chest: Knight Sword
+  Mine - Parallel Room East Box: Battle Axe
+  Mine - Parallel Room West Box: Mobius Crest
+  Minotaur: Minotaur
+  Old Man Barrel: Barrel Pushed
+  Otto: Rainbow Bridge
+  Pazuzu: Pazuzu
+  Pazuzu 1F: Pazuzu 1F
   Pazuzu 2F: Pazuzu 2F
   Pazuzu 2F Lock: Pazuzu 2F Lock
   Pazuzu 3F: Pazuzu 3F
@@ -368,75 +386,23 @@ Playthrough:
   Pazuzu 6F Lock: Pazuzu 6F Lock
   Pazuzu's Tower 1F - Descent Bomb Wall Center Box: Steel Sword
   Pazuzu's Tower 6F - Chest: Venus Key
-  Rope Bridge - East Box: Tree Wither
-  Windia - Inn Bedroom South Box: Captain's Cap
-}
-7: {
-  Jinn: Jinn
-  Kaeli Companion: Kaeli 1
-  Lava Dome - Exterior Dead End Caldera Box: Giant's Axe
-  Lava Dome - U-Bend Room North Box: Charm Claw
-  Lava Dome Plate: Lava Dome Plate
-  Medusa: Medusa
-  Mine - Crescent Room Chest: Knight Sword
-  Mine - Parallel Room East Box: Battle Axe
-  Mine - Parallel Room West Box: Mobius Crest
-  Reuben Companion: Reuben 1
-  Volcano - Base East Right Box: Excalibur
-}
-8: {
-  Dualhead Hydra: Dualhead Hydra
-  Lava Dome - Hydra Room Northwest Box: Cat Claw
-  Mine - Cliff Northeast Box: Elixir
-  Minotaur: Minotaur
-  Reuben's dad Saved: Reuben Dad Saved
-  Ship Dock Access: Ship Dock Access
-}
-9: {
-  Kaeli 2: Kaeli 2
-}
-10: {
-  Windia - Kaeli: Sand Coin
-}
-11: {
-  Dullahan: Dullahan
-  Freezer Crab: Freezer Crab
-  Gidrah: Gidrah
-  Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
-  Pazuzu 1F: Pazuzu 1F
   Phanquid: Phanquid
   Phoebe Companion: Phoebe 1
-  Wintry Cave 2F - West Left Box: Thunder Rock
-}
-12: {
-  Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
-  Otto: Rainbow Bridge
-  Pazuzu: Pazuzu
-}
-13: {
-  Bomb Libra Block: Spencer Cave Libra Block Bombed
-  Collapse Spencer's Cave: Ship Liberated
-  Ice Golem: Ice Golem
-  Ice Pyramid 4F - Chest: Sky Coin
-  Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
-  Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
-  Ice Pyramid B1 - West Box: Jumbo Bomb
-}
-14: {
-  Captain Mac: Ship Loaned
-  Mac Ship Steering Wheel: Ship Steering Wheel
-}
-15: {
+  Reuben Companion: Reuben 1
+  Reuben's dad Saved: Reuben Dad Saved
+  Rope Bridge - East Box: Tree Wither
+  Ship Dock Access: Ship Dock Access
+  Short Spine: Short Spine Bombed
+  Skull 1: Skull 1 Bombed
+  Skull 2: Skull 2 Bombed
   Stone Golem: Stone Golem
-}
-16: {
-  Twinhead Wyvern: Twinhead Wyvern
-}
-17: {
-  Doom Castle 6F - West Box: Wakewater
-  Zuh: Zuh
-}
-18: {
-  Dark King: Dark King
   Summer Aquaria: Summer Aquaria
+  Tristam Bone Dungeon Item Given: Tristam Bone Item Given
+  Tristam Companion: Tristam
+  Twinhead Wyvern: Twinhead Wyvern
+  Volcano - Base East Right Box: Excalibur
+  Windia - Inn Bedroom South Box: Captain's Cap
+  Windia - Kaeli: Sand Coin
+  Wintry Cave 2F - West Left Box: Thunder Rock
+  Zuh: Zuh
 }

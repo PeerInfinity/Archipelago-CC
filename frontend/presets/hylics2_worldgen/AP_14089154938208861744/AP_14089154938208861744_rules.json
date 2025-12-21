@@ -19,8 +19,9 @@
             "name": "Menu New Game",
             "connected_region": "Waynehouse",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,246 +34,81 @@
             "name": "Afterlife To Waynehouse",
             "connected_region": "Waynehouse",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Afterlife To New Muldul",
             "connected_region": "New Muldul",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Afterlife To Viewax",
             "connected_region": "Viewax",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "airship",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "DOCK KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Afterlife To TV Island",
             "connected_region": "TV Island",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "Afterlife To Shield Facility",
             "connected_region": "Shield Facility",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "Afterlife To Worm Pod",
             "connected_region": "Worm Pod",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "enter_wormpod",
-                "args": [],
-                "body_data": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "DOCK KEY"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "WORM ROOM KEY"
-                    }
-                  ]
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "Afterlife To Foglast",
             "connected_region": "Foglast",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "charge_up",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CHARGE UP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_foglast",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "DOCK KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "WORM ROOM KEY"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Afterlife To Sage Labyrinth",
             "connected_region": "Sage Labyrinth",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "skull_bomb",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "SKULL BOMB"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "Afterlife To Hylemxylem",
             "connected_region": "Hylemxylem",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "charge_up",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CHARGE UP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paper_cup",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PAPER CUP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_hylemxylem",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "DOCK KEY"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "PADDLE"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "WORM ROOM KEY"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "BRIDGE KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PNEUMATOPHORE"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -281,8 +117,9 @@
             "name": "Afterlife: Mangled Wayne",
             "id": 200628,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -296,8 +133,9 @@
             "name": "Afterlife: Jar near Mangled Wayne",
             "id": 200629,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "CLOUD GERM",
@@ -311,8 +149,9 @@
             "name": "Afterlife: Jar under Pool",
             "id": 200630,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "COOKIE",
@@ -326,16 +165,9 @@
             "name": "Afterlife: TV",
             "id": 200631,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "cave_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "CAVE KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -354,16 +186,18 @@
             "name": "Waynehouse To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Waynehouse To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -372,8 +206,9 @@
             "name": "Waynehouse: Toilet",
             "id": 200622,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "CLICKER",
@@ -387,8 +222,9 @@
             "name": "Waynehouse: Basement Pot 1",
             "id": 200623,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI STEM CELL",
@@ -402,8 +238,9 @@
             "name": "Waynehouse: Basement Pot 2",
             "id": 200624,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -417,8 +254,9 @@
             "name": "Waynehouse: Basement Pot 3",
             "id": 200625,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "JUICE",
@@ -432,8 +270,9 @@
             "name": "Waynehouse: Sarcophagus",
             "id": 200626,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -447,8 +286,9 @@
             "name": "Waynehouse: TV",
             "id": 200627,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "SINGLE GLOVE",
@@ -467,375 +307,117 @@
             "name": "World To Airship",
             "connected_region": "Airship",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "World To Waynehouse",
             "connected_region": "Waynehouse",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "World To New Muldul",
             "connected_region": "New Muldul",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "World To Drill Castle",
             "connected_region": "Drill Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "World To Viewax",
             "connected_region": "Viewax",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "airship",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "DOCK KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "World To Arcade Island",
             "connected_region": "Arcade Island",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "airship",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "DOCK KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "World To TV Island",
             "connected_region": "TV Island",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "World To Juice Ranch",
             "connected_region": "Juice Ranch",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "World To Shield Facility",
             "connected_region": "Shield Facility",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "World To Worm Pod",
             "connected_region": "Worm Pod",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "enter_wormpod",
-                "args": [],
-                "body_data": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "DOCK KEY"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "WORM ROOM KEY"
-                    }
-                  ]
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "World To Foglast",
             "connected_region": "Foglast",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "charge_up",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CHARGE UP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_foglast",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "DOCK KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "WORM ROOM KEY"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "World To Sage Airship",
             "connected_region": "Sage Airship",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "charge_up",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CHARGE UP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paper_cup",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PAPER CUP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "worm_room_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "WORM ROOM KEY"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_sageship",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "DOCK KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "SKULL BOMB"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "World To Hylemxylem",
             "connected_region": "Hylemxylem",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "charge_up",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CHARGE UP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paper_cup",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PAPER CUP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_hylemxylem",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "DOCK KEY"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "PADDLE"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "WORM ROOM KEY"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "BRIDGE KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PNEUMATOPHORE"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -848,24 +430,27 @@
             "name": "New Muldul To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "New Muldul To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "New Muldul To New Muldul Vault",
             "connected_region": "New Muldul Vault",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -874,8 +459,9 @@
             "name": "New Muldul: Shop Ceiling Pot 1",
             "id": 200632,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "UPPER HOUSE KEY",
@@ -889,8 +475,9 @@
             "name": "New Muldul: Shop Ceiling Pot 2",
             "id": 200633,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BOOTS",
@@ -904,8 +491,9 @@
             "name": "New Muldul: Flag Banana",
             "id": 200634,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "WORM ROOM KEY",
@@ -919,8 +507,9 @@
             "name": "New Muldul: Pot near Vault",
             "id": 200635,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -934,16 +523,9 @@
             "name": "New Muldul: Pot above Vault",
             "id": 200785,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "FATE SANDBOX",
@@ -957,8 +539,9 @@
             "name": "New Muldul: Underground Pot",
             "id": 200636,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -972,16 +555,9 @@
             "name": "New Muldul: Underground Chest",
             "id": 200637,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -995,8 +571,9 @@
             "name": "New Muldul: Juice Trade",
             "id": 200638,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "CLOUD GERM",
@@ -1010,8 +587,9 @@
             "name": "New Muldul: Basement Suitcase",
             "id": 200639,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -1025,16 +603,9 @@
             "name": "New Muldul: Upper House Chest 1",
             "id": 200640,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_house_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER HOUSE KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SKULL BOMB",
@@ -1048,16 +619,9 @@
             "name": "New Muldul: Upper House Chest 2",
             "id": 200641,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_house_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER HOUSE KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BOMBO - GENESIS",
@@ -1071,8 +635,9 @@
             "name": "New Muldul: Talk to Pongorma",
             "id": 200643,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "STEM CELL",
@@ -1086,108 +651,9 @@
             "name": "New Muldul: Rescued Blerol 1",
             "id": 200645,
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "jail_key",
-                        "args": [],
-                        "body_data": {
-                          "type": "item_check",
-                          "item": "JAIL KEY"
-                        }
-                      }
-                    },
-                    {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "paddle",
-                        "args": [],
-                        "body_data": {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        }
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "HelperCall",
-                          "options": [],
-                          "args": {
-                            "helper_name": "air_dash",
-                            "args": [],
-                            "body_data": {
-                              "type": "item_check",
-                              "item": "PNEUMATOPHORE"
-                            }
-                          }
-                        },
-                        {
-                          "rule": "HelperCall",
-                          "options": [],
-                          "args": {
-                            "helper_name": "airship",
-                            "args": [],
-                            "body_data": {
-                              "type": "item_check",
-                              "item": "DOCK KEY"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_hylemxylem",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "DOCK KEY"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "PADDLE"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "WORM ROOM KEY"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "BRIDGE KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PNEUMATOPHORE"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "CLOUD GERM",
@@ -1201,108 +667,9 @@
             "name": "New Muldul: Rescued Blerol 2",
             "id": 200646,
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "jail_key",
-                        "args": [],
-                        "body_data": {
-                          "type": "item_check",
-                          "item": "JAIL KEY"
-                        }
-                      }
-                    },
-                    {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "paddle",
-                        "args": [],
-                        "body_data": {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        }
-                      }
-                    },
-                    {
-                      "rule": "Or",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "HelperCall",
-                          "options": [],
-                          "args": {
-                            "helper_name": "air_dash",
-                            "args": [],
-                            "body_data": {
-                              "type": "item_check",
-                              "item": "PNEUMATOPHORE"
-                            }
-                          }
-                        },
-                        {
-                          "rule": "HelperCall",
-                          "options": [],
-                          "args": {
-                            "helper_name": "airship",
-                            "args": [],
-                            "body_data": {
-                              "type": "item_check",
-                              "item": "DOCK KEY"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "enter_hylemxylem",
-                    "args": [],
-                    "body_data": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "DOCK KEY"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "PADDLE"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "WORM ROOM KEY"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "BRIDGE KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PNEUMATOPHORE"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -1316,16 +683,9 @@
             "name": "New Muldul: TV",
             "id": 200642,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "house_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "HOUSE KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "TARP",
@@ -1344,8 +704,9 @@
             "name": "New Muldul Vault To New Muldul",
             "connected_region": "New Muldul",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1354,42 +715,9 @@
             "name": "New Muldul: Vault Left Chest",
             "id": 200647,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "enter_hylemxylem",
-                "args": [],
-                "body_data": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "DOCK KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "WORM ROOM KEY"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  ]
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SAGE TOKEN",
@@ -1403,42 +731,9 @@
             "name": "New Muldul: Vault Right Chest",
             "id": 200648,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "enter_hylemxylem",
-                "args": [],
-                "body_data": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "DOCK KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "WORM ROOM KEY"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  ]
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MATERIEL MITTS",
@@ -1452,42 +747,9 @@
             "name": "New Muldul: Vault Bomb",
             "id": 200649,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "enter_hylemxylem",
-                "args": [],
-                "body_data": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "DOCK KEY"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "PADDLE"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "WORM ROOM KEY"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  ]
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -1507,16 +769,18 @@
             "name": "Viewax To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Viewax To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1525,8 +789,9 @@
             "name": "Viewax's Edifice: Fountain Banana",
             "id": 200650,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "DUBIOUS BERRY",
@@ -1540,8 +805,9 @@
             "name": "Viewax's Edifice: Dedusmuln's Suitcase",
             "id": 200651,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "CUPCAKE",
@@ -1555,8 +821,9 @@
             "name": "Viewax's Edifice: Dedusmuln's Campfire",
             "id": 200652,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "LONG GLOVES",
@@ -1570,8 +837,9 @@
             "name": "Viewax's Edifice: Talk to Dedusmuln",
             "id": 200653,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "JAIL KEY",
@@ -1585,16 +853,9 @@
             "name": "Viewax's Edifice: Canopic Jar",
             "id": 200655,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "TARP",
@@ -1608,16 +869,9 @@
             "name": "Viewax's Edifice: Cave Sarcophagus",
             "id": 200656,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -1631,34 +885,9 @@
             "name": "Viewax's Edifice: Shielded Key",
             "id": 200657,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paddle",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paddle",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "LINK MOLLUSC",
@@ -1672,16 +901,9 @@
             "name": "Viewax's Edifice: Tower Pot",
             "id": 200658,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -1695,16 +917,9 @@
             "name": "Viewax's Edifice: Tower Jar",
             "id": 200659,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SOUL CRISPER",
@@ -1718,34 +933,9 @@
             "name": "Viewax's Edifice: Tower Chest",
             "id": 200660,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paddle",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "tower_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "TOWER KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -1759,16 +949,9 @@
             "name": "Viewax's Edifice: Sage Fridge",
             "id": 200661,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "TENDRIL HAND",
@@ -1782,16 +965,9 @@
             "name": "Viewax's Edifice: Sage Item 1",
             "id": 200662,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "PAPER CUP",
@@ -1805,16 +981,9 @@
             "name": "Viewax's Edifice: Sage Item 2",
             "id": 200663,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "50 Bones",
@@ -1828,16 +997,9 @@
             "name": "Viewax's Edifice: Viewax Pot",
             "id": 200664,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -1851,16 +1013,9 @@
             "name": "Viewax's Edifice: Defeat Viewax",
             "id": 200665,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -1874,16 +1029,9 @@
             "name": "Arcade 1: Key",
             "id": 200667,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "FADED PONCHO",
@@ -1897,16 +1045,9 @@
             "name": "Arcade 1: Coin Dash",
             "id": 200668,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "PAPER CUP",
@@ -1920,16 +1061,9 @@
             "name": "Arcade 1: Burrito Alcove 1",
             "id": 200669,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "LOOPED DOME",
@@ -1943,16 +1077,9 @@
             "name": "Arcade 1: Burrito Alcove 2",
             "id": 200670,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "PAPER CUP",
@@ -1966,16 +1093,9 @@
             "name": "Arcade 1: Behind Spikes Banana",
             "id": 200671,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "ORGAN FORT",
@@ -1989,16 +1109,9 @@
             "name": "Arcade 1: Pyramid Banana",
             "id": 200672,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "POOLWINE",
@@ -2012,16 +1125,9 @@
             "name": "Arcade 1: Moving Platforms Muscle Applique",
             "id": 200673,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "NEMATODE INTERFACE",
@@ -2035,16 +1141,9 @@
             "name": "Arcade 1: Bed Banana",
             "id": 200674,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "paddle",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PADDLE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "CONVERTER WORM",
@@ -2058,34 +1157,9 @@
             "name": "Viewax's Edifice: TV",
             "id": 200666,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "jail_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "JAIL KEY"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paddle",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -2104,8 +1178,9 @@
             "name": "Airship To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2114,16 +1189,9 @@
             "name": "Airship: Talk to Somsnosa",
             "id": 200675,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "worm_room_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "WORM ROOM KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "CHARGE UP",
@@ -2142,8 +1210,9 @@
             "name": "Arcade Island To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2152,8 +1221,9 @@
             "name": "Arcade Island: Shielded Key",
             "id": 200676,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "LONG GLOVES",
@@ -2167,8 +1237,9 @@
             "name": "Arcade 2: Flying Machine Banana",
             "id": 200677,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -2182,8 +1253,9 @@
             "name": "Arcade 2: Paper Cup Detour",
             "id": 200678,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "TELEDENUDATE",
@@ -2197,8 +1269,9 @@
             "name": "Arcade 2: Peak Muscle Applique",
             "id": 200679,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "SAGE TOKEN",
@@ -2212,8 +1285,9 @@
             "name": "Arcade 2: Double Banana 1",
             "id": 200680,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "VESSEL ROOM KEY",
@@ -2227,8 +1301,9 @@
             "name": "Arcade 2: Double Banana 2",
             "id": 200681,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI STEM CELL",
@@ -2242,8 +1317,9 @@
             "name": "Arcade 2: Cave Burrito",
             "id": 200682,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -2262,16 +1338,18 @@
             "name": "TV Island To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "TV Island To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2280,8 +1358,9 @@
             "name": "TV Island: TV",
             "id": 200683,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "UPPER CHAMBER KEY",
@@ -2300,8 +1379,9 @@
             "name": "Juice Ranch To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2310,8 +1390,9 @@
             "name": "Juice Ranch: Juice 1",
             "id": 200684,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PEPTIDE BODKINS",
@@ -2325,8 +1406,9 @@
             "name": "Juice Ranch: Juice 2",
             "id": 200685,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "DUCTILE HABIT",
@@ -2340,8 +1422,9 @@
             "name": "Juice Ranch: Juice 3",
             "id": 200686,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -2355,8 +1438,9 @@
             "name": "Juice Ranch: Ledge Rancher",
             "id": 200687,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -2370,8 +1454,9 @@
             "name": "Juice Ranch: Battle with Somsnosa",
             "id": 200688,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -2385,8 +1470,9 @@
             "name": "Juice Ranch: Fridge",
             "id": 200690,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -2400,8 +1486,9 @@
             "name": "Juice Ranch: TV",
             "id": 200691,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -2420,45 +1507,27 @@
             "name": "Shield Facility To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Shield Facility To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Shield Facility To Worm Pod",
             "connected_region": "Worm Pod",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "enter_wormpod",
-                "args": [],
-                "body_data": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "DOCK KEY"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "PADDLE"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "WORM ROOM KEY"
-                    }
-                  ]
-                }
-              }
+              "args": {}
             }
           }
         ],
@@ -2471,24 +1540,18 @@
             "name": "Worm Pod To Shield Facility",
             "connected_region": "Shield Facility",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "airship",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DOCK KEY"
-                }
-              }
+              "args": {}
             }
           },
           {
             "name": "Worm Pod To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2497,8 +1560,9 @@
             "name": "Worm Pod: Key",
             "id": 200692,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PLEATHER GAGE",
@@ -2517,16 +1581,18 @@
             "name": "Foglast To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Foglast To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2535,8 +1601,9 @@
             "name": "Foglast: West Sarcophagus",
             "id": 200693,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PNEUMATOPHORE",
@@ -2550,16 +1617,9 @@
             "name": "Foglast: Underground Sarcophagus",
             "id": 200694,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -2573,16 +1633,9 @@
             "name": "Foglast: Shielded Key",
             "id": 200695,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "LONG GLOVES",
@@ -2596,16 +1649,9 @@
             "name": "Foglast: Buy Clicker",
             "id": 200696,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -2619,16 +1665,9 @@
             "name": "Foglast: Shielded Chest",
             "id": 200698,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "LONG GLOVES",
@@ -2642,16 +1681,9 @@
             "name": "Foglast: Cave Fridge",
             "id": 200699,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "COOKIE",
@@ -2665,34 +1697,9 @@
             "name": "Foglast: Roof Sarcophagus",
             "id": 200700,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "STEM CELL",
@@ -2706,34 +1713,9 @@
             "name": "Foglast: Under Lair Sarcophagus 1",
             "id": 200701,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "TIME SIGIL",
@@ -2747,34 +1729,9 @@
             "name": "Foglast: Under Lair Sarcophagus 2",
             "id": 200702,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -2788,34 +1745,9 @@
             "name": "Foglast: Under Lair Sarcophagus 3",
             "id": 200703,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -2829,34 +1761,9 @@
             "name": "Foglast: Sage Sarcophagus",
             "id": 200704,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -2870,34 +1777,9 @@
             "name": "Foglast: Sage Item 1",
             "id": 200705,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "CUPCAKE",
@@ -2911,34 +1793,9 @@
             "name": "Foglast: Sage Item 2",
             "id": 200706,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "bridge_key",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "BRIDGE KEY"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "MULTI STEM CELL",
@@ -2952,34 +1809,9 @@
             "name": "Foglast: TV",
             "id": 200697,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "air_dash",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PNEUMATOPHORE"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "clicker",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CLICKER"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -2998,24 +1830,18 @@
             "name": "Drill Castle To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Drill Castle To Sage Labyrinth",
             "connected_region": "Sage Labyrinth",
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "skull_bomb",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "SKULL BOMB"
-                }
-              }
+              "args": {}
             }
           }
         ],
@@ -3024,8 +1850,9 @@
             "name": "Drill Castle: Ledge Banana",
             "id": 200707,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -3039,16 +1866,9 @@
             "name": "Drill Castle: Island Banana",
             "id": 200708,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "TOWER KEY",
@@ -3062,16 +1882,9 @@
             "name": "Drill Castle: Island Pot",
             "id": 200709,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "POROMER BLEB",
@@ -3085,16 +1898,9 @@
             "name": "Drill Castle: Cave Sarcophagus",
             "id": 200710,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "PSYCHIC KNUCKLE",
@@ -3108,8 +1914,9 @@
             "name": "Drill Castle: Roof Banana",
             "id": 200711,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "COOKIE",
@@ -3123,16 +1930,9 @@
             "name": "Drill Castle: TV",
             "id": 200712,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "air_dash",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "PNEUMATOPHORE"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "LONG GLOVES",
@@ -3151,16 +1951,18 @@
             "name": "Sage Labyrinth To Drill Castle",
             "connected_region": "Drill Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Sage Labyrinth To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3169,8 +1971,9 @@
             "name": "Sage Labyrinth: 1F Chest Near Fountain",
             "id": 200713,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "JUICE",
@@ -3184,8 +1987,9 @@
             "name": "Sage Labyrinth: 1F Hidden Sarcophagus",
             "id": 200714,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "TELESCOPIC SLEEVE",
@@ -3199,8 +2003,9 @@
             "name": "Sage Labyrinth: 1F Four Statues Chest 1",
             "id": 200715,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -3214,8 +2019,9 @@
             "name": "Sage Labyrinth: 1F Four Statues Chest 2",
             "id": 200716,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "JUICE",
@@ -3229,8 +2035,9 @@
             "name": "Sage Labyrinth: B1 Double Chest 1",
             "id": 200717,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "CUPCAKE",
@@ -3244,8 +2051,9 @@
             "name": "Sage Labyrinth: B1 Double Chest 2",
             "id": 200718,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -3259,8 +2067,9 @@
             "name": "Sage Labyrinth: B1 Single Chest",
             "id": 200719,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MEAT",
@@ -3274,8 +2083,9 @@
             "name": "Sage Labyrinth: B1 Enemy Chest",
             "id": 200720,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PADDLE",
@@ -3289,8 +2099,9 @@
             "name": "Sage Labyrinth: B1 Hidden Sarcophagus",
             "id": 200721,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 Bones",
@@ -3304,8 +2115,9 @@
             "name": "Sage Labyrinth: B1 Hole Chest",
             "id": 200722,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "SAGE TOKEN",
@@ -3319,8 +2131,9 @@
             "name": "Sage Labyrinth: B2 Hidden Sarcophagus 1",
             "id": 200723,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -3334,8 +2147,9 @@
             "name": "Sage Labyrinth: B2 Hidden Sarcophagus 2",
             "id": 200724,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "DEEP KEY",
@@ -3349,8 +2163,9 @@
             "name": "Sage Labyrinth: 2F Sarcophagus",
             "id": 200754,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "CAVE KEY",
@@ -3364,8 +2179,9 @@
             "name": "Sage Labyrinth: Boss Secret Chest 1",
             "id": 200786,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -3379,8 +2195,9 @@
             "name": "Sage Labyrinth: Boss Secret Chest 2",
             "id": 200787,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -3394,34 +2211,9 @@
             "name": "Sage Labyrinth: Motor Hunter Sarcophagus",
             "id": 200725,
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "charge_up",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "CHARGE UP"
-                    }
-                  }
-                },
-                {
-                  "rule": "HelperCall",
-                  "options": [],
-                  "args": {
-                    "helper_name": "paper_cup",
-                    "args": [],
-                    "body_data": {
-                      "type": "item_check",
-                      "item": "PAPER CUP"
-                    }
-                  }
-                }
-              ]
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -3435,16 +2227,9 @@
             "name": "Sage Labyrinth: Sage Item 1",
             "id": 200726,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "deep_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DEEP KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "DOCK KEY",
@@ -3458,16 +2243,9 @@
             "name": "Sage Labyrinth: Sage Item 2",
             "id": 200727,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "deep_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DEEP KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BRIDGE KEY",
@@ -3481,16 +2259,9 @@
             "name": "Sage Labyrinth: Sage Left Arm",
             "id": 200728,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "deep_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DEEP KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BRAIN DIGITS",
@@ -3504,16 +2275,9 @@
             "name": "Sage Labyrinth: Sage Right Arm",
             "id": 200729,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "deep_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DEEP KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -3527,16 +2291,9 @@
             "name": "Sage Labyrinth: Sage Left Leg",
             "id": 200730,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "deep_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DEEP KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "COFFEE",
@@ -3550,16 +2307,9 @@
             "name": "Sage Labyrinth: Sage Right Leg",
             "id": 200731,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "deep_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "DEEP KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -3578,8 +2328,9 @@
             "name": "Sage Airship To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3588,8 +2339,9 @@
             "name": "Sage Airship: Bottom Level Pot",
             "id": 200732,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MEAT",
@@ -3603,8 +2355,9 @@
             "name": "Sage Airship: Flesh Pot",
             "id": 200733,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "JUMPSUIT",
@@ -3618,8 +2371,9 @@
             "name": "Sage Airship: Top Jar",
             "id": 200734,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "RANCHER PONCHO",
@@ -3633,20 +2387,9 @@
             "name": "Sage Airship: TV",
             "id": 200735,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "all_tokens",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "SAGE TOKEN",
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  }
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -3665,16 +2408,18 @@
             "name": "Hylemxylem To World",
             "connected_region": "World",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hylemxylem To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3683,8 +2428,9 @@
             "name": "Hylemxylem: Jar",
             "id": 200736,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -3698,8 +2444,9 @@
             "name": "Hylemxylem: Lower Reservoir Key",
             "id": 200737,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "MULTI-COFFEE",
@@ -3713,8 +2460,9 @@
             "name": "Hylemxylem: Fountain Banana",
             "id": 200738,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "JUICE",
@@ -3728,8 +2476,9 @@
             "name": "Hylemxylem: East Island Banana",
             "id": 200739,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "BOTTOMLESS JUICE",
@@ -3743,8 +2492,9 @@
             "name": "Hylemxylem: East Island Chest",
             "id": 200740,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -3758,16 +2508,9 @@
             "name": "Hylemxylem: Upper Chamber Banana",
             "id": 200741,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BANANA",
@@ -3781,16 +2524,9 @@
             "name": "Hylemxylem: Across Upper Reservoir Chest",
             "id": 200742,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "JUICE",
@@ -3804,16 +2540,9 @@
             "name": "Hylemxylem: Drained Lower Reservoir Chest",
             "id": 200743,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "CURSED GLOVES",
@@ -3827,16 +2556,9 @@
             "name": "Hylemxylem: Drained Lower Reservoir Burrito 1",
             "id": 200744,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -3850,16 +2572,9 @@
             "name": "Hylemxylem: Drained Lower Reservoir Burrito 2",
             "id": 200745,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "BURRITO",
@@ -3873,16 +2588,9 @@
             "name": "Hylemxylem: Lower Reservoir Hole Pot 1",
             "id": 200746,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -3896,16 +2604,9 @@
             "name": "Hylemxylem: Lower Reservoir Hole Pot 2",
             "id": 200747,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "HOUSE KEY",
@@ -3919,16 +2620,9 @@
             "name": "Hylemxylem: Lower Reservoir Hole Pot 3",
             "id": 200748,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -3942,16 +2636,9 @@
             "name": "Hylemxylem: Lower Reservoir Hole Sarcophagus",
             "id": 200749,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -3965,16 +2652,9 @@
             "name": "Hylemxylem: Drained Upper Reservoir Burrito 1",
             "id": 200750,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "JUICE",
@@ -3988,16 +2668,9 @@
             "name": "Hylemxylem: Drained Upper Reservoir Burrito 2",
             "id": 200751,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "LOOPED DOME",
@@ -4011,16 +2684,9 @@
             "name": "Hylemxylem: Drained Upper Reservoir Burrito 3",
             "id": 200752,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "COFFEE CHIP",
@@ -4034,16 +2700,9 @@
             "name": "Hylemxylem: Upper Reservoir Hole Key",
             "id": 200753,
             "access_rule": {
-              "rule": "HelperCall",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "helper_name": "upper_chamber_key",
-                "args": [],
-                "body_data": {
-                  "type": "item_check",
-                  "item": "UPPER CHAMBER KEY"
-                }
-              }
+              "args": {}
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -4057,14 +2716,9 @@
             "name": "Defeat Gibby",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "UPPER CHAMBER KEY",
-                  "VESSEL ROOM KEY"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -5101,7 +3755,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -5109,7 +3763,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -5122,6 +3776,17 @@
       "name": "Hylics 2 WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) Bones$",
+          "extract_value": true,
+          "target": "BONES",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "BONES": 0
       },
       "web_theme": "ocean",
       "web_tutorials": [
@@ -5146,5 +3811,152 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "air_dash": {
+        "item": "PNEUMATOPHORE",
+        "type": "item_check"
+      },
+      "airship": {
+        "item": "DOCK KEY",
+        "type": "item_check"
+      },
+      "all_tokens": {
+        "count": {
+          "type": "constant",
+          "value": 3
+        },
+        "item": "SAGE TOKEN",
+        "type": "item_check"
+      },
+      "bridge_key": {
+        "item": "BRIDGE KEY",
+        "type": "item_check"
+      },
+      "cave_key": {
+        "item": "CAVE KEY",
+        "type": "item_check"
+      },
+      "charge_up": {
+        "item": "CHARGE UP",
+        "type": "item_check"
+      },
+      "clicker": {
+        "item": "CLICKER",
+        "type": "item_check"
+      },
+      "deep_key": {
+        "item": "DEEP KEY",
+        "type": "item_check"
+      },
+      "enter_foglast": {
+        "conditions": [
+          {
+            "args": [],
+            "name": "airship",
+            "type": "helper"
+          },
+          {
+            "args": [],
+            "name": "worm_room_key",
+            "type": "helper"
+          },
+          {
+            "args": [],
+            "name": "paddle",
+            "type": "helper"
+          }
+        ],
+        "type": "and"
+      },
+      "enter_hylemxylem": {
+        "conditions": [
+          {
+            "item": "PNEUMATOPHORE",
+            "type": "item_check"
+          },
+          {
+            "args": [],
+            "name": "enter_wormpod",
+            "type": "helper"
+          },
+          {
+            "item": "BRIDGE KEY",
+            "type": "item_check"
+          }
+        ],
+        "type": "and"
+      },
+      "enter_sageship": {
+        "conditions": [
+          {
+            "item": "SKULL BOMB",
+            "type": "item_check"
+          },
+          {
+            "item": "DOCK KEY",
+            "type": "item_check"
+          },
+          {
+            "item": "PADDLE",
+            "type": "item_check"
+          }
+        ],
+        "type": "and"
+      },
+      "enter_wormpod": {
+        "conditions": [
+          {
+            "item": "DOCK KEY",
+            "type": "item_check"
+          },
+          {
+            "item": "WORM ROOM KEY",
+            "type": "item_check"
+          },
+          {
+            "item": "PADDLE",
+            "type": "item_check"
+          }
+        ],
+        "type": "and"
+      },
+      "house_key": {
+        "item": "HOUSE KEY",
+        "type": "item_check"
+      },
+      "jail_key": {
+        "item": "JAIL KEY",
+        "type": "item_check"
+      },
+      "paddle": {
+        "item": "PADDLE",
+        "type": "item_check"
+      },
+      "paper_cup": {
+        "item": "PAPER CUP",
+        "type": "item_check"
+      },
+      "skull_bomb": {
+        "item": "SKULL BOMB",
+        "type": "item_check"
+      },
+      "tower_key": {
+        "item": "TOWER KEY",
+        "type": "item_check"
+      },
+      "upper_chamber_key": {
+        "item": "UPPER CHAMBER KEY",
+        "type": "item_check"
+      },
+      "upper_house_key": {
+        "item": "UPPER HOUSE KEY",
+        "type": "item_check"
+      },
+      "worm_room_key": {
+        "item": "WORM ROOM KEY",
+        "type": "item_check"
+      }
+    }
+  }
 }

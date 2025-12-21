@@ -174,44 +174,34 @@ Playthrough:
   Extractor
 }
 1: {
-  Getting into it: Quad Painter
-  Level 1: Balancer
-  Level 1 Additional: Storage
-  Level 3: Big Belt Upgrade
-  My eyes no longer hurt: Switch
-  Processors Upgrade Tier II: Wires
-}
-2: {
-  Computer Guy: Color Mixer
-  Shapesanity 22: Cutter
-  Storage: Big Belt Upgrade
-}
-3: {
-  Cutter: Big Belt Upgrade
-  Shapesanity 28: Big Belt Upgrade
-  Shapesanity 39: Rotator (CCW)
-}
-4: {
-  Level 10: Stacker
-  Shapesanity 13: Quad Cutter
-}
-5: {
   Branding specialist 2: Compact Splitter
+  Computer Guy: Color Mixer
+  Cutter: Big Belt Upgrade
+  Getting into it: Quad Painter
+  Goal: Goal
   I'll use it later: Constant Signal
   I've seen that before ...: Double Painter
+  Level 1: Balancer
+  Level 1 Additional: Storage
+  Level 10: Stacker
+  Level 22: Big Belt Upgrade
+  Level 3: Big Belt Upgrade
   Memories from the past: Tunnel
+  Miner Upgrade Tier VIII: Rotator (180°)
+  My eyes no longer hurt: Switch
+  Painting Upgrade Tier VI: Painter
   Preparing to launch: Big Belt Upgrade
+  Processors Upgrade Tier II: Wires
+  Processors Upgrade Tier V: Compact Merger
+  Processors Upgrade Tier VIII: Blueprints
+  Shapesanity 13: Quad Cutter
+  Shapesanity 22: Cutter
+  Shapesanity 28: Big Belt Upgrade
   Shapesanity 35: Rotator
+  Shapesanity 39: Rotator (CCW)
   Shapesanity 4: Big Belt Upgrade
   Shapesanity 42: Big Belt Upgrade
   Shapesanity 44: Trash
-}
-6: {
-  Goal: Goal
-  Level 22: Big Belt Upgrade
-  Miner Upgrade Tier VIII: Rotator (180°)
-  Painting Upgrade Tier VI: Painter
-  Processors Upgrade Tier V: Compact Merger
-  Processors Upgrade Tier VIII: Blueprints
+  Storage: Big Belt Upgrade
   Wires: Big Belt Upgrade
 }

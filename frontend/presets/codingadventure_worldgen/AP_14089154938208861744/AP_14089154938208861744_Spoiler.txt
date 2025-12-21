@@ -90,86 +90,66 @@ Playthrough:
 
 }
 1: {
-  Choose Server Language: Server Basics
-  Learn Command Line: Command Line
-  Learn Git: Git
-  Learn HTML: HTML
-  Learn JavaScript: JavaScript Basics
-}
-2: {
-  Learn Algorithms: Algorithms
-  Learn CSS: CSS
-  Learn DOM Manipulation: DOM Manipulation
-  Learn File I/O: File I/O
-  Learn HTTP Basics: HTTP Basics
-  Learn Package Managers: Package Managers
-}
-3: {
-  Advanced Vanilla JS: Frontend Framework
-  Learn Design Systems: Design Systems
-  Learn Django: Django
-  Learn Express: Express
-  Learn Flask: Flask
-  Learn NoSQL: NoSQL
-  Learn React: React
-  Learn SQL: SQL
-  Learn Vue: Vue
-  Static Website Milestone: Static Website Complete
-}
-4: {
-  Build REST APIs: REST APIs
-  Custom State System: State Management
-  Django REST Framework: REST APIs
-  Flask-RESTful: REST APIs
-  MongoDB: Database Basics
-  PostgreSQL: Database Basics
-  React Components: Frontend Framework
-  Redux: State Management
-  UI/UX Principles: UI/UX
-  Vue Components: Frontend Framework
-  Vuex: State Management
-}
-5: {
-  Caching: Caching
-  Django ORM: Database Integration
-  Docker: Docker
-  Indexing Strategies: Query Optimization
-  Interactive App Milestone: Interactive App Complete
-  MongoDB Integration: Database Integration
-  Query Optimization: Query Optimization
-  Responsive Design: Responsive Design
-  SQLAlchemy: Database Integration
-  Sessions: Sessions
-  Unit Tests: Unit Tests
-}
-6: {
   Accessibility: Accessibility
+  Advanced Vanilla JS: Frontend Framework
+  Build REST APIs: REST APIs
   CDN: CDN
   CI/CD: CI/CD
-  Integration Tests: Integration Tests
-  JWT: JWT
-}
-7: {
-  E2E Tests: Testing
-  Load Balancing: Performance
-  Monitoring: DevOps
-  OAuth: Authentication
-}
-8: {
+  CORS: CORS
+  Caching: Caching
+  Choose Server Language: Server Basics
   Cloud Provider: Cloud Provider
+  Custom State System: State Management
+  Django ORM: Database Integration
+  Django REST Framework: REST APIs
+  Docker: Docker
+  Domain Setup: Domain
+  E2E Tests: Testing
+  Flask-RESTful: REST APIs
   Full-Stack Integration Milestone: Full-Stack Complete
   HTTPS: HTTPS
   Horizontal Scaling: Horizontal Scaling
-}
-9: {
-  CORS: CORS
-  Domain Setup: Domain
-  Microservices: Scaling Complete
-}
-10: {
+  Indexing Strategies: Query Optimization
   Input Validation: Security Complete
-  SSL Certificate: Deployment Complete
-}
-11: {
+  Integration Tests: Integration Tests
+  Interactive App Milestone: Interactive App Complete
+  JWT: JWT
+  Learn Algorithms: Algorithms
+  Learn CSS: CSS
+  Learn Command Line: Command Line
+  Learn DOM Manipulation: DOM Manipulation
+  Learn Design Systems: Design Systems
+  Learn Django: Django
+  Learn Express: Express
+  Learn File I/O: File I/O
+  Learn Flask: Flask
+  Learn Git: Git
+  Learn HTML: HTML
+  Learn HTTP Basics: HTTP Basics
+  Learn JavaScript: JavaScript Basics
+  Learn NoSQL: NoSQL
+  Learn Package Managers: Package Managers
+  Learn React: React
+  Learn SQL: SQL
+  Learn Vue: Vue
+  Load Balancing: Performance
+  Microservices: Scaling Complete
+  MongoDB: Database Basics
+  MongoDB Integration: Database Integration
+  Monitoring: DevOps
+  OAuth: Authentication
+  PostgreSQL: Database Basics
   Production Deployment: Victory
+  Query Optimization: Query Optimization
+  React Components: Frontend Framework
+  Redux: State Management
+  Responsive Design: Responsive Design
+  SQLAlchemy: Database Integration
+  SSL Certificate: Deployment Complete
+  Sessions: Sessions
+  Static Website Milestone: Static Website Complete
+  UI/UX Principles: UI/UX
+  Unit Tests: Unit Tests
+  Vue Components: Frontend Framework
+  Vuex: State Management
 }

@@ -181,6 +181,23 @@ Playthrough:
   CIVIC_AP_ANCIENT_04: Progressive Encampment
   CIVIC_AP_ANCIENT_05: Progressive Diplomatic Quarter
   CIVIC_AP_ANCIENT_06: Foreign Trade
+  CIVIC_AP_CLASSICAL_08: Progressive Entertainment Complex
+  CIVIC_AP_CLASSICAL_11: Progressive Holy Site
+  CIVIC_AP_CLASSICAL_12: Progressive Campus
+  CIVIC_AP_CLASSICAL_13: Totalitarianism
+  CIVIC_AP_FUTURE_57: Progressive Space Port
+  CIVIC_AP_INDUSTRIAL_32: Progressive Encampment
+  CIVIC_AP_INFORMATION_49: Progressive Space Port
+  CIVIC_AP_INFORMATION_52: Synthetic Technocracy
+  CIVIC_AP_MEDIEVAL_14: Progressive Encampment
+  CIVIC_AP_MEDIEVAL_17: Progressive Industrial Zone
+  CIVIC_AP_MEDIEVAL_20: Refining
+  CIVIC_AP_MODERN_34: Progressive Industrial Zone
+  CIVIC_AP_MODERN_35: Progressive Industrial Zone
+  CIVIC_AP_MODERN_39: Plastics
+  CIVIC_AP_RENAISSANCE_21: Suffrage
+  CIVIC_AP_RENAISSANCE_23: Progressive Theater
+  Complete a victory type: Victory
   TECH_AP_ANCIENT_00: Progressive Theater
   TECH_AP_ANCIENT_01: State Workforce
   TECH_AP_ANCIENT_02: Mining
@@ -190,62 +207,29 @@ Playthrough:
   TECH_AP_ANCIENT_06: Irrigation
   TECH_AP_ANCIENT_07: Progressive Holy Site
   TECH_AP_ANCIENT_08: Progressive Campus
-}
-2: {
-  CIVIC_AP_CLASSICAL_08: Progressive Entertainment Complex
-  CIVIC_AP_CLASSICAL_11: Progressive Holy Site
-  CIVIC_AP_CLASSICAL_12: Progressive Campus
-  CIVIC_AP_CLASSICAL_13: Totalitarianism
+  TECH_AP_ATOMIC_50: Progressive Aerodrome
+  TECH_AP_ATOMIC_52: Progressive Space Port
+  TECH_AP_ATOMIC_54: Progressive Space Port
   TECH_AP_CLASSICAL_13: Progressive Commercial Hub
   TECH_AP_CLASSICAL_14: Progressive Commercial Hub
   TECH_AP_CLASSICAL_16: Progressive Harbor
-}
-3: {
-  CIVIC_AP_MEDIEVAL_14: Progressive Encampment
-  CIVIC_AP_MEDIEVAL_17: Progressive Industrial Zone
-  CIVIC_AP_MEDIEVAL_20: Refining
+  TECH_AP_INDUSTRIAL_36: Nationalism
+  TECH_AP_INDUSTRIAL_38: Progressive Industrial Zone
+  TECH_AP_INDUSTRIAL_41: Progressive Entertainment Complex
+  TECH_AP_INFORMATION_64: Progressive Space Port
+  TECH_AP_INFORMATION_66: Corporate Libertarianism
   TECH_AP_MEDIEVAL_19: Divine Right
   TECH_AP_MEDIEVAL_22: Combined Arms
   TECH_AP_MEDIEVAL_25: Progressive Commercial Hub
   TECH_AP_MEDIEVAL_67: Exploration
-}
-4: {
-  CIVIC_AP_RENAISSANCE_21: Suffrage
-  CIVIC_AP_RENAISSANCE_23: Progressive Theater
-  TECH_AP_RENAISSANCE_28: Progressive Diplomatic Quarter
-  TECH_AP_RENAISSANCE_31: Progressive Harbor
-  TECH_AP_RENAISSANCE_32: Cartography
-  TECH_AP_RENAISSANCE_33: Reformed Church
-  TECH_AP_RENAISSANCE_34: Digital Democracy
-}
-5: {
-  CIVIC_AP_INDUSTRIAL_32: Progressive Encampment
-  TECH_AP_INDUSTRIAL_36: Nationalism
-  TECH_AP_INDUSTRIAL_38: Progressive Industrial Zone
-  TECH_AP_INDUSTRIAL_41: Progressive Entertainment Complex
-}
-6: {
-  CIVIC_AP_MODERN_34: Progressive Industrial Zone
-  CIVIC_AP_MODERN_35: Progressive Industrial Zone
-  CIVIC_AP_MODERN_39: Plastics
   TECH_AP_MODERN_45: Class Struggle
   TECH_AP_MODERN_46: Progressive Entertainment Complex
   TECH_AP_MODERN_47: Progressive Theater
   TECH_AP_MODERN_48: Progressive Campus
   TECH_AP_MODERN_49: Progressive Aerodrome
-}
-7: {
-  TECH_AP_ATOMIC_50: Progressive Aerodrome
-  TECH_AP_ATOMIC_52: Progressive Space Port
-  TECH_AP_ATOMIC_54: Progressive Space Port
-}
-8: {
-  CIVIC_AP_INFORMATION_49: Progressive Space Port
-  CIVIC_AP_INFORMATION_52: Synthetic Technocracy
-  TECH_AP_INFORMATION_64: Progressive Space Port
-  TECH_AP_INFORMATION_66: Corporate Libertarianism
-}
-9: {
-  CIVIC_AP_FUTURE_57: Progressive Space Port
-  Complete a victory type: Victory
+  TECH_AP_RENAISSANCE_28: Progressive Diplomatic Quarter
+  TECH_AP_RENAISSANCE_31: Progressive Harbor
+  TECH_AP_RENAISSANCE_32: Cartography
+  TECH_AP_RENAISSANCE_33: Reformed Church
+  TECH_AP_RENAISSANCE_34: Digital Democracy
 }

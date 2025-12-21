@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachLocation, CanReachRegion, Compare, Conditional, False_, Has, HasAny, HasGroup, HelperCall, True_
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -43,11 +43,11 @@ def _alinktothepastworldgen_can_bomb_or_bonk(state: "CollectionState", player: i
     return (state.has('Pegasus Boots', player)) or (_alinktothepastworldgen_can_use_bombs(state, player))
 
 
-def _alinktothepastworldgen_can_buy(state: "CollectionState", player: int, item) -> bool:
+def _alinktothepastworldgen_can_buy(state: "CollectionState", player: int, item = None) -> bool:
     return True
 
 
-def _alinktothepastworldgen_can_buy_unlimited(state: "CollectionState", player: int, item) -> bool:
+def _alinktothepastworldgen_can_buy_unlimited(state: "CollectionState", player: int, item = None) -> bool:
     return True
 
 
@@ -63,7 +63,7 @@ def _alinktothepastworldgen_can_get_good_bee(state: "CollectionState", player: i
     return (state.has_group('Bottles', player)) and (state.has('Bug Catching Net', player)) and ((state.has('Pegasus Boots', player)) or ((_alinktothepastworldgen_has_sword(state, player)) and (state.has('Quake', player)))) and (cave.can_reach(state)) and (_alinktothepastworldgen_is_not_bunny(state, player, cave))
 
 
-def _alinktothepastworldgen_can_hold_arrows(state: "CollectionState", player: int, quantity) -> bool:
+def _alinktothepastworldgen_can_hold_arrows(state: "CollectionState", player: int, quantity = None) -> bool:
     if 'off':
         if (quantity == 0):
             return True
@@ -117,7 +117,7 @@ def _alinktothepastworldgen_has_beam_sword(state: "CollectionState", player: int
     return (state.has('Master Sword', player)) or (state.has('Tempered Sword', player)) or (state.has('Golden Sword', player))
 
 
-def _alinktothepastworldgen_has_crystals(state: "CollectionState", player: int, count) -> bool:
+def _alinktothepastworldgen_has_crystals(state: "CollectionState", player: int, count = None) -> bool:
     found = state.count_group('Crystals', player)
     return (found >= count)
 
@@ -126,7 +126,7 @@ def _alinktothepastworldgen_has_fire_source(state: "CollectionState", player: in
     return (state.has('Fire Rod', player)) or (state.has('Lamp', player))
 
 
-def _alinktothepastworldgen_has_hearts(state: "CollectionState", player: int, count) -> bool:
+def _alinktothepastworldgen_has_hearts(state: "CollectionState", player: int, count = None) -> bool:
     return (_alinktothepastworldgen_heart_count(state, player) >= count)
 
 
@@ -152,12 +152,2291 @@ def _alinktothepastworldgen_heart_count(state: "CollectionState", player: int) -
     return (((min(state.count('Boss Heart Container', player), max_heart_containers) + state.count('Sanctuary Heart Container', player)) + (min(state.count('Piece of Heart', player), max_heart_pieces) // 4)) + 3)
 
 
-def _alinktothepastworldgen_is_not_bunny(state: "CollectionState", player: int, region) -> bool:
+def _alinktothepastworldgen_is_not_bunny(state: "CollectionState", player: int, region = None) -> bool:
     return (True if state.has('Moon Pearl', player) else (True if ('open' != 'inverted') else True))
 
 
-def _alinktothepastworldgen_can_defeat_boss(state: "CollectionState", player: int, location_name, boss_type) -> bool:
+def _alinktothepastworldgen_can_defeat_boss(state: "CollectionState", player: int, location_name = None, boss_type = None) -> bool:
     return _alinktothepastworldgen_can_kill_most_things(state, player, 1)
+
+
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'GanonDefeatRule': {   'statements': [   {   'body': [   {   'type': 'return',
+                                                                 'value': {   'conditions': [   {   'item': 'Hammer',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'conditions': [   {   'item': 'Fire '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Lamp',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'or'},
+                                                                                                {   'item': 'Silver '
+                                                                                                            'Bow',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Silver '
+                                                                                                                                                        'Bow',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'},
+                                                                                                                      {   'args': [   {   'type': 'constant',
+                                                                                                                                          'value': 0}],
+                                                                                                                          'name': 'can_hold_arrows',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'}],
+                                                                              'type': 'and'}}],
+                                                 'test': {'type': 'constant', 'value': False},
+                                                 'type': 'if_statement'},
+                                             {   'name': 'can_hurt',
+                                                 'type': 'assign',
+                                                 'value': {   'conditions': [   {   'item': 'Master Sword',
+                                                                                    'type': 'item_check'},
+                                                                                {   'item': 'Tempered Sword',
+                                                                                    'type': 'item_check'},
+                                                                                {   'item': 'Golden Sword',
+                                                                                    'type': 'item_check'}],
+                                                              'type': 'or'}},
+                                             {   'name': 'common',
+                                                 'type': 'assign',
+                                                 'value': {   'conditions': [   {'name': 'can_hurt', 'type': 'name'},
+                                                                                {   'conditions': [   {   'item': 'Fire '
+                                                                                                                  'Rod',
+                                                                                                          'type': 'item_check'},
+                                                                                                      {   'item': 'Lamp',
+                                                                                                          'type': 'item_check'}],
+                                                                                    'type': 'or'}],
+                                                              'type': 'and'}},
+                                             {   'body': [   {   'type': 'return',
+                                                                 'value': {   'conditions': [   {   'name': 'common',
+                                                                                                    'type': 'name'},
+                                                                                                {   'conditions': [   {   'item': 'Tempered '
+                                                                                                                                  'Sword',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Golden '
+                                                                                                                                  'Sword',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Silver '
+                                                                                                                                                        'Bow',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
+                                                                                                                                                                                            'type': 'item_check'},
+                                                                                                                                                                                        {   'item': 'Silver '
+                                                                                                                                                                                                    'Bow',
+                                                                                                                                                                                            'type': 'item_check'}],
+                                                                                                                                                                      'type': 'or'},
+                                                                                                                                                                  {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                      'value': 0}],
+                                                                                                                                                                      'name': 'can_hold_arrows',
+                                                                                                                                                                      'type': 'helper'}],
+                                                                                                                                                'type': 'and'}],
+                                                                                                                          'type': 'and'},
+                                                                                                                      {   'item': 'Lamp',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'statements': [   {   'name': '_h6_basemagic',
+                                                                                                                                                'type': 'assign',
+                                                                                                                                                'value': {   'type': 'constant',
+                                                                                                                                                             'value': 8}},
+                                                                                                                                            {   'name': '_h6_basemagic',
+                                                                                                                                                'type': 'assign',
+                                                                                                                                                'value': {   'if_false': {   'if_false': {   'name': '_h6_basemagic',
+                                                                                                                                                                                             'type': 'name'},
+                                                                                                                                                                             'if_true': {   'type': 'constant',
+                                                                                                                                                                                            'value': 16},
+                                                                                                                                                                             'test': {   'item': 'Magic '
+                                                                                                                                                                                                 'Upgrade '
+                                                                                                                                                                                                 '(1/2)',
+                                                                                                                                                                                         'type': 'item_check'},
+                                                                                                                                                                             'type': 'conditional'},
+                                                                                                                                                             'if_true': {   'type': 'constant',
+                                                                                                                                                                            'value': 32},
+                                                                                                                                                             'test': {   'item': 'Magic '
+                                                                                                                                                                                 'Upgrade '
+                                                                                                                                                                                 '(1/4)',
+                                                                                                                                                                         'type': 'item_check'},
+                                                                                                                                                             'type': 'conditional'}},
+                                                                                                                                            {   'name': '_h6_basemagic',
+                                                                                                                                                'type': 'assign',
+                                                                                                                                                'value': {   'if_false': {   'name': '_h6_basemagic',
+                                                                                                                                                                             'type': 'name'},
+                                                                                                                                                             'if_true': {   'if_false': {   'if_false': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                                                                        'type': 'name'},
+                                                                                                                                                                                                            'op': '+',
+                                                                                                                                                                                                            'right': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                                                                                     'type': 'name'},
+                                                                                                                                                                                                                         'op': '*',
+                                                                                                                                                                                                                         'right': {   'args': [   ],
+                                                                                                                                                                                                                                      'name': 'bottle_count',
+                                                                                                                                                                                                                                      'type': 'helper'},
+                                                                                                                                                                                                                         'type': 'binary_op'},
+                                                                                                                                                                                                            'type': 'binary_op'},
+                                                                                                                                                                                            'if_true': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                                                                       'type': 'name'},
+                                                                                                                                                                                                           'op': '+',
+                                                                                                                                                                                                           'right': {   'args': [   {   'left': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                                                                                                                'type': 'name'},
+                                                                                                                                                                                                                                                    'op': '*',
+                                                                                                                                                                                                                                                    'right': {   'type': 'constant',
+                                                                                                                                                                                                                                                                 'value': 0.25},
+                                                                                                                                                                                                                                                    'type': 'binary_op'},
+                                                                                                                                                                                                                                        'op': '*',
+                                                                                                                                                                                                                                        'right': {   'args': [   ],
+                                                                                                                                                                                                                                                     'name': 'bottle_count',
+                                                                                                                                                                                                                                                     'type': 'helper'},
+                                                                                                                                                                                                                                        'type': 'binary_op'}],
+                                                                                                                                                                                                                        'name': 'int',
+                                                                                                                                                                                                                        'type': 'helper'},
+                                                                                                                                                                                                           'type': 'binary_op'},
+                                                                                                                                                                                            'test': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                                                                                                                          'value': 'hard'},
+                                                                                                                                                                                                                              'op': '==',
+                                                                                                                                                                                                                              'right': {   'type': 'constant',
+                                                                                                                                                                                                                                           'value': 'expert'},
+                                                                                                                                                                                                                              'type': 'compare'},
+                                                                                                                                                                                                                          {   'condition': {   'type': 'constant',
+                                                                                                                                                                                                                                               'value': False},
+                                                                                                                                                                                                                              'type': 'not'}],
+                                                                                                                                                                                                        'type': 'and'},
+                                                                                                                                                                                            'type': 'conditional'},
+                                                                                                                                                                            'if_true': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                                                       'type': 'name'},
+                                                                                                                                                                                           'op': '+',
+                                                                                                                                                                                           'right': {   'args': [   {   'left': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                                                                                                'type': 'name'},
+                                                                                                                                                                                                                                    'op': '*',
+                                                                                                                                                                                                                                    'right': {   'type': 'constant',
+                                                                                                                                                                                                                                                 'value': 0.5},
+                                                                                                                                                                                                                                    'type': 'binary_op'},
+                                                                                                                                                                                                                        'op': '*',
+                                                                                                                                                                                                                        'right': {   'args': [   ],
+                                                                                                                                                                                                                                     'name': 'bottle_count',
+                                                                                                                                                                                                                                     'type': 'helper'},
+                                                                                                                                                                                                                        'type': 'binary_op'}],
+                                                                                                                                                                                                        'name': 'int',
+                                                                                                                                                                                                        'type': 'helper'},
+                                                                                                                                                                                           'type': 'binary_op'},
+                                                                                                                                                                            'test': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                                                                                                          'value': 'hard'},
+                                                                                                                                                                                                              'op': '==',
+                                                                                                                                                                                                              'right': {   'type': 'constant',
+                                                                                                                                                                                                                           'value': 'hard'},
+                                                                                                                                                                                                              'type': 'compare'},
+                                                                                                                                                                                                          {   'condition': {   'type': 'constant',
+                                                                                                                                                                                                                               'value': False},
+                                                                                                                                                                                                              'type': 'not'}],
+                                                                                                                                                                                        'type': 'and'},
+                                                                                                                                                                            'type': 'conditional'},
+                                                                                                                                                             'test': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                                               'value': 'Green '
+                                                                                                                                                                                                                        'Potion'}],
+                                                                                                                                                                                               'name': 'can_buy_unlimited',
+                                                                                                                                                                                               'type': 'helper'},
+                                                                                                                                                                                           {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                                               'value': 'Blue '
+                                                                                                                                                                                                                        'Potion'}],
+                                                                                                                                                                                               'name': 'can_buy_unlimited',
+                                                                                                                                                                                               'type': 'helper'}],
+                                                                                                                                                                         'type': 'or'},
+                                                                                                                                                             'type': 'conditional'}},
+                                                                                                                                            {   'type': 'return',
+                                                                                                                                                'value': {   'left': {   'name': '_h6_basemagic',
+                                                                                                                                                                         'type': 'name'},
+                                                                                                                                                             'op': '>=',
+                                                                                                                                                             'right': {   'type': 'constant',
+                                                                                                                                                                          'value': 12},
+                                                                                                                                                             'type': 'compare'}}],
+                                                                                                                          'type': 'block'}],
+                                                                                                    'type': 'or'}],
+                                                                              'type': 'and'}}],
+                                                 'orelse': [   {   'type': 'return',
+                                                                   'value': {   'conditions': [   {   'name': 'common',
+                                                                                                      'type': 'name'},
+                                                                                                  {   'item': 'Silver '
+                                                                                                              'Bow',
+                                                                                                      'type': 'item_check'},
+                                                                                                  {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
+                                                                                                                                                  'type': 'item_check'},
+                                                                                                                                              {   'item': 'Silver '
+                                                                                                                                                          'Bow',
+                                                                                                                                                  'type': 'item_check'}],
+                                                                                                                            'type': 'or'},
+                                                                                                                        {   'args': [   {   'type': 'constant',
+                                                                                                                                            'value': 0}],
+                                                                                                                            'name': 'can_hold_arrows',
+                                                                                                                            'type': 'helper'}],
+                                                                                                      'type': 'and'}],
+                                                                                'type': 'and'}}],
+                                                 'test': {   'left': {'type': 'constant', 'value': 'no_glitches'},
+                                                             'op': '!=',
+                                                             'right': {'type': 'constant', 'value': 'no_glitches'},
+                                                             'type': 'compare'},
+                                                 'type': 'if_statement'}],
+                           'type': 'block'},
+    'basement_key_rule': {   'count': {'type': 'constant', 'value': 2},
+                             'item': 'Small Key (Hyrule Castle)',
+                             'type': 'count_check'},
+    'bottle_count': {   'args': [   {   'setting': 'difficulty_requirements.progressive_bottle_limit',
+                                        'type': 'setting_value'},
+                                    {'group': 'Bottles', 'type': 'group_count'}],
+                        'type': 'min'},
+    'can_activate_crystal_switch': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                   'name': 'has_sword',
+                                                                                   'type': 'helper'},
+                                                                               {   'item': 'Hammer',
+                                                                                   'type': 'item_check'}],
+                                                             'type': 'or'},
+                                                         {   'statements': [   {   'name': '_h9_bombs',
+                                                                                   'type': 'assign',
+                                                                                   'value': {   'type': 'constant',
+                                                                                                'value': 10}},
+                                                                               {   'name': '_h9_bombs',
+                                                                                   'op': '+=',
+                                                                                   'type': 'assign',
+                                                                                   'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                    'value': 'Bomb '
+                                                                                                                                                             'Upgrade '
+                                                                                                                                                             '(+5)'}],
+                                                                                                                                    'method': 'count',
+                                                                                                                                    'type': 'state_method'},
+                                                                                                                        'op': '*',
+                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                     'value': 5},
+                                                                                                                        'type': 'binary_op'},
+                                                                                                            'op': '+',
+                                                                                                            'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                     'value': 'Bomb '
+                                                                                                                                                              'Upgrade '
+                                                                                                                                                              '(+10)'}],
+                                                                                                                                     'method': 'count',
+                                                                                                                                     'type': 'state_method'},
+                                                                                                                         'op': '*',
+                                                                                                                         'right': {   'type': 'constant',
+                                                                                                                                      'value': 10},
+                                                                                                                         'type': 'binary_op'},
+                                                                                                            'type': 'binary_op'},
+                                                                                                'op': '+',
+                                                                                                'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                         'value': 'Bomb '
+                                                                                                                                                  'Upgrade '
+                                                                                                                                                  '(50)'}],
+                                                                                                                         'method': 'count',
+                                                                                                                         'type': 'state_method'},
+                                                                                                             'op': '*',
+                                                                                                             'right': {   'type': 'constant',
+                                                                                                                          'value': 50},
+                                                                                                             'type': 'binary_op'},
+                                                                                                'type': 'binary_op'}},
+                                                                               {   'name': '_h9_bombs',
+                                                                                   'op': '+=',
+                                                                                   'type': 'assign',
+                                                                                   'value': {   'args': [   {   'type': 'constant',
+                                                                                                                'value': 0},
+                                                                                                            {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                        'value': 'Bomb '
+                                                                                                                                                                 'Upgrade '
+                                                                                                                                                                 '(+5)'}],
+                                                                                                                                        'method': 'count',
+                                                                                                                                        'type': 'state_method'},
+                                                                                                                            'op': '-',
+                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                         'value': 6},
+                                                                                                                            'type': 'binary_op'},
+                                                                                                                'op': '*',
+                                                                                                                'right': {   'type': 'constant',
+                                                                                                                             'value': 10},
+                                                                                                                'type': 'binary_op'}],
+                                                                                                'type': 'max'}},
+                                                                               {   'body': [   {   'name': '_h9_bombs',
+                                                                                                   'op': '+=',
+                                                                                                   'type': 'assign',
+                                                                                                   'value': {   'type': 'constant',
+                                                                                                                'value': 40}}],
+                                                                                   'test': {   'conditions': [   {   'condition': {   'type': 'constant',
+                                                                                                                                      'value': 'off'},
+                                                                                                                     'type': 'not'},
+                                                                                                                 {   'item': 'Capacity '
+                                                                                                                             'Upgrade '
+                                                                                                                             'Shop',
+                                                                                                                     'type': 'item_check'}],
+                                                                                               'type': 'and'},
+                                                                                   'type': 'if_statement'},
+                                                                               {   'type': 'return',
+                                                                                   'value': {   'left': {   'name': '_h9_bombs',
+                                                                                                            'type': 'name'},
+                                                                                                'op': '>=',
+                                                                                                'right': {   'args': [   {   'type': 'constant',
+                                                                                                                             'value': 1},
+                                                                                                                         {   'type': 'constant',
+                                                                                                                             'value': 50}],
+                                                                                                             'type': 'min'},
+                                                                                                'type': 'compare'}}],
+                                                             'type': 'block'},
+                                                         {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
+                                                                                                         'type': 'item_check'},
+                                                                                                     {   'item': 'Silver '
+                                                                                                                 'Bow',
+                                                                                                         'type': 'item_check'}],
+                                                                                   'type': 'or'},
+                                                                               {   'args': [   {   'type': 'constant',
+                                                                                                   'value': 0}],
+                                                                                   'name': 'can_hold_arrows',
+                                                                                   'type': 'helper'}],
+                                                             'type': 'and'},
+                                                         {   'args': [   {   'type': 'constant',
+                                                                             'value': [   'Blue Boomerang',
+                                                                                          'Cane of Byrna',
+                                                                                          'Cane of Somaria',
+                                                                                          'Fire Rod',
+                                                                                          'Hookshot',
+                                                                                          'Ice Rod',
+                                                                                          'Red Boomerang']}],
+                                                             'method': 'has_any',
+                                                             'type': 'state_method'}],
+                                       'type': 'or'},
+    'can_bomb_or_bonk': {   'conditions': [   {'item': 'Pegasus Boots', 'type': 'item_check'},
+                                              {   'statements': [   {   'name': '_h11_bombs',
+                                                                        'type': 'assign',
+                                                                        'value': {'type': 'constant', 'value': 10}},
+                                                                    {   'name': '_h11_bombs',
+                                                                        'op': '+=',
+                                                                        'type': 'assign',
+                                                                        'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                         'value': 'Bomb '
+                                                                                                                                                  'Upgrade '
+                                                                                                                                                  '(+5)'}],
+                                                                                                                         'method': 'count',
+                                                                                                                         'type': 'state_method'},
+                                                                                                             'op': '*',
+                                                                                                             'right': {   'type': 'constant',
+                                                                                                                          'value': 5},
+                                                                                                             'type': 'binary_op'},
+                                                                                                 'op': '+',
+                                                                                                 'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                          'value': 'Bomb '
+                                                                                                                                                   'Upgrade '
+                                                                                                                                                   '(+10)'}],
+                                                                                                                          'method': 'count',
+                                                                                                                          'type': 'state_method'},
+                                                                                                              'op': '*',
+                                                                                                              'right': {   'type': 'constant',
+                                                                                                                           'value': 10},
+                                                                                                              'type': 'binary_op'},
+                                                                                                 'type': 'binary_op'},
+                                                                                     'op': '+',
+                                                                                     'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                              'value': 'Bomb '
+                                                                                                                                       'Upgrade '
+                                                                                                                                       '(50)'}],
+                                                                                                              'method': 'count',
+                                                                                                              'type': 'state_method'},
+                                                                                                  'op': '*',
+                                                                                                  'right': {   'type': 'constant',
+                                                                                                               'value': 50},
+                                                                                                  'type': 'binary_op'},
+                                                                                     'type': 'binary_op'}},
+                                                                    {   'name': '_h11_bombs',
+                                                                        'op': '+=',
+                                                                        'type': 'assign',
+                                                                        'value': {   'args': [   {   'type': 'constant',
+                                                                                                     'value': 0},
+                                                                                                 {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                             'value': 'Bomb '
+                                                                                                                                                      'Upgrade '
+                                                                                                                                                      '(+5)'}],
+                                                                                                                             'method': 'count',
+                                                                                                                             'type': 'state_method'},
+                                                                                                                 'op': '-',
+                                                                                                                 'right': {   'type': 'constant',
+                                                                                                                              'value': 6},
+                                                                                                                 'type': 'binary_op'},
+                                                                                                     'op': '*',
+                                                                                                     'right': {   'type': 'constant',
+                                                                                                                  'value': 10},
+                                                                                                     'type': 'binary_op'}],
+                                                                                     'type': 'max'}},
+                                                                    {   'body': [   {   'name': '_h11_bombs',
+                                                                                        'op': '+=',
+                                                                                        'type': 'assign',
+                                                                                        'value': {   'type': 'constant',
+                                                                                                     'value': 40}}],
+                                                                        'test': {   'conditions': [   {   'condition': {   'type': 'constant',
+                                                                                                                           'value': 'off'},
+                                                                                                          'type': 'not'},
+                                                                                                      {   'item': 'Capacity '
+                                                                                                                  'Upgrade '
+                                                                                                                  'Shop',
+                                                                                                          'type': 'item_check'}],
+                                                                                    'type': 'and'},
+                                                                        'type': 'if_statement'},
+                                                                    {   'type': 'return',
+                                                                        'value': {   'left': {   'name': '_h11_bombs',
+                                                                                                 'type': 'name'},
+                                                                                     'op': '>=',
+                                                                                     'right': {   'args': [   {   'type': 'constant',
+                                                                                                                  'value': 1},
+                                                                                                              {   'type': 'constant',
+                                                                                                                  'value': 50}],
+                                                                                                  'type': 'min'},
+                                                                                     'type': 'compare'}}],
+                                                  'type': 'block'}],
+                            'type': 'or'},
+    'can_buy': {   'body': {   'element_rule': {'region': {'name': 'region', 'type': 'name'}, 'type': 'can_reach'},
+                               'iterator_info': {   'iterator': {   'index': {'type': 'constant', 'value': 'limited'},
+                                                                    'type': 'subscript',
+                                                                    'value': {   'index': {   'name': 'item',
+                                                                                              'type': 'name'},
+                                                                                 'type': 'subscript',
+                                                                                 'value': {   'type': 'constant',
+                                                                                              'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                    'Upgrade'],
+                                                                                                                                     'unlimited': [   ]},
+                                                                                                           'Arrows (10)': {   'limited': [   'Red '
+                                                                                                                                             'Shield '
+                                                                                                                                             'Shop'],
+                                                                                                                              'unlimited': [   'Red '
+                                                                                                                                               'Shield '
+                                                                                                                                               'Shop']},
+                                                                                                           'Bee': {   'limited': [   'Red '
+                                                                                                                                     'Shield '
+                                                                                                                                     'Shop'],
+                                                                                                                      'unlimited': [   'Red '
+                                                                                                                                       'Shield '
+                                                                                                                                       'Shop']},
+                                                                                                           'Blue Potion': {   'limited': [   'Potion '
+                                                                                                                                             'Shop'],
+                                                                                                                              'unlimited': [   'Potion '
+                                                                                                                                               'Shop']},
+                                                                                                           'Blue Shield': {   'limited': [   'Dark '
+                                                                                                                                             'Lake '
+                                                                                                                                             'Hylia '
+                                                                                                                                             'Shop',
+                                                                                                                                             'Dark '
+                                                                                                                                             'World '
+                                                                                                                                             'Lumberjack '
+                                                                                                                                             'Shop',
+                                                                                                                                             'Village '
+                                                                                                                                             'of '
+                                                                                                                                             'Outcasts '
+                                                                                                                                             'Shop',
+                                                                                                                                             'Dark '
+                                                                                                                                             'World '
+                                                                                                                                             'Potion '
+                                                                                                                                             'Shop'],
+                                                                                                                              'unlimited': [   'Dark '
+                                                                                                                                               'Lake '
+                                                                                                                                               'Hylia '
+                                                                                                                                               'Shop',
+                                                                                                                                               'Dark '
+                                                                                                                                               'World '
+                                                                                                                                               'Lumberjack '
+                                                                                                                                               'Shop',
+                                                                                                                                               'Village '
+                                                                                                                                               'of '
+                                                                                                                                               'Outcasts '
+                                                                                                                                               'Shop',
+                                                                                                                                               'Dark '
+                                                                                                                                               'World '
+                                                                                                                                               'Potion '
+                                                                                                                                               'Shop']},
+                                                                                                           'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                   'Upgrade'],
+                                                                                                                                    'unlimited': [   ]},
+                                                                                                           'Bombs (10)': {   'limited': [   'Cave '
+                                                                                                                                            'Shop '
+                                                                                                                                            '(Dark '
+                                                                                                                                            'Death '
+                                                                                                                                            'Mountain)',
+                                                                                                                                            'Dark '
+                                                                                                                                            'Lake '
+                                                                                                                                            'Hylia '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Dark '
+                                                                                                                                            'World '
+                                                                                                                                            'Lumberjack '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Village '
+                                                                                                                                            'of '
+                                                                                                                                            'Outcasts '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Dark '
+                                                                                                                                            'World '
+                                                                                                                                            'Potion '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Light '
+                                                                                                                                            'World '
+                                                                                                                                            'Death '
+                                                                                                                                            'Mountain '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Kakariko '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Cave '
+                                                                                                                                            'Shop '
+                                                                                                                                            '(Lake '
+                                                                                                                                            'Hylia)'],
+                                                                                                                             'unlimited': [   'Cave '
+                                                                                                                                              'Shop '
+                                                                                                                                              '(Dark '
+                                                                                                                                              'Death '
+                                                                                                                                              'Mountain)',
+                                                                                                                                              'Dark '
+                                                                                                                                              'Lake '
+                                                                                                                                              'Hylia '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Dark '
+                                                                                                                                              'World '
+                                                                                                                                              'Lumberjack '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Village '
+                                                                                                                                              'of '
+                                                                                                                                              'Outcasts '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Dark '
+                                                                                                                                              'World '
+                                                                                                                                              'Potion '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Light '
+                                                                                                                                              'World '
+                                                                                                                                              'Death '
+                                                                                                                                              'Mountain '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Kakariko '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Cave '
+                                                                                                                                              'Shop '
+                                                                                                                                              '(Lake '
+                                                                                                                                              'Hylia)']},
+                                                                                                           'Green Potion': {   'limited': [   'Potion '
+                                                                                                                                              'Shop'],
+                                                                                                                               'unlimited': [   'Potion '
+                                                                                                                                                'Shop']},
+                                                                                                           'Red Potion': {   'limited': [   'Cave '
+                                                                                                                                            'Shop '
+                                                                                                                                            '(Dark '
+                                                                                                                                            'Death '
+                                                                                                                                            'Mountain)',
+                                                                                                                                            'Dark '
+                                                                                                                                            'Lake '
+                                                                                                                                            'Hylia '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Dark '
+                                                                                                                                            'World '
+                                                                                                                                            'Lumberjack '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Village '
+                                                                                                                                            'of '
+                                                                                                                                            'Outcasts '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Dark '
+                                                                                                                                            'World '
+                                                                                                                                            'Potion '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Light '
+                                                                                                                                            'World '
+                                                                                                                                            'Death '
+                                                                                                                                            'Mountain '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Kakariko '
+                                                                                                                                            'Shop',
+                                                                                                                                            'Cave '
+                                                                                                                                            'Shop '
+                                                                                                                                            '(Lake '
+                                                                                                                                            'Hylia)',
+                                                                                                                                            'Potion '
+                                                                                                                                            'Shop'],
+                                                                                                                             'unlimited': [   'Cave '
+                                                                                                                                              'Shop '
+                                                                                                                                              '(Dark '
+                                                                                                                                              'Death '
+                                                                                                                                              'Mountain)',
+                                                                                                                                              'Dark '
+                                                                                                                                              'Lake '
+                                                                                                                                              'Hylia '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Dark '
+                                                                                                                                              'World '
+                                                                                                                                              'Lumberjack '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Village '
+                                                                                                                                              'of '
+                                                                                                                                              'Outcasts '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Dark '
+                                                                                                                                              'World '
+                                                                                                                                              'Potion '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Light '
+                                                                                                                                              'World '
+                                                                                                                                              'Death '
+                                                                                                                                              'Mountain '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Kakariko '
+                                                                                                                                              'Shop',
+                                                                                                                                              'Cave '
+                                                                                                                                              'Shop '
+                                                                                                                                              '(Lake '
+                                                                                                                                              'Hylia)',
+                                                                                                                                              'Potion '
+                                                                                                                                              'Shop']},
+                                                                                                           'Red Shield': {   'limited': [   'Red '
+                                                                                                                                            'Shield '
+                                                                                                                                            'Shop'],
+                                                                                                                             'unlimited': [   'Red '
+                                                                                                                                              'Shield '
+                                                                                                                                              'Shop']},
+                                                                                                           'Small Heart': {   'limited': [   'Cave '
+                                                                                                                                             'Shop '
+                                                                                                                                             '(Dark '
+                                                                                                                                             'Death '
+                                                                                                                                             'Mountain)',
+                                                                                                                                             'Light '
+                                                                                                                                             'World '
+                                                                                                                                             'Death '
+                                                                                                                                             'Mountain '
+                                                                                                                                             'Shop',
+                                                                                                                                             'Kakariko '
+                                                                                                                                             'Shop',
+                                                                                                                                             'Cave '
+                                                                                                                                             'Shop '
+                                                                                                                                             '(Lake '
+                                                                                                                                             'Hylia)'],
+                                                                                                                              'unlimited': [   'Cave '
+                                                                                                                                               'Shop '
+                                                                                                                                               '(Dark '
+                                                                                                                                               'Death '
+                                                                                                                                               'Mountain)',
+                                                                                                                                               'Light '
+                                                                                                                                               'World '
+                                                                                                                                               'Death '
+                                                                                                                                               'Mountain '
+                                                                                                                                               'Shop',
+                                                                                                                                               'Kakariko '
+                                                                                                                                               'Shop',
+                                                                                                                                               'Cave '
+                                                                                                                                               'Shop '
+                                                                                                                                               '(Lake '
+                                                                                                                                               'Hylia)']}}}}},
+                                                    'target': {'name': 'region', 'type': 'name'}},
+                               'type': 'any_of'},
+                   'params': ['item']},
+    'can_buy_unlimited': {   'body': {   'element_rule': {   'region': {'name': 'region', 'type': 'name'},
+                                                             'type': 'can_reach'},
+                                         'iterator_info': {   'iterator': {   'index': {   'type': 'constant',
+                                                                                           'value': 'unlimited'},
+                                                                              'type': 'subscript',
+                                                                              'value': {   'index': {   'name': 'item',
+                                                                                                        'type': 'name'},
+                                                                                           'type': 'subscript',
+                                                                                           'value': {   'type': 'constant',
+                                                                                                        'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                              'Upgrade'],
+                                                                                                                                               'unlimited': [   ]},
+                                                                                                                     'Arrows (10)': {   'limited': [   'Red '
+                                                                                                                                                       'Shield '
+                                                                                                                                                       'Shop'],
+                                                                                                                                        'unlimited': [   'Red '
+                                                                                                                                                         'Shield '
+                                                                                                                                                         'Shop']},
+                                                                                                                     'Bee': {   'limited': [   'Red '
+                                                                                                                                               'Shield '
+                                                                                                                                               'Shop'],
+                                                                                                                                'unlimited': [   'Red '
+                                                                                                                                                 'Shield '
+                                                                                                                                                 'Shop']},
+                                                                                                                     'Blue Potion': {   'limited': [   'Potion '
+                                                                                                                                                       'Shop'],
+                                                                                                                                        'unlimited': [   'Potion '
+                                                                                                                                                         'Shop']},
+                                                                                                                     'Blue Shield': {   'limited': [   'Dark '
+                                                                                                                                                       'Lake '
+                                                                                                                                                       'Hylia '
+                                                                                                                                                       'Shop',
+                                                                                                                                                       'Dark '
+                                                                                                                                                       'World '
+                                                                                                                                                       'Lumberjack '
+                                                                                                                                                       'Shop',
+                                                                                                                                                       'Village '
+                                                                                                                                                       'of '
+                                                                                                                                                       'Outcasts '
+                                                                                                                                                       'Shop',
+                                                                                                                                                       'Dark '
+                                                                                                                                                       'World '
+                                                                                                                                                       'Potion '
+                                                                                                                                                       'Shop'],
+                                                                                                                                        'unlimited': [   'Dark '
+                                                                                                                                                         'Lake '
+                                                                                                                                                         'Hylia '
+                                                                                                                                                         'Shop',
+                                                                                                                                                         'Dark '
+                                                                                                                                                         'World '
+                                                                                                                                                         'Lumberjack '
+                                                                                                                                                         'Shop',
+                                                                                                                                                         'Village '
+                                                                                                                                                         'of '
+                                                                                                                                                         'Outcasts '
+                                                                                                                                                         'Shop',
+                                                                                                                                                         'Dark '
+                                                                                                                                                         'World '
+                                                                                                                                                         'Potion '
+                                                                                                                                                         'Shop']},
+                                                                                                                     'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                             'Upgrade'],
+                                                                                                                                              'unlimited': [   ]},
+                                                                                                                     'Bombs (10)': {   'limited': [   'Cave '
+                                                                                                                                                      'Shop '
+                                                                                                                                                      '(Dark '
+                                                                                                                                                      'Death '
+                                                                                                                                                      'Mountain)',
+                                                                                                                                                      'Dark '
+                                                                                                                                                      'Lake '
+                                                                                                                                                      'Hylia '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Dark '
+                                                                                                                                                      'World '
+                                                                                                                                                      'Lumberjack '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Village '
+                                                                                                                                                      'of '
+                                                                                                                                                      'Outcasts '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Dark '
+                                                                                                                                                      'World '
+                                                                                                                                                      'Potion '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Light '
+                                                                                                                                                      'World '
+                                                                                                                                                      'Death '
+                                                                                                                                                      'Mountain '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Kakariko '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Cave '
+                                                                                                                                                      'Shop '
+                                                                                                                                                      '(Lake '
+                                                                                                                                                      'Hylia)'],
+                                                                                                                                       'unlimited': [   'Cave '
+                                                                                                                                                        'Shop '
+                                                                                                                                                        '(Dark '
+                                                                                                                                                        'Death '
+                                                                                                                                                        'Mountain)',
+                                                                                                                                                        'Dark '
+                                                                                                                                                        'Lake '
+                                                                                                                                                        'Hylia '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Dark '
+                                                                                                                                                        'World '
+                                                                                                                                                        'Lumberjack '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Village '
+                                                                                                                                                        'of '
+                                                                                                                                                        'Outcasts '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Dark '
+                                                                                                                                                        'World '
+                                                                                                                                                        'Potion '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Light '
+                                                                                                                                                        'World '
+                                                                                                                                                        'Death '
+                                                                                                                                                        'Mountain '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Kakariko '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Cave '
+                                                                                                                                                        'Shop '
+                                                                                                                                                        '(Lake '
+                                                                                                                                                        'Hylia)']},
+                                                                                                                     'Green Potion': {   'limited': [   'Potion '
+                                                                                                                                                        'Shop'],
+                                                                                                                                         'unlimited': [   'Potion '
+                                                                                                                                                          'Shop']},
+                                                                                                                     'Red Potion': {   'limited': [   'Cave '
+                                                                                                                                                      'Shop '
+                                                                                                                                                      '(Dark '
+                                                                                                                                                      'Death '
+                                                                                                                                                      'Mountain)',
+                                                                                                                                                      'Dark '
+                                                                                                                                                      'Lake '
+                                                                                                                                                      'Hylia '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Dark '
+                                                                                                                                                      'World '
+                                                                                                                                                      'Lumberjack '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Village '
+                                                                                                                                                      'of '
+                                                                                                                                                      'Outcasts '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Dark '
+                                                                                                                                                      'World '
+                                                                                                                                                      'Potion '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Light '
+                                                                                                                                                      'World '
+                                                                                                                                                      'Death '
+                                                                                                                                                      'Mountain '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Kakariko '
+                                                                                                                                                      'Shop',
+                                                                                                                                                      'Cave '
+                                                                                                                                                      'Shop '
+                                                                                                                                                      '(Lake '
+                                                                                                                                                      'Hylia)',
+                                                                                                                                                      'Potion '
+                                                                                                                                                      'Shop'],
+                                                                                                                                       'unlimited': [   'Cave '
+                                                                                                                                                        'Shop '
+                                                                                                                                                        '(Dark '
+                                                                                                                                                        'Death '
+                                                                                                                                                        'Mountain)',
+                                                                                                                                                        'Dark '
+                                                                                                                                                        'Lake '
+                                                                                                                                                        'Hylia '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Dark '
+                                                                                                                                                        'World '
+                                                                                                                                                        'Lumberjack '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Village '
+                                                                                                                                                        'of '
+                                                                                                                                                        'Outcasts '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Dark '
+                                                                                                                                                        'World '
+                                                                                                                                                        'Potion '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Light '
+                                                                                                                                                        'World '
+                                                                                                                                                        'Death '
+                                                                                                                                                        'Mountain '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Kakariko '
+                                                                                                                                                        'Shop',
+                                                                                                                                                        'Cave '
+                                                                                                                                                        'Shop '
+                                                                                                                                                        '(Lake '
+                                                                                                                                                        'Hylia)',
+                                                                                                                                                        'Potion '
+                                                                                                                                                        'Shop']},
+                                                                                                                     'Red Shield': {   'limited': [   'Red '
+                                                                                                                                                      'Shield '
+                                                                                                                                                      'Shop'],
+                                                                                                                                       'unlimited': [   'Red '
+                                                                                                                                                        'Shield '
+                                                                                                                                                        'Shop']},
+                                                                                                                     'Small Heart': {   'limited': [   'Cave '
+                                                                                                                                                       'Shop '
+                                                                                                                                                       '(Dark '
+                                                                                                                                                       'Death '
+                                                                                                                                                       'Mountain)',
+                                                                                                                                                       'Light '
+                                                                                                                                                       'World '
+                                                                                                                                                       'Death '
+                                                                                                                                                       'Mountain '
+                                                                                                                                                       'Shop',
+                                                                                                                                                       'Kakariko '
+                                                                                                                                                       'Shop',
+                                                                                                                                                       'Cave '
+                                                                                                                                                       'Shop '
+                                                                                                                                                       '(Lake '
+                                                                                                                                                       'Hylia)'],
+                                                                                                                                        'unlimited': [   'Cave '
+                                                                                                                                                         'Shop '
+                                                                                                                                                         '(Dark '
+                                                                                                                                                         'Death '
+                                                                                                                                                         'Mountain)',
+                                                                                                                                                         'Light '
+                                                                                                                                                         'World '
+                                                                                                                                                         'Death '
+                                                                                                                                                         'Mountain '
+                                                                                                                                                         'Shop',
+                                                                                                                                                         'Kakariko '
+                                                                                                                                                         'Shop',
+                                                                                                                                                         'Cave '
+                                                                                                                                                         'Shop '
+                                                                                                                                                         '(Lake '
+                                                                                                                                                         'Hylia)']}}}}},
+                                                              'target': {'name': 'region', 'type': 'name'}},
+                                         'type': 'any_of'},
+                             'params': ['item']},
+    'can_defeat_boss': {   'body': {   'conditions': [   {'args': [], 'name': 'has_melee_weapon', 'type': 'helper'},
+                                                         {'item': 'Cane of Somaria', 'type': 'item_check'},
+                                                         {   'conditions': [   {   'item': 'Cane of Byrna',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                     'value': 1},
+                                                                                                         'op': '<',
+                                                                                                         'right': {   'type': 'constant',
+                                                                                                                      'value': 6},
+                                                                                                         'type': 'compare'},
+                                                                                                     {   'args': [],
+                                                                                                         'name': 'can_extend_magic',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
+                                                         {'args': [], 'name': 'can_shoot_arrows', 'type': 'helper'},
+                                                         {'item': 'Fire Rod', 'type': 'item_check'},
+                                                         {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                               'value': 'default'},
+                                                                                   'op': 'in',
+                                                                                   'right': {   'type': 'list',
+                                                                                                'value': [   {   'type': 'constant',
+                                                                                                                 'value': 'easy'},
+                                                                                                             {   'type': 'constant',
+                                                                                                                 'value': 'default'}]},
+                                                                                   'type': 'compare'},
+                                                                               {   'args': [   {   'left': {   'type': 'constant',
+                                                                                                               'value': 1},
+                                                                                                   'op': '*',
+                                                                                                   'right': {   'type': 'constant',
+                                                                                                                'value': 4},
+                                                                                                   'type': 'binary_op'}],
+                                                                                   'name': 'can_use_bombs',
+                                                                                   'type': 'helper'}],
+                                                             'type': 'and'}],
+                                       'type': 'or'},
+                           'params': ['location_name', 'boss_type']},
+    'can_extend_magic': {   'body': {   'statements': [   {   'name': 'basemagic',
+                                                              'type': 'assign',
+                                                              'value': {'type': 'constant', 'value': 8}},
+                                                          {   'name': 'basemagic',
+                                                              'type': 'assign',
+                                                              'value': {   'if_false': {   'if_false': {   'name': 'basemagic',
+                                                                                                           'type': 'name'},
+                                                                                           'if_true': {   'type': 'constant',
+                                                                                                          'value': 16},
+                                                                                           'test': {   'item': 'Magic '
+                                                                                                               'Upgrade '
+                                                                                                               '(1/2)',
+                                                                                                       'type': 'item_check'},
+                                                                                           'type': 'conditional'},
+                                                                           'if_true': {'type': 'constant', 'value': 32},
+                                                                           'test': {   'item': 'Magic Upgrade (1/4)',
+                                                                                       'type': 'item_check'},
+                                                                           'type': 'conditional'}},
+                                                          {   'name': 'basemagic',
+                                                              'type': 'assign',
+                                                              'value': {   'if_false': {   'name': 'basemagic',
+                                                                                           'type': 'name'},
+                                                                           'if_true': {   'if_false': {   'if_false': {   'left': {   'name': 'basemagic',
+                                                                                                                                      'type': 'name'},
+                                                                                                                          'op': '+',
+                                                                                                                          'right': {   'left': {   'name': 'basemagic',
+                                                                                                                                                   'type': 'name'},
+                                                                                                                                       'op': '*',
+                                                                                                                                       'right': {   'args': [   {   'setting': 'difficulty_requirements.progressive_bottle_limit',
+                                                                                                                                                                    'type': 'setting_value'},
+                                                                                                                                                                {   'group': 'Bottles',
+                                                                                                                                                                    'type': 'group_count'}],
+                                                                                                                                                    'type': 'min'},
+                                                                                                                                       'type': 'binary_op'},
+                                                                                                                          'type': 'binary_op'},
+                                                                                                          'if_true': {   'left': {   'name': 'basemagic',
+                                                                                                                                     'type': 'name'},
+                                                                                                                         'op': '+',
+                                                                                                                         'right': {   'args': [   {   'left': {   'left': {   'name': 'basemagic',
+                                                                                                                                                                              'type': 'name'},
+                                                                                                                                                                  'op': '*',
+                                                                                                                                                                  'right': {   'type': 'constant',
+                                                                                                                                                                               'value': 0.25},
+                                                                                                                                                                  'type': 'binary_op'},
+                                                                                                                                                      'op': '*',
+                                                                                                                                                      'right': {   'args': [   ],
+                                                                                                                                                                   'name': 'bottle_count',
+                                                                                                                                                                   'type': 'helper'},
+                                                                                                                                                      'type': 'binary_op'}],
+                                                                                                                                      'name': 'int',
+                                                                                                                                      'type': 'helper'},
+                                                                                                                         'type': 'binary_op'},
+                                                                                                          'test': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                                        'value': 'hard'},
+                                                                                                                                            'op': '==',
+                                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                                         'value': 'expert'},
+                                                                                                                                            'type': 'compare'},
+                                                                                                                                        {   'condition': {   'name': 'fullrefill',
+                                                                                                                                                             'type': 'name'},
+                                                                                                                                            'type': 'not'}],
+                                                                                                                      'type': 'and'},
+                                                                                                          'type': 'conditional'},
+                                                                                          'if_true': {   'left': {   'name': 'basemagic',
+                                                                                                                     'type': 'name'},
+                                                                                                         'op': '+',
+                                                                                                         'right': {   'args': [   {   'left': {   'left': {   'name': 'basemagic',
+                                                                                                                                                              'type': 'name'},
+                                                                                                                                                  'op': '*',
+                                                                                                                                                  'right': {   'type': 'constant',
+                                                                                                                                                               'value': 0.5},
+                                                                                                                                                  'type': 'binary_op'},
+                                                                                                                                      'op': '*',
+                                                                                                                                      'right': {   'args': [   ],
+                                                                                                                                                   'name': 'bottle_count',
+                                                                                                                                                   'type': 'helper'},
+                                                                                                                                      'type': 'binary_op'}],
+                                                                                                                      'name': 'int',
+                                                                                                                      'type': 'helper'},
+                                                                                                         'type': 'binary_op'},
+                                                                                          'test': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                        'value': 'hard'},
+                                                                                                                            'op': '==',
+                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                         'value': 'hard'},
+                                                                                                                            'type': 'compare'},
+                                                                                                                        {   'condition': {   'name': 'fullrefill',
+                                                                                                                                             'type': 'name'},
+                                                                                                                            'type': 'not'}],
+                                                                                                      'type': 'and'},
+                                                                                          'type': 'conditional'},
+                                                                           'test': {   'conditions': [   {   'element_rule': {   'region': {   'name': 'region',
+                                                                                                                                               'type': 'name'},
+                                                                                                                                 'type': 'can_reach'},
+                                                                                                             'iterator_info': {   'iterator': {   'index': {   'type': 'constant',
+                                                                                                                                                               'value': 'unlimited'},
+                                                                                                                                                  'type': 'subscript',
+                                                                                                                                                  'value': {   'index': {   'type': 'constant',
+                                                                                                                                                                            'value': 'Green '
+                                                                                                                                                                                     'Potion'},
+                                                                                                                                                               'type': 'subscript',
+                                                                                                                                                               'value': {   'type': 'constant',
+                                                                                                                                                                            'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                                                                                                  'Upgrade'],
+                                                                                                                                                                                                                   'unlimited': [   ]},
+                                                                                                                                                                                         'Arrows (10)': {   'limited': [   'Red '
+                                                                                                                                                                                                                           'Shield '
+                                                                                                                                                                                                                           'Shop'],
+                                                                                                                                                                                                            'unlimited': [   'Red '
+                                                                                                                                                                                                                             'Shield '
+                                                                                                                                                                                                                             'Shop']},
+                                                                                                                                                                                         'Bee': {   'limited': [   'Red '
+                                                                                                                                                                                                                   'Shield '
+                                                                                                                                                                                                                   'Shop'],
+                                                                                                                                                                                                    'unlimited': [   'Red '
+                                                                                                                                                                                                                     'Shield '
+                                                                                                                                                                                                                     'Shop']},
+                                                                                                                                                                                         'Blue Potion': {   'limited': [   'Potion '
+                                                                                                                                                                                                                           'Shop'],
+                                                                                                                                                                                                            'unlimited': [   'Potion '
+                                                                                                                                                                                                                             'Shop']},
+                                                                                                                                                                                         'Blue Shield': {   'limited': [   'Dark '
+                                                                                                                                                                                                                           'Lake '
+                                                                                                                                                                                                                           'Hylia '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Dark '
+                                                                                                                                                                                                                           'World '
+                                                                                                                                                                                                                           'Lumberjack '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Village '
+                                                                                                                                                                                                                           'of '
+                                                                                                                                                                                                                           'Outcasts '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Dark '
+                                                                                                                                                                                                                           'World '
+                                                                                                                                                                                                                           'Potion '
+                                                                                                                                                                                                                           'Shop'],
+                                                                                                                                                                                                            'unlimited': [   'Dark '
+                                                                                                                                                                                                                             'Lake '
+                                                                                                                                                                                                                             'Hylia '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Dark '
+                                                                                                                                                                                                                             'World '
+                                                                                                                                                                                                                             'Lumberjack '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Village '
+                                                                                                                                                                                                                             'of '
+                                                                                                                                                                                                                             'Outcasts '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Dark '
+                                                                                                                                                                                                                             'World '
+                                                                                                                                                                                                                             'Potion '
+                                                                                                                                                                                                                             'Shop']},
+                                                                                                                                                                                         'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                                                                                                 'Upgrade'],
+                                                                                                                                                                                                                  'unlimited': [   ]},
+                                                                                                                                                                                         'Bombs (10)': {   'limited': [   'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Dark '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain)',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'Lake '
+                                                                                                                                                                                                                          'Hylia '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Lumberjack '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Village '
+                                                                                                                                                                                                                          'of '
+                                                                                                                                                                                                                          'Outcasts '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Potion '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Light '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Kakariko '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Lake '
+                                                                                                                                                                                                                          'Hylia)'],
+                                                                                                                                                                                                           'unlimited': [   'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Dark '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain)',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'Lake '
+                                                                                                                                                                                                                            'Hylia '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Lumberjack '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Village '
+                                                                                                                                                                                                                            'of '
+                                                                                                                                                                                                                            'Outcasts '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Potion '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Light '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Kakariko '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Lake '
+                                                                                                                                                                                                                            'Hylia)']},
+                                                                                                                                                                                         'Green Potion': {   'limited': [   'Potion '
+                                                                                                                                                                                                                            'Shop'],
+                                                                                                                                                                                                             'unlimited': [   'Potion '
+                                                                                                                                                                                                                              'Shop']},
+                                                                                                                                                                                         'Red Potion': {   'limited': [   'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Dark '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain)',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'Lake '
+                                                                                                                                                                                                                          'Hylia '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Lumberjack '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Village '
+                                                                                                                                                                                                                          'of '
+                                                                                                                                                                                                                          'Outcasts '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Potion '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Light '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Kakariko '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Lake '
+                                                                                                                                                                                                                          'Hylia)',
+                                                                                                                                                                                                                          'Potion '
+                                                                                                                                                                                                                          'Shop'],
+                                                                                                                                                                                                           'unlimited': [   'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Dark '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain)',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'Lake '
+                                                                                                                                                                                                                            'Hylia '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Lumberjack '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Village '
+                                                                                                                                                                                                                            'of '
+                                                                                                                                                                                                                            'Outcasts '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Potion '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Light '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Kakariko '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Lake '
+                                                                                                                                                                                                                            'Hylia)',
+                                                                                                                                                                                                                            'Potion '
+                                                                                                                                                                                                                            'Shop']},
+                                                                                                                                                                                         'Red Shield': {   'limited': [   'Red '
+                                                                                                                                                                                                                          'Shield '
+                                                                                                                                                                                                                          'Shop'],
+                                                                                                                                                                                                           'unlimited': [   'Red '
+                                                                                                                                                                                                                            'Shield '
+                                                                                                                                                                                                                            'Shop']},
+                                                                                                                                                                                         'Small Heart': {   'limited': [   'Cave '
+                                                                                                                                                                                                                           'Shop '
+                                                                                                                                                                                                                           '(Dark '
+                                                                                                                                                                                                                           'Death '
+                                                                                                                                                                                                                           'Mountain)',
+                                                                                                                                                                                                                           'Light '
+                                                                                                                                                                                                                           'World '
+                                                                                                                                                                                                                           'Death '
+                                                                                                                                                                                                                           'Mountain '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Kakariko '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Cave '
+                                                                                                                                                                                                                           'Shop '
+                                                                                                                                                                                                                           '(Lake '
+                                                                                                                                                                                                                           'Hylia)'],
+                                                                                                                                                                                                            'unlimited': [   'Cave '
+                                                                                                                                                                                                                             'Shop '
+                                                                                                                                                                                                                             '(Dark '
+                                                                                                                                                                                                                             'Death '
+                                                                                                                                                                                                                             'Mountain)',
+                                                                                                                                                                                                                             'Light '
+                                                                                                                                                                                                                             'World '
+                                                                                                                                                                                                                             'Death '
+                                                                                                                                                                                                                             'Mountain '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Kakariko '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Cave '
+                                                                                                                                                                                                                             'Shop '
+                                                                                                                                                                                                                             '(Lake '
+                                                                                                                                                                                                                             'Hylia)']}}}}},
+                                                                                                                                  'target': {   'name': 'region',
+                                                                                                                                                'type': 'name'}},
+                                                                                                             'type': 'any_of'},
+                                                                                                         {   'element_rule': {   'region': {   'name': 'region',
+                                                                                                                                               'type': 'name'},
+                                                                                                                                 'type': 'can_reach'},
+                                                                                                             'iterator_info': {   'iterator': {   'index': {   'type': 'constant',
+                                                                                                                                                               'value': 'unlimited'},
+                                                                                                                                                  'type': 'subscript',
+                                                                                                                                                  'value': {   'index': {   'type': 'constant',
+                                                                                                                                                                            'value': 'Blue '
+                                                                                                                                                                                     'Potion'},
+                                                                                                                                                               'type': 'subscript',
+                                                                                                                                                               'value': {   'type': 'constant',
+                                                                                                                                                                            'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                                                                                                  'Upgrade'],
+                                                                                                                                                                                                                   'unlimited': [   ]},
+                                                                                                                                                                                         'Arrows (10)': {   'limited': [   'Red '
+                                                                                                                                                                                                                           'Shield '
+                                                                                                                                                                                                                           'Shop'],
+                                                                                                                                                                                                            'unlimited': [   'Red '
+                                                                                                                                                                                                                             'Shield '
+                                                                                                                                                                                                                             'Shop']},
+                                                                                                                                                                                         'Bee': {   'limited': [   'Red '
+                                                                                                                                                                                                                   'Shield '
+                                                                                                                                                                                                                   'Shop'],
+                                                                                                                                                                                                    'unlimited': [   'Red '
+                                                                                                                                                                                                                     'Shield '
+                                                                                                                                                                                                                     'Shop']},
+                                                                                                                                                                                         'Blue Potion': {   'limited': [   'Potion '
+                                                                                                                                                                                                                           'Shop'],
+                                                                                                                                                                                                            'unlimited': [   'Potion '
+                                                                                                                                                                                                                             'Shop']},
+                                                                                                                                                                                         'Blue Shield': {   'limited': [   'Dark '
+                                                                                                                                                                                                                           'Lake '
+                                                                                                                                                                                                                           'Hylia '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Dark '
+                                                                                                                                                                                                                           'World '
+                                                                                                                                                                                                                           'Lumberjack '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Village '
+                                                                                                                                                                                                                           'of '
+                                                                                                                                                                                                                           'Outcasts '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Dark '
+                                                                                                                                                                                                                           'World '
+                                                                                                                                                                                                                           'Potion '
+                                                                                                                                                                                                                           'Shop'],
+                                                                                                                                                                                                            'unlimited': [   'Dark '
+                                                                                                                                                                                                                             'Lake '
+                                                                                                                                                                                                                             'Hylia '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Dark '
+                                                                                                                                                                                                                             'World '
+                                                                                                                                                                                                                             'Lumberjack '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Village '
+                                                                                                                                                                                                                             'of '
+                                                                                                                                                                                                                             'Outcasts '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Dark '
+                                                                                                                                                                                                                             'World '
+                                                                                                                                                                                                                             'Potion '
+                                                                                                                                                                                                                             'Shop']},
+                                                                                                                                                                                         'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
+                                                                                                                                                                                                                                 'Upgrade'],
+                                                                                                                                                                                                                  'unlimited': [   ]},
+                                                                                                                                                                                         'Bombs (10)': {   'limited': [   'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Dark '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain)',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'Lake '
+                                                                                                                                                                                                                          'Hylia '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Lumberjack '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Village '
+                                                                                                                                                                                                                          'of '
+                                                                                                                                                                                                                          'Outcasts '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Potion '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Light '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Kakariko '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Lake '
+                                                                                                                                                                                                                          'Hylia)'],
+                                                                                                                                                                                                           'unlimited': [   'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Dark '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain)',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'Lake '
+                                                                                                                                                                                                                            'Hylia '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Lumberjack '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Village '
+                                                                                                                                                                                                                            'of '
+                                                                                                                                                                                                                            'Outcasts '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Potion '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Light '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Kakariko '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Lake '
+                                                                                                                                                                                                                            'Hylia)']},
+                                                                                                                                                                                         'Green Potion': {   'limited': [   'Potion '
+                                                                                                                                                                                                                            'Shop'],
+                                                                                                                                                                                                             'unlimited': [   'Potion '
+                                                                                                                                                                                                                              'Shop']},
+                                                                                                                                                                                         'Red Potion': {   'limited': [   'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Dark '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain)',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'Lake '
+                                                                                                                                                                                                                          'Hylia '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Lumberjack '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Village '
+                                                                                                                                                                                                                          'of '
+                                                                                                                                                                                                                          'Outcasts '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Dark '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Potion '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Light '
+                                                                                                                                                                                                                          'World '
+                                                                                                                                                                                                                          'Death '
+                                                                                                                                                                                                                          'Mountain '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Kakariko '
+                                                                                                                                                                                                                          'Shop',
+                                                                                                                                                                                                                          'Cave '
+                                                                                                                                                                                                                          'Shop '
+                                                                                                                                                                                                                          '(Lake '
+                                                                                                                                                                                                                          'Hylia)',
+                                                                                                                                                                                                                          'Potion '
+                                                                                                                                                                                                                          'Shop'],
+                                                                                                                                                                                                           'unlimited': [   'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Dark '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain)',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'Lake '
+                                                                                                                                                                                                                            'Hylia '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Lumberjack '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Village '
+                                                                                                                                                                                                                            'of '
+                                                                                                                                                                                                                            'Outcasts '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Dark '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Potion '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Light '
+                                                                                                                                                                                                                            'World '
+                                                                                                                                                                                                                            'Death '
+                                                                                                                                                                                                                            'Mountain '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Kakariko '
+                                                                                                                                                                                                                            'Shop',
+                                                                                                                                                                                                                            'Cave '
+                                                                                                                                                                                                                            'Shop '
+                                                                                                                                                                                                                            '(Lake '
+                                                                                                                                                                                                                            'Hylia)',
+                                                                                                                                                                                                                            'Potion '
+                                                                                                                                                                                                                            'Shop']},
+                                                                                                                                                                                         'Red Shield': {   'limited': [   'Red '
+                                                                                                                                                                                                                          'Shield '
+                                                                                                                                                                                                                          'Shop'],
+                                                                                                                                                                                                           'unlimited': [   'Red '
+                                                                                                                                                                                                                            'Shield '
+                                                                                                                                                                                                                            'Shop']},
+                                                                                                                                                                                         'Small Heart': {   'limited': [   'Cave '
+                                                                                                                                                                                                                           'Shop '
+                                                                                                                                                                                                                           '(Dark '
+                                                                                                                                                                                                                           'Death '
+                                                                                                                                                                                                                           'Mountain)',
+                                                                                                                                                                                                                           'Light '
+                                                                                                                                                                                                                           'World '
+                                                                                                                                                                                                                           'Death '
+                                                                                                                                                                                                                           'Mountain '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Kakariko '
+                                                                                                                                                                                                                           'Shop',
+                                                                                                                                                                                                                           'Cave '
+                                                                                                                                                                                                                           'Shop '
+                                                                                                                                                                                                                           '(Lake '
+                                                                                                                                                                                                                           'Hylia)'],
+                                                                                                                                                                                                            'unlimited': [   'Cave '
+                                                                                                                                                                                                                             'Shop '
+                                                                                                                                                                                                                             '(Dark '
+                                                                                                                                                                                                                             'Death '
+                                                                                                                                                                                                                             'Mountain)',
+                                                                                                                                                                                                                             'Light '
+                                                                                                                                                                                                                             'World '
+                                                                                                                                                                                                                             'Death '
+                                                                                                                                                                                                                             'Mountain '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Kakariko '
+                                                                                                                                                                                                                             'Shop',
+                                                                                                                                                                                                                             'Cave '
+                                                                                                                                                                                                                             'Shop '
+                                                                                                                                                                                                                             '(Lake '
+                                                                                                                                                                                                                             'Hylia)']}}}}},
+                                                                                                                                  'target': {   'name': 'region',
+                                                                                                                                                'type': 'name'}},
+                                                                                                             'type': 'any_of'}],
+                                                                                       'type': 'or'},
+                                                                           'type': 'conditional'}},
+                                                          {   'type': 'return',
+                                                              'value': {   'left': {   'name': 'basemagic',
+                                                                                       'type': 'name'},
+                                                                           'op': '>=',
+                                                                           'right': {   'name': 'smallmagic',
+                                                                                        'type': 'name'},
+                                                                           'type': 'compare'}}],
+                                        'type': 'block'},
+                            'params': ['smallmagic', 'fullrefill']},
+    'can_get_good_bee': {   'statements': [   {   'name': 'cave',
+                                                  'type': 'assign',
+                                                  'value': {'region': 'Good Bee Cave', 'type': 'region_reference'}},
+                                              {   'type': 'return',
+                                                  'value': {   'conditions': [   {   'group': 'Bottles',
+                                                                                     'type': 'group_check'},
+                                                                                 {   'item': 'Bug Catching Net',
+                                                                                     'type': 'item_check'},
+                                                                                 {   'conditions': [   {   'item': 'Pegasus '
+                                                                                                                   'Boots',
+                                                                                                           'type': 'item_check'},
+                                                                                                       {   'conditions': [   {   'conditions': [   {   'item': 'Fighter '
+                                                                                                                                                               'Sword',
+                                                                                                                                                       'type': 'item_check'},
+                                                                                                                                                   {   'item': 'Master '
+                                                                                                                                                               'Sword',
+                                                                                                                                                       'type': 'item_check'},
+                                                                                                                                                   {   'item': 'Tempered '
+                                                                                                                                                               'Sword',
+                                                                                                                                                       'type': 'item_check'},
+                                                                                                                                                   {   'item': 'Golden '
+                                                                                                                                                               'Sword',
+                                                                                                                                                       'type': 'item_check'}],
+                                                                                                                                 'type': 'or'},
+                                                                                                                             {   'item': 'Quake',
+                                                                                                                                 'type': 'item_check'}],
+                                                                                                           'type': 'and'}],
+                                                                                     'type': 'or'},
+                                                                                 {   'args': [],
+                                                                                     'function': {   'attr': 'can_reach',
+                                                                                                     'object': {   'name': 'cave',
+                                                                                                                   'type': 'name'},
+                                                                                                     'type': 'attribute'},
+                                                                                     'type': 'function_call'},
+                                                                                 {   'if_false': {   'if_false': {   'attr': 'is_dark_world',
+                                                                                                                     'region': {   'name': 'cave',
+                                                                                                                                   'type': 'name'},
+                                                                                                                     'type': 'region_attribute'},
+                                                                                                     'if_true': {   'attr': 'is_light_world',
+                                                                                                                    'region': {   'name': 'cave',
+                                                                                                                                  'type': 'name'},
+                                                                                                                    'type': 'region_attribute'},
+                                                                                                     'test': {   'left': {   'type': 'constant',
+                                                                                                                             'value': 'open'},
+                                                                                                                 'op': '!=',
+                                                                                                                 'right': {   'type': 'constant',
+                                                                                                                              'value': 'inverted'},
+                                                                                                                 'type': 'compare'},
+                                                                                                     'type': 'conditional'},
+                                                                                     'if_true': {   'type': 'constant',
+                                                                                                    'value': True},
+                                                                                     'test': {   'item': 'Moon Pearl',
+                                                                                                 'type': 'item_check'},
+                                                                                     'type': 'conditional'}],
+                                                               'type': 'and'}}],
+                            'type': 'block'},
+    'can_hold_arrows': {   'body': {   'statements': [   {   'body': [   {   'body': [   {   'type': 'return',
+                                                                                             'value': {   'type': 'constant',
+                                                                                                          'value': True}}],
+                                                                             'test': {   'left': {   'name': 'quantity',
+                                                                                                     'type': 'name'},
+                                                                                         'op': '==',
+                                                                                         'right': {   'type': 'constant',
+                                                                                                      'value': 0},
+                                                                                         'type': 'compare'},
+                                                                             'type': 'if_statement'},
+                                                                         {   'body': [   {   'name': 'arrows',
+                                                                                             'type': 'assign',
+                                                                                             'value': {   'type': 'constant',
+                                                                                                          'value': 70}}],
+                                                                             'orelse': [   {   'name': 'arrows',
+                                                                                               'type': 'assign',
+                                                                                               'value': {   'left': {   'left': {   'type': 'constant',
+                                                                                                                                    'value': 30},
+                                                                                                                        'op': '+',
+                                                                                                                        'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                 'value': 'Arrow '
+                                                                                                                                                                          'Upgrade '
+                                                                                                                                                                          '(+5)'}],
+                                                                                                                                                 'method': 'count',
+                                                                                                                                                 'type': 'state_method'},
+                                                                                                                                     'op': '*',
+                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                  'value': 5},
+                                                                                                                                     'type': 'binary_op'},
+                                                                                                                        'type': 'binary_op'},
+                                                                                                            'op': '+',
+                                                                                                            'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                     'value': 'Arrow '
+                                                                                                                                                              'Upgrade '
+                                                                                                                                                              '(+10)'}],
+                                                                                                                                     'method': 'count',
+                                                                                                                                     'type': 'state_method'},
+                                                                                                                         'op': '*',
+                                                                                                                         'right': {   'type': 'constant',
+                                                                                                                                      'value': 10},
+                                                                                                                         'type': 'binary_op'},
+                                                                                                            'type': 'binary_op'}},
+                                                                                           {   'name': 'arrows',
+                                                                                               'op': '+=',
+                                                                                               'type': 'assign',
+                                                                                               'value': {   'args': [   {   'type': 'constant',
+                                                                                                                            'value': 0},
+                                                                                                                        {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                    'value': 'Arrow '
+                                                                                                                                                                             'Upgrade '
+                                                                                                                                                                             '(+5)'}],
+                                                                                                                                                    'method': 'count',
+                                                                                                                                                    'type': 'state_method'},
+                                                                                                                                        'op': '-',
+                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                     'value': 6},
+                                                                                                                                        'type': 'binary_op'},
+                                                                                                                            'op': '*',
+                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                         'value': 10},
+                                                                                                                            'type': 'binary_op'}],
+                                                                                                            'type': 'max'}}],
+                                                                             'test': {   'item': 'Arrow Upgrade (70)',
+                                                                                         'type': 'item_check'},
+                                                                             'type': 'if_statement'},
+                                                                         {   'type': 'return',
+                                                                             'value': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                      'value': 70},
+                                                                                                                  {   'name': 'arrows',
+                                                                                                                      'type': 'name'}],
+                                                                                                      'type': 'min'},
+                                                                                          'op': '>=',
+                                                                                          'right': {   'name': 'quantity',
+                                                                                                       'type': 'name'},
+                                                                                          'type': 'compare'}}],
+                                                             'test': {'type': 'constant', 'value': 'off'},
+                                                             'type': 'if_statement'},
+                                                         {   'type': 'return',
+                                                             'value': {   'conditions': [   {   'left': {   'name': 'quantity',
+                                                                                                            'type': 'name'},
+                                                                                                'op': '<=',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 30},
+                                                                                                'type': 'compare'},
+                                                                                            {   'item': 'Capacity '
+                                                                                                        'Upgrade Shop',
+                                                                                                'type': 'item_check'}],
+                                                                          'type': 'or'}}],
+                                       'type': 'block'},
+                           'params': ['quantity']},
+    'can_kill_most_things': {   'body': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                        'name': 'has_sword',
+                                                                                        'type': 'helper'},
+                                                                                    {   'item': 'Hammer',
+                                                                                        'type': 'item_check'}],
+                                                                  'type': 'or'},
+                                                              {'item': 'Cane of Somaria', 'type': 'item_check'},
+                                                              {   'conditions': [   {   'item': 'Cane of Byrna',
+                                                                                        'type': 'item_check'},
+                                                                                    {   'conditions': [   {   'left': {   'name': 'enemies',
+                                                                                                                          'type': 'name'},
+                                                                                                              'op': '<',
+                                                                                                              'right': {   'type': 'constant',
+                                                                                                                           'value': 6},
+                                                                                                              'type': 'compare'},
+                                                                                                          {   'statements': [   {   'name': '_h22_basemagic',
+                                                                                                                                    'type': 'assign',
+                                                                                                                                    'value': {   'type': 'constant',
+                                                                                                                                                 'value': 8}},
+                                                                                                                                {   'name': '_h22_basemagic',
+                                                                                                                                    'type': 'assign',
+                                                                                                                                    'value': {   'if_false': {   'if_false': {   'name': '_h22_basemagic',
+                                                                                                                                                                                 'type': 'name'},
+                                                                                                                                                                 'if_true': {   'type': 'constant',
+                                                                                                                                                                                'value': 16},
+                                                                                                                                                                 'test': {   'item': 'Magic '
+                                                                                                                                                                                     'Upgrade '
+                                                                                                                                                                                     '(1/2)',
+                                                                                                                                                                             'type': 'item_check'},
+                                                                                                                                                                 'type': 'conditional'},
+                                                                                                                                                 'if_true': {   'type': 'constant',
+                                                                                                                                                                'value': 32},
+                                                                                                                                                 'test': {   'item': 'Magic '
+                                                                                                                                                                     'Upgrade '
+                                                                                                                                                                     '(1/4)',
+                                                                                                                                                             'type': 'item_check'},
+                                                                                                                                                 'type': 'conditional'}},
+                                                                                                                                {   'name': '_h22_basemagic',
+                                                                                                                                    'type': 'assign',
+                                                                                                                                    'value': {   'if_false': {   'name': '_h22_basemagic',
+                                                                                                                                                                 'type': 'name'},
+                                                                                                                                                 'if_true': {   'if_false': {   'if_false': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                                                                            'type': 'name'},
+                                                                                                                                                                                                'op': '+',
+                                                                                                                                                                                                'right': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                                                                                         'type': 'name'},
+                                                                                                                                                                                                             'op': '*',
+                                                                                                                                                                                                             'right': {   'args': [   ],
+                                                                                                                                                                                                                          'name': 'bottle_count',
+                                                                                                                                                                                                                          'type': 'helper'},
+                                                                                                                                                                                                             'type': 'binary_op'},
+                                                                                                                                                                                                'type': 'binary_op'},
+                                                                                                                                                                                'if_true': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                                                                           'type': 'name'},
+                                                                                                                                                                                               'op': '+',
+                                                                                                                                                                                               'right': {   'args': [   {   'left': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                                                                                                                    'type': 'name'},
+                                                                                                                                                                                                                                        'op': '*',
+                                                                                                                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                                                                                                                     'value': 0.25},
+                                                                                                                                                                                                                                        'type': 'binary_op'},
+                                                                                                                                                                                                                            'op': '*',
+                                                                                                                                                                                                                            'right': {   'args': [   ],
+                                                                                                                                                                                                                                         'name': 'bottle_count',
+                                                                                                                                                                                                                                         'type': 'helper'},
+                                                                                                                                                                                                                            'type': 'binary_op'}],
+                                                                                                                                                                                                            'name': 'int',
+                                                                                                                                                                                                            'type': 'helper'},
+                                                                                                                                                                                               'type': 'binary_op'},
+                                                                                                                                                                                'test': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                                                                                                              'value': 'hard'},
+                                                                                                                                                                                                                  'op': '==',
+                                                                                                                                                                                                                  'right': {   'type': 'constant',
+                                                                                                                                                                                                                               'value': 'expert'},
+                                                                                                                                                                                                                  'type': 'compare'},
+                                                                                                                                                                                                              {   'condition': {   'type': 'constant',
+                                                                                                                                                                                                                                   'value': False},
+                                                                                                                                                                                                                  'type': 'not'}],
+                                                                                                                                                                                            'type': 'and'},
+                                                                                                                                                                                'type': 'conditional'},
+                                                                                                                                                                'if_true': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                                                           'type': 'name'},
+                                                                                                                                                                               'op': '+',
+                                                                                                                                                                               'right': {   'args': [   {   'left': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                                                                                                    'type': 'name'},
+                                                                                                                                                                                                                        'op': '*',
+                                                                                                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                                                                                                     'value': 0.5},
+                                                                                                                                                                                                                        'type': 'binary_op'},
+                                                                                                                                                                                                            'op': '*',
+                                                                                                                                                                                                            'right': {   'args': [   ],
+                                                                                                                                                                                                                         'name': 'bottle_count',
+                                                                                                                                                                                                                         'type': 'helper'},
+                                                                                                                                                                                                            'type': 'binary_op'}],
+                                                                                                                                                                                            'name': 'int',
+                                                                                                                                                                                            'type': 'helper'},
+                                                                                                                                                                               'type': 'binary_op'},
+                                                                                                                                                                'test': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                                                                                              'value': 'hard'},
+                                                                                                                                                                                                  'op': '==',
+                                                                                                                                                                                                  'right': {   'type': 'constant',
+                                                                                                                                                                                                               'value': 'hard'},
+                                                                                                                                                                                                  'type': 'compare'},
+                                                                                                                                                                                              {   'condition': {   'type': 'constant',
+                                                                                                                                                                                                                   'value': False},
+                                                                                                                                                                                                  'type': 'not'}],
+                                                                                                                                                                            'type': 'and'},
+                                                                                                                                                                'type': 'conditional'},
+                                                                                                                                                 'test': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                                   'value': 'Green '
+                                                                                                                                                                                                            'Potion'}],
+                                                                                                                                                                                   'name': 'can_buy_unlimited',
+                                                                                                                                                                                   'type': 'helper'},
+                                                                                                                                                                               {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                                   'value': 'Blue '
+                                                                                                                                                                                                            'Potion'}],
+                                                                                                                                                                                   'name': 'can_buy_unlimited',
+                                                                                                                                                                                   'type': 'helper'}],
+                                                                                                                                                             'type': 'or'},
+                                                                                                                                                 'type': 'conditional'}},
+                                                                                                                                {   'type': 'return',
+                                                                                                                                    'value': {   'left': {   'name': '_h22_basemagic',
+                                                                                                                                                             'type': 'name'},
+                                                                                                                                                 'op': '>=',
+                                                                                                                                                 'right': {   'type': 'constant',
+                                                                                                                                                              'value': 16},
+                                                                                                                                                 'type': 'compare'}}],
+                                                                                                              'type': 'block'}],
+                                                                                        'type': 'or'}],
+                                                                  'type': 'and'},
+                                                              {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
+                                                                                                              'type': 'item_check'},
+                                                                                                          {   'item': 'Silver '
+                                                                                                                      'Bow',
+                                                                                                              'type': 'item_check'}],
+                                                                                        'type': 'or'},
+                                                                                    {   'args': [   {   'type': 'constant',
+                                                                                                        'value': 0}],
+                                                                                        'name': 'can_hold_arrows',
+                                                                                        'type': 'helper'}],
+                                                                  'type': 'and'},
+                                                              {'item': 'Fire Rod', 'type': 'item_check'},
+                                                              {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                    'value': 'default'},
+                                                                                        'op': 'in',
+                                                                                        'right': {   'type': 'list',
+                                                                                                     'value': [   {   'type': 'constant',
+                                                                                                                      'value': 'easy'},
+                                                                                                                  {   'type': 'constant',
+                                                                                                                      'value': 'default'}]},
+                                                                                        'type': 'compare'},
+                                                                                    {   'statements': [   {   'name': '_h24_bombs',
+                                                                                                              'type': 'assign',
+                                                                                                              'value': {   'type': 'constant',
+                                                                                                                           'value': 10}},
+                                                                                                          {   'name': '_h24_bombs',
+                                                                                                              'op': '+=',
+                                                                                                              'type': 'assign',
+                                                                                                              'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                               'value': 'Bomb '
+                                                                                                                                                                                        'Upgrade '
+                                                                                                                                                                                        '(+5)'}],
+                                                                                                                                                               'method': 'count',
+                                                                                                                                                               'type': 'state_method'},
+                                                                                                                                                   'op': '*',
+                                                                                                                                                   'right': {   'type': 'constant',
+                                                                                                                                                                'value': 5},
+                                                                                                                                                   'type': 'binary_op'},
+                                                                                                                                       'op': '+',
+                                                                                                                                       'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                'value': 'Bomb '
+                                                                                                                                                                                         'Upgrade '
+                                                                                                                                                                                         '(+10)'}],
+                                                                                                                                                                'method': 'count',
+                                                                                                                                                                'type': 'state_method'},
+                                                                                                                                                    'op': '*',
+                                                                                                                                                    'right': {   'type': 'constant',
+                                                                                                                                                                 'value': 10},
+                                                                                                                                                    'type': 'binary_op'},
+                                                                                                                                       'type': 'binary_op'},
+                                                                                                                           'op': '+',
+                                                                                                                           'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                    'value': 'Bomb '
+                                                                                                                                                                             'Upgrade '
+                                                                                                                                                                             '(50)'}],
+                                                                                                                                                    'method': 'count',
+                                                                                                                                                    'type': 'state_method'},
+                                                                                                                                        'op': '*',
+                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                     'value': 50},
+                                                                                                                                        'type': 'binary_op'},
+                                                                                                                           'type': 'binary_op'}},
+                                                                                                          {   'name': '_h24_bombs',
+                                                                                                              'op': '+=',
+                                                                                                              'type': 'assign',
+                                                                                                              'value': {   'args': [   {   'type': 'constant',
+                                                                                                                                           'value': 0},
+                                                                                                                                       {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                   'value': 'Bomb '
+                                                                                                                                                                                            'Upgrade '
+                                                                                                                                                                                            '(+5)'}],
+                                                                                                                                                                   'method': 'count',
+                                                                                                                                                                   'type': 'state_method'},
+                                                                                                                                                       'op': '-',
+                                                                                                                                                       'right': {   'type': 'constant',
+                                                                                                                                                                    'value': 6},
+                                                                                                                                                       'type': 'binary_op'},
+                                                                                                                                           'op': '*',
+                                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                                        'value': 10},
+                                                                                                                                           'type': 'binary_op'}],
+                                                                                                                           'type': 'max'}},
+                                                                                                          {   'body': [   {   'name': '_h24_bombs',
+                                                                                                                              'op': '+=',
+                                                                                                                              'type': 'assign',
+                                                                                                                              'value': {   'type': 'constant',
+                                                                                                                                           'value': 40}}],
+                                                                                                              'test': {   'conditions': [   {   'condition': {   'type': 'constant',
+                                                                                                                                                                 'value': 'off'},
+                                                                                                                                                'type': 'not'},
+                                                                                                                                            {   'item': 'Capacity '
+                                                                                                                                                        'Upgrade '
+                                                                                                                                                        'Shop',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'and'},
+                                                                                                              'type': 'if_statement'},
+                                                                                                          {   'type': 'return',
+                                                                                                              'value': {   'left': {   'name': '_h24_bombs',
+                                                                                                                                       'type': 'name'},
+                                                                                                                           'op': '>=',
+                                                                                                                           'right': {   'args': [   {   'left': {   'name': 'enemies',
+                                                                                                                                                                    'type': 'name'},
+                                                                                                                                                        'op': '*',
+                                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                                     'value': 4},
+                                                                                                                                                        'type': 'binary_op'},
+                                                                                                                                                    {   'type': 'constant',
+                                                                                                                                                        'value': 50}],
+                                                                                                                                        'type': 'min'},
+                                                                                                                           'type': 'compare'}}],
+                                                                                        'type': 'block'}],
+                                                                  'type': 'and'}],
+                                            'type': 'or'},
+                                'params': ['enemies']},
+    'can_lift_heavy_rocks': {'item': 'Titans Mitts', 'type': 'item_check'},
+    'can_lift_rocks': {   'conditions': [   {'item': 'Power Glove', 'type': 'item_check'},
+                                            {'item': 'Titans Mitts', 'type': 'item_check'}],
+                          'type': 'or'},
+    'can_melt_things': {   'conditions': [   {'item': 'Fire Rod', 'type': 'item_check'},
+                                             {   'conditions': [   {'item': 'Bombos', 'type': 'item_check'},
+                                                                   {   'conditions': [   {   'type': 'constant',
+                                                                                             'value': False},
+                                                                                         {   'conditions': [   {   'item': 'Fighter '
+                                                                                                                           'Sword',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'item': 'Master '
+                                                                                                                           'Sword',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'item': 'Tempered '
+                                                                                                                           'Sword',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'item': 'Golden '
+                                                                                                                           'Sword',
+                                                                                                                   'type': 'item_check'}],
+                                                                                             'type': 'or'}],
+                                                                       'type': 'or'}],
+                                                 'type': 'and'}],
+                           'type': 'or'},
+    'can_retrieve_tablet': {   'conditions': [   {'item': 'Book of Mudora', 'type': 'item_check'},
+                                                 {   'conditions': [   {   'conditions': [   {   'item': 'Master Sword',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'item': 'Tempered '
+                                                                                                         'Sword',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'item': 'Golden Sword',
+                                                                                                 'type': 'item_check'}],
+                                                                           'type': 'or'},
+                                                                       {   'conditions': [   {   'type': 'constant',
+                                                                                                 'value': False},
+                                                                                             {   'item': 'Hammer',
+                                                                                                 'type': 'item_check'}],
+                                                                           'type': 'and'}],
+                                                     'type': 'or'}],
+                               'type': 'and'},
+    'can_shoot_arrows': {   'body': {   'conditions': [   {   'conditions': [   {'item': 'Bow', 'type': 'item_check'},
+                                                                                {   'item': 'Silver Bow',
+                                                                                    'type': 'item_check'}],
+                                                              'type': 'or'},
+                                                          {   'statements': [   {   'body': [   {   'body': [   {   'type': 'return',
+                                                                                                                    'value': {   'type': 'constant',
+                                                                                                                                 'value': True}}],
+                                                                                                    'test': {   'left': {   'name': 'count',
+                                                                                                                            'type': 'name'},
+                                                                                                                'op': '==',
+                                                                                                                'right': {   'type': 'constant',
+                                                                                                                             'value': 0},
+                                                                                                                'type': 'compare'},
+                                                                                                    'type': 'if_statement'},
+                                                                                                {   'body': [   {   'name': '_h28_arrows',
+                                                                                                                    'type': 'assign',
+                                                                                                                    'value': {   'type': 'constant',
+                                                                                                                                 'value': 70}}],
+                                                                                                    'orelse': [   {   'name': '_h28_arrows',
+                                                                                                                      'type': 'assign',
+                                                                                                                      'value': {   'left': {   'left': {   'type': 'constant',
+                                                                                                                                                           'value': 30},
+                                                                                                                                               'op': '+',
+                                                                                                                                               'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                        'value': 'Arrow '
+                                                                                                                                                                                                 'Upgrade '
+                                                                                                                                                                                                 '(+5)'}],
+                                                                                                                                                                        'method': 'count',
+                                                                                                                                                                        'type': 'state_method'},
+                                                                                                                                                            'op': '*',
+                                                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                                                         'value': 5},
+                                                                                                                                                            'type': 'binary_op'},
+                                                                                                                                               'type': 'binary_op'},
+                                                                                                                                   'op': '+',
+                                                                                                                                   'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                            'value': 'Arrow '
+                                                                                                                                                                                     'Upgrade '
+                                                                                                                                                                                     '(+10)'}],
+                                                                                                                                                            'method': 'count',
+                                                                                                                                                            'type': 'state_method'},
+                                                                                                                                                'op': '*',
+                                                                                                                                                'right': {   'type': 'constant',
+                                                                                                                                                             'value': 10},
+                                                                                                                                                'type': 'binary_op'},
+                                                                                                                                   'type': 'binary_op'}},
+                                                                                                                  {   'name': '_h28_arrows',
+                                                                                                                      'op': '+=',
+                                                                                                                      'type': 'assign',
+                                                                                                                      'value': {   'args': [   {   'type': 'constant',
+                                                                                                                                                   'value': 0},
+                                                                                                                                               {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                           'value': 'Arrow '
+                                                                                                                                                                                                    'Upgrade '
+                                                                                                                                                                                                    '(+5)'}],
+                                                                                                                                                                           'method': 'count',
+                                                                                                                                                                           'type': 'state_method'},
+                                                                                                                                                               'op': '-',
+                                                                                                                                                               'right': {   'type': 'constant',
+                                                                                                                                                                            'value': 6},
+                                                                                                                                                               'type': 'binary_op'},
+                                                                                                                                                   'op': '*',
+                                                                                                                                                   'right': {   'type': 'constant',
+                                                                                                                                                                'value': 10},
+                                                                                                                                                   'type': 'binary_op'}],
+                                                                                                                                   'type': 'max'}}],
+                                                                                                    'test': {   'item': 'Arrow '
+                                                                                                                        'Upgrade '
+                                                                                                                        '(70)',
+                                                                                                                'type': 'item_check'},
+                                                                                                    'type': 'if_statement'},
+                                                                                                {   'type': 'return',
+                                                                                                    'value': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                             'value': 70},
+                                                                                                                                         {   'name': '_h28_arrows',
+                                                                                                                                             'type': 'name'}],
+                                                                                                                             'type': 'min'},
+                                                                                                                 'op': '>=',
+                                                                                                                 'right': {   'name': 'count',
+                                                                                                                              'type': 'name'},
+                                                                                                                 'type': 'compare'}}],
+                                                                                    'test': {   'type': 'constant',
+                                                                                                'value': 'off'},
+                                                                                    'type': 'if_statement'},
+                                                                                {   'type': 'return',
+                                                                                    'value': {   'conditions': [   {   'left': {   'name': 'count',
+                                                                                                                                   'type': 'name'},
+                                                                                                                       'op': '<=',
+                                                                                                                       'right': {   'type': 'constant',
+                                                                                                                                    'value': 30},
+                                                                                                                       'type': 'compare'},
+                                                                                                                   {   'item': 'Capacity '
+                                                                                                                               'Upgrade '
+                                                                                                                               'Shop',
+                                                                                                                       'type': 'item_check'}],
+                                                                                                 'type': 'or'}}],
+                                                              'type': 'block'}],
+                                        'type': 'and'},
+                            'params': ['count']},
+    'can_use_bombs': {   'body': {   'statements': [   {   'name': 'bombs',
+                                                           'type': 'assign',
+                                                           'value': {'type': 'constant', 'value': 10}},
+                                                       {   'name': 'bombs',
+                                                           'op': '+=',
+                                                           'type': 'assign',
+                                                           'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                            'value': 'Bomb '
+                                                                                                                                     'Upgrade '
+                                                                                                                                     '(+5)'}],
+                                                                                                            'method': 'count',
+                                                                                                            'type': 'state_method'},
+                                                                                                'op': '*',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 5},
+                                                                                                'type': 'binary_op'},
+                                                                                    'op': '+',
+                                                                                    'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                             'value': 'Bomb '
+                                                                                                                                      'Upgrade '
+                                                                                                                                      '(+10)'}],
+                                                                                                             'method': 'count',
+                                                                                                             'type': 'state_method'},
+                                                                                                 'op': '*',
+                                                                                                 'right': {   'type': 'constant',
+                                                                                                              'value': 10},
+                                                                                                 'type': 'binary_op'},
+                                                                                    'type': 'binary_op'},
+                                                                        'op': '+',
+                                                                        'right': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                 'value': 'Bomb '
+                                                                                                                          'Upgrade '
+                                                                                                                          '(50)'}],
+                                                                                                 'method': 'count',
+                                                                                                 'type': 'state_method'},
+                                                                                     'op': '*',
+                                                                                     'right': {   'type': 'constant',
+                                                                                                  'value': 50},
+                                                                                     'type': 'binary_op'},
+                                                                        'type': 'binary_op'}},
+                                                       {   'name': 'bombs',
+                                                           'op': '+=',
+                                                           'type': 'assign',
+                                                           'value': {   'args': [   {'type': 'constant', 'value': 0},
+                                                                                    {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                'value': 'Bomb '
+                                                                                                                                         'Upgrade '
+                                                                                                                                         '(+5)'}],
+                                                                                                                'method': 'count',
+                                                                                                                'type': 'state_method'},
+                                                                                                    'op': '-',
+                                                                                                    'right': {   'type': 'constant',
+                                                                                                                 'value': 6},
+                                                                                                    'type': 'binary_op'},
+                                                                                        'op': '*',
+                                                                                        'right': {   'type': 'constant',
+                                                                                                     'value': 10},
+                                                                                        'type': 'binary_op'}],
+                                                                        'type': 'max'}},
+                                                       {   'body': [   {   'name': 'bombs',
+                                                                           'op': '+=',
+                                                                           'type': 'assign',
+                                                                           'value': {'type': 'constant', 'value': 40}}],
+                                                           'test': {   'conditions': [   {   'condition': {   'type': 'constant',
+                                                                                                              'value': 'off'},
+                                                                                             'type': 'not'},
+                                                                                         {   'item': 'Capacity Upgrade '
+                                                                                                     'Shop',
+                                                                                             'type': 'item_check'}],
+                                                                       'type': 'and'},
+                                                           'type': 'if_statement'},
+                                                       {   'type': 'return',
+                                                           'value': {   'left': {'name': 'bombs', 'type': 'name'},
+                                                                        'op': '>=',
+                                                                        'right': {   'args': [   {   'name': 'quantity',
+                                                                                                     'type': 'name'},
+                                                                                                 {   'type': 'constant',
+                                                                                                     'value': 50}],
+                                                                                     'type': 'min'},
+                                                                        'type': 'compare'}}],
+                                     'type': 'block'},
+                         'params': ['quantity']},
+    'cross_peg_bridge': {   'conditions': [   {'item': 'Hammer', 'type': 'item_check'},
+                                              {'item': 'Moon Pearl', 'type': 'item_check'}],
+                            'type': 'and'},
+    'has_beam_sword': {   'conditions': [   {'item': 'Master Sword', 'type': 'item_check'},
+                                            {'item': 'Tempered Sword', 'type': 'item_check'},
+                                            {'item': 'Golden Sword', 'type': 'item_check'}],
+                          'type': 'or'},
+    'has_crystals': {   'body': {   'statements': [   {   'name': 'found',
+                                                          'type': 'assign',
+                                                          'value': {'group': 'Crystals', 'type': 'group_count'}},
+                                                      {   'type': 'return',
+                                                          'value': {   'left': {'name': 'found', 'type': 'name'},
+                                                                       'op': '>=',
+                                                                       'right': {'name': 'count', 'type': 'name'},
+                                                                       'type': 'compare'}}],
+                                    'type': 'block'},
+                        'params': ['count']},
+    'has_fire_source': {   'conditions': [   {'item': 'Fire Rod', 'type': 'item_check'},
+                                             {'item': 'Lamp', 'type': 'item_check'}],
+                           'type': 'or'},
+    'has_hearts': {   'body': {   'left': {   'statements': [   {   'name': '_h29_max_heart_pieces',
+                                                                    'type': 'assign',
+                                                                    'value': {'type': 'constant', 'value': 24}},
+                                                                {   'name': '_h29_max_heart_containers',
+                                                                    'type': 'assign',
+                                                                    'value': {'type': 'constant', 'value': 10}},
+                                                                {   'type': 'return',
+                                                                    'value': {   'left': {   'left': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                     'value': 'Boss '
+                                                                                                                                                              'Heart '
+                                                                                                                                                              'Container'}],
+                                                                                                                                     'method': 'count',
+                                                                                                                                     'type': 'state_method'},
+                                                                                                                                 {   'name': '_h29_max_heart_containers',
+                                                                                                                                     'type': 'name'}],
+                                                                                                                     'type': 'min'},
+                                                                                                         'op': '+',
+                                                                                                         'right': {   'args': [   {   'type': 'constant',
+                                                                                                                                      'value': 'Sanctuary '
+                                                                                                                                               'Heart '
+                                                                                                                                               'Container'}],
+                                                                                                                      'method': 'count',
+                                                                                                                      'type': 'state_method'},
+                                                                                                         'type': 'binary_op'},
+                                                                                             'op': '+',
+                                                                                             'right': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                      'value': 'Piece '
+                                                                                                                                                               'of '
+                                                                                                                                                               'Heart'}],
+                                                                                                                                      'method': 'count',
+                                                                                                                                      'type': 'state_method'},
+                                                                                                                                  {   'name': '_h29_max_heart_pieces',
+                                                                                                                                      'type': 'name'}],
+                                                                                                                      'type': 'min'},
+                                                                                                          'op': '//',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 4},
+                                                                                                          'type': 'binary_op'},
+                                                                                             'type': 'binary_op'},
+                                                                                 'op': '+',
+                                                                                 'right': {   'type': 'constant',
+                                                                                              'value': 3},
+                                                                                 'type': 'binary_op'}}],
+                                              'type': 'block'},
+                                  'op': '>=',
+                                  'right': {'name': 'count', 'type': 'name'},
+                                  'type': 'compare'},
+                      'params': ['count']},
+    'has_melee_weapon': {   'conditions': [   {   'conditions': [   {'item': 'Fighter Sword', 'type': 'item_check'},
+                                                                    {'item': 'Master Sword', 'type': 'item_check'},
+                                                                    {'item': 'Tempered Sword', 'type': 'item_check'},
+                                                                    {'item': 'Golden Sword', 'type': 'item_check'}],
+                                                  'type': 'or'},
+                                              {'item': 'Hammer', 'type': 'item_check'}],
+                            'type': 'or'},
+    'has_misery_mire_medallion': {'item': {'type': 'constant', 'value': 'Quake'}, 'type': 'item_check'},
+    'has_sword': {   'conditions': [   {'item': 'Fighter Sword', 'type': 'item_check'},
+                                       {'item': 'Master Sword', 'type': 'item_check'},
+                                       {'item': 'Tempered Sword', 'type': 'item_check'},
+                                       {'item': 'Golden Sword', 'type': 'item_check'}],
+                     'type': 'or'},
+    'has_turtle_rock_medallion': {'item': {'type': 'constant', 'value': 'Ether'}, 'type': 'item_check'},
+    'heart_count': {   'statements': [   {   'name': 'max_heart_pieces',
+                                             'type': 'assign',
+                                             'value': {'type': 'constant', 'value': 24}},
+                                         {   'name': 'max_heart_containers',
+                                             'type': 'assign',
+                                             'value': {'type': 'constant', 'value': 10}},
+                                         {   'type': 'return',
+                                             'value': {   'left': {   'left': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
+                                                                                                                              'value': 'Boss '
+                                                                                                                                       'Heart '
+                                                                                                                                       'Container'}],
+                                                                                                              'method': 'count',
+                                                                                                              'type': 'state_method'},
+                                                                                                          {   'name': 'max_heart_containers',
+                                                                                                              'type': 'name'}],
+                                                                                              'type': 'min'},
+                                                                                  'op': '+',
+                                                                                  'right': {   'args': [   {   'type': 'constant',
+                                                                                                               'value': 'Sanctuary '
+                                                                                                                        'Heart '
+                                                                                                                        'Container'}],
+                                                                                               'method': 'count',
+                                                                                               'type': 'state_method'},
+                                                                                  'type': 'binary_op'},
+                                                                      'op': '+',
+                                                                      'right': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
+                                                                                                                               'value': 'Piece '
+                                                                                                                                        'of '
+                                                                                                                                        'Heart'}],
+                                                                                                               'method': 'count',
+                                                                                                               'type': 'state_method'},
+                                                                                                           {   'name': 'max_heart_pieces',
+                                                                                                               'type': 'name'}],
+                                                                                               'type': 'min'},
+                                                                                   'op': '//',
+                                                                                   'right': {   'type': 'constant',
+                                                                                                'value': 4},
+                                                                                   'type': 'binary_op'},
+                                                                      'type': 'binary_op'},
+                                                          'op': '+',
+                                                          'right': {'type': 'constant', 'value': 3},
+                                                          'type': 'binary_op'}}],
+                       'type': 'block'},
+    'is_not_bunny': {   'body': {   'if_false': {   'if_false': {   'attr': 'is_dark_world',
+                                                                    'region': {'name': 'region', 'type': 'name'},
+                                                                    'type': 'region_attribute'},
+                                                    'if_true': {   'attr': 'is_light_world',
+                                                                   'region': {'name': 'region', 'type': 'name'},
+                                                                   'type': 'region_attribute'},
+                                                    'test': {   'left': {'type': 'constant', 'value': 'open'},
+                                                                'op': '!=',
+                                                                'right': {'type': 'constant', 'value': 'inverted'},
+                                                                'type': 'compare'},
+                                                    'type': 'conditional'},
+                                    'if_true': {'type': 'constant', 'value': True},
+                                    'test': {'item': 'Moon Pearl', 'type': 'item_check'},
+                                    'type': 'conditional'},
+                        'params': ['region']}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -167,1206 +2446,2418 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Links House S&Q", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sanctuary S&Q", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Old Man S&Q", player),
-        CanReachLocation("Old Man")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Blinds Hideout", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Secret Entrance Drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Zoras River", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) | (Has("Flippers"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave Outer Rocks", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dam", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Links House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tavern North", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Chicken House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Aginahs Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sahasrahlas Hut", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kakariko Well Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kakariko Well Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Blacksmiths Hut", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bat Cave Drop Ledge", player),
-        Has("Hammer")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bat Cave Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sick Kids House", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hobo Bridge", player),
-        Has("Flippers")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lost Woods Hideout Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lost Woods Hideout Stump", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberjack Tree Tree", player),
-        (Has("Beat Agahnim 1")) & (Has("Pegasus Boots"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumberjack Tree Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mini Moldorm Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Rod Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Pier", player),
-        Has("Flippers")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Rock Cave", player),
-        Has("Pegasus Boots")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Library", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Potion Shop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Two Brothers House (East)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Stairs", player),
-        Has("Book of Mudora")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Eastern Palace", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Master Sword Meadow", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sanctuary", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sanctuary Grave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Entrance Rock", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Flute Spot 1", player),
-        Has("Activated Flute")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Desert Teleporter", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})) & (Has("Activated Flute"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Hyrule Teleporter", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South Hyrule Teleporter", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Kakariko Teleporter", player),
-        (((HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Hammer"))) | (HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'}))) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Elder House (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Elder House (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North Fairy Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North Fairy Cave Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lost Woods Gamble", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Snitch Lady (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Snitch Lady (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tavern (Front)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bush Covered House", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Light World Bomb Hut", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kakariko Shop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Long Fairy Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Good Bee Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("20 Rupee Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cave Shop (Lake Hylia)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Waterfall of Wishing", player),
-        Has("Flippers")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hyrule Castle Main Gate", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Fairy (Light)", player),
-        Has("Pegasus Boots")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("50 Rupee Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fortune Teller (Light)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lake Hylia Fairy", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Light Hype Fairy", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumberjack House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lake Hylia Fortune Teller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kakariko Gamble Game", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Top of Pyramid", player),
-        Has("Beat Agahnim 1")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Old Man Cave (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Death Mountain Entrance Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Capacity Upgrade", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Teleporter", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Secret Entrance Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave", player),
-        Has("Pegasus Boots")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave Inner Rocks", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North Fairy Cave Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Links House Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Chris Houlihan Room Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Elder House Exit (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Elder House Exit (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kakariko Well (top to bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kakariko Well Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bat Cave Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bat Cave Door", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bat Cave Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lost Woods Hideout (top to bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lost Woods Hideout Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumberjack Tree (top to bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumberjack Tree Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cave 45", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Graveyard Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Two Brothers House Exit (East)", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h1_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h1_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h1_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h1_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h1_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Two Brothers House Exit (West)", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h2_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h2_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h2_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h2_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h2_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Two Brothers House (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Entrance (North) Rocks", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Entrance (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Checkerboard Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Entrance (South)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Stairs Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Entrance (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Entrance (North)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge Return Rocks", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Pots (Outer)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Exit (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Exit (East)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace East Wing", player),
-        Has("Small Key (Desert Palace)", 4)
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Exit (South)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Pots (Inner)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Desert Palace Exit (North)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Eastern Palace Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Secret Entrance Stairs", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Entrance (South)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Entrance (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Entrance (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Agahnims Tower", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (Has("Beat Agahnim 1")) | (Has("Cape"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Ledge Courtyard Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Exit (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Exit (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hyrule Castle Exit (South)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Throne Room", player),
-        Has("Lamp")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sewer Drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Door", player),
-        ((Compare(True_(), "==", 'standard')) & (Compare(True_(), "==", 5))) | (Has("Small Key (Hyrule Castle)", 4))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sanctuary Push Door", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Back Door", player),
-        (Has("Small Key (Hyrule Castle)", 4)) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Secret Room", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h3_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h3_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h3_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h3_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h3_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sanctuary Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Agahnim 1", player),
-        ((Has("Small Key (Agahnims Tower)", 4)) & (HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}))) & (Has("Lamp"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Agahnims Tower Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man Cave Exit (East)", player),
-        Has("Lamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man Cave Exit (West)", player),
-        False_()
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Old Man House Exit (Bottom)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man House Front to Back", player),
-        Has("Lamp")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Old Man House Exit (Top)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man House Back to Front", player),
-        Has("Lamp")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Old Man Cave (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Old Man House (Bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Old Man House (Top)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Death Mountain Return Cave (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave Peak", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave (Bottom)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Broken Bridge (West)", player),
-        Has("Hookshot")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Death Mountain Teleporter", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Return Cave Exit (West)", player),
-        Has("Lamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Return Cave Exit (East)", player),
-        Has("Lamp")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Death Mountain Return Ledge Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Death Mountain Return Cave (West)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave Exit (Top)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave Peak Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Cave Exit (Peak)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Broken Bridge (East)", player),
-        Has("Hookshot")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave (Bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave (Middle)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain Teleporter", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hookshot Fairy", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Ascension Rocks", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave (Bottom)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Paradox Cave Push Block Reverse", player),
-        False_()
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave Exit (Bottom)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Light World Death Mountain Shop", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave Push Block", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Paradox Cave Bomb Jump", player),
-        False_()
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave Exit (Middle)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave Exit (Top)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Paradox Cave (Top)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain (Top)", player),
-        Has("Hammer")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave Ledge Access", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("East Death Mountain Drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Teleporter", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})) & (Has("Hammer"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Ledge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave Ledge Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave (top to bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave Exit (Top)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spiral Cave Exit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave (Bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave Climb", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave Exit (Bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave Pots", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave Exit (Top)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Ledge Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Ascension Cave (Top)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain (Top)", player),
-        Has("Hammer")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Hera", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Death Mountain Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spectacle Rock Drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Small Key Door", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h5_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h5_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h5_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h5_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h5_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang']}]}]})) & ((False_()) | (Has("Small Key (Tower of Hera)")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h8_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h8_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h8_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h8_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h8_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang']}]}]})) & (Has("Big Key (Tower of Hera)"))) & (((HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h11_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h11_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h11_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h11_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) & (Has("Silver Bow"))) | (HelperCall(helper_func=_alinktothepastworldgen_has_melee_weapon, helper_name="has_melee_weapon", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}, {'type': 'item_check', 'item': 'Hammer'}]})) | (Has("Cane of Byrna")) | (Has("Cane of Somaria")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Hera Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Fairy", player),
-        ((CanReachRegion("Big Bomb Shop")) & (CanReachRegion("East Dark World")) & (Has("Crystal 5")) & (Has("Crystal 6"))) & (((Has("Beat Agahnim 1")) & (Has("Magic Mirror"))) | (HelperCall(helper_func=_alinktothepastworldgen_cross_peg_bridge, helper_name="cross_peg_bridge", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammer'}, {'type': 'item_check', 'item': 'Moon Pearl'}]})))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South Dark World Bridge", player),
-        (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Drop (East)", player),
-        (Has("Flippers")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hyrule Castle Ledge Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Lake Hylia Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Palace of Darkness Hint", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("East Dark World Hint", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Hole", player),
-        (True_()) | (Has("Beat Agahnim 2"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Northeast Dark World Broken Bridge Pass", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) | (Has("Flippers")) | (Has("Hammer"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Catfish Exit Rock", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Dark World Gap", player),
-        (Has("Hookshot")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark World Potion Shop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Dark World Broken Bridge Pass", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) | (Has("Hammer"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Catfish Entrance Rock", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Teleporter", player),
-        (Has("Flippers")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Drop (South)", player),
-        (Has("Flippers")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hype Cave", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Swamp Palace", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Heavy Rock", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Maze Race Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave 45 Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Dark World Bridge", player),
-        (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Big Bomb Shop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Archery Game", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Fairy (Dark)", player),
-        (Has("Moon Pearl")) & (Has("Pegasus Boots"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Lake Hylia Shop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bombos Tablet Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Island Mirror Spot", player),
-        (Has("Flippers")) & (Has("Magic Mirror")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("East Dark World Pier", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Lake Hylia Ledge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Ice Palace", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Drop", player),
-        (Has("Flippers")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Fairy", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Lake Hylia Ledge Hint", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Spike Cave", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Village of Outcasts Drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Dark World River Pier", player),
-        (Has("Flippers")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brewery", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("C-Shaped House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Chest Game", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Thieves Town", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Graveyard Ledge Mirror Spot", player),
-        (Has("Magic Mirror")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave Mirror Spot", player),
-        (Has("Magic Mirror")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Entrance Rock", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods Forest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Pegs", player),
-        (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Eastern Rocks", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Red Shield Shop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Sanctuary Hint", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fortune Teller (Dark)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark World Lumberjack Shop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Grassy Lawn Pegs", player),
-        (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Village of Outcasts Shop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bat Cave Drop Ledge Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark World Hammer Peg Cave", player),
-        (Has("Hammer")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Peg Area Rocks", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bumper Cave (Bottom)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Entrance Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bumper Cave Entrance Drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Exit (Bottom)", player),
-        ((Has("Cape")) | (Has("Hookshot"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Exit (Top)", player),
-        (Has("Cape")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bumper Cave Ledge Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Bumper Cave (Top)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Ledge Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods First Section Hole (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods First Section Hole (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section Hole (North)", player),
-        Has("Moon Pearl")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods First Section Door", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods Second Section Door (East)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section Hole", player),
-        Has("Moon Pearl")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods Second Section Door (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Final Section", player),
-        (Has("Fire Rod")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_has_misery_mire_medallion, helper_name="has_misery_mire_medallion", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Quake'}})) & (HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mire Shed", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge (Northeast) Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Stairs Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Entrance (North) Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Desert Hint", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Desert Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Spike Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Spectacle Rock Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Death Mountain Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Death Mountain Drop (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Death Mountain Drop (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower", player),
-        HelperCall(helper_func=_alinktothepastworldgen_has_crystals, helper_name="has_crystals", args=(7,), body_data={'params': ['count'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'found', 'value': {'type': 'group_count', 'group': 'Crystals'}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'found'}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Superbunny Cave (Top)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain (Top) Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) & (HelperCall(helper_func=_alinktothepastworldgen_has_turtle_rock_medallion, helper_name="has_turtle_rock_medallion", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Ether'}})) & (CanReachRegion("Turtle Rock (Top)")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Death Mountain Ledge (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dark Death Mountain Ledge (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mimic Cave Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Spiral Cave Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Isolated Ledge Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Turtle Rock Isolated Ledge Entrance", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Superbunny Cave (Bottom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cave Shop (Dark Death Mountain)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Ascension Mirror Spot", player),
-        (Has("Magic Mirror")) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Superbunny Cave Exit (Top)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Superbunny Cave Climb", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Superbunny Cave Exit (Bottom)", player),
-        False_()
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Exit (South)", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Bomb Wall (South)", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hookshot Cave Exit (North)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Bomb Wall (North)", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Floating Island Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hookshot Cave Back Entrance", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Floating Island Mirror Spot", player),
-        Has("Magic Mirror")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Turtle Rock Drop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mimic Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace Moat", player),
-        ((Has("Flippers")) & (Has("Open Floodgate"))) & (Has("Magic Mirror"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Swamp Palace Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace Small Key Door", player),
-        Has("Small Key (Swamp Palace)")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (Center)", player),
-        (Has("Small Key (Swamp Palace)", 3)) & (Has("Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (North)", player),
-        (Has("Small Key (Swamp Palace)", 5)) & (Has("Hookshot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (West)", player),
-        Has("Small Key (Swamp Palace)", 6)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Thieves Town Big Key Door", player),
-        Has("Big Key (Thieves Town)")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Thieves Town Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Blind Fight", player),
-        (Has("Small Key (Thieves Town)", 3)) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods First Section Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section Bomb Jump", player),
-        False_()
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section South Door", player),
-        Has("Small Key (Skull Woods)", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section West Door", player),
-        Has("Small Key (Skull Woods)", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Right) North Door", player),
-        (Has("Small Key (Skull Woods)", 5)) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Left) Door to Exit", player),
-        (Has("Small Key (Skull Woods)", 5)) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Left) Door to Right", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Top) One-Way Path", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section (Drop)", player),
-        Has("Moon Pearl")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods Second Section Exit (East)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods Second Section Exit (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Torch Room", player),
-        (Has("Small Key (Skull Woods)", 4)) & (HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) & (Has("Fire Rod"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skull Woods Final Section Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Second Section)", player),
-        (Has("Small Key (Ice Palace)")) & (HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bombos'}, {'type': 'or', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}]}]}]})) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Ice Palace Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Main)", player),
-        Has("Small Key (Ice Palace)", 2)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (East)", player),
-        ((Conditional(test=True_(), if_true=Has("Small Key (Ice Palace)", 4), if_false=Has("Small Key (Ice Palace)", 6))) | (Has("Hookshot"))) & ((True_()) | (Has("Cane of Byrna")) | (Has("Cape")) | (Has("Hookshot")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Kholdstare)", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (((Has("Small Key (Ice Palace)", 5)) & (Has("Cane of Somaria"))) | (Has("Small Key (Ice Palace)", 6))) & (Has("Big Key (Ice Palace)")) & (Has("Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (East Top)", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (Has("Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Entrance Gap", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h15_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h15_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h15_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h15_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (Has("Cane of Somaria")) | (Has("Fire Rod")) | (Has("Hammer")) | (Has("Ice Rod"))) & ((Has("Hookshot")) | (Has("Pegasus Boots")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Misery Mire Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire (West)", player),
-        Conditional(test=(Compare(['Bombs (3)', 1], "in", [['Big Key (Misery Mire)', 1]])) | (Compare(['Big Key (Misery Mire)', 1], "in", [['Big Key (Misery Mire)', 1]])), if_true=Has("Small Key (Misery Mire)", 5), if_false=Has("Small Key (Misery Mire)", 6))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Big Key Door", player),
-        Has("Big Key (Misery Mire)")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire (Vitreous)", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Cane of Somaria"))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance Gap", player),
-        (Has("Cane of Somaria")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Exit (Front)", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance to Pokey Room", player),
-        Has("Small Key (Turtle Rock)")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance Gap Reverse", player),
-        Has("Cane of Somaria")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Pokey Room) (North)", player),
-        Has("Small Key (Turtle Rock)", 2)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Pokey Room) (South)", player),
-        Conditional(test=True_(), if_true=Has("Small Key (Turtle Rock)", 4), if_false=Has("Small Key (Turtle Rock)", 6))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (North)", player),
-        Has("Small Key (Turtle Rock)", 3)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (South)", player),
-        Conditional(test=True_(), if_true=Has("Small Key (Turtle Rock)", 3), if_false=Has("Small Key (Turtle Rock)", 5))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Chain Chomp Staircase", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Big Key Door", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h16_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h16_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h16_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h16_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h16_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(10,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h22_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h22_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h22_basemagic'}}}}, {'type': 'assign', 'name': '_h22_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h22_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h22_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h24_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h24_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h24_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h24_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h24_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (Has("Big Key (Turtle Rock)"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Second Section Bomb Wall", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(10,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h30_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h30_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h30_basemagic'}}}}, {'type': 'assign', 'name': '_h30_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h30_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h30_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h32_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h32_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h32_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h32_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h32_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Turtle Rock Ledge Exit (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Second Section from Bomb Wall", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Big Chest) (North)", player),
-        ((Has("Cane of Somaria")) | (Has("Hookshot"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Ledge Exit (East)", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Dark Room Staircase", player),
-        Has("Small Key (Turtle Rock)", 5)
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Turtle Rock Big Key Door Reverse", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Dark Room) (North)", player),
-        (Has("Cane of Somaria")) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Dark Room) (South)", player),
-        (Has("Cane of Somaria")) & (Has("Lamp"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Turtle Rock Isolated Ledge Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Eye Bridge from Bomb Wall", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Dark Room (South)", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Trinexx)", player),
-        ((Has("Small Key (Turtle Rock)", 6)) & (Has("Big Key (Turtle Rock)")) & (Has("Cane of Somaria"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Eye Bridge Bomb Wall", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bridge Room", player),
-        Has("Small Key (Palace of Darkness)")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bonk Wall", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h33_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h33_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h33_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h33_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h33_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})) & (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h35_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h35_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h35_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h35_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Palace of Darkness Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (((Compare(['Boss Heart Container', 1], "in", [['Small Key (Palace of Darkness)', 1]])) & (Has("Small Key (Palace of Darkness)", 3))) | (Has("Small Key (Palace of Darkness)", 6)))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness (North)", player),
-        Has("Small Key (Palace of Darkness)", 4)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Door", player),
-        ((Has("Small Key (Palace of Darkness)", 6)) & (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h37_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h37_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h37_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h37_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) & (Has("Big Key (Palace of Darkness)")) & (Has("Hammer"))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Hammer Peg Drop", player),
-        Has("Hammer")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Spike Statue Room Door", player),
-        ((Compare(['Piece of Heart', 1], "in", [['Small Key (Palace of Darkness)', 1]])) & (Has("Small Key (Palace of Darkness)", 4))) | (Has("Small Key (Palace of Darkness)", 6))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Maze Door", player),
-        (Has("Small Key (Palace of Darkness)", 6)) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Tile Room)", player),
-        Has("Cane of Somaria")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Hookshot Room)", player),
-        ((Has("Hookshot")) | (Has("Pegasus Boots"))) & (Has("Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Big Key Door", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h39_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h39_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h39_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h39_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) & (Has("Big Key (Ganons Tower)"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Ganons Tower Exit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player),
-        (((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))) & (Has("Fire Rod"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Bottom) (East)", player),
-        ((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Map Room)", player),
-        ((Compare(['Progressive Shield', 1], "in", [['Big Key (Ganons Tower)', 1]])) & (Has("Small Key (Ganons Tower)", 6))) | (Has("Small Key (Ganons Tower)", 8))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Double Switch Room)", player),
-        (Has("Small Key (Ganons Tower)", 6)) & (Has("Hookshot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Firesnake Room)", player),
-        ((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Ganons Tower (Bottom) (West)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Torch Rooms", player),
-        (True_()) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(8,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h45_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h45_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h45_basemagic'}}}}, {'type': 'assign', 'name': '_h45_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h45_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h45_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h47_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h47_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h47_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h47_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h47_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Moldorm Door", player),
-        (Has("Small Key (Ganons Tower)", 8)) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Moldorm Gap", player),
-        (True_()) & (Has("Hookshot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganon Drop", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) & (Has("Moon Pearl"))
+        True_()
     )
-    # Register indirect conditions for proper sphere calculation
-    multiworld.register_indirect_condition(
-        world.get_region("Big Bomb Shop"),
-        multiworld.get_entrance("Pyramid Fairy", player)
+
+    world.set_rule(
+        multiworld.get_entrance("Pyramid Exit", player),
+        True_()
     )
-    multiworld.register_indirect_condition(
-        world.get_region("East Dark World"),
-        multiworld.get_entrance("Pyramid Fairy", player)
+
+    world.set_rule(
+        multiworld.get_entrance("Pyramid Entrance", player),
+        True_()
     )
-    multiworld.register_indirect_condition(
-        world.get_region("Turtle Rock (Top)"),
-        multiworld.get_entrance("Turtle Rock", player)
+
+    world.set_rule(
+        multiworld.get_entrance("Pyramid Drop", player),
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Mushroom", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bottle Merchant", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Flute Spot", player),
-        Has("Shovel")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sunken Treasure", player),
-        Has("Open Floodgate")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Purple Chest", player),
-        Has("Pick Up Purple Chest")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Flute Activation Spot", player),
-        Has("Flute")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Blind's Hideout - Top", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Blind's Hideout - Left", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Blind's Hideout - Right", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Blind's Hideout - Far Left", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Blind's Hideout - Far Right", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Link's Uncle", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Secret Passage", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("King Zora", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Zora's Ledge", player),
-        Has("Flippers")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Waterfall Fairy - Left", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Waterfall Fairy - Right", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("King's Tomb", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Floodgate", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Floodgate Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Link's House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kakariko Tavern", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chicken House", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Aginah's Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla's Hut - Left", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h48_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h48_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h48_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h48_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h48_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla's Hut - Middle", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h49_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h49_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h49_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h49_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h49_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla's Hut - Right", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Pegasus Boots'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h50_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h50_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h50_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h50_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h50_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla", player),
-        Has("Green Pendant")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Kakariko Well - Top", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kakariko Well - Left", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kakariko Well - Middle", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kakariko Well - Right", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kakariko Well - Bottom", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Blacksmith", player),
-        Has("Return Smith")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Missing Smith", player),
-        (CanReachRegion("Blacksmiths Hut")) & (Has("Get Frog"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Magic Bat", player),
-        Has("Magic Powder")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sick Kid", player),
-        HasGroup("Bottles")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hobo", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lost Woods Hideout", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lumberjack Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cave 45", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Graveyard Cave", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Checkerboard Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Far Left", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h56_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h56_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h56_basemagic'}}}}, {'type': 'assign', 'name': '_h56_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h56_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h56_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h58_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h58_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h58_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h58_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h58_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Left", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h64_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h64_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h64_basemagic'}}}}, {'type': 'assign', 'name': '_h64_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h64_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h64_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h66_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h66_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h66_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h66_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h66_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Right", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h72_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h72_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h72_basemagic'}}}}, {'type': 'assign', 'name': '_h72_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h72_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h72_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h74_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h74_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h74_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h74_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h74_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Far Right", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h80_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h80_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h80_basemagic'}}}}, {'type': 'assign', 'name': '_h80_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h80_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h80_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h82_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h82_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h82_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h82_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h82_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Generous Guy", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h88_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h88_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h88_basemagic'}}}}, {'type': 'assign', 'name': '_h88_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h88_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h88_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h90_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h90_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h90_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h90_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h90_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ice Rod Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bonk Rock Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library", player),
-        Has("Pegasus Boots")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Potion Shop", player),
-        Has("Mushroom")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Hylia Island", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Capacity Upgrade Shop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Maze Race", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Desert Ledge", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Big Chest", player),
-        Has("Big Key (Desert Palace)")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Torch", player),
-        Has("Pegasus Boots")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Desert Palace - Map Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Desert Palace - Compass Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Big Key Chest", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(3,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h96_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h96_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h96_basemagic'}}}}, {'type': 'assign', 'name': '_h96_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h96_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h96_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h98_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h98_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h98_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h98_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h98_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Desert Palace - Desert Tiles 1 Pot Key", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Beamos Hall Pot Key", player),
-        (Has("Small Key (Desert Palace)", 2)) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h104_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h104_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h104_basemagic'}}}}, {'type': 'assign', 'name': '_h104_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h104_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h104_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h106_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h106_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h106_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h106_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h106_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Desert Tiles 2 Pot Key", player),
-        (Has("Small Key (Desert Palace)", 3)) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h112_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h112_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h112_basemagic'}}}}, {'type': 'assign', 'name': '_h112_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h112_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h112_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h114_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h114_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h114_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h114_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h114_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Boss", player),
-        (Has("Small Key (Desert Palace)", 4)) & (True_()) & (HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]})) & (Has("Big Key (Desert Palace)"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Prize", player),
-        ((Has("Small Key (Desert Palace)", 4)) & (True_()) & (HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]})) & (Has("Big Key (Desert Palace)"))) & (True_())
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eastern Palace - Compass Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Chest", player),
-        Has("Big Key (Eastern Palace)")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eastern Palace - Cannonball Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Dark Square Pot Key", player),
-        Has("Lamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Dark Eyegore Key Drop", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h120_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h120_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h120_basemagic'}}}}, {'type': 'assign', 'name': '_h120_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h120_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h120_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h122_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h122_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h122_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h122_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h122_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (Has("Big Key (Eastern Palace)"))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Key Chest", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h128_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h128_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h128_basemagic'}}}}, {'type': 'assign', 'name': '_h128_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h128_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h128_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h130_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h130_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h130_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h130_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h130_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (((True_()) & (Has("Small Key (Eastern Palace)"))) | (Has("Small Key (Eastern Palace)", 2)))) & (Has("Lamp"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eastern Palace - Map Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Boss", player),
-        (((Has("Small Key (Eastern Palace)", 2)) & (True_()) & (Has("Big Key (Eastern Palace)"))) & (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h132_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h132_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h132_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h132_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}}))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Prize", player),
-        (((Has("Small Key (Eastern Palace)", 2)) & (True_()) & (Has("Big Key (Eastern Palace)"))) & (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h134_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h134_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h134_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h134_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}}))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Master Sword Pedestal", player),
-        (Has("Blue Pendant")) & (Has("Green Pendant")) & (Has("Red Pendant"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Boomerang Chest", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_basement_key_rule, helper_name="basement_key_rule", body_data={'type': 'count_check', 'item': 'Small Key (Hyrule Castle)', 'count': {'type': 'constant', 'value': 2}})) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h140_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h140_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h140_basemagic'}}}}, {'type': 'assign', 'name': '_h140_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h140_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h140_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h142_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h142_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h142_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h142_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h142_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hyrule Castle - Map Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        (Has("Small Key (Hyrule Castle)", 4)) & ((Compare(True_(), "in", ['easy', 'default'])) | (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h148_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h148_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h148_basemagic'}}}}, {'type': 'assign', 'name': '_h148_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h148_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h148_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h150_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h150_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h150_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h150_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h150_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))) & (Has("Big Key (Hyrule Castle)"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Map Guard Key Drop", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h156_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h156_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h156_basemagic'}}}}, {'type': 'assign', 'name': '_h156_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h156_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h156_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h158_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h158_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h158_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h158_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h158_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Boomerang Guard Key Drop", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_basement_key_rule, helper_name="basement_key_rule", body_data={'type': 'count_check', 'item': 'Small Key (Hyrule Castle)', 'count': {'type': 'constant', 'value': 2}})) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(2,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h164_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h164_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h164_basemagic'}}}}, {'type': 'assign', 'name': '_h164_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h164_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h164_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h166_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h166_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h166_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h166_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h166_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Big Key Drop", player),
-        (Has("Small Key (Hyrule Castle)", 4)) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h172_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h172_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h172_basemagic'}}}}, {'type': 'assign', 'name': '_h172_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h172_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h172_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h174_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h174_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h174_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h174_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h174_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sewers - Dark Cross", player),
-        Has("Lamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sewers - Key Rat Key Drop", player),
-        (Has("Small Key (Hyrule Castle)", 3)) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h180_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h180_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h180_basemagic'}}}}, {'type': 'assign', 'name': '_h180_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h180_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h180_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h182_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h182_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h182_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h182_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h182_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sewers - Secret Room - Left", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sewers - Secret Room - Middle", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sewers - Secret Room - Right", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sanctuary", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Room 03", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h188_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h188_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h188_basemagic'}}}}, {'type': 'assign', 'name': '_h188_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h188_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h188_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h190_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h190_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h190_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h190_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h190_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        ((Has("Small Key (Agahnims Tower)")) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h196_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h196_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h196_basemagic'}}}}, {'type': 'assign', 'name': '_h196_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h196_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h196_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h198_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h198_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h198_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h198_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h198_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Archer Key Drop", player),
-        ((Has("Small Key (Agahnims Tower)", 2)) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h204_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h204_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h204_basemagic'}}}}, {'type': 'assign', 'name': '_h204_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h204_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h204_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h206_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h206_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h206_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h206_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h206_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Circle of Pots Key Drop", player),
-        ((Has("Small Key (Agahnims Tower)", 3)) & (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h212_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h212_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h212_basemagic'}}}}, {'type': 'assign', 'name': '_h212_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h212_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h212_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h214_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h214_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h214_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h214_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h214_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}}))) & (Has("Lamp"))
+        True_()
     )
 
     world.set_rule(
@@ -1376,67 +4867,87 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Old Man", player),
-        Has("Lamp")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Spectacle Rock Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Far Left", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h216_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h216_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h216_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h216_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (HasAny('Cane of Somaria', 'Fire Rod'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Left", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h218_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h218_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h218_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h218_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (HasAny('Cane of Somaria', 'Fire Rod'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Right", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h220_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h220_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h220_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h220_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (HasAny('Cane of Somaria', 'Fire Rod'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Far Right", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h222_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h222_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h222_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h222_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (HasAny('Cane of Somaria', 'Fire Rod'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Middle", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h224_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h224_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h224_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h224_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (HasAny('Cane of Somaria', 'Fire Rod'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Upper - Left", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Upper - Right", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Spiral Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ether Tablet", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_retrieve_tablet, helper_name="can_retrieve_tablet", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Book of Mudora'}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'item_check', 'item': 'Hammer'}]}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Spectacle Rock", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Basement Cage", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h227_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h227_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h227_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h227_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h227_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Map Chest", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h230_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h230_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h230_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h230_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h230_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Big Key Chest", player),
-        HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tower of Hera - Compass Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Big Chest", player),
-        Has("Big Key (Tower of Hera)")
+        True_()
     )
 
     world.set_rule(
@@ -1450,756 +4961,781 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Pyramid", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Catfish", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Stumpy", player),
-        (((Has("Moon Pearl")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Digging Game", player),
-        (((Has("Moon Pearl")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bombos Tablet", player),
-        HelperCall(helper_func=_alinktothepastworldgen_can_retrieve_tablet, helper_name="can_retrieve_tablet", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Book of Mudora'}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'item_check', 'item': 'Hammer'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Top", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Middle Right", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Middle Left", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Bottom", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hype Cave - Generous Guy", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Frog", player),
-        (((((((((HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks", body_data={'type': 'item_check', 'item': 'Titans Mitts'})) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dark Blacksmith Ruins", player),
-        Has("Return Smith")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Peg Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Left", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Right", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brewery", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("C-Shaped House", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chest Game", player),
-        Has("Moon Pearl")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bumper Cave Ledge", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Left", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Right", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Superbunny Cave - Top", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Superbunny Cave - Bottom", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Spike Cave", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Power Glove'}, {'type': 'item_check', 'item': 'Titans Mitts'}]})) & (((HelperCall(helper_func=_alinktothepastworldgen_can_extend_magic, helper_name="can_extend_magic", args=(16, True,), body_data={'params': ['smallmagic', 'fullrefill'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': 'basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': 'basemagic'}}}}, {'type': 'assign', 'name': 'basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'any_of', 'iterator_info': {'target': {'type': 'name', 'name': 'region'}, 'iterator': {'type': 'subscript', 'value': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}}, 'index': {'type': 'constant', 'value': 'Green Potion'}}, 'index': {'type': 'constant', 'value': 'unlimited'}}}, 'element_rule': {'type': 'can_reach', 'region': {'type': 'name', 'name': 'region'}}}, {'type': 'any_of', 'iterator_info': {'target': {'type': 'name', 'name': 'region'}, 'iterator': {'type': 'subscript', 'value': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}}, 'index': {'type': 'constant', 'value': 'Blue Potion'}}, 'index': {'type': 'constant', 'value': 'unlimited'}}}, 'element_rule': {'type': 'can_reach', 'region': {'type': 'name', 'name': 'region'}}}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'fullrefill'}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'fullrefill'}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '*', 'right': {'type': 'min', 'args': [{'type': 'setting_value', 'setting': 'difficulty_requirements.progressive_bottle_limit'}, {'type': 'group_count', 'group': 'Bottles'}]}}}}}, 'if_false': {'type': 'name', 'name': 'basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '>=', 'right': {'type': 'name', 'name': 'smallmagic'}}}]}})) & (Has("Cape"))) | ((((True_()) & ((HelperCall(helper_func=_alinktothepastworldgen_has_hearts, helper_name="has_hearts", args=(4,), body_data={'params': ['count'], 'body': {'type': 'compare', 'left': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h236_max_heart_pieces', 'value': {'type': 'constant', 'value': 24}}, {'type': 'assign', 'name': '_h236_max_heart_containers', 'value': {'type': 'constant', 'value': 10}}, {'type': 'return', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'min', 'args': [{'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Boss Heart Container'}]}, {'type': 'name', 'name': '_h236_max_heart_containers'}]}, 'op': '+', 'right': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Sanctuary Heart Container'}]}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'min', 'args': [{'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Piece of Heart'}]}, {'type': 'name', 'name': '_h236_max_heart_pieces'}]}, 'op': '//', 'right': {'type': 'constant', 'value': 4}}}, 'op': '+', 'right': {'type': 'constant', 'value': 3}}}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}})) | (Has("Pegasus Boots")))) | (HelperCall(helper_func=_alinktothepastworldgen_can_extend_magic, helper_name="can_extend_magic", args=(12, True,), body_data={'params': ['smallmagic', 'fullrefill'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': 'basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': 'basemagic'}}}}, {'type': 'assign', 'name': 'basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'any_of', 'iterator_info': {'target': {'type': 'name', 'name': 'region'}, 'iterator': {'type': 'subscript', 'value': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}}, 'index': {'type': 'constant', 'value': 'Green Potion'}}, 'index': {'type': 'constant', 'value': 'unlimited'}}}, 'element_rule': {'type': 'can_reach', 'region': {'type': 'name', 'name': 'region'}}}, {'type': 'any_of', 'iterator_info': {'target': {'type': 'name', 'name': 'region'}, 'iterator': {'type': 'subscript', 'value': {'type': 'subscript', 'value': {'type': 'constant', 'value': {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}}, 'index': {'type': 'constant', 'value': 'Blue Potion'}}, 'index': {'type': 'constant', 'value': 'unlimited'}}}, 'element_rule': {'type': 'can_reach', 'region': {'type': 'name', 'name': 'region'}}}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'fullrefill'}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'fullrefill'}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '*', 'right': {'type': 'min', 'args': [{'type': 'setting_value', 'setting': 'difficulty_requirements.progressive_bottle_limit'}, {'type': 'group_count', 'group': 'Bottles'}]}}}}}, 'if_false': {'type': 'name', 'name': 'basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'basemagic'}, 'op': '>=', 'right': {'type': 'name', 'name': 'smallmagic'}}}]}}))) & (Has("Cane of Byrna")))) & (Has("Hammer"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Top Right", player),
-        ((Has("Hookshot")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Top Left", player),
-        ((Has("Hookshot")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Bottom Right", player),
-        (((Has("Hookshot")) | (Has("Pegasus Boots"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Bottom Left", player),
-        ((Has("Hookshot")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Floating Island", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mimic Cave", player),
-        (((Compare(True_(), "in", ['easy', 'default'])) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", args=(4,), body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))) | (HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h241_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h241_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h241_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h241_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (Has("Cane of Somaria"))) & (Has("Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Map Chest", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Pot Row Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 1 Pot Key", player),
-        (Has("Small Key (Swamp Palace)", 2)) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Big Chest", player),
-        ((False_()) | (Has("Big Key (Swamp Palace)"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Compass Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Hookshot Pot Key", player),
-        (Has("Hookshot")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 2 Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Big Key Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - West Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Left", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Right", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterway Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterfall Room", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Boss", player),
-        ((Has("Small Key (Swamp Palace)", 6)) & (True_())) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Prize", player),
-        ((Has("Small Key (Swamp Palace)", 6)) & (True_())) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Key Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Map Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Compass Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Ambush Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Attic", player),
-        (Has("Small Key (Thieves Town)", 3)) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Chest", player),
-        ((((False_()) & (Has("Small Key (Thieves Town)", 2))) | (Has("Small Key (Thieves Town)", 3))) & (Has("Hammer"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Spike Switch Pot Key", player),
-        (Has("Small Key (Thieves Town)")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Blind's Cell", player),
-        (Has("Small Key (Thieves Town)")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Boss", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Prize", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Map Chest", player),
-        (((Has("Moon Pearl")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Pinball Room", player),
-        ((Has("Moon Pearl")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Compass Chest", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Pot Prison", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Chest", player),
-        ((((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Big Key (Skull Woods)"))) | (False_())) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Key Chest", player),
-        ((Has("Moon Pearl")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - West Lobby Pot Key", player),
-        ((Has("Moon Pearl")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Bridge Room", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Spike Corner Key Drop", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Boss", player),
-        ((Has("Small Key (Skull Woods)", 5)) & (True_())) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Prize", player),
-        ((Has("Small Key (Skull Woods)", 5)) & (True_())) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Jelly Key Drop", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bombos'}, {'type': 'or', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}]}]}]})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Compass Chest", player),
-        ((Has("Small Key (Ice Palace)")) & (HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Bombos'}, {'type': 'or', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fighter Sword'}, {'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}]}]}]}))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Conveyor Key Drop", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Freezor Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Many Pots Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Big Chest", player),
-        (Has("Big Key (Ice Palace)")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Iced T Room", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Spike Room", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Big Key Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Map Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Hammer Block Key Drop", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Boss", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Prize", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Big Chest", player),
-        (Has("Big Key (Misery Mire)")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Map Chest", player),
-        (((Has("Small Key (Misery Mire)", 2)) & (HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h245_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h245_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h245_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h245_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h245_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang']}]}]}))) | (Has("Small Key (Misery Mire)", 4))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Main Lobby", player),
-        (((Has("Small Key (Misery Mire)", 3)) & (HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h248_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h248_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h248_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h248_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h248_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'constant', 'value': 1}, {'type': 'constant', 'value': 50}]}}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang']}]}]}))) | (Has("Small Key (Misery Mire)", 5))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Bridge Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spike Chest", player),
-        (((True_()) & (HelperCall(helper_func=_alinktothepastworldgen_has_hearts, helper_name="has_hearts", args=(4,), body_data={'params': ['count'], 'body': {'type': 'compare', 'left': {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h250_max_heart_pieces', 'value': {'type': 'constant', 'value': 24}}, {'type': 'assign', 'name': '_h250_max_heart_containers', 'value': {'type': 'constant', 'value': 10}}, {'type': 'return', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'min', 'args': [{'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Boss Heart Container'}]}, {'type': 'name', 'name': '_h250_max_heart_containers'}]}, 'op': '+', 'right': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Sanctuary Heart Container'}]}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'min', 'args': [{'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Piece of Heart'}]}, {'type': 'name', 'name': '_h250_max_heart_pieces'}]}, 'op': '//', 'right': {'type': 'constant', 'value': 4}}}, 'op': '+', 'right': {'type': 'constant', 'value': 3}}}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}))) | (Has("Cane of Byrna")) | (Has("Cape"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spikes Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Fishbone Pot Key", player),
-        ((Has("Small Key (Misery Mire)", 4)) | (Has("Big Key (Misery Mire)"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Conveyor Crystal Key Drop", player),
-        (Conditional(test=(False_()) | (True_()) | (False_()), if_true=Has("Small Key (Misery Mire)", 4), if_false=Has("Small Key (Misery Mire)", 5))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Compass Chest", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Big Key Chest", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Boss", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Prize", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Compass Chest", player),
-        ((Has("Cane of Somaria")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Roller Room - Left", player),
-        (((Has("Cane of Somaria")) & (Has("Fire Rod"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Roller Room - Right", player),
-        (((Has("Cane of Somaria")) & (Has("Fire Rod"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Pokey 1 Key Drop", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h256_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h256_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h256_basemagic'}}}}, {'type': 'assign', 'name': '_h256_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h256_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h256_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h258_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h258_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h258_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h258_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h258_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Chain Chomps", player),
-        (((HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows", body_data={'params': ['count'], 'body': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': 'off'}, 'body': [{'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}]}, {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Arrow Upgrade (70)'}, 'body': [{'type': 'assign', 'name': '_h260_arrows', 'value': {'type': 'constant', 'value': 70}}], 'orelse': [{'type': 'assign', 'name': '_h260_arrows', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 30}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}}, {'type': 'assign', 'name': '_h260_arrows', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Arrow Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'min', 'args': [{'type': 'constant', 'value': 70}, {'type': 'name', 'name': '_h260_arrows'}]}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}, {'type': 'return', 'value': {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'count'}, 'op': '<=', 'right': {'type': 'constant', 'value': 30}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}}]}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]})) | (HasAny('Blue Boomerang', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang'))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Key Chest", player),
-        (((((Has("Small Key (Turtle Rock)")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Pokey 2 Key Drop", player),
-        (((((HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h266_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h266_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h266_basemagic'}}}}, {'type': 'assign', 'name': '_h266_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h266_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h266_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h268_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h268_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h268_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h268_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h268_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Chest", player),
-        (((Has("Cane of Somaria")) | (Has("Hookshot"))) & (Has("Big Key (Turtle Rock)"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Crystaroller Room", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Bottom Left", player),
-        ((((Has("Cane of Byrna")) | (Has("Cape")) | (Has("Mirror Shield"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Bottom Right", player),
-        ((((Has("Cane of Byrna")) | (Has("Cape")) | (Has("Mirror Shield"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Top Left", player),
-        ((((Has("Cane of Byrna")) | (Has("Cape")) | (Has("Mirror Shield"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Top Right", player),
-        ((((Has("Cane of Byrna")) | (Has("Cape")) | (Has("Mirror Shield"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Boss", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Prize", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Shooter Room", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - The Arena - Bridge", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Stalfos Basement", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Key Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - The Arena - Ledge", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Map Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Compass Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Basement - Left", player),
-        (Has("Lamp")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Basement - Right", player),
-        (Has("Lamp")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Top", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Bottom", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Chest", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (Has("Big Key (Palace of Darkness)"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Harmless Hellway", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Boss", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Prize", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Torch", player),
-        (Has("Moon Pearl")) & (Has("Pegasus Boots"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Left", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Right", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Conveyor Cross Pot Key", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Tile Room", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Top Left", player),
-        ((((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))) & ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (Has("Cane of Somaria"))) & (Has("Fire Rod"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Top Right", player),
-        ((((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))) & ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (Has("Cane of Somaria"))) & (Has("Fire Rod"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player),
-        ((((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))) & ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (Has("Cane of Somaria"))) & (Has("Fire Rod"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player),
-        ((((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))) & ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (Has("Cane of Somaria"))) & (Has("Fire Rod"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player),
-        ((((Has("Small Key (Ganons Tower)", 5)) & (True_())) | (Has("Small Key (Ganons Tower)", 7))) & ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (Has("Cane of Somaria"))) & (Has("Fire Rod"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Left", player),
-        (Has("Hookshot")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Right", player),
-        (Has("Hookshot")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Bottom Left", player),
-        (Has("Hookshot")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Bottom Right", player),
-        (Has("Hookshot")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Double Switch Pot Key", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) | (Has("Cane of Somaria"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Map Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Firesnake Room", player),
-        (((Has("Small Key (Ganons Tower)", 5)) & ((True_()) | (True_()))) | (Has("Small Key (Ganons Tower)", 7))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (((Has("Small Key (Ganons Tower)", 6)) & (True_())) | (Has("Small Key (Ganons Tower)", 8)))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Top Right", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (((Has("Small Key (Ganons Tower)", 6)) & (True_())) | (Has("Small Key (Ganons Tower)", 8)))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Left", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (((Has("Small Key (Ganons Tower)", 6)) & (True_())) | (Has("Small Key (Ganons Tower)", 8)))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Right", player),
-        ((HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}})) & (((Has("Small Key (Ganons Tower)", 6)) & (True_())) | (Has("Small Key (Ganons Tower)", 8)))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Chest", player),
-        (Has("Moon Pearl")) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Chest", player),
-        ((Has("Big Key (Ganons Tower)")) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Room - Left", player),
-        (((HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Room - Left', 'bottom',), body_data={'params': ['location_name', 'boss_type'], 'body': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_melee_weapon', 'args': []}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 1}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'helper', 'name': 'can_extend_magic', 'args': []}]}]}, {'type': 'helper', 'name': 'can_shoot_arrows', 'args': []}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'helper', 'name': 'can_use_bombs', 'args': [{'type': 'binary_op', 'left': {'type': 'constant', 'value': 1}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}]}]}]}})) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Room - Right", player),
-        (((HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Room - Right', 'bottom',), body_data={'params': ['location_name', 'boss_type'], 'body': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_melee_weapon', 'args': []}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 1}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'helper', 'name': 'can_extend_magic', 'args': []}]}]}, {'type': 'helper', 'name': 'can_shoot_arrows', 'args': []}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'helper', 'name': 'can_use_bombs', 'args': [{'type': 'binary_op', 'left': {'type': 'constant', 'value': 1}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}]}]}]}})) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Chest", player),
-        (((HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Chest', 'bottom',), body_data={'params': ['location_name', 'boss_type'], 'body': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_melee_weapon', 'args': []}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 1}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'helper', 'name': 'can_extend_magic', 'args': []}]}]}, {'type': 'helper', 'name': 'can_shoot_arrows', 'args': []}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'helper', 'name': 'can_use_bombs', 'args': [{'type': 'binary_op', 'left': {'type': 'constant', 'value': 1}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}]}]}]}})) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))) & (Has("Moon Pearl"))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Left", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Right", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Pre-Moldorm Chest", player),
-        ((Has("Small Key (Ganons Tower)", 7)) & (HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", body_data={'params': ['quantity'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': 'bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'name', 'name': 'quantity'}, {'type': 'constant', 'value': 50}]}}}]}}))) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Key Drop", player),
-        (HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,), body_data={'params': ['enemies'], 'body': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'helper', 'name': 'has_sword', 'args': []}, {'type': 'item_check', 'item': 'Hammer'}]}, {'type': 'item_check', 'item': 'Cane of Somaria'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cane of Byrna'}, {'type': 'or', 'conditions': [{'type': 'compare', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '<', 'right': {'type': 'constant', 'value': 6}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h277_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h277_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h277_basemagic'}}}}, {'type': 'assign', 'name': '_h277_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h277_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h277_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 16}}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}, {'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'default'}, 'op': 'in', 'right': {'type': 'list', 'value': [{'type': 'constant', 'value': 'easy'}, {'type': 'constant', 'value': 'default'}]}}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h279_bombs', 'value': {'type': 'constant', 'value': 10}}, {'type': 'assign', 'name': '_h279_bombs', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 5}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+10)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (50)'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 50}}}}, {'type': 'assign', 'name': '_h279_bombs', 'op': '+=', 'value': {'type': 'max', 'args': [{'type': 'constant', 'value': 0}, {'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Bomb Upgrade (+5)'}]}, 'op': '-', 'right': {'type': 'constant', 'value': 6}}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}]}}, {'type': 'if_statement', 'test': {'type': 'and', 'conditions': [{'type': 'not', 'condition': {'type': 'constant', 'value': 'off'}}, {'type': 'item_check', 'item': 'Capacity Upgrade Shop'}]}, 'body': [{'type': 'assign', 'name': '_h279_bombs', 'op': '+=', 'value': {'type': 'constant', 'value': 40}}]}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h279_bombs'}, 'op': '>=', 'right': {'type': 'min', 'args': [{'type': 'binary_op', 'left': {'type': 'name', 'name': 'enemies'}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 50}]}}}]}]}]}})) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Validation Chest", player),
-        Has("Moon Pearl")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Agahnim 2", player),
-        (True_()) & (Has("Moon Pearl"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganon", player),
-        (((HelperCall(helper_func=_alinktothepastworldgen_GanonDefeatRule, helper_name="GanonDefeatRule", body_data={'type': 'block', 'statements': [{'type': 'if_statement', 'test': {'type': 'constant', 'value': False}, 'body': [{'type': 'return', 'value': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hammer'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]}, {'type': 'item_check', 'item': 'Silver Bow'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}]}}]}, {'type': 'assign', 'name': 'can_hurt', 'value': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Master Sword'}, {'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}]}}, {'type': 'assign', 'name': 'common', 'value': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'can_hurt'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Fire Rod'}, {'type': 'item_check', 'item': 'Lamp'}]}]}}, {'type': 'if_statement', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'no_glitches'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'no_glitches'}}, 'body': [{'type': 'return', 'value': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'common'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Tempered Sword'}, {'type': 'item_check', 'item': 'Golden Sword'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Silver Bow'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}]}, {'type': 'item_check', 'item': 'Lamp'}, {'type': 'block', 'statements': [{'type': 'assign', 'name': '_h285_basemagic', 'value': {'type': 'constant', 'value': 8}}, {'type': 'assign', 'name': '_h285_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/4)'}, 'if_true': {'type': 'constant', 'value': 32}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Magic Upgrade (1/2)'}, 'if_true': {'type': 'constant', 'value': 16}, 'if_false': {'type': 'name', 'name': '_h285_basemagic'}}}}, {'type': 'assign', 'name': '_h285_basemagic', 'value': {'type': 'conditional', 'test': {'type': 'or', 'conditions': [{'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Green Potion'}]}, {'type': 'helper', 'name': 'can_buy_unlimited', 'args': [{'type': 'constant', 'value': 'Blue Potion'}]}]}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'hard'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.5}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'hard'}, 'op': '==', 'right': {'type': 'constant', 'value': 'expert'}}, {'type': 'not', 'condition': {'type': 'constant', 'value': False}}]}, 'if_true': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '+', 'right': {'type': 'helper', 'name': 'int', 'args': [{'type': 'binary_op', 'left': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '*', 'right': {'type': 'constant', 'value': 0.25}}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}]}}, 'if_false': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '+', 'right': {'type': 'binary_op', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '*', 'right': {'type': 'helper', 'name': 'bottle_count', 'args': []}}}}}, 'if_false': {'type': 'name', 'name': '_h285_basemagic'}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': '_h285_basemagic'}, 'op': '>=', 'right': {'type': 'constant', 'value': 12}}}]}]}]}}], 'orelse': [{'type': 'return', 'value': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'common'}, {'type': 'item_check', 'item': 'Silver Bow'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bow'}, {'type': 'item_check', 'item': 'Silver Bow'}]}, {'type': 'helper', 'name': 'can_hold_arrows', 'args': [{'type': 'constant', 'value': 0}]}]}]}}]}]})) & (HelperCall(helper_func=_alinktothepastworldgen_has_crystals, helper_name="has_crystals", args=(7,), body_data={'params': ['count'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'found', 'value': {'type': 'group_count', 'group': 'Crystals'}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'found'}, 'op': '>=', 'right': {'type': 'name', 'name': 'count'}}}]}}))) & (Has("Beat Agahnim 2"))) & (Has("Moon Pearl"))
+        True_()
     )

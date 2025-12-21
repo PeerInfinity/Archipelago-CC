@@ -214,14 +214,6 @@ Playthrough:
 
 }
 1: {
-  Automate automation-science-pack: Automated automation-science-pack
-  Automate chemical-science-pack: Automated chemical-science-pack
-  Automate logistic-science-pack: Automated logistic-science-pack
-  Automate military-science-pack: Automated military-science-pack
-  Automate production-science-pack: Automated production-science-pack
-  Automate utility-science-pack: Automated utility-science-pack
-}
-2: {
   AP-1-031: progressive-automation
   AP-1-194: night-vision-equipment
   AP-1-195: progressive-advanced-material-processing
@@ -281,7 +273,11 @@ Playthrough:
   AP-6-676: progressive-automation
   AP-6-800: progressive-productivity-module
   AP-6-946: rocket-silo
-}
-3: {
+  Automate automation-science-pack: Automated automation-science-pack
+  Automate chemical-science-pack: Automated chemical-science-pack
+  Automate logistic-science-pack: Automated logistic-science-pack
+  Automate military-science-pack: Automated military-science-pack
+  Automate production-science-pack: Automated production-science-pack
+  Automate utility-science-pack: Automated utility-science-pack
   Rocket Launch: Victory
 }

@@ -20,19 +20,29 @@
             "name": "Menu -> Laboratory",
             "connected_region": "Laboratory",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Trinket 01"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 01"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 02"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 02"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 03"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 03"
+                  }
                 }
               ]
             }
@@ -41,19 +51,29 @@
             "name": "Menu -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Trinket 04"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 04"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 05"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 05"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 06"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 06"
+                  }
                 }
               ]
             }
@@ -62,19 +82,29 @@
             "name": "Menu -> Space Station 2",
             "connected_region": "Space Station 2",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Trinket 07"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 07"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 08"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 08"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 09"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 09"
+                  }
                 }
               ]
             }
@@ -83,19 +113,29 @@
             "name": "Menu -> Warp Zone",
             "connected_region": "Warp Zone",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Trinket 10"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 10"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 11"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 11"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Trinket 12"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Trinket 12"
+                  }
                 }
               ]
             }
@@ -106,8 +146,9 @@
             "name": "Overworld (Pipe-shaped Segment)",
             "id": 2515013,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 14",
@@ -121,8 +162,9 @@
             "name": "Overworld (Left of Ship)",
             "id": 2515015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 03",
@@ -136,8 +178,9 @@
             "name": "Overworld (Square Room)",
             "id": 2515016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 08",
@@ -151,8 +194,9 @@
             "name": "Overworld (Sad Elephant)",
             "id": 2515017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 01",
@@ -166,8 +210,9 @@
             "name": "It's a Secret to Nobody",
             "id": 2515000,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 20",
@@ -181,8 +226,9 @@
             "name": "Trench Warfare",
             "id": 2515001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 02",
@@ -196,68 +242,42 @@
             "name": "NPC Trinket",
             "id": 2515018,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "state_method",
-                      "method": "can_reach",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Space Station 2"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Region"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Space Station 2"
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "can_reach",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "The Tower"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Region"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "The Tower"
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "can_reach",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Warp Zone"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Region"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Warp Zone"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Laboratory"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Laboratory"
+                  }
                 }
               ]
             },
@@ -273,63 +293,36 @@
             "name": "V",
             "id": 2515019,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Laboratory"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Laboratory"
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Space Station 2"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Space Station 2"
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "The Tower"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "The Tower"
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Warp Zone"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Region"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Warp Zone"
+                  }
                 }
               ]
             },
@@ -351,8 +344,9 @@
             "name": "Young Man, It's Worth the Challenge",
             "id": 2515009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 04",
@@ -366,8 +360,9 @@
             "name": "Overworld (Outside Entanglement Generator)",
             "id": 2515014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 16",
@@ -381,8 +376,9 @@
             "name": "The Tantalizing Trinket",
             "id": 2515010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 09",
@@ -396,8 +392,9 @@
             "name": "Purest Unobtainium",
             "id": 2515011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 10",
@@ -417,8 +414,9 @@
             "name": "The Tower 1",
             "id": 2515007,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 18",
@@ -432,8 +430,9 @@
             "name": "The Tower 2",
             "id": 2515008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 15",
@@ -453,8 +452,9 @@
             "name": "One Way Room",
             "id": 2515002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 11",
@@ -468,8 +468,9 @@
             "name": "You Just Keep Coming Back",
             "id": 2515003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 12",
@@ -483,8 +484,9 @@
             "name": "Clarion Call",
             "id": 2515004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 06",
@@ -498,8 +500,9 @@
             "name": "Prize for the Reckless",
             "id": 2515006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 05",
@@ -513,8 +516,9 @@
             "name": "Doing things the hard way",
             "id": 2515005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 19",
@@ -534,8 +538,9 @@
             "name": "Edge Games",
             "id": 2515012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 13",
@@ -825,16 +830,16 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "area_cost": 0,
-        "area_rando": 0,
-        "death_link": 0,
+        "accessibility": "full",
+        "area_cost": "false",
+        "area_rando": "false",
+        "death_link": "false",
         "death_link_amnesty": 15,
         "door_cost": 3,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
-        "music_rando": 0,
+        "music_rando": "false",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],

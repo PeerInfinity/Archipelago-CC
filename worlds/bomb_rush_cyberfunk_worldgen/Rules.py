@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, HelperCall, True_
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _bombrushcyberfunkworldgen_bmx(state: "CollectionState", player: int, movestyle) -> bool:
+def _bombrushcyberfunkworldgen_bmx(state: "CollectionState", player: int, movestyle = None) -> bool:
     return (True if (movestyle == 1) else state.has_group('bmx', player))
 
 
@@ -36,7 +36,7 @@ def _bombrushcyberfunkworldgen_brink_terminal_challenge3(state: "CollectionState
     return _bombrushcyberfunkworldgen_rep(state, player, 220)
 
 
-def _bombrushcyberfunkworldgen_brink_terminal_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_brink_terminal_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 280)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 103)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 280)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 62)))
 
 
@@ -44,7 +44,7 @@ def _bombrushcyberfunkworldgen_brink_terminal_entrance(state: "CollectionState",
     return (_bombrushcyberfunkworldgen_is_girl(state, player)) and (_bombrushcyberfunkworldgen_rep(state, player, 180)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 2))
 
 
-def _bombrushcyberfunkworldgen_brink_terminal_mesh(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_brink_terminal_mesh(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 45)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 67)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 45)))
 
 
@@ -68,23 +68,23 @@ def _bombrushcyberfunkworldgen_camera(state: "CollectionState", player: int) -> 
     return state.has('Camera App', player)
 
 
-def _bombrushcyberfunkworldgen_current_chapter(state: "CollectionState", player: int, chapter) -> bool:
+def _bombrushcyberfunkworldgen_current_chapter(state: "CollectionState", player: int, chapter = None) -> bool:
     return state.has('Chapter Completed', player, (chapter - 1))
 
 
-def _bombrushcyberfunkworldgen_graffitiL(state: "CollectionState", player: int, limit, spots) -> bool:
+def _bombrushcyberfunkworldgen_graffitiL(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
     return (((state.count_group_unique('graffitil', player) * 6) >= spots) if limit else state.has_group('graffitil', player))
 
 
-def _bombrushcyberfunkworldgen_graffitiM(state: "CollectionState", player: int, limit, spots) -> bool:
+def _bombrushcyberfunkworldgen_graffitiM(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
     return (((state.count_group_unique('graffitim', player) * 7) >= spots) if limit else state.has_group('graffitim', player))
 
 
-def _bombrushcyberfunkworldgen_graffitiXL(state: "CollectionState", player: int, limit, spots) -> bool:
+def _bombrushcyberfunkworldgen_graffitiXL(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
     return (((state.count_group_unique('graffitixl', player) * 4) >= spots) if limit else state.has_group('graffitixl', player))
 
 
-def _bombrushcyberfunkworldgen_inline_skates(state: "CollectionState", player: int, movestyle) -> bool:
+def _bombrushcyberfunkworldgen_inline_skates(state: "CollectionState", player: int, movestyle = None) -> bool:
     return (True if (movestyle == 3) else state.has_group('skates', player))
 
 
@@ -92,15 +92,15 @@ def _bombrushcyberfunkworldgen_is_girl(state: "CollectionState", player: int) ->
     return state.has_group('girl', player)
 
 
-def _bombrushcyberfunkworldgen_mataan_all_challenges(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_all_challenges(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_challenge2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_mataan_challenge3(state, player))
 
 
-def _bombrushcyberfunkworldgen_mataan_challenge1(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_challenge1(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 864)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 108)) if glitched else (_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 864)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 98)))
 
 
-def _bombrushcyberfunkworldgen_mataan_challenge2(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_challenge2(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 880)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 59)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 880)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 57)))
 
 
@@ -108,15 +108,15 @@ def _bombrushcyberfunkworldgen_mataan_challenge3(state: "CollectionState", playe
     return _bombrushcyberfunkworldgen_rep(state, player, 920)
 
 
-def _bombrushcyberfunkworldgen_mataan_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_mataan_smoke_wall2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 122)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 59)) if glitched else (_bombrushcyberfunkworldgen_mataan_smoke_wall2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 117)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 57)))
 
 
-def _bombrushcyberfunkworldgen_mataan_deep_city(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_deep_city(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return _bombrushcyberfunkworldgen_mataan_challenge1(state, player, limit, glitched)
 
 
-def _bombrushcyberfunkworldgen_mataan_deepest(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_deepest(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return _bombrushcyberfunkworldgen_mataan_crew_battle(state, player, limit, glitched)
 
 
@@ -124,7 +124,7 @@ def _bombrushcyberfunkworldgen_mataan_entrance(state: "CollectionState", player:
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 2)
 
 
-def _bombrushcyberfunkworldgen_mataan_faux(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_faux(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_deepest(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 122))
 
 
@@ -136,11 +136,11 @@ def _bombrushcyberfunkworldgen_mataan_smoke_wall(state: "CollectionState", playe
     return (_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 850))
 
 
-def _bombrushcyberfunkworldgen_mataan_smoke_wall2(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_mataan_smoke_wall2(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_all_challenges(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_rep(state, player, 960))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_big(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_big(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return _bombrushcyberfunkworldgen_millennium_mall_switch(state, player, limit, glitched)
 
 
@@ -160,7 +160,7 @@ def _bombrushcyberfunkworldgen_millennium_mall_challenge4(state: "CollectionStat
     return _bombrushcyberfunkworldgen_rep(state, player, 458)
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 107)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 78)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 80)))
 
 
@@ -168,7 +168,7 @@ def _bombrushcyberfunkworldgen_millennium_mall_entrance(state: "CollectionState"
     return (_bombrushcyberfunkworldgen_rep(state, player, 380)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling(state: "CollectionState", player: int, limit) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling(state: "CollectionState", player: int, limit = None) -> bool:
     return (_bombrushcyberfunkworldgen_rep(state, player, 580)) or (_bombrushcyberfunkworldgen_millennium_mall_theater(state, player, limit))
 
 
@@ -176,11 +176,11 @@ def _bombrushcyberfunkworldgen_millennium_mall_oldhead_race(state: "CollectionSt
     return _bombrushcyberfunkworldgen_rep(state, player, 530)
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_switch(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_switch(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 72)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3)))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_theater(state: "CollectionState", player: int, limit) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_theater(state: "CollectionState", player: int, limit = None) -> bool:
     return (_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 78))
 
 
@@ -188,7 +188,7 @@ def _bombrushcyberfunkworldgen_millennium_square_entrance(state: "CollectionStat
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 2)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_rep(state, player, 660)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 88)) and (_bombrushcyberfunkworldgen_rep(state, player, 660)))
 
 
@@ -204,7 +204,7 @@ def _bombrushcyberfunkworldgen_pyramid_island_challenge3(state: "CollectionState
     return _bombrushcyberfunkworldgen_rep(state, player, 660)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 730)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 108)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 730)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 97)))
 
 
@@ -224,15 +224,15 @@ def _bombrushcyberfunkworldgen_pyramid_island_top(state: "CollectionState", play
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 5)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_upper_half(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_upper_half(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state, player, limit, glitched)
 
 
-def _bombrushcyberfunkworldgen_rep(state: "CollectionState", player: int, required) -> bool:
+def _bombrushcyberfunkworldgen_rep(state: "CollectionState", player: int, required = None) -> bool:
     return state.has('rep', player, required)
 
 
-def _bombrushcyberfunkworldgen_skateboard(state: "CollectionState", player: int, movestyle) -> bool:
+def _bombrushcyberfunkworldgen_skateboard(state: "CollectionState", player: int, movestyle = None) -> bool:
     return (True if (movestyle == 2) else state.has_group('skateboard', player))
 
 
@@ -244,7 +244,7 @@ def _bombrushcyberfunkworldgen_versum_hill_basketball_court(state: "CollectionSt
     return _bombrushcyberfunkworldgen_rep(state, player, 90)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_ch1_roadblock(state: "CollectionState", player: int, limit) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_ch1_roadblock(state: "CollectionState", player: int, limit = None) -> bool:
     return _bombrushcyberfunkworldgen_graffitiL(state, player, limit, 10)
 
 
@@ -260,7 +260,7 @@ def _bombrushcyberfunkworldgen_versum_hill_challenge3(state: "CollectionState", 
     return _bombrushcyberfunkworldgen_rep(state, player, 65)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 90)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 98)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 90)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 27)))
 
 
@@ -272,12 +272,1244 @@ def _bombrushcyberfunkworldgen_versum_hill_oldhead(state: "CollectionState", pla
     return _bombrushcyberfunkworldgen_rep(state, player, 120)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_rave(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_rave(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return (((_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 90)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 51)) if _bombrushcyberfunkworldgen_current_chapter(state, player, 4) else ((_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 89)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 51)) if _bombrushcyberfunkworldgen_current_chapter(state, player, 3) else (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 85)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 48)))) if glitched else (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 26)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 10)))
 
 
-def _bombrushcyberfunkworldgen_versum_hill_rietveld(state: "CollectionState", player: int, limit, glitched) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_rietveld(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
     return ((_bombrushcyberfunkworldgen_current_chapter(state, player, 2)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) if glitched else (_bombrushcyberfunkworldgen_current_chapter(state, player, 2)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 67)))
+
+
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'bmx': {   'body': {   'if_false': {'group': 'bmx', 'type': 'group_check'},
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'left': {'name': 'movestyle', 'type': 'name'},
+                                       'op': '==',
+                                       'right': {'type': 'constant', 'value': 1},
+                                       'type': 'compare'},
+                           'type': 'conditional'},
+               'params': ['movestyle']},
+    'brink_terminal_all_challenges': {'args': [{'type': 'constant', 'value': 220}], 'name': 'rep', 'type': 'helper'},
+    'brink_terminal_challenge1': {'count': {'type': 'constant', 'value': 188}, 'item': 'rep', 'type': 'item_check'},
+    'brink_terminal_challenge2': {'count': {'type': 'constant', 'value': 200}, 'item': 'rep', 'type': 'item_check'},
+    'brink_terminal_challenge3': {'count': {'type': 'constant', 'value': 220}, 'item': 'rep', 'type': 'item_check'},
+    'brink_terminal_crew_battle': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                     'value': 280},
+                                                                                        'item': 'rep',
+                                                                                        'type': 'item_check'},
+                                                                                    {   'if_false': {   'group': 'graffitil',
+                                                                                                        'type': 'group_check'},
+                                                                                        'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                               'value': 'graffitil'}],
+                                                                                                                               'method': 'count_group_unique',
+                                                                                                                               'type': 'state_method'},
+                                                                                                                   'op': '*',
+                                                                                                                   'right': {   'type': 'constant',
+                                                                                                                                'value': 6},
+                                                                                                                   'type': 'binary_op'},
+                                                                                                       'op': '>=',
+                                                                                                       'right': {   'type': 'constant',
+                                                                                                                    'value': 62},
+                                                                                                       'type': 'compare'},
+                                                                                        'test': {   'name': 'limit',
+                                                                                                    'type': 'name'},
+                                                                                        'type': 'conditional'}],
+                                                                  'type': 'and'},
+                                                  'if_true': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 280},
+                                                                                       'item': 'rep',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'if_false': {   'group': 'graffitil',
+                                                                                                       'type': 'group_check'},
+                                                                                       'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                              'value': 'graffitil'}],
+                                                                                                                              'method': 'count_group_unique',
+                                                                                                                              'type': 'state_method'},
+                                                                                                                  'op': '*',
+                                                                                                                  'right': {   'type': 'constant',
+                                                                                                                               'value': 6},
+                                                                                                                  'type': 'binary_op'},
+                                                                                                      'op': '>=',
+                                                                                                      'right': {   'type': 'constant',
+                                                                                                                   'value': 103},
+                                                                                                      'type': 'compare'},
+                                                                                       'test': {   'name': 'limit',
+                                                                                                   'type': 'name'},
+                                                                                       'type': 'conditional'}],
+                                                                 'type': 'and'},
+                                                  'test': {'name': 'glitched', 'type': 'name'},
+                                                  'type': 'conditional'},
+                                      'params': ['limit', 'glitched']},
+    'brink_terminal_entrance': {   'conditions': [   {'group': 'girl', 'type': 'group_check'},
+                                                     {   'count': {'type': 'constant', 'value': 180},
+                                                         'item': 'rep',
+                                                         'type': 'item_check'},
+                                                     {   'count': {   'left': {'type': 'constant', 'value': 2},
+                                                                      'op': '-',
+                                                                      'right': {'type': 'constant', 'value': 1},
+                                                                      'type': 'binary_op'},
+                                                         'item': 'Chapter Completed',
+                                                         'type': 'item_check'}],
+                                   'type': 'and'},
+    'brink_terminal_mesh': {   'body': {   'if_false': {   'conditions': [   {   'if_false': {   'group': 'graffitim',
+                                                                                                 'type': 'group_check'},
+                                                                                 'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                        'value': 'graffitim'}],
+                                                                                                                        'method': 'count_group_unique',
+                                                                                                                        'type': 'state_method'},
+                                                                                                            'op': '*',
+                                                                                                            'right': {   'type': 'constant',
+                                                                                                                         'value': 7},
+                                                                                                            'type': 'binary_op'},
+                                                                                                'op': '>=',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 67},
+                                                                                                'type': 'compare'},
+                                                                                 'test': {   'name': 'limit',
+                                                                                             'type': 'name'},
+                                                                                 'type': 'conditional'},
+                                                                             {   'if_false': {   'group': 'graffitixl',
+                                                                                                 'type': 'group_check'},
+                                                                                 'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                        'value': 'graffitixl'}],
+                                                                                                                        'method': 'count_group_unique',
+                                                                                                                        'type': 'state_method'},
+                                                                                                            'op': '*',
+                                                                                                            'right': {   'type': 'constant',
+                                                                                                                         'value': 4},
+                                                                                                            'type': 'binary_op'},
+                                                                                                'op': '>=',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 45},
+                                                                                                'type': 'compare'},
+                                                                                 'test': {   'name': 'limit',
+                                                                                             'type': 'name'},
+                                                                                 'type': 'conditional'}],
+                                                           'type': 'and'},
+                                           'if_true': {   'conditions': [   {   'if_false': {   'group': 'graffitim',
+                                                                                                'type': 'group_check'},
+                                                                                'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                       'value': 'graffitim'}],
+                                                                                                                       'method': 'count_group_unique',
+                                                                                                                       'type': 'state_method'},
+                                                                                                           'op': '*',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 7},
+                                                                                                           'type': 'binary_op'},
+                                                                                               'op': '>=',
+                                                                                               'right': {   'type': 'constant',
+                                                                                                            'value': 114},
+                                                                                               'type': 'compare'},
+                                                                                'test': {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                'type': 'conditional'},
+                                                                            {   'if_false': {   'group': 'graffitixl',
+                                                                                                'type': 'group_check'},
+                                                                                'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                       'value': 'graffitixl'}],
+                                                                                                                       'method': 'count_group_unique',
+                                                                                                                       'type': 'state_method'},
+                                                                                                           'op': '*',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 4},
+                                                                                                           'type': 'binary_op'},
+                                                                                               'op': '>=',
+                                                                                               'right': {   'type': 'constant',
+                                                                                                            'value': 45},
+                                                                                               'type': 'compare'},
+                                                                                'test': {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                'type': 'conditional'}],
+                                                          'type': 'and'},
+                                           'test': {'name': 'glitched', 'type': 'name'},
+                                           'type': 'conditional'},
+                               'params': ['limit', 'glitched']},
+    'brink_terminal_oldhead_dock': {'count': {'type': 'constant', 'value': 320}, 'item': 'rep', 'type': 'item_check'},
+    'brink_terminal_oldhead_underground': {   'count': {'type': 'constant', 'value': 250},
+                                              'item': 'rep',
+                                              'type': 'item_check'},
+    'brink_terminal_plaza': {'args': [], 'name': 'brink_terminal_challenge3', 'type': 'helper'},
+    'brink_terminal_tower': {'count': {'type': 'constant', 'value': 280}, 'item': 'rep', 'type': 'item_check'},
+    'camera': {'item': 'Camera App', 'type': 'item_check'},
+    'current_chapter': {   'body': {   'count': {   'left': {'name': 'chapter', 'type': 'name'},
+                                                    'op': '-',
+                                                    'right': {'type': 'constant', 'value': 1},
+                                                    'type': 'binary_op'},
+                                       'item': 'Chapter Completed',
+                                       'type': 'item_check'},
+                           'params': ['chapter']},
+    'graffitiL': {   'body': {   'if_false': {'group': 'graffitil', 'type': 'group_check'},
+                                 'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                        'value': 'graffitil'}],
+                                                                        'method': 'count_group_unique',
+                                                                        'type': 'state_method'},
+                                                            'op': '*',
+                                                            'right': {'type': 'constant', 'value': 6},
+                                                            'type': 'binary_op'},
+                                                'op': '>=',
+                                                'right': {'name': 'spots', 'type': 'name'},
+                                                'type': 'compare'},
+                                 'test': {'name': 'limit', 'type': 'name'},
+                                 'type': 'conditional'},
+                     'params': ['limit', 'spots']},
+    'graffitiM': {   'body': {   'if_false': {'group': 'graffitim', 'type': 'group_check'},
+                                 'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                        'value': 'graffitim'}],
+                                                                        'method': 'count_group_unique',
+                                                                        'type': 'state_method'},
+                                                            'op': '*',
+                                                            'right': {'type': 'constant', 'value': 7},
+                                                            'type': 'binary_op'},
+                                                'op': '>=',
+                                                'right': {'name': 'spots', 'type': 'name'},
+                                                'type': 'compare'},
+                                 'test': {'name': 'limit', 'type': 'name'},
+                                 'type': 'conditional'},
+                     'params': ['limit', 'spots']},
+    'graffitiXL': {   'body': {   'if_false': {'group': 'graffitixl', 'type': 'group_check'},
+                                  'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                         'value': 'graffitixl'}],
+                                                                         'method': 'count_group_unique',
+                                                                         'type': 'state_method'},
+                                                             'op': '*',
+                                                             'right': {'type': 'constant', 'value': 4},
+                                                             'type': 'binary_op'},
+                                                 'op': '>=',
+                                                 'right': {'name': 'spots', 'type': 'name'},
+                                                 'type': 'compare'},
+                                  'test': {'name': 'limit', 'type': 'name'},
+                                  'type': 'conditional'},
+                      'params': ['limit', 'spots']},
+    'inline_skates': {   'body': {   'if_false': {'group': 'skates', 'type': 'group_check'},
+                                     'if_true': {'type': 'constant', 'value': True},
+                                     'test': {   'left': {'name': 'movestyle', 'type': 'name'},
+                                                 'op': '==',
+                                                 'right': {'type': 'constant', 'value': 3},
+                                                 'type': 'compare'},
+                                     'type': 'conditional'},
+                         'params': ['movestyle']},
+    'is_girl': {'group': 'girl', 'type': 'group_check'},
+    'mataan_all_challenges': {   'body': {   'conditions': [   {   'if_false': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                         'value': 880}],
+                                                                                                         'name': 'rep',
+                                                                                                         'type': 'helper'},
+                                                                                                     {   'args': [   {   'name': 'limit',
+                                                                                                                         'type': 'name'},
+                                                                                                                     {   'type': 'constant',
+                                                                                                                         'value': 57}],
+                                                                                                         'name': 'graffitiXL',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'and'},
+                                                                   'if_true': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                        'value': 880}],
+                                                                                                        'name': 'rep',
+                                                                                                        'type': 'helper'},
+                                                                                                    {   'args': [   {   'name': 'limit',
+                                                                                                                        'type': 'name'},
+                                                                                                                    {   'type': 'constant',
+                                                                                                                        'value': 59}],
+                                                                                                        'name': 'graffitiXL',
+                                                                                                        'type': 'helper'}],
+                                                                                  'type': 'and'},
+                                                                   'test': {'name': 'glitched', 'type': 'name'},
+                                                                   'type': 'conditional'},
+                                                               {   'args': [{'type': 'constant', 'value': 920}],
+                                                                   'name': 'rep',
+                                                                   'type': 'helper'}],
+                                             'type': 'and'},
+                                 'params': ['limit', 'glitched']},
+    'mataan_challenge1': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'left': {   'type': 'constant',
+                                                                                                        'value': 5},
+                                                                                            'op': '-',
+                                                                                            'right': {   'type': 'constant',
+                                                                                                         'value': 1},
+                                                                                            'type': 'binary_op'},
+                                                                               'item': 'Chapter Completed',
+                                                                               'type': 'item_check'},
+                                                                           {   'count': {   'type': 'constant',
+                                                                                            'value': 864},
+                                                                               'item': 'rep',
+                                                                               'type': 'item_check'},
+                                                                           {   'if_false': {   'group': 'graffitil',
+                                                                                               'type': 'group_check'},
+                                                                               'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                      'value': 'graffitil'}],
+                                                                                                                      'method': 'count_group_unique',
+                                                                                                                      'type': 'state_method'},
+                                                                                                          'op': '*',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 6},
+                                                                                                          'type': 'binary_op'},
+                                                                                              'op': '>=',
+                                                                                              'right': {   'type': 'constant',
+                                                                                                           'value': 98},
+                                                                                              'type': 'compare'},
+                                                                               'test': {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                               'type': 'conditional'}],
+                                                         'type': 'and'},
+                                         'if_true': {   'conditions': [   {   'count': {   'left': {   'type': 'constant',
+                                                                                                       'value': 5},
+                                                                                           'op': '-',
+                                                                                           'right': {   'type': 'constant',
+                                                                                                        'value': 1},
+                                                                                           'type': 'binary_op'},
+                                                                              'item': 'Chapter Completed',
+                                                                              'type': 'item_check'},
+                                                                          {   'count': {   'type': 'constant',
+                                                                                           'value': 864},
+                                                                              'item': 'rep',
+                                                                              'type': 'item_check'},
+                                                                          {   'if_false': {   'group': 'graffitil',
+                                                                                              'type': 'group_check'},
+                                                                              'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                     'value': 'graffitil'}],
+                                                                                                                     'method': 'count_group_unique',
+                                                                                                                     'type': 'state_method'},
+                                                                                                         'op': '*',
+                                                                                                         'right': {   'type': 'constant',
+                                                                                                                      'value': 6},
+                                                                                                         'type': 'binary_op'},
+                                                                                             'op': '>=',
+                                                                                             'right': {   'type': 'constant',
+                                                                                                          'value': 108},
+                                                                                             'type': 'compare'},
+                                                                              'test': {'name': 'limit', 'type': 'name'},
+                                                                              'type': 'conditional'}],
+                                                        'type': 'and'},
+                                         'test': {'name': 'glitched', 'type': 'name'},
+                                         'type': 'conditional'},
+                             'params': ['limit', 'glitched']},
+    'mataan_challenge2': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                            'value': 880},
+                                                                               'item': 'rep',
+                                                                               'type': 'item_check'},
+                                                                           {   'if_false': {   'group': 'graffitixl',
+                                                                                               'type': 'group_check'},
+                                                                               'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                      'value': 'graffitixl'}],
+                                                                                                                      'method': 'count_group_unique',
+                                                                                                                      'type': 'state_method'},
+                                                                                                          'op': '*',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 4},
+                                                                                                          'type': 'binary_op'},
+                                                                                              'op': '>=',
+                                                                                              'right': {   'type': 'constant',
+                                                                                                           'value': 57},
+                                                                                              'type': 'compare'},
+                                                                               'test': {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                               'type': 'conditional'}],
+                                                         'type': 'and'},
+                                         'if_true': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                           'value': 880},
+                                                                              'item': 'rep',
+                                                                              'type': 'item_check'},
+                                                                          {   'if_false': {   'group': 'graffitixl',
+                                                                                              'type': 'group_check'},
+                                                                              'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                     'value': 'graffitixl'}],
+                                                                                                                     'method': 'count_group_unique',
+                                                                                                                     'type': 'state_method'},
+                                                                                                         'op': '*',
+                                                                                                         'right': {   'type': 'constant',
+                                                                                                                      'value': 4},
+                                                                                                         'type': 'binary_op'},
+                                                                                             'op': '>=',
+                                                                                             'right': {   'type': 'constant',
+                                                                                                          'value': 59},
+                                                                                             'type': 'compare'},
+                                                                              'test': {'name': 'limit', 'type': 'name'},
+                                                                              'type': 'conditional'}],
+                                                        'type': 'and'},
+                                         'test': {'name': 'glitched', 'type': 'name'},
+                                         'type': 'conditional'},
+                             'params': ['limit', 'glitched']},
+    'mataan_challenge3': {'count': {'type': 'constant', 'value': 920}, 'item': 'rep', 'type': 'item_check'},
+    'mataan_crew_battle': {   'body': {   'if_false': {   'conditions': [   {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                                      'type': 'name'},
+                                                                                                                  {   'name': 'glitched',
+                                                                                                                      'type': 'name'}],
+                                                                                                      'name': 'mataan_all_challenges',
+                                                                                                      'type': 'helper'},
+                                                                                                  {   'args': [   {   'type': 'constant',
+                                                                                                                      'value': 960}],
+                                                                                                      'name': 'rep',
+                                                                                                      'type': 'helper'}],
+                                                                                'type': 'and'},
+                                                                            {   'if_false': {   'group': 'graffitim',
+                                                                                                'type': 'group_check'},
+                                                                                'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                       'value': 'graffitim'}],
+                                                                                                                       'method': 'count_group_unique',
+                                                                                                                       'type': 'state_method'},
+                                                                                                           'op': '*',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 7},
+                                                                                                           'type': 'binary_op'},
+                                                                                               'op': '>=',
+                                                                                               'right': {   'type': 'constant',
+                                                                                                            'value': 117},
+                                                                                               'type': 'compare'},
+                                                                                'test': {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                'type': 'conditional'},
+                                                                            {   'if_false': {   'group': 'graffitixl',
+                                                                                                'type': 'group_check'},
+                                                                                'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                       'value': 'graffitixl'}],
+                                                                                                                       'method': 'count_group_unique',
+                                                                                                                       'type': 'state_method'},
+                                                                                                           'op': '*',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 4},
+                                                                                                           'type': 'binary_op'},
+                                                                                               'op': '>=',
+                                                                                               'right': {   'type': 'constant',
+                                                                                                            'value': 57},
+                                                                                               'type': 'compare'},
+                                                                                'test': {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                'type': 'conditional'}],
+                                                          'type': 'and'},
+                                          'if_true': {   'conditions': [   {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                                     'type': 'name'},
+                                                                                                                 {   'name': 'glitched',
+                                                                                                                     'type': 'name'}],
+                                                                                                     'name': 'mataan_all_challenges',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'args': [   {   'type': 'constant',
+                                                                                                                     'value': 960}],
+                                                                                                     'name': 'rep',
+                                                                                                     'type': 'helper'}],
+                                                                               'type': 'and'},
+                                                                           {   'if_false': {   'group': 'graffitim',
+                                                                                               'type': 'group_check'},
+                                                                               'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                      'value': 'graffitim'}],
+                                                                                                                      'method': 'count_group_unique',
+                                                                                                                      'type': 'state_method'},
+                                                                                                          'op': '*',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 7},
+                                                                                                          'type': 'binary_op'},
+                                                                                              'op': '>=',
+                                                                                              'right': {   'type': 'constant',
+                                                                                                           'value': 122},
+                                                                                              'type': 'compare'},
+                                                                               'test': {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                               'type': 'conditional'},
+                                                                           {   'if_false': {   'group': 'graffitixl',
+                                                                                               'type': 'group_check'},
+                                                                               'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                      'value': 'graffitixl'}],
+                                                                                                                      'method': 'count_group_unique',
+                                                                                                                      'type': 'state_method'},
+                                                                                                          'op': '*',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 4},
+                                                                                                          'type': 'binary_op'},
+                                                                                              'op': '>=',
+                                                                                              'right': {   'type': 'constant',
+                                                                                                           'value': 59},
+                                                                                              'type': 'compare'},
+                                                                               'test': {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                               'type': 'conditional'}],
+                                                         'type': 'and'},
+                                          'test': {'name': 'glitched', 'type': 'name'},
+                                          'type': 'conditional'},
+                              'params': ['limit', 'glitched']},
+    'mataan_deep_city': {   'body': {   'if_false': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                              'value': 5}],
+                                                                              'name': 'current_chapter',
+                                                                              'type': 'helper'},
+                                                                          {   'args': [   {   'type': 'constant',
+                                                                                              'value': 864}],
+                                                                              'name': 'rep',
+                                                                              'type': 'helper'},
+                                                                          {   'args': [   {   'name': 'limit',
+                                                                                              'type': 'name'},
+                                                                                          {   'type': 'constant',
+                                                                                              'value': 98}],
+                                                                              'name': 'graffitiL',
+                                                                              'type': 'helper'}],
+                                                        'type': 'and'},
+                                        'if_true': {   'conditions': [   {   'args': [{'type': 'constant', 'value': 5}],
+                                                                             'name': 'current_chapter',
+                                                                             'type': 'helper'},
+                                                                         {   'args': [   {   'type': 'constant',
+                                                                                             'value': 864}],
+                                                                             'name': 'rep',
+                                                                             'type': 'helper'},
+                                                                         {   'args': [   {   'name': 'limit',
+                                                                                             'type': 'name'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 108}],
+                                                                             'name': 'graffitiL',
+                                                                             'type': 'helper'}],
+                                                       'type': 'and'},
+                                        'test': {'name': 'glitched', 'type': 'name'},
+                                        'type': 'conditional'},
+                            'params': ['limit', 'glitched']},
+    'mataan_deepest': {   'body': {   'if_false': {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                        {   'name': 'glitched',
+                                                                                            'type': 'name'}],
+                                                                            'name': 'mataan_smoke_wall2',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [   {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': 117}],
+                                                                            'name': 'graffitiM',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [   {   'name': 'limit',
+                                                                                            'type': 'name'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': 57}],
+                                                                            'name': 'graffitiXL',
+                                                                            'type': 'helper'}],
+                                                      'type': 'and'},
+                                      'if_true': {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                                       {   'name': 'glitched',
+                                                                                           'type': 'name'}],
+                                                                           'name': 'mataan_smoke_wall2',
+                                                                           'type': 'helper'},
+                                                                       {   'args': [   {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                                       {   'type': 'constant',
+                                                                                           'value': 122}],
+                                                                           'name': 'graffitiM',
+                                                                           'type': 'helper'},
+                                                                       {   'args': [   {   'name': 'limit',
+                                                                                           'type': 'name'},
+                                                                                       {   'type': 'constant',
+                                                                                           'value': 59}],
+                                                                           'name': 'graffitiXL',
+                                                                           'type': 'helper'}],
+                                                     'type': 'and'},
+                                      'test': {'name': 'glitched', 'type': 'name'},
+                                      'type': 'conditional'},
+                          'params': ['limit', 'glitched']},
+    'mataan_entrance': {   'count': {   'left': {'type': 'constant', 'value': 2},
+                                        'op': '-',
+                                        'right': {'type': 'constant', 'value': 1},
+                                        'type': 'binary_op'},
+                           'item': 'Chapter Completed',
+                           'type': 'item_check'},
+    'mataan_faux': {   'body': {   'conditions': [   {   'args': [   {'name': 'limit', 'type': 'name'},
+                                                                     {'name': 'glitched', 'type': 'name'}],
+                                                         'name': 'mataan_crew_battle',
+                                                         'type': 'helper'},
+                                                     {   'if_false': {'group': 'graffitim', 'type': 'group_check'},
+                                                         'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                'value': 'graffitim'}],
+                                                                                                'method': 'count_group_unique',
+                                                                                                'type': 'state_method'},
+                                                                                    'op': '*',
+                                                                                    'right': {   'type': 'constant',
+                                                                                                 'value': 7},
+                                                                                    'type': 'binary_op'},
+                                                                        'op': '>=',
+                                                                        'right': {'type': 'constant', 'value': 122},
+                                                                        'type': 'compare'},
+                                                         'test': {'name': 'limit', 'type': 'name'},
+                                                         'type': 'conditional'}],
+                                   'type': 'and'},
+                       'params': ['limit', 'glitched']},
+    'mataan_oldhead': {'count': {'type': 'constant', 'value': 935}, 'item': 'rep', 'type': 'item_check'},
+    'mataan_smoke_wall': {   'conditions': [   {   'count': {   'left': {'type': 'constant', 'value': 5},
+                                                                'op': '-',
+                                                                'right': {'type': 'constant', 'value': 1},
+                                                                'type': 'binary_op'},
+                                                   'item': 'Chapter Completed',
+                                                   'type': 'item_check'},
+                                               {   'count': {'type': 'constant', 'value': 850},
+                                                   'item': 'rep',
+                                                   'type': 'item_check'}],
+                             'type': 'and'},
+    'mataan_smoke_wall2': {   'body': {   'conditions': [   {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                      'type': 'name'},
+                                                                                                  {   'name': 'glitched',
+                                                                                                      'type': 'name'}],
+                                                                                      'name': 'mataan_challenge2',
+                                                                                      'type': 'helper'},
+                                                                                  {   'args': [],
+                                                                                      'name': 'mataan_challenge3',
+                                                                                      'type': 'helper'}],
+                                                                'type': 'and'},
+                                                            {   'count': {'type': 'constant', 'value': 960},
+                                                                'item': 'rep',
+                                                                'type': 'item_check'}],
+                                          'type': 'and'},
+                              'params': ['limit', 'glitched']},
+    'millennium_mall_big': {   'body': {   'if_false': {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                 'type': 'name'},
+                                                                                             {   'type': 'constant',
+                                                                                                 'value': 72}],
+                                                                                 'name': 'graffitiM',
+                                                                                 'type': 'helper'},
+                                                                             {   'args': [   {   'type': 'constant',
+                                                                                                 'value': 3}],
+                                                                                 'name': 'current_chapter',
+                                                                                 'type': 'helper'}],
+                                                           'type': 'and'},
+                                           'if_true': {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                'type': 'name'},
+                                                                                            {   'type': 'constant',
+                                                                                                'value': 114}],
+                                                                                'name': 'graffitiM',
+                                                                                'type': 'helper'},
+                                                                            {   'args': [   {   'type': 'constant',
+                                                                                                'value': 3}],
+                                                                                'name': 'current_chapter',
+                                                                                'type': 'helper'}],
+                                                          'type': 'and'},
+                                           'test': {'name': 'glitched', 'type': 'name'},
+                                           'type': 'conditional'},
+                               'params': ['limit', 'glitched']},
+    'millennium_mall_challenge1': {'count': {'type': 'constant', 'value': 434}, 'item': 'rep', 'type': 'item_check'},
+    'millennium_mall_challenge2': {'count': {'type': 'constant', 'value': 442}, 'item': 'rep', 'type': 'item_check'},
+    'millennium_mall_challenge3': {'count': {'type': 'constant', 'value': 450}, 'item': 'rep', 'type': 'item_check'},
+    'millennium_mall_challenge4': {'count': {'type': 'constant', 'value': 458}, 'item': 'rep', 'type': 'item_check'},
+    'millennium_mall_crew_battle': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 491},
+                                                                                         'item': 'rep',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'if_false': {   'group': 'graffitim',
+                                                                                                         'type': 'group_check'},
+                                                                                         'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                'value': 'graffitim'}],
+                                                                                                                                'method': 'count_group_unique',
+                                                                                                                                'type': 'state_method'},
+                                                                                                                    'op': '*',
+                                                                                                                    'right': {   'type': 'constant',
+                                                                                                                                 'value': 7},
+                                                                                                                    'type': 'binary_op'},
+                                                                                                        'op': '>=',
+                                                                                                        'right': {   'type': 'constant',
+                                                                                                                     'value': 78},
+                                                                                                        'type': 'compare'},
+                                                                                         'test': {   'name': 'limit',
+                                                                                                     'type': 'name'},
+                                                                                         'type': 'conditional'},
+                                                                                     {   'if_false': {   'group': 'graffitil',
+                                                                                                         'type': 'group_check'},
+                                                                                         'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                'value': 'graffitil'}],
+                                                                                                                                'method': 'count_group_unique',
+                                                                                                                                'type': 'state_method'},
+                                                                                                                    'op': '*',
+                                                                                                                    'right': {   'type': 'constant',
+                                                                                                                                 'value': 6},
+                                                                                                                    'type': 'binary_op'},
+                                                                                                        'op': '>=',
+                                                                                                        'right': {   'type': 'constant',
+                                                                                                                     'value': 80},
+                                                                                                        'type': 'compare'},
+                                                                                         'test': {   'name': 'limit',
+                                                                                                     'type': 'name'},
+                                                                                         'type': 'conditional'}],
+                                                                   'type': 'and'},
+                                                   'if_true': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                     'value': 491},
+                                                                                        'item': 'rep',
+                                                                                        'type': 'item_check'},
+                                                                                    {   'if_false': {   'group': 'graffitim',
+                                                                                                        'type': 'group_check'},
+                                                                                        'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                               'value': 'graffitim'}],
+                                                                                                                               'method': 'count_group_unique',
+                                                                                                                               'type': 'state_method'},
+                                                                                                                   'op': '*',
+                                                                                                                   'right': {   'type': 'constant',
+                                                                                                                                'value': 7},
+                                                                                                                   'type': 'binary_op'},
+                                                                                                       'op': '>=',
+                                                                                                       'right': {   'type': 'constant',
+                                                                                                                    'value': 114},
+                                                                                                       'type': 'compare'},
+                                                                                        'test': {   'name': 'limit',
+                                                                                                    'type': 'name'},
+                                                                                        'type': 'conditional'},
+                                                                                    {   'if_false': {   'group': 'graffitil',
+                                                                                                        'type': 'group_check'},
+                                                                                        'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                               'value': 'graffitil'}],
+                                                                                                                               'method': 'count_group_unique',
+                                                                                                                               'type': 'state_method'},
+                                                                                                                   'op': '*',
+                                                                                                                   'right': {   'type': 'constant',
+                                                                                                                                'value': 6},
+                                                                                                                   'type': 'binary_op'},
+                                                                                                       'op': '>=',
+                                                                                                       'right': {   'type': 'constant',
+                                                                                                                    'value': 107},
+                                                                                                       'type': 'compare'},
+                                                                                        'test': {   'name': 'limit',
+                                                                                                    'type': 'name'},
+                                                                                        'type': 'conditional'}],
+                                                                  'type': 'and'},
+                                                   'test': {'name': 'glitched', 'type': 'name'},
+                                                   'type': 'conditional'},
+                                       'params': ['limit', 'glitched']},
+    'millennium_mall_entrance': {   'conditions': [   {   'count': {'type': 'constant', 'value': 380},
+                                                          'item': 'rep',
+                                                          'type': 'item_check'},
+                                                      {   'count': {   'left': {'type': 'constant', 'value': 3},
+                                                                       'op': '-',
+                                                                       'right': {'type': 'constant', 'value': 1},
+                                                                       'type': 'binary_op'},
+                                                          'item': 'Chapter Completed',
+                                                          'type': 'item_check'}],
+                                    'type': 'and'},
+    'millennium_mall_oldhead_ceiling': {   'body': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                          'value': 580},
+                                                                             'item': 'rep',
+                                                                             'type': 'item_check'},
+                                                                         {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                   'value': 491}],
+                                                                                                   'name': 'rep',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [   {   'name': 'limit',
+                                                                                                                   'type': 'name'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': 78}],
+                                                                                                   'name': 'graffitiM',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'and'}],
+                                                       'type': 'or'},
+                                           'params': ['limit']},
+    'millennium_mall_oldhead_race': {'count': {'type': 'constant', 'value': 530}, 'item': 'rep', 'type': 'item_check'},
+    'millennium_mall_switch': {   'body': {   'if_false': {   'conditions': [   {   'if_false': {   'group': 'graffitim',
+                                                                                                    'type': 'group_check'},
+                                                                                    'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                           'value': 'graffitim'}],
+                                                                                                                           'method': 'count_group_unique',
+                                                                                                                           'type': 'state_method'},
+                                                                                                               'op': '*',
+                                                                                                               'right': {   'type': 'constant',
+                                                                                                                            'value': 7},
+                                                                                                               'type': 'binary_op'},
+                                                                                                   'op': '>=',
+                                                                                                   'right': {   'type': 'constant',
+                                                                                                                'value': 72},
+                                                                                                   'type': 'compare'},
+                                                                                    'test': {   'name': 'limit',
+                                                                                                'type': 'name'},
+                                                                                    'type': 'conditional'},
+                                                                                {   'count': {   'left': {   'type': 'constant',
+                                                                                                             'value': 3},
+                                                                                                 'op': '-',
+                                                                                                 'right': {   'type': 'constant',
+                                                                                                              'value': 1},
+                                                                                                 'type': 'binary_op'},
+                                                                                    'item': 'Chapter Completed',
+                                                                                    'type': 'item_check'}],
+                                                              'type': 'and'},
+                                              'if_true': {   'conditions': [   {   'if_false': {   'group': 'graffitim',
+                                                                                                   'type': 'group_check'},
+                                                                                   'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                          'value': 'graffitim'}],
+                                                                                                                          'method': 'count_group_unique',
+                                                                                                                          'type': 'state_method'},
+                                                                                                              'op': '*',
+                                                                                                              'right': {   'type': 'constant',
+                                                                                                                           'value': 7},
+                                                                                                              'type': 'binary_op'},
+                                                                                                  'op': '>=',
+                                                                                                  'right': {   'type': 'constant',
+                                                                                                               'value': 114},
+                                                                                                  'type': 'compare'},
+                                                                                   'test': {   'name': 'limit',
+                                                                                               'type': 'name'},
+                                                                                   'type': 'conditional'},
+                                                                               {   'count': {   'left': {   'type': 'constant',
+                                                                                                            'value': 3},
+                                                                                                'op': '-',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 1},
+                                                                                                'type': 'binary_op'},
+                                                                                   'item': 'Chapter Completed',
+                                                                                   'type': 'item_check'}],
+                                                             'type': 'and'},
+                                              'test': {'name': 'glitched', 'type': 'name'},
+                                              'type': 'conditional'},
+                                  'params': ['limit', 'glitched']},
+    'millennium_mall_theater': {   'body': {   'conditions': [   {   'count': {'type': 'constant', 'value': 491},
+                                                                     'item': 'rep',
+                                                                     'type': 'item_check'},
+                                                                 {   'if_false': {   'group': 'graffitim',
+                                                                                     'type': 'group_check'},
+                                                                     'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                            'value': 'graffitim'}],
+                                                                                                            'method': 'count_group_unique',
+                                                                                                            'type': 'state_method'},
+                                                                                                'op': '*',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 7},
+                                                                                                'type': 'binary_op'},
+                                                                                    'op': '>=',
+                                                                                    'right': {   'type': 'constant',
+                                                                                                 'value': 78},
+                                                                                    'type': 'compare'},
+                                                                     'test': {'name': 'limit', 'type': 'name'},
+                                                                     'type': 'conditional'}],
+                                               'type': 'and'},
+                                   'params': ['limit']},
+    'millennium_square_entrance': {   'count': {   'left': {'type': 'constant', 'value': 2},
+                                                   'op': '-',
+                                                   'right': {'type': 'constant', 'value': 1},
+                                                   'type': 'binary_op'},
+                                      'item': 'Chapter Completed',
+                                      'type': 'item_check'},
+    'pyramid_island_all_challenges': {   'body': {   'if_false': {   'conditions': [   {   'if_false': {   'group': 'graffitim',
+                                                                                                           'type': 'group_check'},
+                                                                                           'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                  'value': 'graffitim'}],
+                                                                                                                                  'method': 'count_group_unique',
+                                                                                                                                  'type': 'state_method'},
+                                                                                                                      'op': '*',
+                                                                                                                      'right': {   'type': 'constant',
+                                                                                                                                   'value': 7},
+                                                                                                                      'type': 'binary_op'},
+                                                                                                          'op': '>=',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 88},
+                                                                                                          'type': 'compare'},
+                                                                                           'test': {   'name': 'limit',
+                                                                                                       'type': 'name'},
+                                                                                           'type': 'conditional'},
+                                                                                       {   'count': {   'type': 'constant',
+                                                                                                        'value': 660},
+                                                                                           'item': 'rep',
+                                                                                           'type': 'item_check'}],
+                                                                     'type': 'and'},
+                                                     'if_true': {   'conditions': [   {   'if_false': {   'group': 'graffitim',
+                                                                                                          'type': 'group_check'},
+                                                                                          'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                 'value': 'graffitim'}],
+                                                                                                                                 'method': 'count_group_unique',
+                                                                                                                                 'type': 'state_method'},
+                                                                                                                     'op': '*',
+                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                  'value': 7},
+                                                                                                                     'type': 'binary_op'},
+                                                                                                         'op': '>=',
+                                                                                                         'right': {   'type': 'constant',
+                                                                                                                      'value': 114},
+                                                                                                         'type': 'compare'},
+                                                                                          'test': {   'name': 'limit',
+                                                                                                      'type': 'name'},
+                                                                                          'type': 'conditional'},
+                                                                                      {   'count': {   'type': 'constant',
+                                                                                                       'value': 660},
+                                                                                          'item': 'rep',
+                                                                                          'type': 'item_check'}],
+                                                                    'type': 'and'},
+                                                     'test': {'name': 'glitched', 'type': 'name'},
+                                                     'type': 'conditional'},
+                                         'params': ['limit', 'glitched']},
+    'pyramid_island_challenge1': {   'conditions': [   {   'count': {'type': 'constant', 'value': 630},
+                                                           'item': 'rep',
+                                                           'type': 'item_check'},
+                                                       {   'count': {   'left': {'type': 'constant', 'value': 4},
+                                                                        'op': '-',
+                                                                        'right': {'type': 'constant', 'value': 1},
+                                                                        'type': 'binary_op'},
+                                                           'item': 'Chapter Completed',
+                                                           'type': 'item_check'}],
+                                     'type': 'and'},
+    'pyramid_island_challenge2': {'count': {'type': 'constant', 'value': 650}, 'item': 'rep', 'type': 'item_check'},
+    'pyramid_island_challenge3': {'count': {'type': 'constant', 'value': 660}, 'item': 'rep', 'type': 'item_check'},
+    'pyramid_island_crew_battle': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                     'value': 730},
+                                                                                        'item': 'rep',
+                                                                                        'type': 'item_check'},
+                                                                                    {   'if_false': {   'group': 'graffitil',
+                                                                                                        'type': 'group_check'},
+                                                                                        'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                               'value': 'graffitil'}],
+                                                                                                                               'method': 'count_group_unique',
+                                                                                                                               'type': 'state_method'},
+                                                                                                                   'op': '*',
+                                                                                                                   'right': {   'type': 'constant',
+                                                                                                                                'value': 6},
+                                                                                                                   'type': 'binary_op'},
+                                                                                                       'op': '>=',
+                                                                                                       'right': {   'type': 'constant',
+                                                                                                                    'value': 97},
+                                                                                                       'type': 'compare'},
+                                                                                        'test': {   'name': 'limit',
+                                                                                                    'type': 'name'},
+                                                                                        'type': 'conditional'}],
+                                                                  'type': 'and'},
+                                                  'if_true': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 730},
+                                                                                       'item': 'rep',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'if_false': {   'group': 'graffitil',
+                                                                                                       'type': 'group_check'},
+                                                                                       'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                              'value': 'graffitil'}],
+                                                                                                                              'method': 'count_group_unique',
+                                                                                                                              'type': 'state_method'},
+                                                                                                                  'op': '*',
+                                                                                                                  'right': {   'type': 'constant',
+                                                                                                                               'value': 6},
+                                                                                                                  'type': 'binary_op'},
+                                                                                                      'op': '>=',
+                                                                                                      'right': {   'type': 'constant',
+                                                                                                                   'value': 108},
+                                                                                                      'type': 'compare'},
+                                                                                       'test': {   'name': 'limit',
+                                                                                                   'type': 'name'},
+                                                                                       'type': 'conditional'}],
+                                                                 'type': 'and'},
+                                                  'test': {'name': 'glitched', 'type': 'name'},
+                                                  'type': 'conditional'},
+                                      'params': ['limit', 'glitched']},
+    'pyramid_island_entrance': {   'count': {   'left': {'type': 'constant', 'value': 4},
+                                                'op': '-',
+                                                'right': {'type': 'constant', 'value': 1},
+                                                'type': 'binary_op'},
+                                   'item': 'Chapter Completed',
+                                   'type': 'item_check'},
+    'pyramid_island_gate': {'count': {'type': 'constant', 'value': 620}, 'item': 'rep', 'type': 'item_check'},
+    'pyramid_island_oldhead': {'count': {'type': 'constant', 'value': 780}, 'item': 'rep', 'type': 'item_check'},
+    'pyramid_island_top': {   'count': {   'left': {'type': 'constant', 'value': 5},
+                                           'op': '-',
+                                           'right': {'type': 'constant', 'value': 1},
+                                           'type': 'binary_op'},
+                              'item': 'Chapter Completed',
+                              'type': 'item_check'},
+    'pyramid_island_upper_half': {   'body': {   'if_false': {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                       'type': 'name'},
+                                                                                                   {   'type': 'constant',
+                                                                                                       'value': 88}],
+                                                                                       'name': 'graffitiM',
+                                                                                       'type': 'helper'},
+                                                                                   {   'args': [   {   'type': 'constant',
+                                                                                                       'value': 660}],
+                                                                                       'name': 'rep',
+                                                                                       'type': 'helper'}],
+                                                                 'type': 'and'},
+                                                 'if_true': {   'conditions': [   {   'args': [   {   'name': 'limit',
+                                                                                                      'type': 'name'},
+                                                                                                  {   'type': 'constant',
+                                                                                                      'value': 114}],
+                                                                                      'name': 'graffitiM',
+                                                                                      'type': 'helper'},
+                                                                                  {   'args': [   {   'type': 'constant',
+                                                                                                      'value': 660}],
+                                                                                      'name': 'rep',
+                                                                                      'type': 'helper'}],
+                                                                'type': 'and'},
+                                                 'test': {'name': 'glitched', 'type': 'name'},
+                                                 'type': 'conditional'},
+                                     'params': ['limit', 'glitched']},
+    'rep': {   'body': {'count': {'name': 'required', 'type': 'name'}, 'item': 'rep', 'type': 'item_check'},
+               'params': ['required']},
+    'skateboard': {   'body': {   'if_false': {'group': 'skateboard', 'type': 'group_check'},
+                                  'if_true': {'type': 'constant', 'value': True},
+                                  'test': {   'left': {'name': 'movestyle', 'type': 'name'},
+                                              'op': '==',
+                                              'right': {'type': 'constant', 'value': 2},
+                                              'type': 'compare'},
+                                  'type': 'conditional'},
+                      'params': ['movestyle']},
+    'versum_hill_all_challenges': {'args': [{'type': 'constant', 'value': 65}], 'name': 'rep', 'type': 'helper'},
+    'versum_hill_basketball_court': {'count': {'type': 'constant', 'value': 90}, 'item': 'rep', 'type': 'item_check'},
+    'versum_hill_ch1_roadblock': {   'body': {   'if_false': {'group': 'graffitil', 'type': 'group_check'},
+                                                 'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                        'value': 'graffitil'}],
+                                                                                        'method': 'count_group_unique',
+                                                                                        'type': 'state_method'},
+                                                                            'op': '*',
+                                                                            'right': {'type': 'constant', 'value': 6},
+                                                                            'type': 'binary_op'},
+                                                                'op': '>=',
+                                                                'right': {'type': 'constant', 'value': 10},
+                                                                'type': 'compare'},
+                                                 'test': {'name': 'limit', 'type': 'name'},
+                                                 'type': 'conditional'},
+                                     'params': ['limit']},
+    'versum_hill_challenge1': {'count': {'type': 'constant', 'value': 50}, 'item': 'rep', 'type': 'item_check'},
+    'versum_hill_challenge2': {'count': {'type': 'constant', 'value': 58}, 'item': 'rep', 'type': 'item_check'},
+    'versum_hill_challenge3': {'count': {'type': 'constant', 'value': 65}, 'item': 'rep', 'type': 'item_check'},
+    'versum_hill_crew_battle': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                  'value': 90},
+                                                                                     'item': 'rep',
+                                                                                     'type': 'item_check'},
+                                                                                 {   'if_false': {   'group': 'graffitim',
+                                                                                                     'type': 'group_check'},
+                                                                                     'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                            'value': 'graffitim'}],
+                                                                                                                            'method': 'count_group_unique',
+                                                                                                                            'type': 'state_method'},
+                                                                                                                'op': '*',
+                                                                                                                'right': {   'type': 'constant',
+                                                                                                                             'value': 7},
+                                                                                                                'type': 'binary_op'},
+                                                                                                    'op': '>=',
+                                                                                                    'right': {   'type': 'constant',
+                                                                                                                 'value': 27},
+                                                                                                    'type': 'compare'},
+                                                                                     'test': {   'name': 'limit',
+                                                                                                 'type': 'name'},
+                                                                                     'type': 'conditional'}],
+                                                               'type': 'and'},
+                                               'if_true': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                 'value': 90},
+                                                                                    'item': 'rep',
+                                                                                    'type': 'item_check'},
+                                                                                {   'if_false': {   'group': 'graffitim',
+                                                                                                    'type': 'group_check'},
+                                                                                    'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                           'value': 'graffitim'}],
+                                                                                                                           'method': 'count_group_unique',
+                                                                                                                           'type': 'state_method'},
+                                                                                                               'op': '*',
+                                                                                                               'right': {   'type': 'constant',
+                                                                                                                            'value': 7},
+                                                                                                               'type': 'binary_op'},
+                                                                                                   'op': '>=',
+                                                                                                   'right': {   'type': 'constant',
+                                                                                                                'value': 98},
+                                                                                                   'type': 'compare'},
+                                                                                    'test': {   'name': 'limit',
+                                                                                                'type': 'name'},
+                                                                                    'type': 'conditional'}],
+                                                              'type': 'and'},
+                                               'test': {'name': 'glitched', 'type': 'name'},
+                                               'type': 'conditional'},
+                                   'params': ['limit', 'glitched']},
+    'versum_hill_entrance': {'count': {'type': 'constant', 'value': 20}, 'item': 'rep', 'type': 'item_check'},
+    'versum_hill_oldhead': {'count': {'type': 'constant', 'value': 120}, 'item': 'rep', 'type': 'item_check'},
+    'versum_hill_rave': {   'body': {   'if_false': {   'conditions': [   {   'if_false': {   'group': 'graffitil',
+                                                                                              'type': 'group_check'},
+                                                                              'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                     'value': 'graffitil'}],
+                                                                                                                     'method': 'count_group_unique',
+                                                                                                                     'type': 'state_method'},
+                                                                                                         'op': '*',
+                                                                                                         'right': {   'type': 'constant',
+                                                                                                                      'value': 6},
+                                                                                                         'type': 'binary_op'},
+                                                                                             'op': '>=',
+                                                                                             'right': {   'type': 'constant',
+                                                                                                          'value': 26},
+                                                                                             'type': 'compare'},
+                                                                              'test': {'name': 'limit', 'type': 'name'},
+                                                                              'type': 'conditional'},
+                                                                          {   'if_false': {   'group': 'graffitixl',
+                                                                                              'type': 'group_check'},
+                                                                              'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                     'value': 'graffitixl'}],
+                                                                                                                     'method': 'count_group_unique',
+                                                                                                                     'type': 'state_method'},
+                                                                                                         'op': '*',
+                                                                                                         'right': {   'type': 'constant',
+                                                                                                                      'value': 4},
+                                                                                                         'type': 'binary_op'},
+                                                                                             'op': '>=',
+                                                                                             'right': {   'type': 'constant',
+                                                                                                          'value': 10},
+                                                                                             'type': 'compare'},
+                                                                              'test': {'name': 'limit', 'type': 'name'},
+                                                                              'type': 'conditional'}],
+                                                        'type': 'and'},
+                                        'if_true': {   'if_false': {   'if_false': {   'conditions': [   {   'if_false': {   'group': 'graffitil',
+                                                                                                                             'type': 'group_check'},
+                                                                                                             'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                    'value': 'graffitil'}],
+                                                                                                                                                    'method': 'count_group_unique',
+                                                                                                                                                    'type': 'state_method'},
+                                                                                                                                        'op': '*',
+                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                     'value': 6},
+                                                                                                                                        'type': 'binary_op'},
+                                                                                                                            'op': '>=',
+                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                         'value': 85},
+                                                                                                                            'type': 'compare'},
+                                                                                                             'test': {   'name': 'limit',
+                                                                                                                         'type': 'name'},
+                                                                                                             'type': 'conditional'},
+                                                                                                         {   'if_false': {   'group': 'graffitixl',
+                                                                                                                             'type': 'group_check'},
+                                                                                                             'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                    'value': 'graffitixl'}],
+                                                                                                                                                    'method': 'count_group_unique',
+                                                                                                                                                    'type': 'state_method'},
+                                                                                                                                        'op': '*',
+                                                                                                                                        'right': {   'type': 'constant',
+                                                                                                                                                     'value': 4},
+                                                                                                                                        'type': 'binary_op'},
+                                                                                                                            'op': '>=',
+                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                         'value': 48},
+                                                                                                                            'type': 'compare'},
+                                                                                                             'test': {   'name': 'limit',
+                                                                                                                         'type': 'name'},
+                                                                                                             'type': 'conditional'}],
+                                                                                       'type': 'and'},
+                                                                       'if_true': {   'conditions': [   {   'if_false': {   'group': 'graffitil',
+                                                                                                                            'type': 'group_check'},
+                                                                                                            'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                   'value': 'graffitil'}],
+                                                                                                                                                   'method': 'count_group_unique',
+                                                                                                                                                   'type': 'state_method'},
+                                                                                                                                       'op': '*',
+                                                                                                                                       'right': {   'type': 'constant',
+                                                                                                                                                    'value': 6},
+                                                                                                                                       'type': 'binary_op'},
+                                                                                                                           'op': '>=',
+                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                        'value': 89},
+                                                                                                                           'type': 'compare'},
+                                                                                                            'test': {   'name': 'limit',
+                                                                                                                        'type': 'name'},
+                                                                                                            'type': 'conditional'},
+                                                                                                        {   'if_false': {   'group': 'graffitixl',
+                                                                                                                            'type': 'group_check'},
+                                                                                                            'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                                   'value': 'graffitixl'}],
+                                                                                                                                                   'method': 'count_group_unique',
+                                                                                                                                                   'type': 'state_method'},
+                                                                                                                                       'op': '*',
+                                                                                                                                       'right': {   'type': 'constant',
+                                                                                                                                                    'value': 4},
+                                                                                                                                       'type': 'binary_op'},
+                                                                                                                           'op': '>=',
+                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                        'value': 51},
+                                                                                                                           'type': 'compare'},
+                                                                                                            'test': {   'name': 'limit',
+                                                                                                                        'type': 'name'},
+                                                                                                            'type': 'conditional'}],
+                                                                                      'type': 'and'},
+                                                                       'test': {   'count': {   'left': {   'type': 'constant',
+                                                                                                            'value': 3},
+                                                                                                'op': '-',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 1},
+                                                                                                'type': 'binary_op'},
+                                                                                   'item': 'Chapter Completed',
+                                                                                   'type': 'item_check'},
+                                                                       'type': 'conditional'},
+                                                       'if_true': {   'conditions': [   {   'if_false': {   'group': 'graffitil',
+                                                                                                            'type': 'group_check'},
+                                                                                            'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                   'value': 'graffitil'}],
+                                                                                                                                   'method': 'count_group_unique',
+                                                                                                                                   'type': 'state_method'},
+                                                                                                                       'op': '*',
+                                                                                                                       'right': {   'type': 'constant',
+                                                                                                                                    'value': 6},
+                                                                                                                       'type': 'binary_op'},
+                                                                                                           'op': '>=',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 90},
+                                                                                                           'type': 'compare'},
+                                                                                            'test': {   'name': 'limit',
+                                                                                                        'type': 'name'},
+                                                                                            'type': 'conditional'},
+                                                                                        {   'if_false': {   'group': 'graffitixl',
+                                                                                                            'type': 'group_check'},
+                                                                                            'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                                   'value': 'graffitixl'}],
+                                                                                                                                   'method': 'count_group_unique',
+                                                                                                                                   'type': 'state_method'},
+                                                                                                                       'op': '*',
+                                                                                                                       'right': {   'type': 'constant',
+                                                                                                                                    'value': 4},
+                                                                                                                       'type': 'binary_op'},
+                                                                                                           'op': '>=',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 51},
+                                                                                                           'type': 'compare'},
+                                                                                            'test': {   'name': 'limit',
+                                                                                                        'type': 'name'},
+                                                                                            'type': 'conditional'}],
+                                                                      'type': 'and'},
+                                                       'test': {   'count': {   'left': {   'type': 'constant',
+                                                                                            'value': 4},
+                                                                                'op': '-',
+                                                                                'right': {   'type': 'constant',
+                                                                                             'value': 1},
+                                                                                'type': 'binary_op'},
+                                                                   'item': 'Chapter Completed',
+                                                                   'type': 'item_check'},
+                                                       'type': 'conditional'},
+                                        'test': {'name': 'glitched', 'type': 'name'},
+                                        'type': 'conditional'},
+                            'params': ['limit', 'glitched']},
+    'versum_hill_rietveld': {   'body': {   'if_false': {   'conditions': [   {   'count': {   'left': {   'type': 'constant',
+                                                                                                           'value': 2},
+                                                                                               'op': '-',
+                                                                                               'right': {   'type': 'constant',
+                                                                                                            'value': 1},
+                                                                                               'type': 'binary_op'},
+                                                                                  'item': 'Chapter Completed',
+                                                                                  'type': 'item_check'},
+                                                                              {   'if_false': {   'group': 'graffitim',
+                                                                                                  'type': 'group_check'},
+                                                                                  'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                         'value': 'graffitim'}],
+                                                                                                                         'method': 'count_group_unique',
+                                                                                                                         'type': 'state_method'},
+                                                                                                             'op': '*',
+                                                                                                             'right': {   'type': 'constant',
+                                                                                                                          'value': 7},
+                                                                                                             'type': 'binary_op'},
+                                                                                                 'op': '>=',
+                                                                                                 'right': {   'type': 'constant',
+                                                                                                              'value': 67},
+                                                                                                 'type': 'compare'},
+                                                                                  'test': {   'name': 'limit',
+                                                                                              'type': 'name'},
+                                                                                  'type': 'conditional'}],
+                                                            'type': 'and'},
+                                            'if_true': {   'conditions': [   {   'count': {   'left': {   'type': 'constant',
+                                                                                                          'value': 2},
+                                                                                              'op': '-',
+                                                                                              'right': {   'type': 'constant',
+                                                                                                           'value': 1},
+                                                                                              'type': 'binary_op'},
+                                                                                 'item': 'Chapter Completed',
+                                                                                 'type': 'item_check'},
+                                                                             {   'if_false': {   'group': 'graffitim',
+                                                                                                 'type': 'group_check'},
+                                                                                 'if_true': {   'left': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                        'value': 'graffitim'}],
+                                                                                                                        'method': 'count_group_unique',
+                                                                                                                        'type': 'state_method'},
+                                                                                                            'op': '*',
+                                                                                                            'right': {   'type': 'constant',
+                                                                                                                         'value': 7},
+                                                                                                            'type': 'binary_op'},
+                                                                                                'op': '>=',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 114},
+                                                                                                'type': 'compare'},
+                                                                                 'test': {   'name': 'limit',
+                                                                                             'type': 'name'},
+                                                                                 'type': 'conditional'}],
+                                                           'type': 'and'},
+                                            'test': {'name': 'glitched', 'type': 'name'},
+                                            'type': 'conditional'},
+                                'params': ['limit', 'glitched']}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -287,308 +1519,338 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("New Game", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Misc -> Hideout", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Hideout -> Misc", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Hideout -> Versum Hill", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 20}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hideout -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hideout -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Versum Hill -> Hideout", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 10}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Versum Hill - After Roadblock -> Hideout", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 20}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Underground Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_oldhead, helper_name="versum_hill_oldhead", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 120}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Side Street", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_all_challenges, helper_name="versum_hill_all_challenges", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 65}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Basketball Court", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_basketball_court, helper_name="versum_hill_basketball_court", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 90}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Underground Mall -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 10}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Side Street -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 10}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Basketball Court -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 10}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Basketball Court -> Versum Hill", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 20}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Versum Hill - After Roadblock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 10}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 180}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 380}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 4}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Underground", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_underground, helper_name="brink_terminal_oldhead_underground", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 250}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Dock", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_dock, helper_name="brink_terminal_oldhead_dock", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 320}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Planet Plaza", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 220}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Underground -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 180}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Dock -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 180}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Planet Plaza -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 180}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Planet Plaza -> Brink Terminal - Tower", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_tower, helper_name="brink_terminal_tower", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 280}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Tower -> Brink Terminal", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance", body_data={'type': 'and', 'conditions': [{'type': 'group_check', 'group': 'girl'}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 180}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Tower -> Brink Terminal - Planet Plaza", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 220}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Mall - Hanging Lights", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling, helper_name="millennium_mall_oldhead_ceiling", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 580}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 491}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 78}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Mall - Atrium", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 72}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Hanging Lights -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 380}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 380}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall - Race Track", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_race, helper_name="millennium_mall_oldhead_race", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 530}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall - Theater", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_theater, helper_name="millennium_mall_theater", args=(0,), body_data={'params': ['limit'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 491}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 78}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Race Track -> Millennium Mall - Atrium", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 72}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Theater -> Millennium Mall - Atrium", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 72}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Theater -> Millennium Mall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 380}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Base -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Base -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 620}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 4}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Maze", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_oldhead, helper_name="pyramid_island_oldhead", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 780}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Upper Areas", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 660}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 88}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 660}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Maze -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 620}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 4}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 620}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - Top", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_top, helper_name="pyramid_island_top", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Base", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 4}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - After Gate", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 620}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Upper Areas", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 660}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 88}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 660}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mataan - Streets -> Hideout", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Streets -> Millennium Square", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Streets -> Mataan - After Smoke Wall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 850}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - After Smoke Wall -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - After Smoke Wall -> Mataan - Deep City", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 108}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 98}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - After Smoke Wall", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 850}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - Red Light District", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_oldhead, helper_name="mataan_oldhead", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 935}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - Lion Statue", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall2, helper_name="mataan_smoke_wall2", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Red Light District -> Mataan - Deep City", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 108}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 98}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Lion Statue -> Mataan - Deep City", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 108}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 98}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Lion Statue -> Mataan - Skyscrapers", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 122}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 117}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Skyscrapers -> Mataan - Streets", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance", body_data={'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}})
+        True_()
     )
     # Location rules
     world.set_rule(
@@ -982,316 +2244,871 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Hideout: Half pipe CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Garage tower CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Rooftop CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Under staircase graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Secret area graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Rear studio graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Corner ledge graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hideout: Upper platform skateboard", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Hideout: BMX garage skateboard", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Unlock phone app", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Vinyl joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Solace joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Main street Robo Post graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Behind glass graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Office room graffiti", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: BMX gate outfit", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Big Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Trash Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Under bridge graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Train rail ledge skateboard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Train station CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Billboard platform outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Hilltop Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Hill secret skateboard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Rooftop CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Wallrunning challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge1, helper_name="versum_hill_challenge1", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 50}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Manual challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge2, helper_name="versum_hill_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 58}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Corner challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge3, helper_name="versum_hill_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 65}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Glass floor skates", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Frank joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Underground mall billboard graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Underground mall vending machine skateboard", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Rave joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rave, helper_name="versum_hill_rave", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 4}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 90}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 51}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 3}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 89}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 51}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 85}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 48}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 26}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 10}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Fruit stand Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Side street alley outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Side street secret skateboard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Basketball court alley skateboard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Versum Hill: Basketball court Robo Post CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Basketball court shortcut CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Rietveld joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rietveld, helper_name="versum_hill_rietveld", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 2}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 67}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Complete Chapter 1", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_crew_battle, helper_name="versum_hill_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 90}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 98}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 90}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 27}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Center ramp graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Rooftop staircase graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Toilet graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Trash graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Center tower graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Rooftop billboard graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Center Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Parking garage Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Mall ledge outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Alley rooftop outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Alley staircase skateboard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Secret painting skates", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Vending machine skates", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Walkway roof skates", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: Alley ledge skates", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Square: DJ Cyber joins the crew", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Square: Half pipe Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Upside grind challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge1, helper_name="brink_terminal_challenge1", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 188}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Manual challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge2, helper_name="brink_terminal_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 200}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge3, helper_name="brink_terminal_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 220}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Under square ledge graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Bus graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Under square Robo Post graffiti", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: BMX gate graffiti", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Square tower CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Trash CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Shop roof outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Glass roof skates", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Eclipse joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(3,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Behind glass Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Underground glass skates", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Underground ramp skates", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh's skateboard", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 45}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 67}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 45}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Ocean platform CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: End of dock CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Dock Robo Post outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Control room skates", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 45}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 67}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 45}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Wire grind CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Rooftop halfpipe graffiti", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Rooftop glass CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: Tower core outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Brink Terminal: High rooftop outfit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Complete Chapter 2", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_crew_battle, helper_name="brink_terminal_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 280}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 103}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 280}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 62}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Warehouse pallet graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Wall alcove graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Maintenance shaft CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Glass cylinder CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Lower Robo Post outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Hanging lights CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Atrium vending machine graffiti", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Trick challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge1, helper_name="millennium_mall_challenge1", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 434}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Slide challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge2, helper_name="millennium_mall_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 442}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Fish challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge3, helper_name="millennium_mall_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 450}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge4, helper_name="millennium_mall_challenge4", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 458}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Atrium top floor Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Atrium top floor floating CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Atrium top floor BMX", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Theater entrance BMX", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Atrium BMX gate BMX", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Upside down rail outfit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: DOT.EXE joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Race track Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Theater stage corner graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Theater hanging billboards graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Theater garage graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Millennium Mall: Theater maintenance CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Shine joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Complete Chapter 3", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_crew_battle, helper_name="millennium_mall_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 491}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 114}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 107}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 491}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 78}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 80}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Lower rooftop graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Polo graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Above entrance graffiti", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: BMX gate BMX", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'bmx'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 1", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 2", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 3", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 4", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Quarter pipe rooftop graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Supply port Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Above gate ledge CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Smoke hole BMX", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Above gate rail outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Rail loop outfit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge1, helper_name="pyramid_island_challenge1", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 630}}, {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 4}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Score challenge 2 reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge2, helper_name="pyramid_island_challenge2", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 650}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Quarter pipe challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge3, helper_name="pyramid_island_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 660}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze outfit", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_skateboard, helper_name="skateboard", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skateboard'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze glass Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze classroom Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze vent Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Big maze Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze desk Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze forklift Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Wind turbines CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Shortcut glass CD", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,), body_data={'params': ['movestyle'], 'body': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'movestyle'}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'group_check', 'group': 'skates'}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Turret jump CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Helipad BMX", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Pipe outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Trash outfit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Devil Theory joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,), body_data={'params': ['chapter'], 'body': {'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'chapter'}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Complete Chapter 4", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_crew_battle, helper_name="pyramid_island_crew_battle", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 730}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 108}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 730}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 97}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Pyramid top CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Island: Pyramid top Robo Post CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Rise joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Robo Post graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Secret ledge BMX", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Highway rooftop BMX", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Trash CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Half pipe CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Across bull horns graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Small rooftop graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Trash graffiti", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Trash Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Deep city Robo Post CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Deep city tower CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Race challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge1, helper_name="mataan_challenge1", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 108}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Chapter Completed', 'count': {'type': 'binary_op', 'left': {'type': 'constant', 'value': 5}, 'op': '-', 'right': {'type': 'constant', 'value': 1}}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 864}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitil'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 6}}, 'op': '>=', 'right': {'type': 'constant', 'value': 98}}, 'if_false': {'type': 'group_check', 'group': 'graffitil'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Wallrunning challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge2, helper_name="mataan_challenge2", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Score challenge reward", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge3, helper_name="mataan_challenge3", body_data={'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Deep city vent jump BMX", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Deep city side wires outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Deep city center island outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Red light rail graffiti", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Red light side alley outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Statue hand outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Crane CD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Elephant tower glass outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Helipad outfit", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Vending machine CD", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Coil joins the crew", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 122}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 117}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Flesh Prince joins the crew", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mataan: Futurism joins the crew", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Shopping Polo", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera", body_data={'type': 'item_check', 'item': 'Camera App'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Defeat Faux", player),
-        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_faux, helper_name="mataan_faux", args=(0, 0,), body_data={'params': ['limit', 'glitched'], 'body': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 122}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'name', 'name': 'glitched'}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 59}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 880}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 920}}]}, {'type': 'item_check', 'item': 'rep', 'count': {'type': 'constant', 'value': 960}}]}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 117}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitixl'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 4}}, 'op': '>=', 'right': {'type': 'constant', 'value': 57}}, 'if_false': {'type': 'group_check', 'group': 'graffitixl'}}]}}, {'type': 'conditional', 'test': {'type': 'name', 'name': 'limit'}, 'if_true': {'type': 'compare', 'left': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count_group_unique', 'args': [{'type': 'constant', 'value': 'graffitim'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 7}}, 'op': '>=', 'right': {'type': 'constant', 'value': 122}}, 'if_false': {'type': 'group_check', 'group': 'graffitim'}}]}})
+        True_()
     )

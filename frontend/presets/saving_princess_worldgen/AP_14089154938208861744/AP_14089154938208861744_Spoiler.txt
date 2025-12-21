@@ -65,40 +65,32 @@ Playthrough:
 
 }
 1: {
-  Cave: After Wallboss: Clip Extension
-  Cave: Spike pit: Powered Blaster
-  Cave: Wallboss (Boss): Faster Reload
-  Hub: Console login: Clip Extension
-  Hub: Hidden near Cave: Swamp Key
-  Hub: Hidden near Swamp: Faster Reload
-}
-2: {
+  Arctic: Ace (Boss): Life Extension
   Arctic: After Guard: Arctic Key
   Arctic: Before pipes: System Power
+  Arctic: Ice Spreadshot chest: Faster Reload
+  Arctic: Under snow: Faster Reload
+  Cave: After Wallboss: Clip Extension
   Cave: Guard (Boss): Clip Extension
   Cave: Powered Blaster chest: Volcanic Key
-  Hub: Hidden near Arctic: Faster Reload
-  Swamp: Down the chimney: Ice Spreadshot
-  Swamp: Wall maze: Clip Extension
-  Volcanic: Under bridge: Life Extension
-}
-3: {
-  Arctic: Ace (Boss): Life Extension
-  Arctic: Ice Spreadshot chest: Faster Reload
-  Swamp: Special Extension chest: Life Extension
-  Volcanic: Cliff (Boss): Clip Extension
-  Volcanic: Flamethrower chest: Cave Key
-  Volcanic: Hot coals: Flamethrower
-}
-4: {
-  Arctic: Under snow: Faster Reload
+  Cave: Spike pit: Powered Blaster
+  Cave: Wallboss (Boss): Faster Reload
+  Electrical: BRAINOS (Boss): Life Extension
   Electrical: Before Malakhov: Faster Reload
   Electrical: Behind wall: Clip Extension
   Electrical: Volt Laser chest: Life Extension
+  Hub: Console login: Clip Extension
+  Hub: Hidden near Arctic: Faster Reload
+  Hub: Hidden near Cave: Swamp Key
+  Hub: Hidden near Swamp: Faster Reload
   Hub: Ninja scare (Boss?): Life Extension
-  Swamp: Bramble room: Volt Laser
-}
-5: {
-  Electrical: BRAINOS (Boss): Life Extension
   Mission objective: PRINCESS
+  Swamp: Bramble room: Volt Laser
+  Swamp: Down the chimney: Ice Spreadshot
+  Swamp: Special Extension chest: Life Extension
+  Swamp: Wall maze: Clip Extension
+  Volcanic: Cliff (Boss): Clip Extension
+  Volcanic: Flamethrower chest: Cave Key
+  Volcanic: Hot coals: Flamethrower
+  Volcanic: Under bridge: Life Extension
 }

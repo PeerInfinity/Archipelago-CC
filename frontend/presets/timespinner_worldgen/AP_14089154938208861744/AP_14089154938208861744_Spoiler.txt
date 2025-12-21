@@ -213,49 +213,35 @@ Playthrough:
 
 }
 1: {
-  Lake Desolation: Starter chest 1: Celestial Sash
-  Tutorial: Yo Momma 2: Infernal Flames
-}
-2: {
-  Library: Backer room chest 4: Security Keycard A
-}
-3: {
-  Sealed Caves (Xarion): Jacksquat room: Elevator Keycard
-  Sealed Caves (Xarion): Xarion: Lightwall
-  Varndagroth Towers (Right): Air vents left chest: Plasma Orb
-  Varndagroth Towers: Bridge: Pyro Ring
-}
-4: {
-  Varndagroth Towers (Right): Spider Hell: Twin Pyramid Key
-}
-5: {
+  Ancient Pyramid: Nightmare Door chest: Fire Orb
+  Ancient Pyramid: Regret chest: Security Keycard D
+  Ancient Pyramid: Why not it's right there: Djinn Inferno
   Castle Basement: Giantess guarded chest: Security Keycard C
   Castle Ramparts: Giantess guarded room: Timespinner Spindle
   Castle Ramparts: Knight and archer guarded room: Timespinner Wheel
   Castle Ramparts: Pedestal: Gas Mask
-  Killed Aelana: Killed Aelana
-  Killed Twins: Killed Twins
-  Lake Desolation (Upper): Double jump cave platform: Plasma Geyser
-  Lake Desolation (Upper): Secret room: Water Mask
-  Lake Serene: Behind the vines: Talaria Attachment
-  Royal Towers: Before Aelana: Succubus Hairpin
-}
-6: {
   Caves of Banishment (Maw): Last chance before Maw: Timespinner Gear 1
   Caves of Banishment (Sirens): Siren room underwater left chest: Tablet
   Forest: Waterfall chest 1: Timespinner Gear 3
-  Killed Maw: Killed Maw
-  Sealed Caves (Sirens): Water hook: Timespinner Gear 2
-}
-7: {
-  Ancient Pyramid: Nightmare Door chest: Fire Orb
-  Ancient Pyramid: Regret chest: Security Keycard D
-  Ancient Pyramid: Why not it's right there: Djinn Inferno
+  Killed Aelana: Killed Aelana
   Killed Emperor: Killed Emperor
+  Killed Maw: Killed Maw
   Killed Nightmare: Killed Nightmare
+  Killed Twins: Killed Twins
   Lab: Left terminal (Biotechnology): Royal Ring
   Lake Desolation (Upper): Crash site chest 1: Library Keycard V
-}
-8: {
+  Lake Desolation (Upper): Double jump cave platform: Plasma Geyser
+  Lake Desolation (Upper): Secret room: Water Mask
+  Lake Desolation: Starter chest 1: Celestial Sash
+  Lake Serene: Behind the vines: Talaria Attachment
+  Library: Backer room chest 4: Security Keycard A
   Library: V terminal 2 (Lake Desolation Map): Security Keycard B
+  Royal Towers: Before Aelana: Succubus Hairpin
+  Sealed Caves (Sirens): Water hook: Timespinner Gear 2
+  Sealed Caves (Xarion): Jacksquat room: Elevator Keycard
+  Sealed Caves (Xarion): Xarion: Lightwall
+  Tutorial: Yo Momma 2: Infernal Flames
+  Varndagroth Towers (Right): Air vents left chest: Plasma Orb
+  Varndagroth Towers (Right): Spider Hell: Twin Pyramid Key
+  Varndagroth Towers: Bridge: Pyro Ring
 }

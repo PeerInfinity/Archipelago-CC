@@ -19,297 +19,363 @@
             "name": "Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern",
             "connected_region": "Dragon Roost Cavern",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_dungeon_entrance_on_dragon_roost_island",
-              "args": []
+              "rule": "can_access_dungeon_entrance_on_dragon_roost_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Dungeon Entrance in Forest Haven Sector -> Forbidden Woods",
             "connected_region": "Forbidden Woods",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_dungeon_entrance_in_forest_haven_sector",
-              "args": []
+              "rule": "can_access_dungeon_entrance_in_forest_haven_sector",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods",
             "connected_region": "Tower of the Gods",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_dungeon_entrance_in_tower_of_the_gods_sector",
-              "args": []
+              "rule": "can_access_dungeon_entrance_in_tower_of_the_gods_sector",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Dungeon Entrance on Headstone Island -> Earth Temple",
             "connected_region": "Earth Temple",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_dungeon_entrance_on_headstone_island",
-              "args": []
+              "rule": "can_access_dungeon_entrance_on_headstone_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Dungeon Entrance on Gale Isle -> Wind Temple",
             "connected_region": "Wind Temple",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_dungeon_entrance_on_gale_isle",
-              "args": []
+              "rule": "can_access_dungeon_entrance_on_gale_isle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Miniboss Entrance in Hyrule Castle -> Master Sword Chamber",
             "connected_region": "Master Sword Chamber",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_miniboss_entrance_in_hyrule_castle",
-              "args": []
+              "rule": "can_access_miniboss_entrance_in_hyrule_castle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena",
             "connected_region": "Helmaroc King Boss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_boss_entrance_in_forsaken_fortress",
-              "args": []
+              "rule": "can_access_boss_entrance_in_forsaken_fortress",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Outset Island -> Savage Labyrinth",
             "connected_region": "Savage Labyrinth",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_outset_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_outset_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Dragon Roost Island -> Dragon Roost Island Secret Cave",
             "connected_region": "Dragon Roost Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_dragon_roost_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_dragon_roost_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Fire Mountain -> Fire Mountain Secret Cave",
             "connected_region": "Fire Mountain Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_fire_mountain",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_fire_mountain",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Ice Ring Isle -> Ice Ring Isle Secret Cave",
             "connected_region": "Ice Ring Isle Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_ice_ring_isle",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_ice_ring_isle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Private Oasis -> Cabana Labyrinth",
             "connected_region": "Cabana Labyrinth",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_private_oasis",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_private_oasis",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Needle Rock Isle -> Needle Rock Isle Secret Cave",
             "connected_region": "Needle Rock Isle Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_needle_rock_isle",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_needle_rock_isle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave",
             "connected_region": "Angular Isles Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_angular_isles",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_angular_isles",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Boating Course -> Boating Course Secret Cave",
             "connected_region": "Boating Course Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_boating_course",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_boating_course",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave",
             "connected_region": "Stone Watcher Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_stone_watcher_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_stone_watcher_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave",
             "connected_region": "Overlook Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_overlook_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_overlook_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave",
             "connected_region": "Bird's Peak Rock Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_birds_peak_rock",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_birds_peak_rock",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave",
             "connected_region": "Pawprint Isle Chuchu Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_pawprint_isle",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_pawprint_isle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave",
             "connected_region": "Pawprint Isle Wizzrobe Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_pawprint_isle_side_isle",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_pawprint_isle_side_isle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave",
             "connected_region": "Diamond Steppe Island Warp Maze Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_diamond_steppe_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_diamond_steppe_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Bomb Island -> Bomb Island Secret Cave",
             "connected_region": "Bomb Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_bomb_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_bomb_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave",
             "connected_region": "Rock Spire Isle Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_rock_spire_isle",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_rock_spire_isle",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Shark Island -> Shark Island Secret Cave",
             "connected_region": "Shark Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_shark_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_shark_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave",
             "connected_region": "Cliff Plateau Isles Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_cliff_plateau_isles",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_cliff_plateau_isles",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Horseshoe Island -> Horseshoe Island Secret Cave",
             "connected_region": "Horseshoe Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_horseshoe_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_horseshoe_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Secret Cave Entrance on Star Island -> Star Island Secret Cave",
             "connected_region": "Star Island Secret Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_secret_cave_entrance_on_star_island",
-              "args": []
+              "rule": "can_access_secret_cave_entrance_on_star_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain",
             "connected_region": "Outset Fairy Fountain",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_fairy_fountain_entrance_on_outset_island",
-              "args": []
+              "rule": "can_access_fairy_fountain_entrance_on_outset_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain",
             "connected_region": "Thorned Fairy Fountain",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_fairy_fountain_entrance_on_thorned_fairy_island",
-              "args": []
+              "rule": "can_access_fairy_fountain_entrance_on_thorned_fairy_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Eastern Fairy Island -> Eastern Fairy Fountain",
             "connected_region": "Eastern Fairy Fountain",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_fairy_fountain_entrance_on_eastern_fairy_island",
-              "args": []
+              "rule": "can_access_fairy_fountain_entrance_on_eastern_fairy_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain",
             "connected_region": "Western Fairy Fountain",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_fairy_fountain_entrance_on_western_fairy_island",
-              "args": []
+              "rule": "can_access_fairy_fountain_entrance_on_western_fairy_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain",
             "connected_region": "Southern Fairy Fountain",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_fairy_fountain_entrance_on_southern_fairy_island",
-              "args": []
+              "rule": "can_access_fairy_fountain_entrance_on_southern_fairy_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain",
             "connected_region": "Northern Fairy Fountain",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_fairy_fountain_entrance_on_northern_fairy_island",
-              "args": []
+              "rule": "can_access_fairy_fountain_entrance_on_northern_fairy_island",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -318,9 +384,11 @@
             "name": "Defeat Ganondorf",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_and_defeat_ganondorf",
-              "args": []
+              "rule": "can_reach_and_defeat_ganondorf",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Victory",
@@ -334,9 +402,11 @@
             "name": "Forsaken Fortress - Chest Guarded By Bokoblin",
             "id": 2326645,
             "access_rule": {
-              "type": "helper",
-              "name": "can_get_inside_forsaken_fortress",
-              "args": []
+              "rule": "can_get_inside_forsaken_fortress",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "FF Dungeon Map",
@@ -350,9 +420,11 @@
             "name": "Forsaken Fortress - Chest Inside Lower Jail Cell",
             "id": 2326644,
             "access_rule": {
-              "type": "helper",
-              "name": "can_get_inside_forsaken_fortress",
-              "args": []
+              "rule": "can_get_inside_forsaken_fortress",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Triforce Shard 2",
@@ -366,28 +438,42 @@
             "name": "Forsaken Fortress - Chest Outside Upper Jail Cell",
             "id": 2326643,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_get_inside_forsaken_fortress",
-                  "args": []
+                  "rule": "can_get_inside_forsaken_fortress",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_indoors",
-                      "args": []
+                      "rule": "can_fly_with_deku_leaf_indoors",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "setting_value",
-                      "setting": "logic_obscure_1"
+                      "rule": "AST_setting_value",
+                      "options": [],
+                      "args": {
+                        "setting": "logic_obscure_1",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Hookshot"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Hookshot"
+                      }
                     }
                   ]
                 }
@@ -405,9 +491,11 @@
             "name": "Forsaken Fortress - Chest on Bed",
             "id": 2326646,
             "access_rule": {
-              "type": "helper",
-              "name": "can_get_inside_forsaken_fortress",
-              "args": []
+              "rule": "can_get_inside_forsaken_fortress",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Orange Rupee",
@@ -421,9 +509,11 @@
             "name": "Forsaken Fortress - Phantom Ganon",
             "id": 2326642,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_and_defeat_phantom_ganon",
-              "args": []
+              "rule": "can_reach_and_defeat_phantom_ganon",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Orange Rupee",
@@ -437,17 +527,22 @@
             "name": "Ganon's Tower - Maze Chest",
             "id": 2326692,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_phantom_ganon",
-                  "args": []
+                  "rule": "can_defeat_phantom_ganon",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_ganons_tower_phantom_ganon_room",
-                  "args": []
+                  "rule": "can_reach_ganons_tower_phantom_ganon_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -463,14 +558,11 @@
             "name": "Outset Island - Great Fairy",
             "id": 2326532,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outset Fairy Fountain"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Outset Fairy Fountain"
+              }
             },
             "item": {
               "name": "Hero's Charm",
@@ -484,9 +576,11 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item",
             "id": 2326758,
             "access_rule": {
-              "type": "helper",
-              "name": "has_any_wallet_upgrade",
-              "args": []
+              "rule": "has_any_wallet_upgrade",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Bomb Bag Capacity Upgrade",
@@ -500,9 +594,11 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
             "id": 2326760,
             "access_rule": {
-              "type": "helper",
-              "name": "has_any_wallet_upgrade",
-              "args": []
+              "rule": "has_any_wallet_upgrade",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Progressive Shield",
@@ -516,9 +612,11 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item",
             "id": 2326759,
             "access_rule": {
-              "type": "helper",
-              "name": "has_any_wallet_upgrade",
-              "args": []
+              "rule": "has_any_wallet_upgrade",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Orange Rupee",
@@ -532,8 +630,9 @@
             "name": "The Great Sea - Salvage Corp Gift",
             "id": 2326706,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Silver Rupee",
@@ -547,8 +646,9 @@
             "name": "Windfall Island - Jail - Tingle - First Gift",
             "id": 2326537,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wind Waker",
@@ -562,8 +662,9 @@
             "name": "Windfall Island - Jail - Tingle - Second Gift",
             "id": 2326538,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Piece of Heart",
@@ -577,8 +678,9 @@
             "name": "Windfall Island - Maggie - Free Item",
             "id": 2326553,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Triforce Shard 8",
@@ -592,8 +694,11 @@
             "name": "Windfall Island - Tott - Teach Rhythm",
             "id": 2326558,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wind Waker"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wind Waker"
+              }
             },
             "item": {
               "name": "Magic Armor",
@@ -612,9 +717,11 @@
             "name": "Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena",
             "connected_region": "Gohma Boss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_boss_entrance_in_dragon_roost_cavern",
-              "args": []
+              "rule": "can_access_boss_entrance_in_dragon_roost_cavern",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -623,11 +730,10 @@
             "name": "Dragon Roost Cavern - Alcove With Water Jugs",
             "id": 2326585,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 1
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key"
               }
             },
             "item": {
@@ -642,21 +748,29 @@
             "name": "Dragon Roost Cavern - Big Key Chest",
             "id": 2326599,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_dragon_roost_cavern_gaping_maw",
-                  "args": []
+                  "rule": "can_reach_dragon_roost_cavern_gaping_maw",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_stun_magtails",
-                  "args": []
+                  "rule": "can_stun_magtails",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Grappling Hook"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Grappling Hook"
+                  }
                 }
               ]
             },
@@ -672,11 +786,11 @@
             "name": "Dragon Roost Cavern - Bird's Nest",
             "id": 2326591,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key",
+                "count": 3
               }
             },
             "item": {
@@ -691,11 +805,10 @@
             "name": "Dragon Roost Cavern - Boarded Up Chest",
             "id": 2326587,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 1
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key"
               }
             },
             "item": {
@@ -710,9 +823,11 @@
             "name": "Dragon Roost Cavern - Boss Stairs Left Chest",
             "id": 2326601,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_dragon_roost_cavern_boss_stairs",
-              "args": []
+              "rule": "can_reach_dragon_roost_cavern_boss_stairs",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "DRC Dungeon Map",
@@ -726,9 +841,11 @@
             "name": "Dragon Roost Cavern - Boss Stairs Right Chest",
             "id": 2326600,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_dragon_roost_cavern_boss_stairs",
-              "args": []
+              "rule": "can_reach_dragon_roost_cavern_boss_stairs",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Deku Leaf",
@@ -742,41 +859,57 @@
             "name": "Dragon Roost Cavern - Chest Across Lava Pit",
             "id": 2326588,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "setting_value",
-                          "setting": "logic_obscure_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_obscure_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "item_check",
-                          "item": "Hookshot"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Hookshot"
+                          }
                         }
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_indoors",
-                      "args": []
+                      "rule": "can_fly_with_deku_leaf_indoors",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Grappling Hook"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "DRC Small Key",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "DRC Small Key",
+                    "count": 2
                   }
                 }
               ]
@@ -793,11 +926,11 @@
             "name": "Dragon Roost Cavern - Dark Room",
             "id": 2326592,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 4
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key",
+                "count": 4
               }
             },
             "item": {
@@ -812,8 +945,9 @@
             "name": "Dragon Roost Cavern - First Room",
             "id": 2326584,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "DRC Small Key",
@@ -827,11 +961,11 @@
             "name": "Dragon Roost Cavern - Miniboss",
             "id": 2326596,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 4
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key",
+                "count": 4
               }
             },
             "item": {
@@ -846,11 +980,11 @@
             "name": "Dragon Roost Cavern - Pot Room Chest",
             "id": 2326595,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 4
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key",
+                "count": 4
               }
             },
             "item": {
@@ -865,11 +999,11 @@
             "name": "Dragon Roost Cavern - Rat Room",
             "id": 2326589,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 2
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key",
+                "count": 2
               }
             },
             "item": {
@@ -884,11 +1018,11 @@
             "name": "Dragon Roost Cavern - Rat Room Boarded Up Chest",
             "id": 2326590,
             "access_rule": {
-              "type": "item_check",
-              "item": "DRC Small Key",
-              "count": {
-                "type": "constant",
-                "value": 2
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DRC Small Key",
+                "count": 2
               }
             },
             "item": {
@@ -903,28 +1037,35 @@
             "name": "Dragon Roost Cavern - Under Rope Bridge",
             "id": 2326597,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_outdoors",
-                      "args": []
+                      "rule": "can_fly_with_deku_leaf_outdoors",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Grappling Hook"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "DRC Small Key",
-                  "count": {
-                    "type": "constant",
-                    "value": 4
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "DRC Small Key",
+                    "count": 4
                   }
                 }
               ]
@@ -946,18 +1087,22 @@
             "name": "Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena",
             "connected_region": "Forbidden Woods Miniboss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_miniboss_entrance_in_forbidden_woods",
-              "args": []
+              "rule": "can_access_miniboss_entrance_in_forbidden_woods",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena",
             "connected_region": "Kalle Demos Boss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_boss_entrance_in_forbidden_woods",
-              "args": []
+              "rule": "can_access_boss_entrance_in_forbidden_woods",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -966,30 +1111,32 @@
             "name": "Forbidden Woods - Big Key Chest",
             "id": 2326621,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Boomerang",
-                        "Grappling Hook"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Boomerang",
+                      "Grappling Hook"
+                    ]
+                  }
                 }
               ]
             },
@@ -1005,30 +1152,32 @@
             "name": "Forbidden Woods - Chest Across Red Hanging Flower",
             "id": 2326618,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Boomerang",
-                        "Grappling Hook"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Boomerang",
+                      "Grappling Hook"
+                    ]
+                  }
                 }
               ]
             },
@@ -1044,30 +1193,32 @@
             "name": "Forbidden Woods - Chest in Locked Tree Trunk",
             "id": 2326620,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Boomerang",
-                        "Grappling Hook"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Boomerang",
+                      "Grappling Hook"
+                    ]
+                  }
                 }
               ]
             },
@@ -1083,17 +1234,22 @@
             "name": "Forbidden Woods - Climb to Top Using Boko Baba Bulbs",
             "id": 2326608,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_door_flowers",
-                  "args": []
+                  "rule": "can_defeat_door_flowers",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -1109,34 +1265,47 @@
             "name": "Forbidden Woods - Double Mothula Room",
             "id": 2326622,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_mothulas",
-                  "args": []
+                  "rule": "can_defeat_mothulas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_defeat_door_flowers",
-                      "args": []
+                      "rule": "can_defeat_door_flowers",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Grappling Hook"
+                      }
                     }
                   ]
                 }
@@ -1154,8 +1323,9 @@
             "name": "Forbidden Woods - First Room",
             "id": 2326606,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Skull Hammer",
@@ -1169,17 +1339,22 @@
             "name": "Forbidden Woods - Hole in Tree",
             "id": 2326610,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -1195,17 +1370,22 @@
             "name": "Forbidden Woods - Inside Hollow Tree's Mouth",
             "id": 2326607,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_door_flowers",
-                  "args": []
+                  "rule": "can_defeat_door_flowers",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -1221,21 +1401,29 @@
             "name": "Forbidden Woods - Morth Pit",
             "id": 2326611,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Grappling Hook"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Grappling Hook"
+                  }
                 }
               ]
             },
@@ -1251,49 +1439,61 @@
             "name": "Forbidden Woods - Past Seeds Hanging by Vines",
             "id": 2326617,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_door_flowers",
-                  "args": []
+                  "rule": "can_defeat_door_flowers",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_destroy_seeds_hanging_by_vines",
-                      "args": []
+                      "rule": "can_destroy_seeds_hanging_by_vines",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "setting_value",
-                      "setting": "logic_precise_1"
+                      "rule": "AST_setting_value",
+                      "options": [],
+                      "args": {
+                        "setting": "logic_precise_1",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_cc": true
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "FW Small Key",
-                        "Grappling Hook"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "FW Small Key",
+                      "Grappling Hook"
+                    ]
+                  }
                 }
               ]
             },
@@ -1309,44 +1509,54 @@
             "name": "Forbidden Woods - Tall Room Before Miniboss",
             "id": 2326615,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_defeat_peahats",
-                      "args": []
+                      "rule": "can_defeat_peahats",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "setting_value",
-                      "setting": "logic_precise_2"
+                      "rule": "AST_setting_value",
+                      "options": [],
+                      "args": {
+                        "setting": "logic_precise_2",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_cc": true
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "FW Small Key",
-                        "Grappling Hook"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "FW Small Key",
+                      "Grappling Hook"
+                    ]
+                  }
                 }
               ]
             },
@@ -1362,21 +1572,29 @@
             "name": "Forbidden Woods - Vine Maze Left Chest",
             "id": 2326612,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Grappling Hook"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Grappling Hook"
+                  }
                 }
               ]
             },
@@ -1392,21 +1610,29 @@
             "name": "Forbidden Woods - Vine Maze Right Chest",
             "id": 2326613,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
+                  "rule": "can_fly_with_deku_leaf_indoors",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Grappling Hook"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Grappling Hook"
+                  }
                 }
               ]
             },
@@ -1427,18 +1653,22 @@
             "name": "Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena",
             "connected_region": "Tower of the Gods Miniboss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_miniboss_entrance_in_tower_of_the_gods",
-              "args": []
+              "rule": "can_access_miniboss_entrance_in_tower_of_the_gods",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Boss Entrance in Tower of the Gods -> Gohdan Boss Arena",
             "connected_region": "Gohdan Boss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_boss_entrance_in_tower_of_the_gods",
-              "args": []
+              "rule": "can_access_boss_entrance_in_tower_of_the_gods",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -1447,9 +1677,11 @@
             "name": "Tower of the Gods - Big Key Chest",
             "id": 2326639,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_tower_of_the_gods_third_floor",
-              "args": []
+              "rule": "can_reach_tower_of_the_gods_third_floor",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Empty Bottle",
@@ -1463,8 +1695,11 @@
             "name": "Tower of the Gods - Chest Behind Bombable Walls",
             "id": 2326625,
             "access_rule": {
-              "type": "item_check",
-              "item": "Bombs"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bombs"
+              }
             },
             "item": {
               "name": "Heart Container",
@@ -1478,17 +1713,22 @@
             "name": "Tower of the Gods - First Chest Guarded by Armos Knights",
             "id": 2326632,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_second_floor",
-                  "args": []
+                  "rule": "can_reach_tower_of_the_gods_second_floor",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "has_heros_bow",
-                  "args": []
+                  "rule": "has_heros_bow",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -1504,47 +1744,70 @@
             "name": "Tower of the Gods - Floating Platforms Room",
             "id": 2326636,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_second_floor",
-                  "args": []
+                  "rule": "can_reach_tower_of_the_gods_second_floor",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_indoors",
-                          "args": []
+                          "rule": "can_fly_with_deku_leaf_indoors",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "logic_precise_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_precise_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         }
                       ]
                     },
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "setting_value",
-                          "setting": "logic_obscure_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_obscure_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "item_check",
-                          "item": "Hookshot"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Hookshot"
+                          }
                         }
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_heros_bow",
-                      "args": []
+                      "rule": "has_heros_bow",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 }
@@ -1562,8 +1825,9 @@
             "name": "Tower of the Gods - Hop Across Floating Boxes",
             "id": 2326627,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Orange Rupee",
@@ -1577,8 +1841,11 @@
             "name": "Tower of the Gods - Light Two Torches",
             "id": 2326628,
             "access_rule": {
-              "type": "item_check",
-              "item": "Bombs"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bombs"
+              }
             },
             "item": {
               "name": "TotG Dungeon Map",
@@ -1592,21 +1859,29 @@
             "name": "Tower of the Gods - Second Chest Guarded by Armos Knights",
             "id": 2326635,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_play_winds_requiem",
-                  "args": []
+                  "rule": "can_play_winds_requiem",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_second_floor",
-                  "args": []
+                  "rule": "can_reach_tower_of_the_gods_second_floor",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Bombs"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Bombs"
+                  }
                 }
               ]
             },
@@ -1622,16 +1897,22 @@
             "name": "Tower of the Gods - Shoot Eye Above Skulls Room Chest",
             "id": 2326630,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "has_heros_bow",
-                  "args": []
+                  "rule": "has_heros_bow",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Bombs"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Bombs"
+                  }
                 }
               ]
             },
@@ -1647,8 +1928,11 @@
             "name": "Tower of the Gods - Skulls Room Chest",
             "id": 2326629,
             "access_rule": {
-              "type": "item_check",
-              "item": "Bombs"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bombs"
+              }
             },
             "item": {
               "name": "TotG Small Key",
@@ -1662,16 +1946,22 @@
             "name": "Tower of the Gods - Stone Tablet",
             "id": 2326633,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_second_floor",
-                  "args": []
+                  "rule": "can_reach_tower_of_the_gods_second_floor",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Wind Waker"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Wind Waker"
+                  }
                 }
               ]
             },
@@ -1687,17 +1977,22 @@
             "name": "Tower of the Gods - Top of Floating Platforms Room",
             "id": 2326637,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_second_floor",
-                  "args": []
+                  "rule": "can_reach_tower_of_the_gods_second_floor",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "has_heros_bow",
-                  "args": []
+                  "rule": "has_heros_bow",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -1718,18 +2013,22 @@
             "name": "Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena",
             "connected_region": "Earth Temple Miniboss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_miniboss_entrance_in_earth_temple",
-              "args": []
+              "rule": "can_access_miniboss_entrance_in_earth_temple",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Boss Entrance in Earth Temple -> Jalhalla Boss Arena",
             "connected_region": "Jalhalla Boss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_boss_entrance_in_earth_temple",
-              "args": []
+              "rule": "can_access_boss_entrance_in_earth_temple",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -1738,87 +2037,129 @@
             "name": "Earth Temple - Big Key Chest",
             "id": 2326674,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_aim_mirror_shield",
-                  "args": []
+                  "rule": "can_aim_mirror_shield",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_darknuts",
-                  "args": []
+                  "rule": "can_defeat_darknuts",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_play_command_melody",
-                  "args": []
+                  "rule": "can_play_command_melody",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_many_mirrors_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_many_mirrors_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "helper",
-                          "name": "has_heros_bow",
-                          "args": []
+                          "rule": "has_heros_bow",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "logic_obscure_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_obscure_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         }
                       ]
                     },
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "or",
-                          "conditions": [
+                          "rule": "Or",
+                          "options": [],
+                          "children": [
                             {
-                              "type": "helper",
-                              "name": "has_any_master_sword",
-                              "args": []
+                              "rule": "has_any_master_sword",
+                              "options": [],
+                              "args": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true
                             },
                             {
-                              "type": "helper",
-                              "name": "has_heros_sword",
-                              "args": []
+                              "rule": "has_heros_sword",
+                              "options": [],
+                              "args": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true
                             },
                             {
-                              "type": "item_check",
-                              "item": "Skull Hammer"
+                              "rule": "Has",
+                              "options": [],
+                              "args": {
+                                "item_name": "Skull Hammer"
+                              }
                             }
                           ]
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "logic_obscure_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_obscure_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "logic_precise_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_precise_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         }
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "can_defeat_blue_bubbles",
-                      "args": []
+                      "rule": "can_defeat_blue_bubbles",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Power Bracelets"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Bracelets"
+                  }
                 }
               ]
             },
@@ -1834,9 +2175,11 @@
             "name": "Earth Temple - Casket in Second Crypt",
             "id": 2326664,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_earth_temple_moblins_and_poes_room",
-              "args": []
+              "rule": "can_reach_earth_temple_moblins_and_poes_room",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "ET Dungeon Map",
@@ -1850,17 +2193,22 @@
             "name": "Earth Temple - Chest Behind Destructible Walls",
             "id": 2326661,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_right_path",
-                  "args": []
+                  "rule": "can_reach_earth_temple_right_path",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "has_mirror_shield",
-                  "args": []
+                  "rule": "has_mirror_shield",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -1876,25 +2224,33 @@
             "name": "Earth Temple - Chest Behind Statues",
             "id": 2326663,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_moblins_and_poes_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_moblins_and_poes_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_aim_mirror_shield",
-                      "args": []
+                      "rule": "can_aim_mirror_shield",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_play_command_melody",
-                      "args": []
+                      "rule": "can_play_command_melody",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 }
@@ -1912,41 +2268,56 @@
             "name": "Earth Temple - Chest In Three Blocks Room",
             "id": 2326662,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_floormasters",
-                  "args": []
+                  "rule": "can_defeat_floormasters",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_left_path",
-                  "args": []
+                  "rule": "can_reach_earth_temple_left_path",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "has_fire_arrows",
-                  "args": []
+                  "rule": "has_fire_arrows",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_aim_mirror_shield",
-                      "args": []
+                      "rule": "can_aim_mirror_shield",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_play_command_melody",
-                      "args": []
+                      "rule": "can_play_command_melody",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Power Bracelets"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Bracelets"
+                  }
                 }
               ]
             },
@@ -1962,9 +2333,11 @@
             "name": "Earth Temple - Chest in Third Crypt",
             "id": 2326670,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_earth_temple_third_crypt",
-              "args": []
+              "rule": "can_reach_earth_temple_third_crypt",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Wallet Capacity Upgrade",
@@ -1978,25 +2351,33 @@
             "name": "Earth Temple - End of Foggy Room With Floormasters",
             "id": 2326667,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_redead_hub_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_redead_hub_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_aim_mirror_shield",
-                      "args": []
+                      "rule": "can_aim_mirror_shield",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_play_command_melody",
-                      "args": []
+                      "rule": "can_play_command_melody",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 }
@@ -2014,30 +2395,40 @@
             "name": "Earth Temple - Kill All Floormasters in Foggy Room",
             "id": 2326668,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_floormasters",
-                  "args": []
+                  "rule": "can_defeat_floormasters",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_redead_hub_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_redead_hub_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_aim_mirror_shield",
-                      "args": []
+                      "rule": "can_aim_mirror_shield",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_play_command_melody",
-                      "args": []
+                      "rule": "can_play_command_melody",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 }
@@ -2055,26 +2446,36 @@
             "name": "Earth Temple - Many Mirrors Room Left Chest",
             "id": 2326672,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_aim_mirror_shield",
-                  "args": []
+                  "rule": "can_aim_mirror_shield",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_play_command_melody",
-                  "args": []
+                  "rule": "can_play_command_melody",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_many_mirrors_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_many_mirrors_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Power Bracelets"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Bracelets"
+                  }
                 }
               ]
             },
@@ -2090,17 +2491,22 @@
             "name": "Earth Temple - Many Mirrors Room Right Chest",
             "id": 2326671,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_play_command_melody",
-                  "args": []
+                  "rule": "can_play_command_melody",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_many_mirrors_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_many_mirrors_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -2116,17 +2522,22 @@
             "name": "Earth Temple - Stalfos Crypt Room",
             "id": 2326673,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_stalfos",
-                  "args": []
+                  "rule": "can_defeat_stalfos",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_many_mirrors_room",
-                  "args": []
+                  "rule": "can_reach_earth_temple_many_mirrors_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -2142,9 +2553,11 @@
             "name": "Earth Temple - Transparent Chest In Warp Pot Room",
             "id": 2326658,
             "access_rule": {
-              "type": "helper",
-              "name": "can_play_command_melody",
-              "args": []
+              "rule": "can_play_command_melody",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Hookshot",
@@ -2158,31 +2571,42 @@
             "name": "Earth Temple - Transparent Chest in First Crypt",
             "id": 2326660,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_right_path",
-                  "args": []
+                  "rule": "can_reach_earth_temple_right_path",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_play_command_melody",
-                      "args": []
+                      "rule": "can_play_command_melody",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "helper",
-                      "name": "has_mirror_shield",
-                      "args": []
+                      "rule": "has_mirror_shield",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Power Bracelets"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Power Bracelets"
+                  }
                 }
               ]
             },
@@ -2203,18 +2627,22 @@
             "name": "Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena",
             "connected_region": "Wind Temple Miniboss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_miniboss_entrance_in_wind_temple",
-              "args": []
+              "rule": "can_access_miniboss_entrance_in_wind_temple",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "Boss Entrance in Wind Temple -> Molgera Boss Arena",
             "connected_region": "Molgera Boss Arena",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_boss_entrance_in_wind_temple",
-              "args": []
+              "rule": "can_access_boss_entrance_in_wind_temple",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -2223,31 +2651,43 @@
             "name": "Wind Temple - Big Key Chest",
             "id": 2326681,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_darknuts",
-                  "args": []
+                  "rule": "can_defeat_darknuts",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_fan_with_deku_leaf",
-                  "args": []
+                  "rule": "can_fan_with_deku_leaf",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_play_wind_gods_aria",
-                  "args": []
+                  "rule": "can_play_wind_gods_aria",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_wind_temple_kidnapping_room",
-                  "args": []
+                  "rule": "can_reach_wind_temple_kidnapping_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Iron Boots"
+                  }
                 }
               ]
             },
@@ -2263,17 +2703,22 @@
             "name": "Wind Temple - Chest Behind Seven Armos",
             "id": 2326689,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_activate_wind_temple_giant_fan",
-                  "args": []
+                  "rule": "can_activate_wind_temple_giant_fan",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_armos",
-                  "args": []
+                  "rule": "can_defeat_armos",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -2289,25 +2734,25 @@
             "name": "Wind Temple - Chest Behind Stone Head",
             "id": 2326679,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_wind_temple_kidnapping_room",
-                  "args": []
+                  "rule": "can_reach_wind_temple_kidnapping_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hookshot",
-                        "Iron Boots"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Iron Boots"
+                    ]
+                  }
                 }
               ]
             },
@@ -2323,9 +2768,11 @@
             "name": "Wind Temple - Chest Between Two Dirt Patches",
             "id": 2326676,
             "access_rule": {
-              "type": "helper",
-              "name": "can_play_command_melody",
-              "args": []
+              "rule": "can_play_command_melody",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Delivery Bag",
@@ -2339,88 +2786,129 @@
             "name": "Wind Temple - Chest In Many Cyclones Room",
             "id": 2326682,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_wind_temple_kidnapping_room",
-                  "args": []
+                  "rule": "can_reach_wind_temple_kidnapping_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "helper",
-                          "name": "can_defeat_blue_bubbles",
-                          "args": []
+                          "rule": "can_defeat_blue_bubbles",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_indoors",
-                          "args": []
+                          "rule": "can_fly_with_deku_leaf_indoors",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "item_check",
-                          "item": "Hookshot"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Hookshot"
+                          }
                         }
                       ]
                     },
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "helper",
-                          "name": "can_fan_with_deku_leaf",
-                          "args": []
+                          "rule": "can_fan_with_deku_leaf",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_indoors",
-                          "args": []
+                          "rule": "can_fly_with_deku_leaf_indoors",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "or",
-                          "conditions": [
+                          "rule": "Or",
+                          "options": [],
+                          "children": [
                             {
-                              "type": "helper",
-                              "name": "can_cut_grass",
-                              "args": []
+                              "rule": "can_cut_grass",
+                              "options": [],
+                              "args": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true
                             },
                             {
-                              "type": "helper",
-                              "name": "has_magic_meter_upgrade",
-                              "args": []
+                              "rule": "has_magic_meter_upgrade",
+                              "options": [],
+                              "args": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true
                             }
                           ]
                         },
                         {
-                          "type": "item_check",
-                          "item": "Iron Boots"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Iron Boots"
+                          }
                         }
                       ]
                     },
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_indoors",
-                          "args": []
+                          "rule": "can_fly_with_deku_leaf_indoors",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "logic_obscure_1"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_obscure_1",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "setting_value",
-                          "setting": "logic_precise_2"
+                          "rule": "AST_setting_value",
+                          "options": [],
+                          "args": {
+                            "setting": "logic_precise_2",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_cc": true
                         },
                         {
-                          "type": "item_check",
-                          "item": "Hookshot"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Hookshot"
+                          }
                         }
                       ]
                     }
@@ -2440,9 +2928,11 @@
             "name": "Wind Temple - Chest In Middle Of Hub Room",
             "id": 2326684,
             "access_rule": {
-              "type": "helper",
-              "name": "can_open_wind_temple_upper_giant_grate",
-              "args": []
+              "rule": "can_open_wind_temple_upper_giant_grate",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -2456,9 +2946,11 @@
             "name": "Wind Temple - Chest at Top of Hub Room",
             "id": 2326688,
             "access_rule": {
-              "type": "helper",
-              "name": "can_activate_wind_temple_giant_fan",
-              "args": []
+              "rule": "can_activate_wind_temple_giant_fan",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "WT Small Key",
@@ -2472,21 +2964,29 @@
             "name": "Wind Temple - Chest in Left Alcove",
             "id": 2326680,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_fan_with_deku_leaf",
-                  "args": []
+                  "rule": "can_fan_with_deku_leaf",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_wind_temple_kidnapping_room",
-                  "args": []
+                  "rule": "can_reach_wind_temple_kidnapping_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Iron Boots"
+                  }
                 }
               ]
             },
@@ -2502,27 +3002,36 @@
             "name": "Wind Temple - Kill All Enemies in Tall Basement Room",
             "id": 2326690,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_morths",
-                  "args": []
+                  "rule": "can_defeat_morths",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_stalfos",
-                  "args": []
+                  "rule": "can_defeat_stalfos",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_wizzrobes",
-                  "args": []
+                  "rule": "can_defeat_wizzrobes",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_wind_temple_tall_basement_room",
-                  "args": []
+                  "rule": "can_reach_wind_temple_tall_basement_room",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -2538,16 +3047,22 @@
             "name": "Wind Temple - Spike Wall Room - Destroy All Cracked Floors",
             "id": 2326686,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_open_wind_temple_upper_giant_grate",
-                  "args": []
+                  "rule": "can_open_wind_temple_upper_giant_grate",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Iron Boots"
+                  }
                 }
               ]
             },
@@ -2563,16 +3078,22 @@
             "name": "Wind Temple - Spike Wall Room - First Chest",
             "id": 2326685,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_open_wind_temple_upper_giant_grate",
-                  "args": []
+                  "rule": "can_open_wind_temple_upper_giant_grate",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Iron Boots"
+                  }
                 }
               ]
             },
@@ -2594,9 +3115,11 @@
             "name": "Forbidden Woods - Mothula Miniboss Room",
             "id": 2326616,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_winged_mothulas",
-              "args": []
+              "rule": "can_defeat_winged_mothulas",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "FW Compass",
@@ -2616,9 +3139,11 @@
             "name": "Tower of the Gods - Darknut Miniboss Room",
             "id": 2326634,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_darknuts",
-              "args": []
+              "rule": "can_defeat_darknuts",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Telescope",
@@ -2638,16 +3163,22 @@
             "name": "Earth Temple - Stalfos Miniboss Room",
             "id": 2326665,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_stalfos",
-                  "args": []
+                  "rule": "can_defeat_stalfos",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Hookshot"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Hookshot"
+                  }
                 }
               ]
             },
@@ -2669,17 +3200,22 @@
             "name": "Wind Temple - Wizzrobe Miniboss Room",
             "id": 2326687,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_defeat_darknuts",
-                  "args": []
+                  "rule": "can_defeat_darknuts",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "can_remove_peahat_armor",
-                  "args": []
+                  "rule": "can_remove_peahat_armor",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -2701,9 +3237,11 @@
             "name": "Hyrule - Master Sword Chamber",
             "id": 2326641,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_mighty_darknuts",
-              "args": []
+              "rule": "can_defeat_mighty_darknuts",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -2723,9 +3261,11 @@
             "name": "Dragon Roost Cavern - Gohma Heart Container",
             "id": 2326603,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_gohma",
-              "args": []
+              "rule": "can_defeat_gohma",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -2745,9 +3285,11 @@
             "name": "Forbidden Woods - Kalle Demos Heart Container",
             "id": 2326623,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_kalle_demos",
-              "args": []
+              "rule": "can_defeat_kalle_demos",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Iron Boots",
@@ -2767,9 +3309,11 @@
             "name": "Tower of the Gods - Gohdan Heart Container",
             "id": 2326640,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_gohdan",
-              "args": []
+              "rule": "can_defeat_gohdan",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "TotG Compass",
@@ -2789,9 +3333,11 @@
             "name": "Forsaken Fortress - Helmaroc King Heart Container",
             "id": 2326647,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_helmaroc_king",
-              "args": []
+              "rule": "can_defeat_helmaroc_king",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Triforce Shard 6",
@@ -2811,9 +3357,11 @@
             "name": "Earth Temple - Jalhalla Heart Container",
             "id": 2326675,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_jalhalla",
-              "args": []
+              "rule": "can_defeat_jalhalla",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Ghost Ship Chart",
@@ -2833,9 +3381,11 @@
             "name": "Wind Temple - Molgera Heart Container",
             "id": 2326691,
             "access_rule": {
-              "type": "helper",
-              "name": "can_defeat_molgera",
-              "args": []
+              "rule": "can_defeat_molgera",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Progressive Magic Meter",
@@ -2869,9 +3419,11 @@
             "name": "Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave",
             "connected_region": "Ice Ring Isle Inner Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_inner_entrance_in_ice_ring_isle_secret_cave",
-              "args": []
+              "rule": "can_access_inner_entrance_in_ice_ring_isle_secret_cave",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -2880,8 +3432,9 @@
             "name": "Ice Ring Isle - Cave - Chest",
             "id": 2326654,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ballad of Gales",
@@ -2901,8 +3454,11 @@
             "name": "Private Oasis - Cabana Labyrinth - Lower Floor Chest",
             "id": 2326712,
             "access_rule": {
-              "type": "item_check",
-              "item": "Skull Hammer"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Skull Hammer"
+              }
             },
             "item": {
               "name": "Orange Rupee",
@@ -2916,16 +3472,22 @@
             "name": "Private Oasis - Cabana Labyrinth - Upper Floor Chest",
             "id": 2326713,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_play_winds_requiem",
-                  "args": []
+                  "rule": "can_play_winds_requiem",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Skull Hammer"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Skull Hammer"
+                  }
                 }
               ]
             },
@@ -2947,9 +3509,11 @@
             "name": "Needle Rock Isle - Cave",
             "id": 2326718,
             "access_rule": {
-              "type": "helper",
-              "name": "has_fire_arrows",
-              "args": []
+              "rule": "has_fire_arrows",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Boomerang",
@@ -2969,24 +3533,33 @@
             "name": "Angular Isles - Cave",
             "id": 2326721,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "can_aim_mirror_shield",
-                  "args": []
+                  "rule": "can_aim_mirror_shield",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_indoors",
-                      "args": []
+                      "rule": "can_fly_with_deku_leaf_indoors",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Hookshot"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Hookshot"
+                      }
                     }
                   ]
                 }
@@ -3025,9 +3598,11 @@
             "name": "Bird's Peak Rock - Cave",
             "id": 2326730,
             "access_rule": {
-              "type": "helper",
-              "name": "can_play_winds_requiem",
-              "args": []
+              "rule": "can_play_winds_requiem",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Power Bracelets",
@@ -3047,9 +3622,11 @@
             "name": "Pawprint Isle - Chuchu Cave - Behind Left Boulder",
             "id": 2326732,
             "access_rule": {
-              "type": "helper",
-              "name": "can_move_boulders",
-              "args": []
+              "rule": "can_move_boulders",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Silver Rupee",
@@ -3063,9 +3640,11 @@
             "name": "Pawprint Isle - Chuchu Cave - Behind Right Boulder",
             "id": 2326733,
             "access_rule": {
-              "type": "helper",
-              "name": "can_move_boulders",
-              "args": []
+              "rule": "can_move_boulders",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Silver Rupee",
@@ -3079,8 +3658,9 @@
             "name": "Pawprint Isle - Chuchu Cave - Chest",
             "id": 2326731,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Grappling Hook",
@@ -3094,8 +3674,11 @@
             "name": "Pawprint Isle - Chuchu Cave - Scale the Wall",
             "id": 2326734,
             "access_rule": {
-              "type": "item_check",
-              "item": "Grappling Hook"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Grappling Hook"
+              }
             },
             "item": {
               "name": "Piece of Heart",
@@ -3120,8 +3703,9 @@
             "name": "Diamond Steppe Island - Warp Maze Cave - First Chest",
             "id": 2326751,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Silver Rupee",
@@ -3135,8 +3719,9 @@
             "name": "Diamond Steppe Island - Warp Maze Cave - Second Chest",
             "id": 2326752,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Din's Pearl",
@@ -3156,9 +3741,11 @@
             "name": "Bomb Island - Cave",
             "id": 2326754,
             "access_rule": {
-              "type": "helper",
-              "name": "can_stun_magtails",
-              "args": []
+              "rule": "can_stun_magtails",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Progressive Bow",
@@ -3187,9 +3774,11 @@
             "name": "Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave",
             "connected_region": "Cliff Plateau Isles Inner Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave",
-              "args": []
+              "rule": "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -3198,29 +3787,46 @@
             "name": "Cliff Plateau Isles - Cave",
             "id": 2326766,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "setting_value",
-                      "setting": "logic_obscure_1"
+                      "rule": "AST_setting_value",
+                      "options": [],
+                      "args": {
+                        "setting": "logic_obscure_1",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "setting_value",
-                      "setting": "logic_precise_1"
+                      "rule": "AST_setting_value",
+                      "options": [],
+                      "args": {
+                        "setting": "logic_precise_1",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Grappling Hook"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
+                  "rule": "can_defeat_boko_babas",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             },
@@ -3257,8 +3863,9 @@
             "name": "Cliff Plateau Isles - Highest Isle",
             "id": 2326767,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Bow",
@@ -3283,8 +3890,9 @@
             "name": "Thorned Fairy Island - Great Fairy",
             "id": 2326737,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bombs",
@@ -3304,8 +3912,9 @@
             "name": "Eastern Fairy Island - Great Fairy",
             "id": 2326740,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bait Bag",
@@ -3325,8 +3934,9 @@
             "name": "Western Fairy Island - Great Fairy",
             "id": 2326742,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Silver Rupee",
@@ -3346,8 +3956,9 @@
             "name": "Southern Fairy Island - Great Fairy",
             "id": 2326744,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hurricane Spin",
@@ -3367,8 +3978,9 @@
             "name": "Northern Fairy Island - Great Fairy",
             "id": 2326747,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Triforce Shard 5",
@@ -5298,71 +5910,71 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "add_shortcut_warps_between_dungeons": 0,
-        "chest_type_matches_contents": 0,
-        "death_link": 0,
-        "enable_tuner_logic": 0,
+        "accessibility": "full",
+        "add_shortcut_warps_between_dungeons": "false",
+        "chest_type_matches_contents": "false",
+        "death_link": "false",
+        "enable_tuner_logic": "false",
         "exclude_locations": [],
         "excluded_dungeons": [],
-        "hero_mode": 0,
+        "hero_mode": "false",
         "included_dungeons": [],
-        "instant_text_boxes": 1,
+        "instant_text_boxes": "true",
         "item_links": [],
         "local_items": [],
-        "logic_obscurity": 0,
-        "logic_precision": 0,
-        "mix_entrances": 0,
+        "logic_obscurity": "none",
+        "logic_precision": "none",
+        "mix_entrances": "separate_pools",
         "non_local_items": [],
         "num_required_bosses": 4,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "progression_battlesquid": 0,
-        "progression_big_octos_gunboats": 0,
-        "progression_combat_secret_caves": 0,
-        "progression_dungeon_secrets": 0,
-        "progression_dungeons": 1,
-        "progression_expensive_purchases": 1,
-        "progression_eye_reef_chests": 0,
-        "progression_free_gifts": 1,
-        "progression_great_fairies": 1,
-        "progression_island_puzzles": 0,
-        "progression_long_sidequests": 0,
-        "progression_mail": 0,
-        "progression_minigames": 0,
-        "progression_misc": 0,
-        "progression_platforms_rafts": 0,
-        "progression_puzzle_secret_caves": 1,
-        "progression_savage_labyrinth": 0,
-        "progression_short_sidequests": 0,
-        "progression_spoils_trading": 0,
-        "progression_submarines": 0,
-        "progression_tingle_chests": 0,
-        "progression_treasure_charts": 0,
-        "progression_triforce_charts": 0,
-        "randomize_bigkeys": 2,
-        "randomize_boss_entrances": 0,
-        "randomize_charts": 0,
-        "randomize_dungeon_entrances": 0,
-        "randomize_enemies": 0,
-        "randomize_fairy_fountain_entrances": 0,
-        "randomize_mapcompass": 2,
-        "randomize_miniboss_entrances": 0,
-        "randomize_secret_cave_entrances": 0,
-        "randomize_secret_cave_inner_entrances": false,
-        "randomize_smallkeys": 2,
-        "randomize_starting_island": 0,
-        "remove_music": 0,
-        "required_bosses": 0,
-        "reveal_full_sea_chart": 1,
-        "skip_rematch_bosses": 1,
+        "progression_battlesquid": "false",
+        "progression_big_octos_gunboats": "false",
+        "progression_combat_secret_caves": "false",
+        "progression_dungeon_secrets": "false",
+        "progression_dungeons": "true",
+        "progression_expensive_purchases": "true",
+        "progression_eye_reef_chests": "false",
+        "progression_free_gifts": "true",
+        "progression_great_fairies": "true",
+        "progression_island_puzzles": "false",
+        "progression_long_sidequests": "false",
+        "progression_mail": "false",
+        "progression_minigames": "false",
+        "progression_misc": "false",
+        "progression_platforms_rafts": "false",
+        "progression_puzzle_secret_caves": "true",
+        "progression_savage_labyrinth": "false",
+        "progression_short_sidequests": "false",
+        "progression_spoils_trading": "false",
+        "progression_submarines": "false",
+        "progression_tingle_chests": "false",
+        "progression_treasure_charts": "false",
+        "progression_triforce_charts": "false",
+        "randomize_bigkeys": "dungeon",
+        "randomize_boss_entrances": "false",
+        "randomize_charts": "false",
+        "randomize_dungeon_entrances": "false",
+        "randomize_enemies": "false",
+        "randomize_fairy_fountain_entrances": "false",
+        "randomize_mapcompass": "dungeon",
+        "randomize_miniboss_entrances": "false",
+        "randomize_secret_cave_entrances": "false",
+        "randomize_secret_cave_inner_entrances": "false",
+        "randomize_smallkeys": "dungeon",
+        "randomize_starting_island": "false",
+        "remove_music": "false",
+        "required_bosses": "false",
+        "reveal_full_sea_chart": "true",
+        "skip_rematch_bosses": "true",
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "swift_sail": 1,
-        "sword_mode": 0
+        "swift_sail": "true",
+        "sword_mode": "start_with_sword"
       },
       "logic_in_swordless_mode": false,
       "logic_in_required_bosses_mode": false,

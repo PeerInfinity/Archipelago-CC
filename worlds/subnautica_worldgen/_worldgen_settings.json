@@ -3,12 +3,12 @@
   "assume_bidirectional_exits": false,
   "use_resolved_items": false,
   "options": {
-    "accessibility": 0,
-    "creature_scan_logic": 0,
+    "accessibility": "full",
+    "creature_scan_logic": "stasis",
     "creature_scans": 0,
-    "death_link": 0,
-    "early_seaglide": 1,
-    "empty_tanks": 1,
+    "death_link": "false",
+    "early_seaglide": "true",
+    "empty_tanks": "true",
     "exclude_locations": [],
     "filler_items_distribution": {
       "Copper Ore": 1,
@@ -26,8 +26,8 @@
       "Silver Ore": 1,
       "Titanium": 1
     },
-    "free_samples": 0,
-    "goal": 0,
+    "free_samples": "false",
+    "goal": "launch",
     "item_links": [],
     "local_items": [],
     "non_local_items": [],

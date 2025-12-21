@@ -128,10 +128,19 @@ Playthrough:
 
 }
 1: {
+  Act 1 - Clock Main Compartment: Holo Pelt
   Act 1 - Clock Upper Compartment: Film Roll
   Act 1 - Painting 1: Epitaph Piece
-}
-2: {
+  Act 1 - Painting 2: Caged Wolf Card
+  Act 1 - Wardrobe Drawer 4: Monocle
+  Act 2 - Ancient Obol: Epitaph Piece
+  Act 2 - Battle Goobert: Magnificus Eye
+  Act 2 - Battle Lonely Wizard: Epitaph Piece
+  Act 2 - Battle Melter: Holo Pelt
+  Act 2 - Battle Pike Mage: Epitaph Piece
+  Act 2 - Bone Lord Femur: Camera Replica
+  Act 2 - Boss Grimora: Bone Lord Holo Key
+  Act 2 - Boss P03: Epitaph Piece
   Act 2 - Cabin Wardrobe Drawer: Epitaph Piece
   Act 2 - Camera Replica: Ancient Obol
   Act 2 - Crypt Casket 2: Holo Pelt
@@ -139,41 +148,14 @@ Playthrough:
   Act 2 - Epitaph Piece 1: Epitaph Piece
   Act 2 - Epitaph Piece 6: Oil Painting's Clover Plant
   Act 2 - Epitaph Piece 8: Epitaph Piece
-}
-3: {
-  Act 2 - Bone Lord Femur: Camera Replica
-}
-4: {
-  Act 2 - Battle Melter: Holo Pelt
-  Act 2 - Boss P03: Epitaph Piece
   Act 2 - Factory Drawer 1: Gems Module
   Act 2 - Factory Drawer 2: Wardrobe Key
   Act 2 - Tower Chest 1: Epitaph Piece
-}
-5: {
-  Act 1 - Wardrobe Drawer 4: Monocle
-}
-6: {
-  Act 2 - Ancient Obol: Epitaph Piece
-  Act 2 - Battle Goobert: Magnificus Eye
-  Act 2 - Battle Lonely Wizard: Epitaph Piece
-  Act 2 - Battle Pike Mage: Epitaph Piece
   Act 2 - Tower Chest 3: Holo Pelt
-}
-7: {
-  Act 1 - Clock Main Compartment: Holo Pelt
-  Act 2 - Boss Grimora: Bone Lord Holo Key
-  Act 3 - Drawer 1: Inspectometer Battery
-}
-8: {
   Act 3 - Boss Photographer: Holo Pelt
+  Act 3 - Drawer 1: Inspectometer Battery
   Act 3 - Gems Drone: Squirrel Totem Head
-}
-9: {
-  Act 1 - Painting 2: Caged Wolf Card
-  Act 3 - Trader 5: Quill
-}
-10: {
   Act 3 - Luke's File Entry 1: Dagger
   Act 3 - The Great Transcendence: Mycologists Holo Key
+  Act 3 - Trader 5: Quill
 }

@@ -53,25 +53,13 @@ Playthrough:
 
 }
 1: {
+  Black Castle Foyer: Bridge
   Black Castle Gate: Black Key
   Catacombs: Sword
-}
-2: {
-  Black Castle Foyer: Bridge
-  Dungeon1: Right Difficulty Switch
-}
-3: {
-  Dungeon Vault: White Key
-}
-4: {
-  Slay Grundle: Yellow Key
-}
-5: {
-  Inside Yellow Castle: Magnet
-}
-6: {
-  Credits Right Side: Chalice
-}
-7: {
   Chalice Home: Victory
+  Credits Right Side: Chalice
+  Dungeon Vault: White Key
+  Dungeon1: Right Difficulty Switch
+  Inside Yellow Castle: Magnet
+  Slay Grundle: Yellow Key
 }

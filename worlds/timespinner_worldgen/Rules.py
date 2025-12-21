@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachRegion, False_, Has, HasAll, HasAny, HelperCall, Not, True_
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -24,7 +24,7 @@ def _timespinnerworldgen_can_kill_all_3_bosses(state: "CollectionState", player:
     return (state.has_all(('Laser Access A', 'Laser Access I', 'Laser Access M'), player) if False else state.has_all(('Killed Aelana', 'Killed Maw', 'Killed Twins'), player))
 
 
-def _timespinnerworldgen_can_teleport_to(state: "CollectionState", player: int, era, gate) -> bool:
+def _timespinnerworldgen_can_teleport_to(state: "CollectionState", player: int, era = None, gate = None) -> bool:
     return (('GateLakeSereneRight' == gate) if not (False) else ((('GateSealedSirensCave' == gate)) and (state.has('Modern Warp Beacon', player)) if (era == 'Present') else ((('GateLakeSereneRight' == gate)) and (state.has('Timeworn Warp Beacon', player)) if (era == 'Past') else ((('GateRightPyramid' == gate)) and (state.has('Mysterious Warp Beacon', player)) if (era == 'Time') else None))))
 
 
@@ -68,6 +68,146 @@ def _timespinnerworldgen_has_upwarddash(state: "CollectionState", player: int) -
     return (state.has('Celestial Sash', player)) or (state.has('Lightwall', player))
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'can_break_walls': {'type': 'constant', 'value': True},
+    'can_kill_all_3_bosses': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Killed Aelana'},
+                                                                 {'type': 'constant', 'value': 'Killed Maw'},
+                                                                 {'type': 'constant', 'value': 'Killed Twins'}],
+                                                 'type': 'set'}],
+                                 'method': 'has_all',
+                                 'type': 'state_method'},
+    'can_teleport_to': {   'body': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                       'if_true': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                                        'value': 'GateRightPyramid'},
+                                                                                                                            'op': '==',
+                                                                                                                            'right': {   'name': 'gate',
+                                                                                                                                         'type': 'name'},
+                                                                                                                            'type': 'compare'},
+                                                                                                                        {   'item': 'Mysterious '
+                                                                                                                                    'Warp '
+                                                                                                                                    'Beacon',
+                                                                                                                            'type': 'item_check'}],
+                                                                                                      'type': 'and'},
+                                                                                       'test': {   'left': {   'name': 'era',
+                                                                                                               'type': 'name'},
+                                                                                                   'op': '==',
+                                                                                                   'right': {   'type': 'constant',
+                                                                                                                'value': 'Time'},
+                                                                                                   'type': 'compare'},
+                                                                                       'type': 'conditional'},
+                                                                       'if_true': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                                        'value': 'GateLakeSereneRight'},
+                                                                                                            'op': '==',
+                                                                                                            'right': {   'name': 'gate',
+                                                                                                                         'type': 'name'},
+                                                                                                            'type': 'compare'},
+                                                                                                        {   'item': 'Timeworn '
+                                                                                                                    'Warp '
+                                                                                                                    'Beacon',
+                                                                                                            'type': 'item_check'}],
+                                                                                      'type': 'and'},
+                                                                       'test': {   'left': {   'name': 'era',
+                                                                                               'type': 'name'},
+                                                                                   'op': '==',
+                                                                                   'right': {   'type': 'constant',
+                                                                                                'value': 'Past'},
+                                                                                   'type': 'compare'},
+                                                                       'type': 'conditional'},
+                                                       'if_true': {   'conditions': [   {   'left': {   'type': 'constant',
+                                                                                                        'value': 'GateSealedSirensCave'},
+                                                                                            'op': '==',
+                                                                                            'right': {   'name': 'gate',
+                                                                                                         'type': 'name'},
+                                                                                            'type': 'compare'},
+                                                                                        {   'item': 'Modern Warp '
+                                                                                                    'Beacon',
+                                                                                            'type': 'item_check'}],
+                                                                      'type': 'and'},
+                                                       'test': {   'left': {'name': 'era', 'type': 'name'},
+                                                                   'op': '==',
+                                                                   'right': {'type': 'constant', 'value': 'Present'},
+                                                                   'type': 'compare'},
+                                                       'type': 'conditional'},
+                                       'if_true': {   'left': {'type': 'constant', 'value': 'GateLakeSereneRight'},
+                                                      'op': '==',
+                                                      'right': {'name': 'gate', 'type': 'name'},
+                                                      'type': 'compare'},
+                                       'test': {'condition': {'type': 'constant', 'value': False}, 'type': 'not'},
+                                       'type': 'conditional'},
+                           'params': ['era', 'gate']},
+    'has_doublejump': {   'conditions': [   {'item': 'Celestial Sash', 'type': 'item_check'},
+                                            {'item': 'Lightwall', 'type': 'item_check'},
+                                            {'item': 'Succubus Hairpin', 'type': 'item_check'}],
+                          'type': 'or'},
+    'has_doublejump_of_npc': {   'conditions': [   {   'conditions': [   {   'item': 'Celestial Sash',
+                                                                             'type': 'item_check'},
+                                                                         {'item': 'Lightwall', 'type': 'item_check'}],
+                                                       'type': 'or'},
+                                                   {   'conditions': [   {   'item': 'Timespinner Wheel',
+                                                                             'type': 'item_check'},
+                                                                         {   'conditions': [   {   'item': 'Celestial '
+                                                                                                           'Sash',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'item': 'Lightwall',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'item': 'Succubus '
+                                                                                                           'Hairpin',
+                                                                                                   'type': 'item_check'}],
+                                                                             'type': 'or'}],
+                                                       'type': 'and'}],
+                                 'type': 'or'},
+    'has_fastjump_on_npc': {   'conditions': [   {'item': 'Talaria Attachment', 'type': 'item_check'},
+                                                 {'item': 'Timespinner Wheel', 'type': 'item_check'}],
+                               'type': 'and'},
+    'has_fire': {   'conditions': [   {'item': 'Djinn Inferno', 'type': 'item_check'},
+                                      {'item': 'Fire Orb', 'type': 'item_check'},
+                                      {'item': 'Infernal Flames', 'type': 'item_check'},
+                                      {'item': 'Pyro Ring', 'type': 'item_check'}],
+                    'type': 'or'},
+    'has_forwarddash_doublejump': {   'conditions': [   {   'conditions': [   {   'item': 'Celestial Sash',
+                                                                                  'type': 'item_check'},
+                                                                              {   'item': 'Lightwall',
+                                                                                  'type': 'item_check'}],
+                                                            'type': 'or'},
+                                                        {   'conditions': [   {   'item': 'Talaria Attachment',
+                                                                                  'type': 'item_check'},
+                                                                              {   'conditions': [   {   'item': 'Celestial '
+                                                                                                                'Sash',
+                                                                                                        'type': 'item_check'},
+                                                                                                    {   'item': 'Lightwall',
+                                                                                                        'type': 'item_check'},
+                                                                                                    {   'item': 'Succubus '
+                                                                                                                'Hairpin',
+                                                                                                        'type': 'item_check'}],
+                                                                                  'type': 'or'}],
+                                                            'type': 'and'}],
+                                      'type': 'or'},
+    'has_keycard_A': {'item': 'Security Keycard A', 'type': 'item_check'},
+    'has_keycard_B': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Security Keycard A'},
+                                                         {'type': 'constant', 'value': 'Security Keycard B'}],
+                                         'type': 'set'}],
+                         'method': 'has_any',
+                         'type': 'state_method'},
+    'has_pink': {   'conditions': [   {'item': 'Plasma Geyser', 'type': 'item_check'},
+                                      {'item': 'Plasma Orb', 'type': 'item_check'},
+                                      {'item': 'Royal Ring', 'type': 'item_check'}],
+                    'type': 'or'},
+    'has_timestop': {   'conditions': [   {'item': 'Celestial Sash', 'type': 'item_check'},
+                                          {'item': 'Lightwall', 'type': 'item_check'},
+                                          {'item': 'Succubus Hairpin', 'type': 'item_check'},
+                                          {'item': 'Timespinner Wheel', 'type': 'item_check'}],
+                        'type': 'or'},
+    'has_upwarddash': {   'conditions': [   {'item': 'Celestial Sash', 'type': 'item_check'},
+                                            {'item': 'Lightwall', 'type': 'item_check'}],
+                          'type': 'or'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -75,895 +215,1536 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Tutorial", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Start Game", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Lake desolation -> Lower lake desolation", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_timestop, helper_name="has_timestop", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}, {'type': 'item_check', 'item': 'Timespinner Wheel'}]})) | (Has("Talaria Attachment"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Upper lake desolation", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_fire, helper_name="has_fire", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Djinn Inferno'}, {'type': 'item_check', 'item': 'Fire Orb'}, {'type': 'item_check', 'item': 'Infernal Flames'}, {'type': 'item_check', 'item': 'Pyro Ring'}]})) & (CanReachRegion("Upper Lake Serene"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Skeleton Shaft", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Upper lake desolation -> Lake desolation", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Upper lake desolation -> Eastern lake desolation", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lower lake desolation -> Lake desolation", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lower lake desolation -> Eastern lake desolation", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Eastern lake desolation -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Eastern lake desolation -> Library", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Eastern lake desolation -> Lower lake desolation", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Eastern lake desolation -> Upper lake desolation", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_fire, helper_name="has_fire", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Djinn Inferno'}, {'type': 'item_check', 'item': 'Fire Orb'}, {'type': 'item_check', 'item': 'Infernal Flames'}, {'type': 'item_check', 'item': 'Pyro Ring'}]})) & (CanReachRegion("Upper Lake Serene"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Library -> Eastern lake desolation", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Library top", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) | (Has("Talaria Attachment"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Varndagroth tower left", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Library top -> Library", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varndagroth tower left -> Library", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Varndagroth tower right (upper)", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Varndagroth tower right (lower)", player),
-        HasAny('Security Keycard A', 'Security Keycard B')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Sealed Caves (Sirens)", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_keycard_B, helper_name="has_keycard_B", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Security Keycard B'}, 'if_false': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Security Keycard A'}, {'type': 'constant', 'value': 'Security Keycard B'}]}]}})) & (Has("Elevator Keycard"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Refugee Camp", player),
-        (Has("Timespinner Spindle")) & (Has("Timespinner Wheel"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varndagroth tower right (upper) -> Varndagroth tower left", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (upper) -> Varndagroth tower right (elevator)", player),
-        Has("Elevator Keycard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Varndagroth tower left", player),
-        HasAny('Security Keycard A', 'Security Keycard B')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Varndagroth tower right (elevator)", player),
-        Has("Elevator Keycard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Sealed Caves (Sirens)", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_keycard_B, helper_name="has_keycard_B", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Security Keycard B'}, 'if_false': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Security Keycard A'}, {'type': 'constant', 'value': 'Security Keycard B'}]}]}})) & (Has("Elevator Keycard"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Military Fortress", player),
-        HasAll('Killed Aelana', 'Killed Maw', 'Killed Twins')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varndagroth tower right (elevator) -> Varndagroth tower right (upper)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varndagroth tower right (elevator) -> Varndagroth tower right (lower)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Varndagroth tower left", player),
-        Has("Elevator Keycard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Varndagroth tower right (lower)", player),
-        Has("Elevator Keycard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Varndagroth tower right (lower)", player),
-        HasAll('Killed Aelana', 'Killed Maw', 'Killed Twins')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Temporal Gyre", player),
-        (HelperCall(helper_func=_timespinnerworldgen_can_kill_all_3_bosses, helper_name="can_kill_all_3_bosses", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Laser Access A'}, {'type': 'constant', 'value': 'Laser Access I'}, {'type': 'constant', 'value': 'Laser Access M'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Killed Aelana'}, {'type': 'constant', 'value': 'Killed Maw'}, {'type': 'constant', 'value': 'Killed Twins'}]}]}})) & (Has("Timespinner Wheel"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Military Fortress (hangar)", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Military Fortress (hangar) -> Military Fortress", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress (hangar) -> Lab Entrance", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lab Entrance -> Main Lab", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_keycard_B, helper_name="has_keycard_B", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Security Keycard B'}, 'if_false': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Security Keycard A'}, {'type': 'constant', 'value': 'Security Keycard B'}]}]}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lab Entrance -> Military Fortress (hangar)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Main Lab -> Lab Entrance", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> Lab Research", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> The lab (upper)", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})) & ((Not(False_())) | (Has("Lab Access Genza")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Main Lab", player),
-        (False_()) & (Has("Lab Access Genza"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Emperors tower (courtyard)", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (Has("Talaria Attachment"))) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Ancient Pyramid (entrance)", player),
-        HasAll('Timespinner Gear 1', 'Timespinner Gear 2', 'Timespinner Gear 3', 'Timespinner Spindle', 'Timespinner Wheel')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Emperors tower (courtyard) -> The lab (upper)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Emperors tower (courtyard) -> Emperors tower", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Emperors tower -> Emperors tower (courtyard)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Skeleton Shaft -> Lake desolation", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skeleton Shaft -> Sealed Caves (Xarion)", player),
-        Has("Security Keycard A")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skeleton Shaft -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sealed Caves (Xarion) -> Skeleton Shaft", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Xarion) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Refugee Camp -> Forest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Refugee Camp -> Library", player),
-        (False_()) & ((False_()) | (False_())) & (HasAll('Timespinner Spindle', 'Timespinner Wheel'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Refugee Camp -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forest -> Refugee Camp", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Left Side forest Caves", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_timestop, helper_name="has_timestop", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}, {'type': 'item_check', 'item': 'Timespinner Wheel'}]})) | (Has("Talaria Attachment"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forest -> Caves of Banishment (Sirens)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Castle Ramparts", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]})) | (Not(False_())) | (Has("Drawbridge Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Left Side forest Caves -> Forest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Side forest Caves -> Upper Lake Serene", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Side forest Caves -> Lower Lake Serene", player),
-        (False_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Side forest Caves -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Upper Lake Serene -> Left Side forest Caves", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Upper Lake Serene -> Lower Lake Serene", player),
-        (False_()) | (Has("Water Mask"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lower Lake Serene -> Upper Lake Serene", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lower Lake Serene -> Left Side forest Caves", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lower Lake Serene -> Caves of Banishment (upper)", player),
-        (True_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (upper) -> Lower Lake Serene", player),
-        (False_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (upper) -> Caves of Banishment (Maw)", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (upper) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Caves of Banishment (upper)", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Caves of Banishment (Sirens)", player),
-        HasAny('Gas Mask', 'Talaria Attachment')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Caves of Banishment (Flooded)", player),
-        (False_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Caves of Banishment (Sirens) -> Forest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Castle Ramparts -> Forest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Castle Ramparts -> Castle Keep", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Ramparts -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Castle Keep -> Castle Ramparts", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Castle Basement", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Royal towers (lower)", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & ((HelperCall(helper_func=_timespinnerworldgen_has_pink, helper_name="has_pink", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Plasma Geyser'}, {'type': 'item_check', 'item': 'Plasma Orb'}, {'type': 'item_check', 'item': 'Royal Ring'}]})) | (Not(False_())))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Royal towers (lower) -> Castle Keep", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Royal towers (lower) -> Royal towers", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})) | (Has("Timespinner Wheel"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Royal towers (lower) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Royal towers -> Royal towers (lower)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Royal towers -> Royal towers (upper)", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Royal towers (upper) -> Royal towers", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Temporal Gyre -> Military Fortress", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (entrance) -> Ancient Pyramid (left)", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (entrance) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Ancient Pyramid (left) -> Ancient Pyramid (entrance)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (left) -> Ancient Pyramid (right)", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (left) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (right) -> Ancient Pyramid (left)", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (right) -> Space time continuum", player),
-        (False_()) | (Has("Twin Pyramid Key"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Teleport back to start", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Lake desolation", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateLakeDesolation',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Lower lake desolation", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateKittyBoss',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Library", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateLeftLibrary',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Varndagroth tower right (lower)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateMilitaryGate',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Skeleton Shaft", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateSealedCaves',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Sealed Caves (Sirens)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateSealedSirensCave',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Sealed Caves (Xarion)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateXarion',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Upper Lake Serene", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateLakeSereneLeft',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Left Side forest Caves", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateLakeSereneRight',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Refugee Camp", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateAccessToPast',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Forest", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateCastleRamparts',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Castle Keep", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateCastleKeep',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Royal towers (lower)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateRoyalTowers',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Caves of Banishment (Maw)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateMaw',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Caves of Banishment (upper)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateCavesOfBanishment',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Military Fortress (hangar)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateLabEntrance',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> The lab (upper)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateDadsTower',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (entrance)", player),
-        ((False_()) & (Not(False_()))) | (HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateGyre',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})) | (HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateLeftPyramid',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (right)", player),
-        HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateRightPyramid',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})
-    )
-    # Register indirect conditions for proper sphere calculation
-    multiworld.register_indirect_condition(
-        world.get_region("Upper Lake Serene"),
-        multiworld.get_entrance("Lake desolation -> Upper lake desolation", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Upper Lake Serene"),
-        multiworld.get_entrance("Eastern lake desolation -> Upper lake desolation", player)
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Tutorial: Yo Momma 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tutorial: Yo Momma 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation: Starter chest 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation: Starter chest 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation: Starter chest 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Lower): Timespinner Wheel room", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Lake Desolation: Forget me not chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_fire, helper_name="has_fire", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Djinn Inferno'}, {'type': 'item_check', 'item': 'Fire Orb'}, {'type': 'item_check', 'item': 'Infernal Flames'}, {'type': 'item_check', 'item': 'Pyro Ring'}]})) & (CanReachRegion("Upper Lake Serene"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Lower): Chicken chest", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Upper): Oxygen recovery room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Upper): Secret room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Double jump cave platform", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Upper): Double jump cave floor", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Upper): Sparrow chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Upper): Crash site pedestal", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 1", player),
-        Has("Killed Maw")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 2", player),
-        Has("Killed Maw")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Lower): Not so secret room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Tank chest", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation: Kitty Boss", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Basement", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Warp gate", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Librarian", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Reading nook chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Storage room chest 1", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Storage room chest 2", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Storage room chest 3", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 2 (Lachiem)", player),
-        Has("Tablet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 1 (Windaria)", player),
-        Has("Tablet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 3 (Emperor Nuvius)", player),
-        Has("Tablet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: V terminal 1 (War of the Sisters)", player),
-        HasAll('Library Keycard V', 'Tablet')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: V terminal 2 (Lake Desolation Map)", player),
-        HasAll('Library Keycard V', 'Tablet')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: V terminal 3 (Vilete)", player),
-        HasAll('Library Keycard V', 'Tablet')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Backer room chest 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Backer room chest 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Backer room chest 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Backer room chest 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Library: Backer room chest 1", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Library: Backer room terminal (Vandagray Metropolis Map)", player),
-        Has("Tablet")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers (Left): Elevator Key not required", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers (Left): Ye olde Timespinner", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Left): Bottom floor", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers (Left): Air vents secret", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Left): Elevator chest", player),
-        Has("Elevator Keycard")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers: Bridge", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Elevator card chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) | (Has("Elevator Keycard"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Air vents right chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) | (Has("Elevator Keycard"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Air vents left chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) | (Has("Elevator Keycard"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers (Right): Bottom floor", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers (Right): Elevator chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Varndagroth", player),
-        HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Spider Hell", player),
-        Has("Security Keycard A")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Medbay terminal (Bleakness Research)", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_keycard_B, helper_name="has_keycard_B", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Security Keycard B'}, 'if_false': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Security Keycard A'}, {'type': 'constant', 'value': 'Security Keycard B'}]}]}})) & (Has("Tablet"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Water hook", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Siren room underwater right", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Siren room underwater left", player),
-        Has("Water Mask")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Sirens): Cave after sirens chest 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Sirens): Cave after sirens chest 2", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: Bomber chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})) & (Has("Timespinner Wheel"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Military Fortress: Close combat room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Military Fortress: Soldiers bridge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Military Fortress: Giantess room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Military Fortress: Giantess bridge", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: B door chest 2", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (HelperCall(helper_func=_timespinnerworldgen_has_keycard_B, helper_name="has_keycard_B", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Security Keycard B'}, 'if_false': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Security Keycard A'}, {'type': 'constant', 'value': 'Security Keycard B'}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: B door chest 1", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (HelperCall(helper_func=_timespinnerworldgen_has_keycard_B, helper_name="has_keycard_B", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Security Keycard B'}, 'if_false': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Security Keycard A'}, {'type': 'constant', 'value': 'Security Keycard B'}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: Pedestal", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})) | (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lab: Coffee break", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Lower trash right", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Lower trash left", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Below lab entrance", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Trash jump room", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})) | (Not(False_()))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Experiment #13", player),
-        (Not(False_())) | (Has("Lab Access Experiment"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Sentry platform terminal (Origins)", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateDadsTower',), body_data={'params': ['era', 'gate'], 'body': {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': False}}, 'if_true': {'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Present'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateSealedSirensCave'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Modern Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Past'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateLakeSereneRight'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Timeworn Warp Beacon'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'era'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Time'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'constant', 'value': 'GateRightPyramid'}, 'op': '==', 'right': {'type': 'name', 'name': 'gate'}}, {'type': 'item_check', 'item': 'Mysterious Warp Beacon'}]}, 'if_false': None}}}}})) | (Not(False_())) | (Has("Lab Access Genza"))) & (Has("Tablet"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Experiment 13 terminal (W.R.E.C Farewell)", player),
-        Has("Tablet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Left terminal (Biotechnology)", player),
-        Has("Tablet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Dynamo Works", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]})) & (Has("Lab Access Dynamo"))) | (Not(False_()))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Spider Hell", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_keycard_A, helper_name="has_keycard_A", body_data={'type': 'item_check', 'item': 'Security Keycard A'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Middle terminal (Amadeus Laboratory Map)", player),
-        Has("Tablet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Right terminal (Experiment #11)", player),
-        Has("Tablet")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lab: Genza (Blob Mom)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lab: Download and chest room chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lab: Lab secret", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Download and chest room terminal (Experiment #13)", player),
-        Has("Tablet")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Emperor's Tower: Courtyard bottom chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Courtyard floor secret", player),
-        (HelperCall(helper_func=_timespinnerworldgen_can_break_walls, helper_name="can_break_walls", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Oculus Ring'}, 'if_false': {'type': 'constant', 'value': True}})) & (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Courtyard upper chest", player),
-        HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Emperor's Tower: Galactic sage room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Emperor's Tower: Bottom right tower", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Wayyyy up there", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (Has("Timespinner Wheel"))) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Emperor's Tower: Left tower balcony", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Emperor's Tower: Emperor's Chambers chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Emperor's Tower: Emperor's Chambers pedestal", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Killed Emperor", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Xarion): Skeleton", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Shroom jump room", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Xarion): Double shroom room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Jacksquat room", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (Has("Talaria Attachment"))) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Xarion): Below Jacksquat room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Xarion): Secret room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sealed Caves (Xarion): Bottom left room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Last chance before Xarion", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Xarion", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Refugee Camp: Neliste's Bra", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Refugee Camp: Storage chest 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Refugee Camp: Storage chest 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Refugee Camp: Storage chest 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forest: Refugee camp roof", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Bat jump ledge", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]})) | (HelperCall(helper_func=_timespinnerworldgen_has_fastjump_on_npc, helper_name="has_fastjump_on_npc", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'item_check', 'item': 'Timespinner Wheel'}]})) | (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forest: Green platform secret", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forest: Rats guarded chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Waterfall chest 1", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Waterfall chest 2", player),
-        Has("Water Mask")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forest: Batcave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: In the moat", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forest: Before Serene single bat cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Under the eels", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Past the eels", player),
-        Has("Water Mask")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Upper): Rat nest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Upper): Double jump cave platform", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Upper): Double jump cave floor", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Upper): Cave secret", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene: Before Big Bird", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene: Behind the vines", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene: Pyramid keys room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Upper): Chicken ledge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Lower): Deep dive", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Lower): Water spikes room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Lower): Underwater secret", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): T chest", player),
-        (True_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Underwater pedestal", player),
-        (True_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Shroom jump room", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Secret room", player),
-        (HelperCall(helper_func=_timespinnerworldgen_can_break_walls, helper_name="can_break_walls", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Oculus Ring'}, 'if_false': {'type': 'constant', 'value': True}})) & ((True_()) | (Has("Water Mask")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Bottom left room", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Caves of Banishment (Maw): Single shroom room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 1", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 2", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 3", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 4", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Pedestal", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Last chance before Maw", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Plasma Crystal", player),
-        HasAny('Gas Mask', 'Talaria Attachment')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Killed Maw", player),
-        Has("Gas Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Mineshaft", player),
-        HasAny('Gas Mask', 'Talaria Attachment')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Caves of Banishment (Sirens): Wyvern room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Caves of Banishment (Sirens): Siren room above water chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater left chest", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater right chest", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater right ground", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Water hook", player),
-        Has("Water Mask")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: Bomber chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]})) | (Has("Timespinner Wheel"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: Freeze the engineer", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_timestop, helper_name="has_timestop", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}, {'type': 'item_check', 'item': 'Timespinner Wheel'}]})) | (Has("Talaria Attachment"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Ramparts: Giantess guarded room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Ramparts: Knight and archer guarded room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Ramparts: Pedestal", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Keep: Under the twins", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Killed Twins", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Advisor jump", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Twins", player),
-        HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Royal guard tiny room", player),
-        (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) | (HelperCall(helper_func=_timespinnerworldgen_has_fastjump_on_npc, helper_name="has_fastjump_on_npc", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Talaria Attachment'}, {'type': 'item_check', 'item': 'Timespinner Wheel'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Basement: Secret pedestal", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Basement: Clean the castle basement", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Basement: Giantess guarded chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Basement: Omelette chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Basement: Just an egg", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Yas queen room", player),
-        HasAny('Plasma Geyser', 'Plasma Orb', 'Royal Ring')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Floor secret", player),
-        (HelperCall(helper_func=_timespinnerworldgen_can_break_walls, helper_name="can_break_walls", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Oculus Ring'}, 'if_false': {'type': 'constant', 'value': True}})) & (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Pre-climb gap", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Long balcony", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Past bottom struggle juggle", player),
-        (False_()) | (HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Timespinner Wheel'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Bottom struggle juggle", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (Has("Timespinner Wheel"))) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Right tower freebie", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Top struggle juggle", player),
-        ((HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]})) & (Has("Timespinner Wheel"))) | (HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: No struggle required", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Left tower small balcony", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Left tower royal guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Before Aelana", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Killed Aelana", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Aelana's attic", player),
-        HasAny('Celestial Sash', 'Lightwall')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Aelana's chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Royal Towers: Aelana's pedestal", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ancient Pyramid: Why not it's right there", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ancient Pyramid: Conviction guarded room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Pit secret room", player),
-        (HelperCall(helper_func=_timespinnerworldgen_can_break_walls, helper_name="can_break_walls", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Oculus Ring'}, 'if_false': {'type': 'constant', 'value': True}})) & ((True_()) | (Has("Water Mask")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Regret chest", player),
-        (HelperCall(helper_func=_timespinnerworldgen_can_break_walls, helper_name="can_break_walls", body_data={'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'item_check', 'item': 'Oculus Ring'}, 'if_false': {'type': 'constant', 'value': True}})) & (HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Celestial Sash'}, {'type': 'item_check', 'item': 'Lightwall'}, {'type': 'item_check', 'item': 'Succubus Hairpin'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Nightmare Door chest", player),
-        (True_()) | (Has("Water Mask"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Killed Nightmare", player),
-        ((True_()) | (Has("Water Mask"))) & (HasAll('Timespinner Gear 1', 'Timespinner Gear 2', 'Timespinner Gear 3', 'Timespinner Spindle', 'Timespinner Wheel'))
+        True_()
     )

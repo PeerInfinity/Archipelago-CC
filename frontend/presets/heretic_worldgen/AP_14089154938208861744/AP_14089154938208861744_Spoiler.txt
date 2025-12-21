@@ -538,171 +538,123 @@ Playthrough:
   The Storehouse (E3M1)
 }
 1: {
-  The Docks (E1M1) - Silver Shield: Dragon Claw
-  The Storehouse (E3M1) - Gauntlets of the Necromancer: Ethereal Crossbow
-  The Storehouse (E3M1) - Silver Shield: The Storehouse (E3M1) - Green key
-}
-2: {
-  The Storehouse (E3M1) - Exit: The Storehouse (E3M1) - Complete
-  The Storehouse (E3M1) - Hellstaff: The Crater (E2M1) - Yellow key
-  The Storehouse (E3M1) - Ring of Invincibility: The Cesspool (E3M2)
-}
-3: {
-  The Crater (E2M1) - Dragon Claw: The Gatehouse (E1M3)
-  The Crater (E2M1) - Mystic Urn: The River of Fire (E2M3)
-}
-4: {
-  The Gatehouse (E1M3) - Ethereal Crossbow: The River of Fire (E2M3) - Blue key
-  The Gatehouse (E1M3) - Silver Shield: Hellstaff
-  The River of Fire (E2M3) - Gauntlets of the Necromancer: The Azure Fortress (E3M4)
-  The River of Fire (E2M3) - Silver Shield: The Glacier (E2M9)
-  The River of Fire (E2M3) - Tome of Power: The Aquifer (E3M9) - Blue key
-}
-5: {
-  The River of Fire (E2M3) - Exit: The River of Fire (E2M3) - Complete
-  The River of Fire (E2M3) - Hellstaff: Firemace
-}
-6: {
-  The Azure Fortress (E3M4) - Gauntlets of the Necromancer: The Halls of Fear (E3M6) - Green key
-  The Azure Fortress (E3M4) - Ring of Invincibility: The Gatehouse (E1M3) - Yellow key
-  The Azure Fortress (E3M4) - Tome of Power 2: The Lava Pits (E2M2)
-  The Azure Fortress (E3M4) - Torch: The Cathedral (E1M6)
-  The Cesspool (E3M2) - Morph Ovum: The Ice Grotto (E2M4) - Green key
-  The Cesspool (E3M2) - Tome of Power: The River of Fire (E2M3) - Yellow key
-  The Cesspool (E3M2) - Yellow key: Gauntlets of the Necromancer
-}
-7: {
-  The Cathedral (E1M6) - Yellow key: The Confluence (E3M3)
-  The Glacier (E2M9) - Ethereal Crossbow: The Graveyard (E1M9)
-  The Lava Pits (E2M2) - Shadowsphere: The Ophidian Lair (E3M5) - Yellow key
-  The River of Fire (E2M3) - Green key: The Ice Grotto (E2M4) - Blue key
-}
-8: {
-  The Graveyard (E1M9) - Silver Shield: The Cathedral (E1M6) - Yellow key
-}
-9: {
-  The Cathedral (E1M6) - Bag of Holding 3: The Dungeons (E1M2)
-  The Cathedral (E1M6) - Green key: The River of Fire (E2M3) - Green key
-  The Cathedral (E1M6) - Ring of Invincibility 2: The Cesspool (E3M2) - Yellow key
-  The Cathedral (E1M6) - Silver Shield: The Cesspool (E3M2) - Blue key
-  The Cathedral (E1M6) - Tome of Power: The Labyrinth (E2M6) - Yellow key
-}
-10: {
-  The Cesspool (E3M2) - Firemace 5: The Ophidian Lair (E3M5)
-  The Cesspool (E3M2) - Green key: The Portals of Chaos (E2M8)
-  The Cesspool (E3M2) - Torch: The Glacier (E2M9) - Yellow key
-  The Dungeons (E1M2) - Ethereal Crossbow: The Aquifer (E3M9) - Green key
-  The Dungeons (E1M2) - Silver Shield: The Guard Tower (E1M4) - Green key
-  The Dungeons (E1M2) - Torch: The Ophidian Lair (E3M5) - Green key
-}
-11: {
-  The Glacier (E2M9) - Chaos Device: The Halls of Fear (E3M6) - Blue key
-  The Ophidian Lair (E3M5) - Exit: The Ophidian Lair (E3M5) - Complete
-  The Ophidian Lair (E3M5) - Green key: The Aquifer (E3M9)
-  The Ophidian Lair (E3M5) - Morph Ovum: The Ice Grotto (E2M4)
-  The Ophidian Lair (E3M5) - Tome of Power 2: The Cathedral (E1M6) - Green key
-  The Ophidian Lair (E3M5) - Torch: The Dungeons (E1M2) - Green key
-}
-12: {
-  The Cathedral (E1M6) - Exit: The Cathedral (E1M6) - Complete
-  The Dungeons (E1M2) - Blue key: The Graveyard (E1M9) - Yellow key
-  The Dungeons (E1M2) - Green key: The Citadel (E1M5)
-  The Ice Grotto (E2M4) - Dragon Claw: Hell's Maw (E1M8)
-  The Ice Grotto (E2M4) - Ethereal Crossbow: The Confluence (E3M3) - Green key
-  The Ice Grotto (E2M4) - Exit: The Ice Grotto (E2M4) - Complete
-  The Ice Grotto (E2M4) - Shadowsphere: The Crypts (E1M7)
-  The Ice Grotto (E2M4) - Tome of Power 2: The Crypts (E1M7) - Green key
-}
-13: {
+  D'Sparil's Keep (E3M8) - Dragon Claw: The Citadel (E1M5) - Blue key
+  D'Sparil's Keep (E3M8) - Exit: D'Sparil's Keep (E3M8) - Complete
+  D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer: The Ice Grotto (E2M4) - Yellow key
   Hell's Maw (E1M8) - Bag of Holding: The Storehouse (E3M1) - Yellow key
   Hell's Maw (E1M8) - Dragon Claw: The Great Hall (E2M7) - Green key
   Hell's Maw (E1M8) - Exit: Hell's Maw (E1M8) - Complete
   Hell's Maw (E1M8) - Ring of Invincibility: The Halls of Fear (E3M6) - Yellow key
   Hell's Maw (E1M8) - Tome of Power: The Guard Tower (E1M4)
-  The Citadel (E1M5) - Gauntlets of the Necromancer: The Catacombs (E2M5) - Blue key
-  The Confluence (E3M3) - Chaos Device: The Dungeons (E1M2) - Yellow key
-  The Confluence (E3M3) - Mystic Urn: The Catacombs (E2M5) - Green key
-  The Confluence (E3M3) - Tome of Power 5: Phoenix Rod
-  The Crypts (E1M7) - Silver Shield: The Lava Pits (E2M2) - Yellow key
-  The Crypts (E1M7) - Silver Shield 2: The Great Hall (E2M7)
-  The Graveyard (E1M9) - Green key: The Crater (E2M1) - Green key
-}
-14: {
-  The Crater (E2M1) - Exit: The Crater (E2M1) - Complete
-  The Great Hall (E2M7) - Silver Shield: The Gatehouse (E1M3) - Green key
-  The Guard Tower (E1M4) - Map Scroll: The Halls of Fear (E3M6)
-  The Lava Pits (E2M2) - Gauntlets of the Necromancer: The Confluence (E3M3) - Yellow key
-  The Lava Pits (E2M2) - Map Scroll: The Great Hall (E2M7) - Yellow key
-  The Lava Pits (E2M2) - Ring of Invincibility: The Chasm (E3M7) - Blue key
-  The Portals of Chaos (E2M8) - Dragon Claw: The Chasm (E3M7)
-  The Portals of Chaos (E2M8) - Exit: The Portals of Chaos (E2M8) - Complete
-}
-15: {
-  The Chasm (E3M7) - Ethereal Crossbow: The Crypts (E1M7) - Blue key
-  The Gatehouse (E1M3) - Exit: The Gatehouse (E1M3) - Complete
-  The Halls of Fear (E3M6) - Bag of Holding 2: The Citadel (E1M5) - Green key
-  The Halls of Fear (E3M6) - Exit: The Halls of Fear (E3M6) - Complete
-  The Halls of Fear (E3M6) - Firemace: D'Sparil's Keep (E3M8)
-  The Halls of Fear (E3M6) - Firemace 2: The Labyrinth (E2M6) - Green key
-  The Halls of Fear (E3M6) - Morph Ovum: The Azure Fortress (E3M4) - Green key
-}
-16: {
-  D'Sparil's Keep (E3M8) - Dragon Claw: The Citadel (E1M5) - Blue key
-  D'Sparil's Keep (E3M8) - Exit: D'Sparil's Keep (E3M8) - Complete
-  D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer: The Ice Grotto (E2M4) - Yellow key
-  The Azure Fortress (E3M4) - Exit: The Azure Fortress (E3M4) - Complete
-  The Azure Fortress (E3M4) - Map Scroll: The Catacombs (E2M5)
-  The Azure Fortress (E3M4) - Phoenix Rod: The Crypts (E1M7) - Yellow key
-  The Crypts (E1M7) - Exit: The Crypts (E1M7) - Complete
-}
-17: {
-  The Catacombs (E2M5) - Torch: The Graveyard (E1M9) - Blue key
-  The Ice Grotto (E2M4) - Phoenix Rod: The Lava Pits (E2M2) - Green key
-}
-18: {
-  The Graveyard (E1M9) - Exit: The Graveyard (E1M9) - Complete
-  The Lava Pits (E2M2) - Bag of Holding: The Great Hall (E2M7) - Blue key
-  The Lava Pits (E2M2) - Enchanted Shield: The Aquifer (E3M9) - Yellow key
-  The Lava Pits (E2M2) - Exit: The Lava Pits (E2M2) - Complete
-}
-19: {
   The Aquifer (E3M9) - Exit: The Aquifer (E3M9) - Complete
   The Aquifer (E3M9) - Hellstaff: The Catacombs (E2M5) - Yellow key
-  The Great Hall (E2M7) - Exit: The Great Hall (E2M7) - Complete
-}
-20: {
+  The Azure Fortress (E3M4) - Exit: The Azure Fortress (E3M4) - Complete
+  The Azure Fortress (E3M4) - Gauntlets of the Necromancer: The Halls of Fear (E3M6) - Green key
+  The Azure Fortress (E3M4) - Green key: The Guard Tower (E1M4) - Yellow key
+  The Azure Fortress (E3M4) - Map Scroll: The Catacombs (E2M5)
+  The Azure Fortress (E3M4) - Phoenix Rod: The Crypts (E1M7) - Yellow key
+  The Azure Fortress (E3M4) - Ring of Invincibility: The Gatehouse (E1M3) - Yellow key
+  The Azure Fortress (E3M4) - Tome of Power 2: The Lava Pits (E2M2)
+  The Azure Fortress (E3M4) - Torch: The Cathedral (E1M6)
   The Catacombs (E2M5) - Blue key: The Citadel (E1M5) - Yellow key
   The Catacombs (E2M5) - Chaos Device: The Chasm (E3M7) - Green key
   The Catacombs (E2M5) - Ethereal Crossbow: The Cesspool (E3M2) - Green key
   The Catacombs (E2M5) - Exit: The Catacombs (E2M5) - Complete
   The Catacombs (E2M5) - Shadowsphere: The Glacier (E2M9) - Blue key
-}
-21: {
+  The Catacombs (E2M5) - Torch: The Graveyard (E1M9) - Blue key
+  The Cathedral (E1M6) - Bag of Holding 3: The Dungeons (E1M2)
+  The Cathedral (E1M6) - Exit: The Cathedral (E1M6) - Complete
+  The Cathedral (E1M6) - Green key: The River of Fire (E2M3) - Green key
+  The Cathedral (E1M6) - Ring of Invincibility 2: The Cesspool (E3M2) - Yellow key
+  The Cathedral (E1M6) - Silver Shield: The Cesspool (E3M2) - Blue key
+  The Cathedral (E1M6) - Tome of Power: The Labyrinth (E2M6) - Yellow key
+  The Cathedral (E1M6) - Yellow key: The Confluence (E3M3)
   The Cesspool (E3M2) - Chaos Device: The Docks (E1M1) - Yellow key
   The Cesspool (E3M2) - Exit: The Cesspool (E3M2) - Complete
   The Cesspool (E3M2) - Firemace 3: The Labyrinth (E2M6)
-  The Citadel (E1M5) - Exit: The Citadel (E1M5) - Complete
-  The Citadel (E1M5) - Tome of Power 4: The Graveyard (E1M9) - Green key
-  The Glacier (E2M9) - Exit: The Glacier (E2M9) - Complete
-}
-22: {
-  The Docks (E1M1) - Exit: The Docks (E1M1) - Complete
-  The Labyrinth (E2M6) - Chaos Device: The Confluence (E3M3) - Blue key
-  The Labyrinth (E2M6) - Enchanted Shield: The Chasm (E3M7) - Yellow key
-}
-23: {
+  The Cesspool (E3M2) - Firemace 5: The Ophidian Lair (E3M5)
+  The Cesspool (E3M2) - Green key: The Portals of Chaos (E2M8)
+  The Cesspool (E3M2) - Morph Ovum: The Ice Grotto (E2M4) - Green key
+  The Cesspool (E3M2) - Tome of Power: The River of Fire (E2M3) - Yellow key
+  The Cesspool (E3M2) - Torch: The Glacier (E2M9) - Yellow key
+  The Cesspool (E3M2) - Yellow key: Gauntlets of the Necromancer
+  The Chasm (E3M7) - Ethereal Crossbow: The Crypts (E1M7) - Blue key
   The Chasm (E3M7) - Exit: The Chasm (E3M7) - Complete
   The Chasm (E3M7) - Hellstaff: The Azure Fortress (E3M4) - Yellow key
   The Chasm (E3M7) - Map Scroll: The Glacier (E2M9) - Green key
   The Chasm (E3M7) - Tome of Power 2: The Labyrinth (E2M6) - Blue key
+  The Citadel (E1M5) - Exit: The Citadel (E1M5) - Complete
+  The Citadel (E1M5) - Gauntlets of the Necromancer: The Catacombs (E2M5) - Blue key
+  The Citadel (E1M5) - Tome of Power 4: The Graveyard (E1M9) - Green key
+  The Confluence (E3M3) - Chaos Device: The Dungeons (E1M2) - Yellow key
   The Confluence (E3M3) - Exit: The Confluence (E3M3) - Complete
   The Confluence (E3M3) - Map Scroll: The Dungeons (E1M2) - Blue key
-}
-24: {
-  The Azure Fortress (E3M4) - Green key: The Guard Tower (E1M4) - Yellow key
+  The Confluence (E3M3) - Mystic Urn: The Catacombs (E2M5) - Green key
+  The Confluence (E3M3) - Tome of Power 5: Phoenix Rod
+  The Crater (E2M1) - Dragon Claw: The Gatehouse (E1M3)
+  The Crater (E2M1) - Exit: The Crater (E2M1) - Complete
+  The Crater (E2M1) - Mystic Urn: The River of Fire (E2M3)
+  The Crypts (E1M7) - Exit: The Crypts (E1M7) - Complete
+  The Crypts (E1M7) - Silver Shield: The Lava Pits (E2M2) - Yellow key
+  The Crypts (E1M7) - Silver Shield 2: The Great Hall (E2M7)
+  The Docks (E1M1) - Exit: The Docks (E1M1) - Complete
+  The Docks (E1M1) - Silver Shield: Dragon Claw
+  The Dungeons (E1M2) - Blue key: The Graveyard (E1M9) - Yellow key
+  The Dungeons (E1M2) - Ethereal Crossbow: The Aquifer (E3M9) - Green key
   The Dungeons (E1M2) - Exit: The Dungeons (E1M2) - Complete
-  The Labyrinth (E2M6) - Exit: The Labyrinth (E2M6) - Complete
-}
-25: {
+  The Dungeons (E1M2) - Green key: The Citadel (E1M5)
+  The Dungeons (E1M2) - Silver Shield: The Guard Tower (E1M4) - Green key
+  The Dungeons (E1M2) - Torch: The Ophidian Lair (E3M5) - Green key
+  The Gatehouse (E1M3) - Ethereal Crossbow: The River of Fire (E2M3) - Blue key
+  The Gatehouse (E1M3) - Exit: The Gatehouse (E1M3) - Complete
+  The Gatehouse (E1M3) - Silver Shield: Hellstaff
+  The Glacier (E2M9) - Chaos Device: The Halls of Fear (E3M6) - Blue key
+  The Glacier (E2M9) - Ethereal Crossbow: The Graveyard (E1M9)
+  The Glacier (E2M9) - Exit: The Glacier (E2M9) - Complete
+  The Graveyard (E1M9) - Exit: The Graveyard (E1M9) - Complete
+  The Graveyard (E1M9) - Green key: The Crater (E2M1) - Green key
+  The Graveyard (E1M9) - Silver Shield: The Cathedral (E1M6) - Yellow key
+  The Great Hall (E2M7) - Exit: The Great Hall (E2M7) - Complete
+  The Great Hall (E2M7) - Silver Shield: The Gatehouse (E1M3) - Green key
   The Guard Tower (E1M4) - Exit: The Guard Tower (E1M4) - Complete
+  The Guard Tower (E1M4) - Map Scroll: The Halls of Fear (E3M6)
+  The Halls of Fear (E3M6) - Bag of Holding 2: The Citadel (E1M5) - Green key
+  The Halls of Fear (E3M6) - Exit: The Halls of Fear (E3M6) - Complete
+  The Halls of Fear (E3M6) - Firemace: D'Sparil's Keep (E3M8)
+  The Halls of Fear (E3M6) - Firemace 2: The Labyrinth (E2M6) - Green key
+  The Halls of Fear (E3M6) - Morph Ovum: The Azure Fortress (E3M4) - Green key
+  The Ice Grotto (E2M4) - Dragon Claw: Hell's Maw (E1M8)
+  The Ice Grotto (E2M4) - Ethereal Crossbow: The Confluence (E3M3) - Green key
+  The Ice Grotto (E2M4) - Exit: The Ice Grotto (E2M4) - Complete
+  The Ice Grotto (E2M4) - Phoenix Rod: The Lava Pits (E2M2) - Green key
+  The Ice Grotto (E2M4) - Shadowsphere: The Crypts (E1M7)
+  The Ice Grotto (E2M4) - Tome of Power 2: The Crypts (E1M7) - Green key
+  The Labyrinth (E2M6) - Chaos Device: The Confluence (E3M3) - Blue key
+  The Labyrinth (E2M6) - Enchanted Shield: The Chasm (E3M7) - Yellow key
+  The Labyrinth (E2M6) - Exit: The Labyrinth (E2M6) - Complete
+  The Lava Pits (E2M2) - Bag of Holding: The Great Hall (E2M7) - Blue key
+  The Lava Pits (E2M2) - Enchanted Shield: The Aquifer (E3M9) - Yellow key
+  The Lava Pits (E2M2) - Exit: The Lava Pits (E2M2) - Complete
+  The Lava Pits (E2M2) - Gauntlets of the Necromancer: The Confluence (E3M3) - Yellow key
+  The Lava Pits (E2M2) - Map Scroll: The Great Hall (E2M7) - Yellow key
+  The Lava Pits (E2M2) - Ring of Invincibility: The Chasm (E3M7) - Blue key
+  The Lava Pits (E2M2) - Shadowsphere: The Ophidian Lair (E3M5) - Yellow key
+  The Ophidian Lair (E3M5) - Exit: The Ophidian Lair (E3M5) - Complete
+  The Ophidian Lair (E3M5) - Green key: The Aquifer (E3M9)
+  The Ophidian Lair (E3M5) - Morph Ovum: The Ice Grotto (E2M4)
+  The Ophidian Lair (E3M5) - Tome of Power 2: The Cathedral (E1M6) - Green key
+  The Ophidian Lair (E3M5) - Torch: The Dungeons (E1M2) - Green key
+  The Portals of Chaos (E2M8) - Dragon Claw: The Chasm (E3M7)
+  The Portals of Chaos (E2M8) - Exit: The Portals of Chaos (E2M8) - Complete
+  The River of Fire (E2M3) - Exit: The River of Fire (E2M3) - Complete
+  The River of Fire (E2M3) - Gauntlets of the Necromancer: The Azure Fortress (E3M4)
+  The River of Fire (E2M3) - Green key: The Ice Grotto (E2M4) - Blue key
+  The River of Fire (E2M3) - Hellstaff: Firemace
+  The River of Fire (E2M3) - Silver Shield: The Glacier (E2M9)
+  The River of Fire (E2M3) - Tome of Power: The Aquifer (E3M9) - Blue key
+  The Storehouse (E3M1) - Exit: The Storehouse (E3M1) - Complete
+  The Storehouse (E3M1) - Gauntlets of the Necromancer: Ethereal Crossbow
+  The Storehouse (E3M1) - Hellstaff: The Crater (E2M1) - Yellow key
+  The Storehouse (E3M1) - Ring of Invincibility: The Cesspool (E3M2)
+  The Storehouse (E3M1) - Silver Shield: The Storehouse (E3M1) - Green key
 }

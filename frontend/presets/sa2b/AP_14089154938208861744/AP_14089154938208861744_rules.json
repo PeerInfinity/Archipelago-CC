@@ -19,8 +19,9 @@
             "name": "Gate 0",
             "connected_region": "Gate 0",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -34,8 +35,9 @@
             "name": "City Escape - 1",
             "id": 16711680,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -49,18 +51,11 @@
             "name": "City Escape - 2",
             "id": 16711712,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "City Escape - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "City Escape - 1"
+              }
             },
             "item": {
               "name": "Five Rings",
@@ -74,8 +69,9 @@
             "name": "City Escape - Chao Key 1",
             "id": 16712704,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Eggman - Large Cannon",
@@ -89,8 +85,9 @@
             "name": "City Escape - Chao Key 2",
             "id": 16712736,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Rouge - Iron Boots",
@@ -104,8 +101,9 @@
             "name": "City Escape - Chao Key 3",
             "id": 16712768,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Eggman - Jet Engine",
@@ -119,8 +117,9 @@
             "name": "City Escape - Gold Beetle",
             "id": 16713216,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -134,15 +133,22 @@
             "name": "City Escape - Upgrade",
             "id": 16711840,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Flame Ring"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Flame Ring"
+                  }
                 }
               ]
             },
@@ -164,8 +170,11 @@
             "name": "Metal Harbor - 1",
             "id": 16711683,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Light Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Light Shoes"
+              }
             },
             "item": {
               "name": "Rouge - Pick Nails",
@@ -179,25 +188,22 @@
             "name": "Metal Harbor - 2",
             "id": 16711715,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Metal Harbor - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Metal Harbor - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Light Shoes"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
                 }
               ]
             },
@@ -213,8 +219,9 @@
             "name": "Metal Harbor - Chao Key 1",
             "id": 16712707,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sonic - Flame Ring",
@@ -228,8 +235,11 @@
             "name": "Metal Harbor - Chao Key 2",
             "id": 16712739,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Light Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Light Shoes"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -243,8 +253,11 @@
             "name": "Metal Harbor - Chao Key 3",
             "id": 16712771,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Light Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Light Shoes"
+              }
             },
             "item": {
               "name": "Shadow - Ancient Light",
@@ -258,8 +271,9 @@
             "name": "Metal Harbor - Gold Beetle",
             "id": 16713219,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -273,8 +287,9 @@
             "name": "Metal Harbor - Upgrade",
             "id": 16711843,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -294,8 +309,9 @@
             "name": "Green Forest - 1",
             "id": 16711684,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -309,18 +325,11 @@
             "name": "Green Forest - 2",
             "id": 16711716,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Green Forest - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Green Forest - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -334,8 +343,9 @@
             "name": "Green Forest - Chao Key 1",
             "id": 16712708,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -349,8 +359,9 @@
             "name": "Green Forest - Chao Key 2",
             "id": 16712740,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -364,8 +375,9 @@
             "name": "Green Forest - Chao Key 3",
             "id": 16712772,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -379,8 +391,9 @@
             "name": "Green Forest - Gold Beetle",
             "id": 16713220,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ten Rings",
@@ -394,8 +407,9 @@
             "name": "Green Forest - Upgrade",
             "id": 16711844,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shadow - Air Shoes",
@@ -415,8 +429,11 @@
             "name": "Pyramid Cave - 1",
             "id": 16711690,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Five Rings",
@@ -430,18 +447,11 @@
             "name": "Pyramid Cave - 2",
             "id": 16711722,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Pyramid Cave - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Pyramid Cave - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -455,8 +465,9 @@
             "name": "Pyramid Cave - Chao Key 1",
             "id": 16712714,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -470,8 +481,11 @@
             "name": "Pyramid Cave - Chao Key 2",
             "id": 16712746,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Magnetic Shield",
@@ -485,19 +499,29 @@
             "name": "Pyramid Cave - Chao Key 3",
             "id": 16712778,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Light Shoes"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Mystic Melody"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Mystic Melody"
+                  }
                 }
               ]
             },
@@ -513,8 +537,11 @@
             "name": "Pyramid Cave - Gold Beetle",
             "id": 16713226,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Extra Life",
@@ -528,8 +555,9 @@
             "name": "Pyramid Cave - Upgrade",
             "id": 16711850,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -549,19 +577,29 @@
             "name": "Crazy Gadget - 1",
             "id": 16711694,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Flame Ring"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Flame Ring"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Light Shoes"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
                 }
               ]
             },
@@ -577,25 +615,22 @@
             "name": "Crazy Gadget - 2",
             "id": 16711726,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Crazy Gadget - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Crazy Gadget - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 }
               ]
             },
@@ -611,8 +646,11 @@
             "name": "Crazy Gadget - Chao Key 1",
             "id": 16712718,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -626,8 +664,11 @@
             "name": "Crazy Gadget - Chao Key 2",
             "id": 16712750,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -641,19 +682,29 @@
             "name": "Crazy Gadget - Chao Key 3",
             "id": 16712782,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Flame Ring"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Flame Ring"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Light Shoes"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
                 }
               ]
             },
@@ -669,19 +720,29 @@
             "name": "Crazy Gadget - Gold Beetle",
             "id": 16713230,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Flame Ring"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Flame Ring"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Light Shoes"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
                 }
               ]
             },
@@ -697,8 +758,11 @@
             "name": "Crazy Gadget - Upgrade",
             "id": 16711854,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Magnetic Shield",
@@ -718,8 +782,11 @@
             "name": "Final Rush - 1",
             "id": 16711695,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -733,18 +800,11 @@
             "name": "Final Rush - 2",
             "id": 16711727,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Final Rush - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Final Rush - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -758,8 +818,9 @@
             "name": "Final Rush - Chao Key 1",
             "id": 16712719,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Rouge - Mystic Melody",
@@ -773,8 +834,9 @@
             "name": "Final Rush - Chao Key 2",
             "id": 16712751,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Magnetic Shield",
@@ -788,8 +850,11 @@
             "name": "Final Rush - Chao Key 3",
             "id": 16712783,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -803,8 +868,9 @@
             "name": "Final Rush - Gold Beetle",
             "id": 16713231,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -818,8 +884,11 @@
             "name": "Final Rush - Upgrade",
             "id": 16711855,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sonic - Bounce Bracelet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -839,8 +908,9 @@
             "name": "Prison Lane - 1",
             "id": 16711682,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -854,18 +924,11 @@
             "name": "Prison Lane - 2",
             "id": 16711714,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Prison Lane - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Prison Lane - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -879,8 +942,11 @@
             "name": "Prison Lane - Chao Key 1",
             "id": 16712706,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Bazooka"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Bazooka"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -894,8 +960,11 @@
             "name": "Prison Lane - Chao Key 2",
             "id": 16712738,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Eggman - Protective Armor",
@@ -909,8 +978,9 @@
             "name": "Prison Lane - Chao Key 3",
             "id": 16712770,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ten Rings",
@@ -924,8 +994,9 @@
             "name": "Prison Lane - Gold Beetle",
             "id": 16713218,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -939,8 +1010,11 @@
             "name": "Prison Lane - Upgrade",
             "id": 16711842,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Bazooka"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Bazooka"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -960,8 +1034,11 @@
             "name": "Mission Street - 1",
             "id": 16711686,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -975,25 +1052,22 @@
             "name": "Mission Street - 2",
             "id": 16711718,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Mission Street - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Mission Street - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1009,8 +1083,11 @@
             "name": "Mission Street - Chao Key 1",
             "id": 16712710,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Extra Life",
@@ -1024,8 +1101,11 @@
             "name": "Mission Street - Chao Key 2",
             "id": 16712742,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1039,8 +1119,11 @@
             "name": "Mission Street - Chao Key 3",
             "id": 16712774,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1054,8 +1137,11 @@
             "name": "Mission Street - Gold Beetle",
             "id": 16713222,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1069,8 +1155,9 @@
             "name": "Mission Street - Upgrade",
             "id": 16711846,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Extra Life",
@@ -1090,8 +1177,9 @@
             "name": "Route 101 - 1",
             "id": 16711688,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1105,18 +1193,11 @@
             "name": "Route 101 - 2",
             "id": 16711720,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Route 101 - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Route 101 - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1136,8 +1217,11 @@
             "name": "Hidden Base - 1",
             "id": 16711689,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1151,25 +1235,22 @@
             "name": "Hidden Base - 2",
             "id": 16711721,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Hidden Base - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Hidden Base - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1185,8 +1266,11 @@
             "name": "Hidden Base - Chao Key 1",
             "id": 16712713,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Ten Rings",
@@ -1200,8 +1284,11 @@
             "name": "Hidden Base - Chao Key 2",
             "id": 16712745,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1215,8 +1302,11 @@
             "name": "Hidden Base - Gold Beetle",
             "id": 16713225,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Tails - Laser Blaster",
@@ -1230,15 +1320,22 @@
             "name": "Hidden Base - Upgrade",
             "id": 16711849,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Tails - Bazooka"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Bazooka"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1260,15 +1357,22 @@
             "name": "Eternal Engine - 1",
             "id": 16711692,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Tails - Bazooka"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Bazooka"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1284,25 +1388,22 @@
             "name": "Eternal Engine - 2",
             "id": 16711724,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Eternal Engine - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Eternal Engine - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1318,8 +1419,11 @@
             "name": "Eternal Engine - Chao Key 1",
             "id": 16712716,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1333,15 +1437,22 @@
             "name": "Eternal Engine - Chao Key 2",
             "id": 16712748,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Tails - Bazooka"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Bazooka"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1357,8 +1468,11 @@
             "name": "Eternal Engine - Chao Key 3",
             "id": 16712780,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1372,15 +1486,22 @@
             "name": "Eternal Engine - Gold Beetle",
             "id": 16713228,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Tails - Bazooka"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Bazooka"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -1396,8 +1517,11 @@
             "name": "Eternal Engine - Upgrade",
             "id": 16711852,
             "access_rule": {
-              "type": "item_check",
-              "item": "Tails - Booster"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Tails - Booster"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1417,8 +1541,9 @@
             "name": "Wild Canyon - 1",
             "id": 16711681,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1432,18 +1557,11 @@
             "name": "Wild Canyon - 2",
             "id": 16711713,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Wild Canyon - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Wild Canyon - 1"
+              }
             },
             "item": {
               "name": "Sonic - Light Shoes",
@@ -1457,8 +1575,9 @@
             "name": "Wild Canyon - Chao Key 1",
             "id": 16712705,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1472,8 +1591,9 @@
             "name": "Wild Canyon - Chao Key 2",
             "id": 16712737,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1487,8 +1607,9 @@
             "name": "Wild Canyon - Chao Key 3",
             "id": 16712769,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1502,8 +1623,9 @@
             "name": "Wild Canyon - Gold Beetle",
             "id": 16713217,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1517,8 +1639,11 @@
             "name": "Wild Canyon - Upgrade",
             "id": 16711841,
             "access_rule": {
-              "type": "item_check",
-              "item": "Knuckles - Shovel Claws"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Knuckles - Shovel Claws"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1538,8 +1663,11 @@
             "name": "Pumpkin Hill - 1",
             "id": 16711685,
             "access_rule": {
-              "type": "item_check",
-              "item": "Knuckles - Shovel Claws"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Knuckles - Shovel Claws"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1553,18 +1681,11 @@
             "name": "Pumpkin Hill - 2",
             "id": 16711717,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Pumpkin Hill - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Pumpkin Hill - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1578,8 +1699,9 @@
             "name": "Pumpkin Hill - Chao Key 1",
             "id": 16712709,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1593,8 +1715,9 @@
             "name": "Pumpkin Hill - Chao Key 2",
             "id": 16712741,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1608,8 +1731,9 @@
             "name": "Pumpkin Hill - Chao Key 3",
             "id": 16712773,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1623,8 +1747,9 @@
             "name": "Pumpkin Hill - Upgrade",
             "id": 16711845,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1644,8 +1769,11 @@
             "name": "Aquatic Mine - 1",
             "id": 16711687,
             "access_rule": {
-              "type": "item_check",
-              "item": "Knuckles - Shovel Claws"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Knuckles - Shovel Claws"
+              }
             },
             "item": {
               "name": "Extra Life",
@@ -1659,18 +1787,11 @@
             "name": "Aquatic Mine - 2",
             "id": 16711719,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Aquatic Mine - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Aquatic Mine - 1"
+              }
             },
             "item": {
               "name": "Twenty Rings",
@@ -1684,8 +1805,9 @@
             "name": "Aquatic Mine - Chao Key 1",
             "id": 16712711,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1699,8 +1821,9 @@
             "name": "Aquatic Mine - Chao Key 2",
             "id": 16712743,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1714,8 +1837,9 @@
             "name": "Aquatic Mine - Chao Key 3",
             "id": 16712775,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1729,8 +1853,9 @@
             "name": "Aquatic Mine - Gold Beetle",
             "id": 16713223,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1744,8 +1869,9 @@
             "name": "Aquatic Mine - Upgrade",
             "id": 16711847,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Tails - Booster",
@@ -1765,15 +1891,22 @@
             "name": "Death Chamber - 1",
             "id": 16711691,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Shovel Claws"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Shovel Claws"
+                  }
                 }
               ]
             },
@@ -1789,34 +1922,35 @@
             "name": "Death Chamber - 2",
             "id": 16711723,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Knuckles - Hammer Gloves"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Knuckles - Hammer Gloves"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Knuckles - Shovel Claws"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Knuckles - Shovel Claws"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Death Chamber - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Death Chamber - 1"
+                  }
                 }
               ]
             },
@@ -1832,8 +1966,11 @@
             "name": "Death Chamber - Chao Key 1",
             "id": 16712715,
             "access_rule": {
-              "type": "item_check",
-              "item": "Knuckles - Hammer Gloves"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Knuckles - Hammer Gloves"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1847,8 +1984,11 @@
             "name": "Death Chamber - Chao Key 2",
             "id": 16712747,
             "access_rule": {
-              "type": "item_check",
-              "item": "Knuckles - Hammer Gloves"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Knuckles - Hammer Gloves"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1862,15 +2002,22 @@
             "name": "Death Chamber - Chao Key 3",
             "id": 16712779,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Shovel Claws"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Shovel Claws"
+                  }
                 }
               ]
             },
@@ -1886,15 +2033,22 @@
             "name": "Death Chamber - Gold Beetle",
             "id": 16713227,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Shovel Claws"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Shovel Claws"
+                  }
                 }
               ]
             },
@@ -1910,8 +2064,9 @@
             "name": "Death Chamber - Upgrade",
             "id": 16711851,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -1931,15 +2086,22 @@
             "name": "Meteor Herd - 1",
             "id": 16711693,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Shovel Claws"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Shovel Claws"
+                  }
                 }
               ]
             },
@@ -1955,18 +2117,11 @@
             "name": "Meteor Herd - 2",
             "id": 16711725,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Meteor Herd - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Meteor Herd - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1980,8 +2135,9 @@
             "name": "Meteor Herd - Chao Key 1",
             "id": 16712717,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Twenty Rings",
@@ -1995,8 +2151,9 @@
             "name": "Meteor Herd - Chao Key 2",
             "id": 16712749,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shield",
@@ -2010,8 +2167,9 @@
             "name": "Meteor Herd - Chao Key 3",
             "id": 16712781,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2025,8 +2183,9 @@
             "name": "Meteor Herd - Gold Beetle",
             "id": 16713229,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2040,8 +2199,11 @@
             "name": "Meteor Herd - Upgrade",
             "id": 16711853,
             "access_rule": {
-              "type": "item_check",
-              "item": "Knuckles - Hammer Gloves"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Knuckles - Hammer Gloves"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2061,8 +2223,9 @@
             "name": "Radical Highway - 1",
             "id": 16711699,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2076,18 +2239,11 @@
             "name": "Radical Highway - 2",
             "id": 16711731,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Radical Highway - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Radical Highway - 1"
+              }
             },
             "item": {
               "name": "Ten Rings",
@@ -2101,8 +2257,9 @@
             "name": "Radical Highway - Chao Key 1",
             "id": 16712723,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2116,8 +2273,9 @@
             "name": "Radical Highway - Chao Key 2",
             "id": 16712755,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Five Rings",
@@ -2131,8 +2289,9 @@
             "name": "Radical Highway - Chao Key 3",
             "id": 16712787,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2146,8 +2305,9 @@
             "name": "Radical Highway - Gold Beetle",
             "id": 16713235,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2161,8 +2321,11 @@
             "name": "Radical Highway - Upgrade",
             "id": 16711859,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shadow - Air Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
             },
             "item": {
               "name": "Sonic - Bounce Bracelet",
@@ -2182,8 +2345,11 @@
             "name": "White Jungle - 1",
             "id": 16711704,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shadow - Air Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2197,18 +2363,11 @@
             "name": "White Jungle - 2",
             "id": 16711736,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "White Jungle - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "White Jungle - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2222,8 +2381,9 @@
             "name": "White Jungle - Chao Key 1",
             "id": 16712728,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2237,8 +2397,11 @@
             "name": "White Jungle - Chao Key 2",
             "id": 16712760,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shadow - Air Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
             },
             "item": {
               "name": "Sonic - Ancient Light",
@@ -2252,8 +2415,11 @@
             "name": "White Jungle - Chao Key 3",
             "id": 16712792,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shadow - Air Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2267,8 +2433,11 @@
             "name": "White Jungle - Gold Beetle",
             "id": 16713240,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shadow - Air Shoes"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
             },
             "item": {
               "name": "Ten Rings",
@@ -2282,8 +2451,9 @@
             "name": "White Jungle - Upgrade",
             "id": 16711864,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2303,8 +2473,9 @@
             "name": "Sky Rail - 1",
             "id": 16711706,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Invincibility",
@@ -2318,18 +2489,11 @@
             "name": "Sky Rail - 2",
             "id": 16711738,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Sky Rail - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Sky Rail - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2343,8 +2507,9 @@
             "name": "Sky Rail - Chao Key 1",
             "id": 16712730,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2358,8 +2523,9 @@
             "name": "Sky Rail - Chao Key 2",
             "id": 16712762,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2373,8 +2539,9 @@
             "name": "Sky Rail - Chao Key 3",
             "id": 16712794,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2388,8 +2555,9 @@
             "name": "Sky Rail - Gold Beetle",
             "id": 16713242,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2403,8 +2571,9 @@
             "name": "Sky Rail - Upgrade",
             "id": 16711866,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shield",
@@ -2424,8 +2593,9 @@
             "name": "Final Chase - 1",
             "id": 16711709,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Twenty Rings",
@@ -2439,18 +2609,11 @@
             "name": "Final Chase - 2",
             "id": 16711741,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Final Chase - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Final Chase - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2464,8 +2627,9 @@
             "name": "Final Chase - Chao Key 1",
             "id": 16712733,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2479,8 +2643,9 @@
             "name": "Final Chase - Chao Key 2",
             "id": 16712765,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2494,8 +2659,9 @@
             "name": "Final Chase - Chao Key 3",
             "id": 16712797,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Knuckles - Air Necklace",
@@ -2509,8 +2675,9 @@
             "name": "Final Chase - Gold Beetle",
             "id": 16713245,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2524,8 +2691,9 @@
             "name": "Final Chase - Upgrade",
             "id": 16711869,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2545,8 +2713,9 @@
             "name": "Iron Gate - 1",
             "id": 16711696,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2560,18 +2729,11 @@
             "name": "Iron Gate - 2",
             "id": 16711728,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Iron Gate - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Iron Gate - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2585,8 +2747,9 @@
             "name": "Iron Gate - Chao Key 1",
             "id": 16712720,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2600,8 +2763,9 @@
             "name": "Iron Gate - Chao Key 2",
             "id": 16712752,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Extra Life",
@@ -2615,8 +2779,9 @@
             "name": "Iron Gate - Chao Key 3",
             "id": 16712784,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2630,8 +2795,9 @@
             "name": "Iron Gate - Gold Beetle",
             "id": 16713232,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shadow - Flame Ring",
@@ -2645,8 +2811,11 @@
             "name": "Iron Gate - Upgrade",
             "id": 16711856,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Large Cannon"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Large Cannon"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2666,8 +2835,9 @@
             "name": "Sand Ocean - 1",
             "id": 16711698,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2681,18 +2851,11 @@
             "name": "Sand Ocean - 2",
             "id": 16711730,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Sand Ocean - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Sand Ocean - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2706,8 +2869,9 @@
             "name": "Sand Ocean - Chao Key 1",
             "id": 16712722,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2721,8 +2885,9 @@
             "name": "Sand Ocean - Chao Key 2",
             "id": 16712754,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2736,8 +2901,9 @@
             "name": "Sand Ocean - Chao Key 3",
             "id": 16712786,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2751,8 +2917,9 @@
             "name": "Sand Ocean - Gold Beetle",
             "id": 16713234,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Magnetic Shield",
@@ -2766,8 +2933,11 @@
             "name": "Sand Ocean - Upgrade",
             "id": 16711858,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2787,8 +2957,11 @@
             "name": "Lost Colony - 1",
             "id": 16711701,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2802,25 +2975,22 @@
             "name": "Lost Colony - 2",
             "id": 16711733,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Lost Colony - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Lost Colony - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 }
               ]
             },
@@ -2836,8 +3006,9 @@
             "name": "Lost Colony - Chao Key 1",
             "id": 16712725,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2851,8 +3022,9 @@
             "name": "Lost Colony - Chao Key 2",
             "id": 16712757,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2866,8 +3038,11 @@
             "name": "Lost Colony - Chao Key 3",
             "id": 16712789,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2881,8 +3056,11 @@
             "name": "Lost Colony - Gold Beetle",
             "id": 16713237,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2896,8 +3074,9 @@
             "name": "Lost Colony - Upgrade",
             "id": 16711861,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -2917,15 +3096,22 @@
             "name": "Weapons Bed - 1",
             "id": 16711702,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Large Cannon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Large Cannon"
+                  }
                 }
               ]
             },
@@ -2941,34 +3127,35 @@
             "name": "Weapons Bed - 2",
             "id": 16711734,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Eggman - Jet Engine"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Eggman - Jet Engine"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Eggman - Large Cannon"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Eggman - Large Cannon"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Weapons Bed - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Weapons Bed - 1"
+                  }
                 }
               ]
             },
@@ -2984,8 +3171,9 @@
             "name": "Weapons Bed - Chao Key 1",
             "id": 16712726,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Magnetic Shield",
@@ -2999,15 +3187,22 @@
             "name": "Weapons Bed - Chao Key 2",
             "id": 16712758,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Large Cannon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Large Cannon"
+                  }
                 }
               ]
             },
@@ -3023,15 +3218,22 @@
             "name": "Weapons Bed - Chao Key 3",
             "id": 16712790,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Large Cannon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Large Cannon"
+                  }
                 }
               ]
             },
@@ -3047,8 +3249,9 @@
             "name": "Weapons Bed - Upgrade",
             "id": 16711862,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3068,8 +3271,11 @@
             "name": "Cosmic Wall - 1",
             "id": 16711708,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3083,25 +3289,22 @@
             "name": "Cosmic Wall - 2",
             "id": 16711740,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Cosmic Wall - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Cosmic Wall - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 }
               ]
             },
@@ -3117,8 +3320,11 @@
             "name": "Cosmic Wall - Chao Key 1",
             "id": 16712732,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3132,8 +3338,11 @@
             "name": "Cosmic Wall - Chao Key 2",
             "id": 16712764,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3147,8 +3356,11 @@
             "name": "Cosmic Wall - Chao Key 3",
             "id": 16712796,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3162,8 +3374,11 @@
             "name": "Cosmic Wall - Gold Beetle",
             "id": 16713244,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3177,8 +3392,11 @@
             "name": "Cosmic Wall - Upgrade",
             "id": 16711868,
             "access_rule": {
-              "type": "item_check",
-              "item": "Eggman - Jet Engine"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3198,8 +3416,9 @@
             "name": "Dry Lagoon - 1",
             "id": 16711697,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3213,18 +3432,11 @@
             "name": "Dry Lagoon - 2",
             "id": 16711729,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Dry Lagoon - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Dry Lagoon - 1"
+              }
             },
             "item": {
               "name": "Rouge - Treasure Scope",
@@ -3238,8 +3450,9 @@
             "name": "Dry Lagoon - Chao Key 1",
             "id": 16712721,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Magnetic Shield",
@@ -3253,8 +3466,9 @@
             "name": "Dry Lagoon - Chao Key 2",
             "id": 16712753,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3268,8 +3482,9 @@
             "name": "Dry Lagoon - Chao Key 3",
             "id": 16712785,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3283,19 +3498,29 @@
             "name": "Dry Lagoon - Gold Beetle",
             "id": 16713233,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Iron Boots"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Mystic Melody"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Mystic Melody"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Pick Nails"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Pick Nails"
+                  }
                 }
               ]
             },
@@ -3311,8 +3536,11 @@
             "name": "Dry Lagoon - Upgrade",
             "id": 16711857,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Pick Nails"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Pick Nails"
+              }
             },
             "item": {
               "name": "Tails - Bazooka",
@@ -3332,8 +3560,11 @@
             "name": "Egg Quarters - 1",
             "id": 16711700,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Pick Nails"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Pick Nails"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3347,18 +3578,11 @@
             "name": "Egg Quarters - 2",
             "id": 16711732,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Egg Quarters - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Egg Quarters - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3372,8 +3596,9 @@
             "name": "Egg Quarters - Chao Key 1",
             "id": 16712724,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Knuckles - Sunglasses",
@@ -3387,8 +3612,9 @@
             "name": "Egg Quarters - Chao Key 2",
             "id": 16712756,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Twenty Rings",
@@ -3402,8 +3628,11 @@
             "name": "Egg Quarters - Chao Key 3",
             "id": 16712788,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Mystic Melody"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Mystic Melody"
+              }
             },
             "item": {
               "name": "Shield",
@@ -3417,8 +3646,9 @@
             "name": "Egg Quarters - Gold Beetle",
             "id": 16713236,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3432,8 +3662,9 @@
             "name": "Egg Quarters - Upgrade",
             "id": 16711860,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Knuckles - Hammer Gloves",
@@ -3453,8 +3684,11 @@
             "name": "Security Hall - 1",
             "id": 16711703,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Pick Nails"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Pick Nails"
+              }
             },
             "item": {
               "name": "Invincibility",
@@ -3468,25 +3702,22 @@
             "name": "Security Hall - 2",
             "id": 16711735,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Security Hall - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Security Hall - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Pick Nails"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Pick Nails"
+                  }
                 }
               ]
             },
@@ -3502,8 +3733,9 @@
             "name": "Security Hall - Chao Key 1",
             "id": 16712727,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3517,8 +3749,9 @@
             "name": "Security Hall - Chao Key 2",
             "id": 16712759,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3532,8 +3765,11 @@
             "name": "Security Hall - Chao Key 3",
             "id": 16712791,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Pick Nails"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Pick Nails"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3547,8 +3783,9 @@
             "name": "Security Hall - Gold Beetle",
             "id": 16713239,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3562,15 +3799,22 @@
             "name": "Security Hall - Upgrade",
             "id": 16711863,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Iron Boots"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Mystic Melody"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Mystic Melody"
+                  }
                 }
               ]
             },
@@ -3592,8 +3836,9 @@
             "name": "Route 280 - 1",
             "id": 16711705,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -3607,18 +3852,11 @@
             "name": "Route 280 - 2",
             "id": 16711737,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Route 280 - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Route 280 - 1"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3638,15 +3876,22 @@
             "name": "Mad Space - 1",
             "id": 16711707,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Iron Boots"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Pick Nails"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Pick Nails"
+                  }
                 }
               ]
             },
@@ -3662,25 +3907,22 @@
             "name": "Mad Space - 2",
             "id": 16711739,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Mad Space - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Mad Space - 1"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rouge - Iron Boots"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rouge - Iron Boots"
+                  }
                 }
               ]
             },
@@ -3696,8 +3938,9 @@
             "name": "Mad Space - Chao Key 1",
             "id": 16712731,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Five Rings",
@@ -3711,8 +3954,11 @@
             "name": "Mad Space - Chao Key 2",
             "id": 16712763,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Iron Boots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Iron Boots"
+              }
             },
             "item": {
               "name": "Ten Rings",
@@ -3726,8 +3972,11 @@
             "name": "Mad Space - Chao Key 3",
             "id": 16712795,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Iron Boots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Iron Boots"
+              }
             },
             "item": {
               "name": "Invincibility",
@@ -3741,8 +3990,11 @@
             "name": "Mad Space - Gold Beetle",
             "id": 16713243,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rouge - Iron Boots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rouge - Iron Boots"
+              }
             },
             "item": {
               "name": "Sonic - Mystic Melody",
@@ -3756,8 +4008,9 @@
             "name": "Mad Space - Upgrade",
             "id": 16711867,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Invincibility",
@@ -3776,18 +4029,11 @@
             "name": "Biolizard",
             "connected_region": "Biolizard",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Cannon's Core - 1"
-                },
-                {
-                  "type": "constant",
-                  "value": "Location"
-                }
-              ]
+              "rule": "CanReachLocation",
+              "options": [],
+              "args": {
+                "location_name": "Cannon's Core - 1"
+              }
             }
           }
         ],
@@ -3796,27 +4042,43 @@
             "name": "Cannon's Core - 1",
             "id": 16711710,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Air Necklace"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Air Necklace"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Bounce Bracelet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Bounce Bracelet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -3832,34 +4094,35 @@
             "name": "Cannon's Core - 2",
             "id": 16711742,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Eggman - Jet Engine"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Eggman - Jet Engine"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Tails - Booster"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Tails - Booster"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Cannon's Core - 1"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Location"
-                    }
-                  ]
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Cannon's Core - 1"
+                  }
                 }
               ]
             },
@@ -3875,19 +4138,29 @@
             "name": "Cannon's Core - Chao Key 1",
             "id": 16712734,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Large Cannon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Large Cannon"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -3903,15 +4176,22 @@
             "name": "Cannon's Core - Chao Key 2",
             "id": 16712766,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -3927,27 +4207,43 @@
             "name": "Cannon's Core - Chao Key 3",
             "id": 16712798,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Air Necklace"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Air Necklace"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sonic - Flame Ring"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sonic - Flame Ring"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -3963,23 +4259,36 @@
             "name": "Cannon's Core - Gold Beetle",
             "id": 16713246,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Eggman - Jet Engine"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Air Necklace"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Air Necklace"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knuckles - Hammer Gloves"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knuckles - Hammer Gloves"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tails - Booster"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
                 }
               ]
             },
@@ -4050,11 +4359,11 @@
             "name": "Cannon's Core",
             "connected_region": "Cannon's Core",
             "access_rule": {
-              "type": "item_check",
-              "item": "Emblem",
-              "count": {
-                "type": "constant",
-                "value": 89
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Emblem",
+                "count": 89
               }
             }
           },
@@ -4062,75 +4371,83 @@
             "name": "Sky Rail",
             "connected_region": "Sky Rail",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Dry Lagoon",
             "connected_region": "Dry Lagoon",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Death Chamber",
             "connected_region": "Death Chamber",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Pyramid Cave",
             "connected_region": "Pyramid Cave",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Cosmic Wall",
             "connected_region": "Cosmic Wall",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Wild Canyon",
             "connected_region": "Wild Canyon",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Pumpkin Hill",
             "connected_region": "Pumpkin Hill",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Green Forest",
             "connected_region": "Green Forest",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Gate 1 Boss",
             "connected_region": "Gate 1 Boss",
             "access_rule": {
-              "type": "item_check",
-              "item": "Emblem",
-              "count": {
-                "type": "constant",
-                "value": 7
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Emblem",
+                "count": 7
               }
             }
           },
@@ -4138,24 +4455,27 @@
             "name": "Chao Race - Beginner",
             "connected_region": "Chao Race - Beginner",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Chao Karate - Beginner",
             "connected_region": "Chao Karate - Beginner",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Kart Race - Beginner",
             "connected_region": "Kart Race - Beginner",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4168,75 +4488,83 @@
             "name": "Aquatic Mine",
             "connected_region": "Aquatic Mine",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Iron Gate",
             "connected_region": "Iron Gate",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hidden Base",
             "connected_region": "Hidden Base",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Radical Highway",
             "connected_region": "Radical Highway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Sand Ocean",
             "connected_region": "Sand Ocean",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Meteor Herd",
             "connected_region": "Meteor Herd",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Weapons Bed",
             "connected_region": "Weapons Bed",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "City Escape",
             "connected_region": "City Escape",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Gate 2 Boss",
             "connected_region": "Gate 2 Boss",
             "access_rule": {
-              "type": "item_check",
-              "item": "Emblem",
-              "count": {
-                "type": "constant",
-                "value": 30
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Emblem",
+                "count": 30
               }
             }
           },
@@ -4244,24 +4572,27 @@
             "name": "Chao Race - Intermediate",
             "connected_region": "Chao Race - Intermediate",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Chao Karate - Standard",
             "connected_region": "Chao Karate - Standard",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Kart Race - Intermediate",
             "connected_region": "Kart Race - Intermediate",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4274,8 +4605,9 @@
             "name": "Gate 1",
             "connected_region": "Gate 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4284,8 +4616,9 @@
             "name": "Gate 1 Boss",
             "id": 16711936,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -4304,75 +4637,83 @@
             "name": "Lost Colony",
             "connected_region": "Lost Colony",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Final Chase",
             "connected_region": "Final Chase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Mission Street",
             "connected_region": "Mission Street",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Eternal Engine",
             "connected_region": "Eternal Engine",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Egg Quarters",
             "connected_region": "Egg Quarters",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Security Hall",
             "connected_region": "Security Hall",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crazy Gadget",
             "connected_region": "Crazy Gadget",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Final Rush",
             "connected_region": "Final Rush",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Gate 3 Boss",
             "connected_region": "Gate 3 Boss",
             "access_rule": {
-              "type": "item_check",
-              "item": "Emblem",
-              "count": {
-                "type": "constant",
-                "value": 68
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Emblem",
+                "count": 68
               }
             }
           },
@@ -4380,8 +4721,9 @@
             "name": "Chao Karate - Expert",
             "connected_region": "Chao Karate - Expert",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4394,8 +4736,9 @@
             "name": "Gate 2",
             "connected_region": "Gate 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4404,8 +4747,9 @@
             "name": "Gate 2 Boss",
             "id": 16711937,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Emblem",
@@ -4424,72 +4768,81 @@
             "name": "Metal Harbor",
             "connected_region": "Metal Harbor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Route 101",
             "connected_region": "Route 101",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Prison Lane",
             "connected_region": "Prison Lane",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "White Jungle",
             "connected_region": "White Jungle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Route 280",
             "connected_region": "Route 280",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Mad Space",
             "connected_region": "Mad Space",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Chao Race - Expert",
             "connected_region": "Chao Race - Expert",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Chao Karate - Super",
             "connected_region": "Chao Karate - Super",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Kart Race - Expert",
             "connected_region": "Kart Race - Expert",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4502,8 +4855,9 @@
             "name": "Gate 3",
             "connected_region": "Gate 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4512,8 +4866,9 @@
             "name": "Gate 3 Boss",
             "id": 16711938,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Five Rings",
@@ -4533,8 +4888,9 @@
             "name": "Finalhazard",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "What Maria Wanted",
@@ -6789,131 +7145,131 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "animalsanity": 0,
-        "bee_trap_weight": 2,
-        "beetlesanity": 1,
-        "big_fishing_difficulty": 1,
-        "bigsanity": 0,
+        "accessibility": "full",
+        "animalsanity": "false",
+        "bee_trap_weight": "medium",
+        "beetlesanity": "true",
+        "big_fishing_difficulty": "medium",
+        "bigsanity": "false",
         "black_market_price_multiplier": 1,
         "black_market_slots": 0,
-        "black_market_unlock_costs": 1,
-        "boss_rush_shuffle": 0,
-        "breakout_trap_weight": 2,
-        "cannons_core_mission_2": 1,
-        "cannons_core_mission_3": 1,
-        "cannons_core_mission_4": 1,
-        "cannons_core_mission_5": 1,
+        "black_market_unlock_costs": "medium",
+        "boss_rush_shuffle": "vanilla",
+        "breakout_trap_weight": "medium",
+        "cannons_core_mission_2": "true",
+        "cannons_core_mission_3": "true",
+        "cannons_core_mission_4": "true",
+        "cannons_core_mission_5": "true",
         "cannons_core_mission_count": 2,
-        "chao_animal_parts": 0,
-        "chao_entrance_randomization": 0,
-        "chao_karate_difficulty": 0,
-        "chao_kindergarten": 0,
-        "chao_race_difficulty": 0,
-        "chao_stadium_checks": 0,
+        "chao_animal_parts": "false",
+        "chao_entrance_randomization": "false",
+        "chao_karate_difficulty": "none",
+        "chao_kindergarten": "none",
+        "chao_race_difficulty": "none",
+        "chao_stadium_checks": "all",
         "chao_stats": 0,
         "chao_stats_frequency": 5,
-        "chao_stats_hidden": 0,
-        "chao_stats_stamina": 0,
-        "confusion_trap_weight": 2,
-        "controller_drift_trap_weight": 2,
-        "cutscene_trap_weight": 2,
-        "death_link": 0,
-        "eggman_mission_2": 1,
-        "eggman_mission_3": 1,
-        "eggman_mission_4": 1,
-        "eggman_mission_5": 1,
+        "chao_stats_hidden": "false",
+        "chao_stats_stamina": "false",
+        "confusion_trap_weight": "medium",
+        "controller_drift_trap_weight": "medium",
+        "cutscene_trap_weight": "medium",
+        "death_link": "false",
+        "eggman_mission_2": "true",
+        "eggman_mission_3": "true",
+        "eggman_mission_4": "true",
+        "eggman_mission_5": "true",
         "eggman_mission_count": 2,
         "emblem_percentage_for_cannons_core": 50,
         "exclude_locations": [],
-        "exposition_trap_weight": 2,
-        "fishing_trap_weight": 2,
-        "gate_boss_plando": 0,
-        "goal": 0,
-        "gravity_trap_weight": 2,
-        "ice_trap_weight": 2,
-        "input_sequence_trap_weight": 2,
+        "exposition_trap_weight": "medium",
+        "fishing_trap_weight": "medium",
+        "gate_boss_plando": "plando",
+        "goal": "biolizard",
+        "gravity_trap_weight": "medium",
+        "ice_trap_weight": "medium",
+        "input_sequence_trap_weight": "medium",
         "item_links": [],
-        "itemboxsanity": 0,
+        "itemboxsanity": "none",
         "junk_fill_percentage": 50,
-        "kart_mission_2": 1,
-        "kart_mission_3": 1,
-        "kart_mission_4": 1,
-        "kart_mission_5": 1,
+        "kart_mission_2": "true",
+        "kart_mission_3": "true",
+        "kart_mission_4": "true",
+        "kart_mission_5": "true",
         "kart_mission_count": 2,
-        "kart_race_checks": 0,
-        "keysanity": 1,
-        "knuckles_mission_2": 1,
-        "knuckles_mission_3": 1,
-        "knuckles_mission_4": 1,
-        "knuckles_mission_5": 1,
+        "kart_race_checks": "none",
+        "keysanity": "true",
+        "knuckles_mission_2": "true",
+        "knuckles_mission_3": "true",
+        "knuckles_mission_4": "true",
+        "knuckles_mission_5": "true",
         "knuckles_mission_count": 2,
-        "level_gate_costs": 0,
-        "level_gate_distribution": 1,
-        "light_up_path_trap_weight": 2,
-        "literature_trap_weight": 2,
+        "level_gate_costs": "low",
+        "level_gate_distribution": "even",
+        "light_up_path_trap_weight": "medium",
+        "literature_trap_weight": "medium",
         "local_items": [],
-        "logic_difficulty": 0,
-        "math_quiz_trap_weight": 2,
+        "logic_difficulty": "standard",
+        "math_quiz_trap_weight": "medium",
         "max_emblem_cap": 180,
         "minigame_madness_minimum": 5,
         "minigame_madness_requirement": 3,
-        "minigame_trap_difficulty": 1,
-        "mission_shuffle": 0,
-        "music_shuffle": 0,
-        "narrator": 0,
+        "minigame_trap_difficulty": "medium",
+        "mission_shuffle": "false",
+        "music_shuffle": "none",
+        "narrator": "default",
         "non_local_items": [],
         "number_of_level_gates": 3,
-        "number_sequence_trap_weight": 2,
-        "omochao_trap_weight": 2,
-        "omosanity": 0,
-        "pinball_trap_weight": 2,
+        "number_sequence_trap_weight": "medium",
+        "omochao_trap_weight": "medium",
+        "omosanity": "false",
+        "pinball_trap_weight": "medium",
         "plando_items": [],
-        "poison_trap_weight": 2,
-        "pokemon_count_trap_weight": 2,
-        "pokemon_trivia_trap_weight": 2,
-        "pong_trap_weight": 2,
+        "poison_trap_weight": "medium",
+        "pokemon_count_trap_weight": "medium",
+        "pokemon_trivia_trap_weight": "medium",
+        "pong_trap_weight": "medium",
         "priority_locations": [],
         "progression_balancing": 50,
-        "required_cannons_core_missions": 0,
-        "required_rank": 0,
-        "reverse_trap_weight": 2,
-        "ring_link": 0,
-        "ring_loss": 0,
-        "rouge_mission_2": 1,
-        "rouge_mission_3": 1,
-        "rouge_mission_4": 1,
-        "rouge_mission_5": 1,
+        "required_cannons_core_missions": "first",
+        "required_rank": "e",
+        "reverse_trap_weight": "medium",
+        "ring_link": "false",
+        "ring_loss": "classic",
+        "rouge_mission_2": "true",
+        "rouge_mission_3": "true",
+        "rouge_mission_4": "true",
+        "rouge_mission_5": "true",
         "rouge_mission_count": 2,
-        "sadx_music": 0,
-        "shadow_mission_2": 1,
-        "shadow_mission_3": 1,
-        "shadow_mission_4": 1,
-        "shadow_mission_5": 1,
+        "sadx_music": "sa2b",
+        "shadow_mission_2": "true",
+        "shadow_mission_3": "true",
+        "shadow_mission_4": "true",
+        "shadow_mission_5": "true",
         "shadow_mission_count": 2,
-        "shuffle_starting_chao_eggs": 1,
-        "slow_trap_weight": 2,
-        "snake_trap_weight": 2,
-        "sonic_mission_2": 1,
-        "sonic_mission_3": 1,
-        "sonic_mission_4": 1,
-        "sonic_mission_5": 1,
+        "shuffle_starting_chao_eggs": "true",
+        "slow_trap_weight": "medium",
+        "snake_trap_weight": "medium",
+        "sonic_mission_2": "true",
+        "sonic_mission_3": "true",
+        "sonic_mission_4": "true",
+        "sonic_mission_5": "true",
         "sonic_mission_count": 2,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "tails_mission_2": 1,
-        "tails_mission_3": 1,
-        "tails_mission_4": 1,
-        "tails_mission_5": 1,
+        "tails_mission_2": "true",
+        "tails_mission_3": "true",
+        "tails_mission_4": "true",
+        "tails_mission_5": "true",
         "tails_mission_count": 2,
-        "timestop_trap_weight": 2,
-        "tiny_trap_weight": 2,
+        "timestop_trap_weight": "medium",
+        "tiny_trap_weight": "medium",
         "trap_fill_percentage": 0,
-        "trap_link": 0,
-        "trivia_trap_weight": 2,
-        "voice_shuffle": 0,
-        "whistlesanity": 0
+        "trap_link": "false",
+        "trivia_trap_weight": "medium",
+        "voice_shuffle": "none",
+        "whistlesanity": "none"
       },
       "world_directory": "sa2b"
     }

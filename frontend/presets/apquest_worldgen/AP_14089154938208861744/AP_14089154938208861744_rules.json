@@ -19,8 +19,9 @@
             "name": "MenuToStart",
             "connected_region": "Overworld",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,32 +34,27 @@
             "name": "Overworld to Bottom Right Room",
             "connected_region": "Bottom Right Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Sword",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Overworld to Right Room",
             "connected_region": "Right Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Overworld to Top Left Room",
             "connected_region": "Top Left Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Key",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -67,8 +63,9 @@
             "name": "Bottom Left Chest",
             "id": 3,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Confetti Cannon",
@@ -82,8 +79,9 @@
             "name": "Top Middle Chest",
             "id": 2,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sword",
@@ -103,8 +101,9 @@
             "name": "Top Left Room Chest",
             "id": 1,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shield",
@@ -118,8 +117,9 @@
             "name": "Top Left Room Button",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Top Left Room Button Pressed",
@@ -139,8 +139,9 @@
             "name": "Bottom Right Room Left Chest",
             "id": 5,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Health Upgrade",
@@ -154,8 +155,9 @@
             "name": "Bottom Right Room Right Chest",
             "id": 6,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Health Upgrade",
@@ -174,12 +176,9 @@
             "name": "Right Room to Final Boss Room",
             "connected_region": "Final Boss Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Top Left Room Button Pressed",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -188,12 +187,9 @@
             "name": "Right Room Enemy Drop",
             "id": 10,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Sword",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Key",
@@ -213,14 +209,9 @@
             "name": "Final Boss Defeated",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Shield",
-                  "Sword"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -386,7 +377,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -394,7 +385,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []

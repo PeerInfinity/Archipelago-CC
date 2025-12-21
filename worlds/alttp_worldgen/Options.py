@@ -21,20 +21,6 @@ class BomblessStart(Toggle):
     display_name = "Bombless Start"
     default = False
 
-class CrystalsNeededForGanon(Range):
-    """Option for Crystals Needed For Ganon."""
-    display_name = "Crystals Needed For Ganon"
-    range_start = 0
-    range_end = 100
-    default = 7
-
-class CrystalsNeededForGt(Range):
-    """Option for Crystals Needed For Gt."""
-    display_name = "Crystals Needed For Gt"
-    range_start = 0
-    range_end = 100
-    default = 7
-
 class EnemyShuffle(Toggle):
     """Option for Enemy Shuffle."""
     display_name = "Enemy Shuffle"
@@ -59,13 +45,6 @@ class RetroBow(Toggle):
     display_name = "Retro Bow"
     default = False
 
-class SmallKeyShuffle(Range):
-    """Option for Small Key Shuffle."""
-    display_name = "Small Key Shuffle"
-    range_start = 0
-    range_end = 100
-    default = 0
-
 class Swordless(Toggle):
     """Option for Swordless."""
     display_name = "Swordless"
@@ -77,11 +56,8 @@ class ALinktothePastWorldGenOptions(PerGameCommonOptions):
     """Options for A Link to the Past WorldGen."""
     randomize_items: RandomizeItems
     bombless_start: BomblessStart
-    crystals_needed_for_ganon: CrystalsNeededForGanon
-    crystals_needed_for_gt: CrystalsNeededForGt
     enemy_shuffle: EnemyShuffle
     logical_heart_containers: LogicalHeartContainers
     logical_heart_pieces: LogicalHeartPieces
     retro_bow: RetroBow
-    small_key_shuffle: SmallKeyShuffle
     swordless: Swordless

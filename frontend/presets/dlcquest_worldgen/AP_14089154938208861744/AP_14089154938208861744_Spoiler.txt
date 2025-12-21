@@ -1723,34 +1723,24 @@ Playthrough:
 }
 1: {
   Animation Pack: Psychological Warfare Pack
-  Move Right coins: 4 coins
-  Movement Pack: Movement Pack
-  Pause Menu Pack: Time is Money Pack
-}
-2: {
   Behind Tree coins: 60 coins
-  Map Pack: Armor for your Horse Pack
-  Movement Pack coins: 46 coins
-  Psychological Warfare coins: 100 coins
-  West Cave Sheep: Double Jump Pack
-}
-3: {
   Double Jump Behind Tree coins: 89 coins
   Double Jump Total Left Cave coins: 9 coins
   Double Jump Total Left Roof coins: 10 coins
   Double Jump Total Left coins: 50 coins
-  Pet Pack: Map Pack
-  True Double Jump Behind Tree coins: 7 coins
-}
-4: {
+  Finish the Fight Pack: Finish the Fight Pack
   Forest High Sheep: Gun Pack
+  Map Pack: Armor for your Horse Pack
+  Move Right coins: 4 coins
+  Movement Pack: Movement Pack
+  Movement Pack coins: 46 coins
+  Pause Menu Pack: Time is Money Pack
+  Pet Pack: Map Pack
+  Psychological Warfare coins: 100 coins
   The Forest coins: 171 coins
   The Forest with double Jump Part 2 coins: 203 coins
   The Forest with double Jump coins: 76 coins
-}
-5: {
-  Finish the Fight Pack: Finish the Fight Pack
-}
-6: {
+  True Double Jump Behind Tree coins: 7 coins
+  West Cave Sheep: Double Jump Pack
   Winning Basic: Victory Basic
 }
