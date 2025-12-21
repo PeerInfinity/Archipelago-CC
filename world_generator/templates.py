@@ -1181,6 +1181,13 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         base_id_section = ''
 
+    # Build origin_region_name section
+    # This specifies the true starting region for the exporter, even when Menu is added
+    if data.start_region and data.start_region != "Menu":
+        origin_region_name_section = f'\n    origin_region_name: str = "{data.start_region}"'
+    else:
+        origin_region_name_section = ''
+
     # Build use_auto_indirect_conditions section
     # When True, use auto sweep algorithm for region dependencies instead of explicit
     # This is needed for worlds that set access_rule directly without registering indirect_connections
@@ -1282,7 +1289,7 @@ class {world_class}(RuleWorldMixin, World):
 
     options_dataclass = {class_name}Options
     options: {class_name}Options
-{base_id_section}
+{base_id_section}{origin_region_name_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}
 
