@@ -2338,7 +2338,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           result = undefined;
         } else if (rule.count !== undefined) {
           // If there's a count field, use count-based checking
-          const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
+          let requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
+          // Unwrap return marker if block was used as expression
+          if (requiredCount && typeof requiredCount === 'object' && requiredCount.__isReturn) {
+            requiredCount = requiredCount.value;
+          }
           if (requiredCount === undefined) {
             result = undefined;
           } else if (typeof context.countItem === 'function') {
