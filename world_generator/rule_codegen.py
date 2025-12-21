@@ -499,7 +499,10 @@ class RuleCodeGenerator:
             else:
                 return repr(rule)
 
-        rule_type = rule.get('type', '')
+        # Support both 'type' key (internal format) and 'rule' key (JSON export format)
+        rule_type = rule.get('type', '') or rule.get('rule', '')
+        # Normalize to lowercase for matching
+        rule_type_lower = rule_type.lower() if rule_type else ''
 
         # Dispatch based on rule type
         converters = {
@@ -525,9 +528,13 @@ class RuleCodeGenerator:
             'binary_op': self._convert_binary_op,
             'sum': self._convert_sum,
             'setting_value': self._convert_setting_value,
+            # JSON export format uses these rule names
+            'has': self._convert_has,
+            'true_': self._convert_true,
+            'false_': self._convert_false,
         }
 
-        converter = converters.get(rule_type)
+        converter = converters.get(rule_type_lower)
         if converter:
             return converter(rule)
 
@@ -572,6 +579,32 @@ class RuleCodeGenerator:
         else:
             self.required_imports.add('False_')
             return 'False_()'
+
+    def _convert_has(self, rule: Dict[str, Any]) -> str:
+        """Convert Has rule from JSON export format.
+
+        JSON format: {"rule": "Has", "args": {"item_name": "Item Name"}}
+        """
+        args = rule.get('args', {})
+        item_name = args.get('item_name', '')
+        if not item_name:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        # Escape the item name for Python string
+        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+        self.required_imports.add('Has')
+        return f'Has("{item_escaped}")'
+
+    def _convert_true(self, rule: Dict[str, Any]) -> str:
+        """Convert True_ rule from JSON export format."""
+        self.required_imports.add('True_')
+        return 'True_()'
+
+    def _convert_false(self, rule: Dict[str, Any]) -> str:
+        """Convert False_ rule from JSON export format."""
+        self.required_imports.add('False_')
+        return 'False_()'
 
     def _convert_list(self, rule: Dict[str, Any]) -> str:
         """Convert list rule to Python list literal.
@@ -670,7 +703,8 @@ class RuleCodeGenerator:
 
     def _convert_and(self, rule: Dict[str, Any]) -> str:
         """Convert and rule to & expression."""
-        conditions = rule.get('conditions', [])
+        # Support both 'conditions' (internal format) and 'children' (JSON export format)
+        conditions = rule.get('conditions', []) or rule.get('children', [])
 
         if not conditions:
             self.required_imports.add('True_')
@@ -687,7 +721,8 @@ class RuleCodeGenerator:
 
     def _convert_or(self, rule: Dict[str, Any]) -> str:
         """Convert or rule to | expression."""
-        conditions = rule.get('conditions', [])
+        # Support both 'conditions' (internal format) and 'children' (JSON export format)
+        conditions = rule.get('conditions', []) or rule.get('children', [])
 
         if not conditions:
             self.required_imports.add('False_')
