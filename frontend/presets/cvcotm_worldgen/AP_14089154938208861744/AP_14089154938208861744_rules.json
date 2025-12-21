@@ -30,9 +30,12 @@
             "name": "Sealed Room: Main shaft left fake wall",
             "id": 3579576373,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -46,9 +49,12 @@
             "name": "Catacomb: Push crate treasure room",
             "id": 3579576375,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Max Up",
@@ -62,9 +68,14 @@
             "name": "Catacomb: Fleamen brain room - Lower",
             "id": 3579576387,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Double",
+                  "Roc Wing"
+                ]
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -110,9 +121,12 @@
             "name": "Catacomb: Tackle block treasure room",
             "id": 3579576376,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -302,9 +316,14 @@
             "name": "Catacomb: Mummies' fake wall",
             "id": 3579576388,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Double",
+                  "Roc Wing"
+                ]
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -323,9 +342,14 @@
             "name": "Stairway to Audience",
             "connected_region": "Audience Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Double",
+                  "Roc Wing"
+                ]
+              }
             }
           }
         ],
@@ -371,9 +395,12 @@
             "name": "Audience to Machine Bottom",
             "connected_region": "Machine Tower Bottom",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           },
           {
@@ -407,36 +434,48 @@
             "name": "Audience to Warehouse",
             "connected_region": "Underground Warehouse Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             }
           },
           {
             "name": "Audience to Waterway",
             "connected_region": "Underground Waterway Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Maiden Detonator",
+                "count": 1
+              }
             }
           },
           {
             "name": "Audience to Observation",
             "connected_region": "Observation Tower",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             }
           },
           {
             "name": "Ceremonial Door",
             "connected_region": "Ceremonial Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Last Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -445,9 +484,12 @@
             "name": "Abyss Staircase: Roc ledge",
             "id": 3579576390,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -525,9 +567,12 @@
             "name": "Audience Room: Push crate gallery",
             "id": 3579576395,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -557,9 +602,12 @@
             "name": "Audience Room: Tackle block gallery",
             "id": 3579576393,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -589,9 +637,12 @@
             "name": "Audience Room: Wicked roc chamber - Upper",
             "id": 3579576396,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Black Dog Card",
@@ -781,9 +832,12 @@
             "name": "Outer Wall: Left roc ledge",
             "id": 3579576471,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1027,9 +1081,12 @@
             "name": "Machine Tower: Stone fox hallway",
             "id": 3579576416,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1080,9 +1137,12 @@
             "name": "Corridor to Gallery",
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Maiden Detonator",
+                "count": 1
+              }
             }
           },
           {
@@ -1130,9 +1190,12 @@
             "name": "Dip Into Waterway End",
             "connected_region": "Underground Waterway End",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             }
           },
           {
@@ -1198,9 +1261,12 @@
             "name": "Chapel Tower: Lower chapel push crate room",
             "id": 3579576425,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Uranus Card",
@@ -1278,9 +1344,12 @@
             "name": "Chapel Tower: Middle chapel push crate room",
             "id": 3579576430,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1390,9 +1459,12 @@
             "name": "Chapel Tower: Behind Adramelech iron maiden",
             "id": 3579576433,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Maiden Detonator",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1458,9 +1530,12 @@
             "name": "Gallery Upper to Lower",
             "connected_region": "Underground Gallery Lower",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           }
         ],
@@ -1485,9 +1560,12 @@
             "name": "Underground Gallery: Conveyor upper push crate room",
             "id": 3579576451,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -1501,9 +1579,12 @@
             "name": "Underground Gallery: Conveyor lower push crate room",
             "id": 3579576449,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Max Up",
@@ -1554,9 +1635,12 @@
             "name": "Gallery Lower to Upper",
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           }
         ],
@@ -1565,9 +1649,12 @@
             "name": "Underground Gallery: Harpy mantis tackle hallway",
             "id": 3579576454,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -1650,9 +1737,12 @@
             "name": "Into Warehouse Main",
             "connected_region": "Underground Warehouse Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           }
         ],
@@ -2003,9 +2093,12 @@
             "name": "Underground Waterway: Roc fake ceiling",
             "id": 3579576469,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Neptune Card",
@@ -2089,9 +2182,12 @@
             "name": "Underground Waterway: Roc exit shaft",
             "id": 3579576466,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Apollo Card",
@@ -2121,9 +2217,12 @@
             "name": "Underground Waterway: Roc exit shaft fake wall",
             "id": 3579576470,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -2325,9 +2424,12 @@
             "name": "Dracula",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "The Count Downed",
@@ -2359,7 +2461,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "Catacomb"
       ],
       "available": []
     }

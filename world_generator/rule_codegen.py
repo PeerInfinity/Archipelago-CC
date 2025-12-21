@@ -625,7 +625,8 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_')
                 return 'True_()'
             self.required_imports.add('HasAll')
-            return f'HasAll({repr(items)})'
+            # HasAll expects *item_names, so unpack the list as separate arguments
+            return f'HasAll({", ".join(repr(item) for item in items)})'
 
         if rb_rule == 'HasAny':
             items = args.get('items', [])
@@ -633,7 +634,8 @@ class RuleCodeGenerator:
                 self.required_imports.add('False_')
                 return 'False_()'
             self.required_imports.add('HasAny')
-            return f'HasAny({repr(items)})'
+            # HasAny expects *item_names, so unpack the list as separate arguments
+            return f'HasAny({", ".join(repr(item) for item in items)})'
 
         if rb_rule == 'HasGroup':
             group = args.get('group', '')
