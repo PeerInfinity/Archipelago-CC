@@ -95,6 +95,7 @@ class CastlevaniaCircleoftheMoonWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = CastlevaniaCircleoftheMoonWorldGenOptions
     options: CastlevaniaCircleoftheMoonWorldGenOptions
 
+    origin_region_name: str = "Catacomb"
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 

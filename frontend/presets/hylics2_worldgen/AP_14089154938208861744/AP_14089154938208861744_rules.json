@@ -2716,9 +2716,14 @@
             "name": "Defeat Gibby",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "UPPER CHAMBER KEY",
+                  "VESSEL ROOM KEY"
+                ]
+              }
             },
             "item": {
               "name": "Victory",

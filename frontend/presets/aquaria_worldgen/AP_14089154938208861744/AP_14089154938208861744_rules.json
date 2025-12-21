@@ -401,72 +401,96 @@
             "name": "Home Waters, turtle room to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "Home Waters, turtle room to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -1238,72 +1262,96 @@
             "name": "Open Waters top right area, turtle room to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "Open Waters top right area, turtle room to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -1719,72 +1767,96 @@
             "name": "Arnassi Ruins cave, transturtle area to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave, transturtle area to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           }
         ],
@@ -1862,72 +1934,96 @@
             "name": "Simon Says area to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "Simon Says area to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -3400,72 +3496,96 @@
             "name": "Kelp Forest bottom left area to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kelp Forest bottom left area to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -3946,72 +4066,96 @@
             "name": "The Veil top left area to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top left area to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -4139,72 +4283,96 @@
             "name": "The Veil top right area, left of temple to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Veil top right area, left of temple to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -5396,72 +5564,96 @@
             "name": "Abyss right area, transturtle to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Final Boss",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "Abyss right area, transturtle to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],
@@ -6343,72 +6535,96 @@
             "name": "The Body, final boss area turtle room to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top left",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Veil top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Open Waters top right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Kelp Forest bottom left",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Home Waters",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Abyss right",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Simon Says",
+                "count": 1
+              }
             }
           },
           {
             "name": "The Body, final boss area turtle room to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins",
+                "count": 1
+              }
             }
           }
         ],

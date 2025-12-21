@@ -20,36 +20,60 @@
             "name": "Menu -> Laboratory",
             "connected_region": "Laboratory",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Trinket 01",
+                  "Trinket 02",
+                  "Trinket 03"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Trinket 04",
+                  "Trinket 05",
+                  "Trinket 06"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> Space Station 2",
             "connected_region": "Space Station 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Trinket 07",
+                  "Trinket 08",
+                  "Trinket 09"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> Warp Zone",
             "connected_region": "Warp Zone",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Trinket 10",
+                  "Trinket 11",
+                  "Trinket 12"
+                ]
+              }
             }
           }
         ],
@@ -154,9 +178,44 @@
             "name": "NPC Trinket",
             "id": 2515018,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "And",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Space Station 2"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "The Tower"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Warp Zone"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Laboratory"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Trinket 07",
@@ -170,9 +229,38 @@
             "name": "V",
             "id": 2515019,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Laboratory"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Space Station 2"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "The Tower"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Warp Zone"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Trinket 17",

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -373,11 +373,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Main Area", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("BaseUltraRocks", player),
         True_()
     )
@@ -394,17 +389,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hooniversity", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("TeeheeValley", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Shop Starting Flag", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
@@ -434,42 +424,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beanbean Castle Town", player),
-        True_()
+        And(True_(), Or(True_(), True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Chuckolator Flag", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), Or(True_(), True_(), True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Mom Piranha Flag", player),
-        True_()
+        Or(True_(), Or(True_(), True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Enter Fungitown Flag", player),
-        True_()
+        Or(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Beanstar Complete Flag", player),
-        True_()
+        Or(And(True_(), True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Birdo Flag", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("GwarharEntrance  ", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Oasis   ", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -478,33 +458,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Oasis", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("GwarharMain", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("GwarharEntrance", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Oasis  ", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Fungitown", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("JokesMain", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -513,182 +488,22 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Bowser's Castle", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Fungitown Shop Birdo Flag", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Bowser's Castle Mini", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cackletta's Soul", player),
-        True_()
+        And(True_(), True_())
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Stardust Fields Room 1 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 1 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 2 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 3 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 4 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 4 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 4 Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stardust Fields Room 5 Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Hoohoo Village Hammer House Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Below Summit Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Below Summit Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Below Summit Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Past Hoohooros Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Past Hoohooros Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Hoohooros Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Hoohooros Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Before Hoohooros Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Fountain Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Fountain Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Room 1 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Room 1 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Room 1 Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Room 1 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village Eastside Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village Bridge Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village Bridge Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village Bridge Room Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Bridge Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Bridge Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Bridge Room Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Bridge Room Block 4", player),
         True_()
     )
 
@@ -698,13 +513,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Block 2", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
@@ -714,127 +524,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Grassy Area Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Grassy Area Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Past Minecart Minigame Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Past Minecart Minigame Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave Connecting Stardust Fields and Hoohoo Village Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave Connecting Stardust Fields and Hoohoo Village Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village South Cave Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village North Cave Room 1 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village North Cave Room 2 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Surf Beach Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Star Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Star Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Star Room Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Sun Door Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Sun Door Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Fountain Room 2 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Outside Woohoo Hooniversity Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Starting Flag 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Starting Flag 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Starting Flag 3", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
@@ -889,12 +579,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village Super Hammer Cave Digspot", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village Super Hammer Cave Block", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
@@ -909,17 +599,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Digspot 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Digspot 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Digspot 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -979,12 +669,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Block", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 2", player),
-        True_()
+        And(And(True_(), True_()), True_())
     )
 
     world.set_rule(
@@ -994,7 +684,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NE Digspot 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1009,7 +699,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts E Digspot 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1044,7 +734,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts North Beach Digspot 3", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
@@ -1149,12 +839,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Secret Scroll 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Secret Scroll 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1174,12 +864,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1189,7 +879,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 7", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1203,18 +893,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Peasley's Rose", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Beanbean Outskirts Super Hammer Upgrade", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Ultra Hammer Upgrade", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
@@ -1224,11 +909,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Village Hammers", player),
         True_()
     )
 
@@ -1313,16 +993,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Chateau Popple Fight Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chateau Popple Fight Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Chateau Popple Fight Room Digspot", player),
         True_()
     )
@@ -1338,43 +1008,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Cave Room 1 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Cave Room 1 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Cave Room 2 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Cave Room 3 Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 2 Block", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 2 Block", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1474,22 +1119,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods West of Chuckleroot Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Southwest of Chuckleroot Block", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1533,16 +1168,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Koopa Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Koopa Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Chucklehuck Woods Koopa Room Digspot", player),
         True_()
     )
@@ -1574,12 +1199,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chateau Green Goblet", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Red Goblet", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1589,87 +1214,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Chuckola Fruit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Purple Chuckola Fruit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town West Side House Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town West Side House Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town West Side House Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town West Side House Block 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town East Side House Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town East Side House Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town East Side House Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town East Side House Block 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Peach's Extra Dress", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Fake Beanstar", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanlet 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanlet 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanlet 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanlet 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanlet 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1723,333 +1278,183 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 5", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 6", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Brew Reward 7", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Woohoo Blend", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Hoohoo Blend", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Chuckle Blend", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Teehee Blend", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Hoolumbian", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Chuckoccino", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coffee Shop Teeheespresso", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone Reward", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanlet Reward", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Badge Shop Starting Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Starting Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Starting Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Starting Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Starting Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Chuckolator Flag", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Chuckolator Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Chuckolator Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Chuckolator Flag 3", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Chuckolator Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Chuckolator Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Chuckolator Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Mom Piranha Flag 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Mom Piranha Flag 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Mom Piranha Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Mom Piranha Flag 4", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Mom Piranha Flag 1", player),
-        True_()
+        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Mom Piranha Flag 2", player),
-        True_()
+        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Mom Piranha Flag 3", player),
-        True_()
+        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Mom Piranha Flag 1", player),
-        True_()
+        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Mom Piranha Flag 2", player),
-        True_()
+        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Mom Piranha Flag 3", player),
-        True_()
+        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Trunkle Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Trunkle Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Trunkle Flag 3", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Trunkle Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Trunkle Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Trunkle Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Trunkle Flag 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Trunkle Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Beanstar Complete Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Beanstar Complete Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Beanstar Complete Flag 3", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Beanstar Complete Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Beanstar Complete Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Beanstar Complete Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Beanstar Complete Flag 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Beanstar Complete Flag 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Beanstar Complete Flag 3", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Birdo Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Birdo Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Birdo Flag 3", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shop Birdo Flag", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean North Whirlpool Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean North Whirlpool Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean North Whirlpool Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean North Whirlpool Block 4", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
@@ -2113,16 +1518,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Surf Minigame", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("North Ocean Whirlpool Mole", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 1", player),
         True_()
     )
@@ -2138,67 +1533,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity South Of Star Room Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Block 4", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Sun Door Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Sun Door Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Sun Door Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 1 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Block 2", player),
         True_()
     )
 
@@ -2218,37 +1558,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Basement Room 3 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Basement Room 4 Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 1", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Solo Mario Barrel Area Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Solo Mario Barrel Area Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Solo Mario Barrel Area Block 3", player),
         True_()
     )
 
@@ -2279,17 +1594,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Red Pearl Bean", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Green Pearl Bean", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean South Room 1 Block", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2299,11 +1609,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Past Hermie Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon East of Stone Bridge Block", player),
         True_()
     )
 
@@ -2329,26 +1634,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 3 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 3 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 3 Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 1 Block", player),
         True_()
     )
 
@@ -2389,11 +1674,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Spangle Reward", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanstar Piece Hermie", player),
         True_()
     )
 
@@ -2444,41 +1724,16 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Before Trunkle Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("S.S. Chuckola Storage Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("S.S. Chuckola Storage Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("S.S. Chuckola Membership Card", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Winkle Cave Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Winkle Cave Block 2", player),
         True_()
     )
 
@@ -2493,11 +1748,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Winkle Area Outside Colloseum Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Winkle Area Colloseum Digspot", player),
         True_()
     )
@@ -2508,57 +1758,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Winkle Area Winkle Card", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Room 3 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Room 3 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Room 3 Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Sewers Room 5 Block 1", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sewers Room 5 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Prison Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Prison Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Prison Room Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Prison Room Block 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Beanbean Brooch", player),
         True_()
     )
 
@@ -2648,52 +1853,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Joke's End West of First Boiler Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End West of First Boiler Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Joke's End First Boiler Room Digspot 1", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End First Boiler Room Digspot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Floor West Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Floor West Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Floor West Room Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Floor West Room Block 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Mole Reward 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Mole Reward 2", player),
         True_()
     )
 
@@ -2724,12 +1889,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Joke's End Northeast of Boiler Room 2 Digspot", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Northeast of Boiler Room 3 Digspot", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2743,32 +1908,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Joke's End South of Bridge Room Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Luigi Room 1 Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Joke's End Solo Luigi Room 1 Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Final Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Final Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Final Room Block 3", player),
         True_()
     )
 
@@ -2783,21 +1923,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Room 2 Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Room 2 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Room 2 Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Joke's End Second Boiler Room Digspot 1", player),
         True_()
     )
@@ -2808,33 +1933,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Joke's End North of Second Boiler Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End North of Second Boiler Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Before Jojora Room Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Before Jojora Room Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Joke's End Before Jojora Room Digspot", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Jojora Room Digspot", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2908,133 +2013,73 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Fungitown Embassy Room Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Entrance Room Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Starting Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Starting Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Starting Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 5", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 6", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 7", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Starting Flag 8", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Starting Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Starting Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Starting Flag 3", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Beanstar Complete Flag", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Shop Birdo Flag", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Birdo Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Birdo Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Birdo Flag 1", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Birdo Flag 2", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
     )
 
     world.set_rule(
@@ -3048,18 +2093,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Beanstar Piece Harhall", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Beanbean Outskirts Boostatue Mole", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harhall's Pants", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -3073,22 +2108,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Beanbean Outskirts S Room 2 Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 3", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Oho Oasis West Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Oasis Fire Palace Block", player),
         True_()
     )
 
@@ -3113,37 +2138,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Past Ultra Hammer Rocks Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Past Ultra Hammer Rocks Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Past Ultra Hammer Rocks Block 3", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Mole Near Teehee Valley", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Teehee Valley Entrance To Hoohoo Mountain Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Upper Maze Room 1 Block", player),
         True_()
     )
 
@@ -3173,37 +2173,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Teehee Valley Entrance Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cackletta's Soul", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Entrance Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Entrance Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Bowser's Castle Entrance Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Block 2", player),
         True_()
     )
 
@@ -3213,17 +2183,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Bowser's Castle Past Morton Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Bowser's Castle Morton Room 1 Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Lemmy Room 1 Block", player),
         True_()
     )
 
@@ -3233,91 +2193,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Bowser's Castle Ludwig Room 1 Block", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Lemmy Room Mole", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Ludwig & Roy Hallway Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Ludwig & Roy Hallway Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Roy Corridor Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Roy Corridor Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Mini Mario Sidescroller Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Mini Mario Sidescroller Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Mini Mario Maze Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Mini Mario Maze Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Before Wendy Fight Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Before Wendy Fight Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Larry Room Block", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Bowser's Castle Wendy & Larry Hallway Digspot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Before Fawful Fight Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Before Fawful Fight Block 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Great Door Block 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Great Door Block 2", player),
         True_()
     )

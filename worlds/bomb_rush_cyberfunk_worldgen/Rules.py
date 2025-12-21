@@ -1519,21 +1519,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("New Game", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Misc -> Hideout", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hideout -> Misc", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Hideout -> Versum Hill", player),
         True_()
     )
@@ -1549,17 +1534,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Versum Hill -> Hideout", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Versum Hill -> Versum Hill - After Roadblock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Versum Hill - After Roadblock -> Hideout", player),
         True_()
     )
 
@@ -1790,11 +1765,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Upper Areas", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mataan - Streets -> Hideout", player),
         True_()
     )
 
@@ -2244,46 +2214,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Hideout: Half pipe CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Garage tower CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Rooftop CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Under staircase graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Secret area graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Rear studio graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Corner ledge graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hideout: Upper platform skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Hideout: BMX garage skateboard", player),
         True_()
     )
@@ -2304,21 +2234,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Versum Hill: Main street Robo Post graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Behind glass graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Office room graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Versum Hill: BMX gate outfit", player),
         True_()
     )
@@ -2330,41 +2245,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Trash Polo", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Under bridge graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Train rail ledge skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Train station CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Billboard platform outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Hilltop Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Hill secret skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Rooftop CD", player),
         True_()
     )
 
@@ -2394,42 +2274,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Versum Hill: Underground mall billboard graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Underground mall vending machine skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Versum Hill: Rave joins the crew", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Fruit stand Polo", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Side street alley outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Side street secret skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Basketball court alley skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Versum Hill: Basketball court Robo Post CD", player),
         True_()
     )
 
@@ -2445,86 +2295,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Complete Chapter 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Center ramp graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Rooftop staircase graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Toilet graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Trash graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Center tower graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Rooftop billboard graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Center Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Parking garage Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Mall ledge outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Alley rooftop outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Alley staircase skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Secret painting skates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Vending machine skates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Walkway roof skates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: Alley ledge skates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Square: DJ Cyber joins the crew", player),
         True_()
     )
 
@@ -2549,42 +2319,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Brink Terminal: Under square ledge graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Bus graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Under square Robo Post graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Brink Terminal: BMX gate graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Square tower CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Trash CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Shop roof outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Glass roof skates", player),
         True_()
     )
 
@@ -2599,37 +2334,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Brink Terminal: Underground glass skates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Underground ramp skates", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh's skateboard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Ocean platform CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: End of dock CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Dock Robo Post outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Control room skates", player),
         True_()
     )
 
@@ -2639,27 +2344,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Brink Terminal: Wire grind CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Rooftop halfpipe graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Brink Terminal: Rooftop glass CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: Tower core outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brink Terminal: High rooftop outfit", player),
         True_()
     )
 
@@ -2669,37 +2354,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Millennium Mall: Warehouse pallet graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Wall alcove graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Maintenance shaft CD", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Millennium Mall: Glass cylinder CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Lower Robo Post outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Hanging lights CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Atrium vending machine graffiti", player),
         True_()
     )
 
@@ -2724,62 +2379,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Millennium Mall: Atrium top floor Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Atrium top floor floating CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Atrium top floor BMX", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Theater entrance BMX", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Millennium Mall: Atrium BMX gate BMX", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Millennium Mall: Upside down rail outfit", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Millennium Mall: DOT.EXE joins the crew", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Race track Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Theater stage corner graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Theater hanging billboards graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Theater garage graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Millennium Mall: Theater maintenance CD", player),
         True_()
     )
 
@@ -2790,21 +2395,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Complete Chapter 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Lower rooftop graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Polo graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Above entrance graffiti", player),
         True_()
     )
 
@@ -2830,36 +2420,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Quarter pipe rooftop graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Supply port Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Above gate ledge CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Smoke hole BMX", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Above gate rail outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Rail loop outfit", player),
         True_()
     )
 
@@ -2914,32 +2474,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Pyramid Island: Wind turbines CD", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Pyramid Island: Shortcut glass CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Turret jump CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Helipad BMX", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Pipe outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Trash outfit", player),
         True_()
     )
 
@@ -2954,72 +2489,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Pyramid Island: Pyramid top CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Island: Pyramid top Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Pyramid Island: Rise joins the crew", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Mataan: Robo Post graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Secret ledge BMX", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Highway rooftop BMX", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Trash CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Half pipe CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Across bull horns graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Small rooftop graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Trash graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Mataan: Trash Polo", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Deep city Robo Post CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Deep city tower CD", player),
         True_()
     )
 
@@ -3039,67 +2514,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Mataan: Deep city vent jump BMX", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Deep city side wires outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Deep city center island outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Red light rail graffiti", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Red light side alley outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Statue hand outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Crane CD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Elephant tower glass outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Helipad outfit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Vending machine CD", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Mataan: Coil joins the crew", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Flesh Prince joins the crew", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mataan: Futurism joins the crew", player),
         True_()
     )
 

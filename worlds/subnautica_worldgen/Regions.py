@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Planet 4546B"]
+    region_names = ["Planet 4546B"]
 
     regions = {}
     for region_name in region_names:
@@ -43,7 +43,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Planet 4546B"], "MenuToStart")
+
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:

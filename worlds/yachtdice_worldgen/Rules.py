@@ -19,11 +19,6 @@ def set_rules(world: "World") -> None:
     player = world.player
     multiworld = world.multiworld
 
-    # Entrance rules
-    world.set_rule(
-        multiworld.get_entrance("New Board", player),
-        True_()
-    )
     # Location rules
     world.set_rule(
         multiworld.get_location("1 score", player),

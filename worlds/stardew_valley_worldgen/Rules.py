@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachLocation, Has, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,976 +16,976 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _stardewvalleyworldgen_has_legend(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))
-
-
-def _stardewvalleyworldgen_has_tea_sapling(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_summer_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_spring_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_fall_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_winter_seeds(state, player)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_cave_jelly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (True)
-
-
-def _stardewvalleyworldgen_has_the_diamond_hunter(state: "CollectionState", player: int) -> bool:
-    return (True) and (True) and (_stardewvalleyworldgen_has_diamond(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_melon(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_melon_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_beet_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_fossilized_spine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_taro_root(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_taro_tuber(state, player))
-
-
 def _stardewvalleyworldgen_has_fossilized_ribs(state: "CollectionState", player: int) -> bool:
     return (state.has('Open Professor Snail Cave', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_powdermelon(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_powdermelon_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_solar_essence(state: "CollectionState", player: int) -> bool:
-    return (True) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (True))
-
-
-def _stardewvalleyworldgen_has_woodcutter_s_weekly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_corn_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Corn Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_the_art_o_crabbing(state: "CollectionState", player: int) -> bool:
-    return (state.has("Book: The Art O' Crabbing", player)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_pufferfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_honey(state: "CollectionState", player: int) -> bool:
-    return (True) or ((_stardewvalleyworldgen_has_bee_house(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))))
-
-
-def _stardewvalleyworldgen_has_summer_squash_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer Squash Seeds', player)) and (True) and (True) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_hops(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_hops_starter(state, player))
-
-
-def _stardewvalleyworldgen_has_apricot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_apricot_sapling(state, player))
 
 
 def _stardewvalleyworldgen_has_rare_seed(state: "CollectionState", player: int) -> bool:
     return (state.has('Rare Seed', player)) and ((state.has('Spring', player)) or (state.has('Summer', player))) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True)
 
 
-def _stardewvalleyworldgen_has_tapper(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_oil_maker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 8)) and (True) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_shad(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_banana_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Banana Sapling', player)) and (True) and (True) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_pineapple_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pineapple Seeds', player)) and (True) and (True) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_jotpk_small_buff(state: "CollectionState", player: int) -> bool:
-    return True
-
-
-def _stardewvalleyworldgen_has_tree_fertilizer(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Foraging Level', player, 7)) and (True) and (True)) or ((state.has('Foraging Level', player, 7)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_cauliflower_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_super_cucumber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_diamond(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_lightning_rod(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (_stardewvalleyworldgen_has_bat_wing(state, player))
-
-
 def _stardewvalleyworldgen_has_void_salmon(state: "CollectionState", player: int) -> bool:
     return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)
-
-
-def _stardewvalleyworldgen_has_rabbit_s_foot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_stingray(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)
-
-
-def _stardewvalleyworldgen_has_void_mayonnaise(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_mayonnaise_machine(state, player)) and (_stardewvalleyworldgen_has_void_egg_starter(state, player))
-
-
-def _stardewvalleyworldgen_has_duck_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_price_catalogue(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_topaz(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_salmonberry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spring', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_starfruit(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_starfruit_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_cranberries(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_cranberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_scarecrow(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_rhubarb_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_banana(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_banana_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_lingcod(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_apple(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_apple_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_fish_smoker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Progressive Fishing Rod', player, 2)) and (_stardewvalleyworldgen_has_cave_jelly(state, player))
-
-
-def _stardewvalleyworldgen_has_book_of_mysteries(state: "CollectionState", player: int) -> bool:
-    return (state.has('Power: Book of Mysteries', player)) and (state.has('Received Progression Percent', player, 8)) and (True) and (state.has("Mr Qi's Plane Ride", player))
-
-
-def _stardewvalleyworldgen_has_grape_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_woody_s_secret(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Progressive Axe', player, 2)) and (state.has('Foraging Level', player, 5))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_rhubarb_pie(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) and (True) and (True) and (_stardewvalleyworldgen_has_rhubarb(state, player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_mango(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_mango_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_potato(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_potato_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_cloth(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_wool(state, player)) and (_stardewvalleyworldgen_has_loom(state, player))) or ((True) and (_stardewvalleyworldgen_has_aquamarine(state, player)))
-
-
-def _stardewvalleyworldgen_has_rice_shoot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rice Shoot', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_chicken_egg(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))
-
-
-def _stardewvalleyworldgen_has_kale(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_kale_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_blobfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_amethyst(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_recycling_machine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_large_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_bait(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fishing Level', player, 2)) and (True)
-
-
-def _stardewvalleyworldgen_has_golden_pumpkin(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
-
-
-def _stardewvalleyworldgen_has_loom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 7)) and (True) and (True) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_cranberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True))) and (True)
-
-
-def _stardewvalleyworldgen_has_preserves_jar(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 4)) and (True) and (True) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_crab_pot(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))
-
-
-def _stardewvalleyworldgen_has_largemouth_bass(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))
-
-
-def _stardewvalleyworldgen_has_strawberry(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_strawberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_midnight_carp(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_wool(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Barn', player, 3)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_fire_quartz(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 4)) or (True) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_bone_fragment(state: "CollectionState", player: int) -> bool:
-    return (True) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3))))
-
-
-def _stardewvalleyworldgen_has_wild_plum(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_cherry_bomb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player)) and (state.has('Copper Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_pineapple(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_pineapple_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_fall_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 6)) and (_stardewvalleyworldgen_has_common_mushroom(state, player)) and (_stardewvalleyworldgen_has_wild_plum(state, player)) and (state.has('Fall', player)) and (_stardewvalleyworldgen_has_blackberry(state, player))
-
-
-def _stardewvalleyworldgen_has_sweet_gem_berry(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_rare_seed(state, player))
-
-
-def _stardewvalleyworldgen_has_rainbow_trout(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_pina_colada(state: "CollectionState", player: int) -> bool:
-    return (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True)))
-
-
-def _stardewvalleyworldgen_has_cherry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_cherry_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_tomato_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Tomato Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_fossilized_tail(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_truffle_oil(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_truffle(state, player)) and (_stardewvalleyworldgen_has_oil_maker(state, player))
-
-
-def _stardewvalleyworldgen_has_ruby(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
 
 
 def _stardewvalleyworldgen_has_orange(state: "CollectionState", player: int) -> bool:
     return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_orange_sapling(state, player))
 
 
-def _stardewvalleyworldgen_has_garlic_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_rhubarb(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_rhubarb_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_sashimi(state: "CollectionState", player: int) -> bool:
-    return (state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player))
-
-
-def _stardewvalleyworldgen_has_bait_and_bobber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_powdermelon_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_common_mushroom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (True))
-
-
-def _stardewvalleyworldgen_has_jotpk_big_buff(state: "CollectionState", player: int) -> bool:
-    return True
-
-
-def _stardewvalleyworldgen_has_cactus_fruit(state: "CollectionState", player: int) -> bool:
-    return (True) or (((True) or (True)) and (_stardewvalleyworldgen_has_cactus_seeds(state, player)))
-
-
-def _stardewvalleyworldgen_has_combat_quarterly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_aquamarine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_truffle(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_solar_panel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Solar Panel Recipe', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_goblin_problem(state: "CollectionState", player: int) -> bool:
-    return (True) and ((state.has('Progressive Fishing Rod', player)) or (_stardewvalleyworldgen_has_void_mayonnaise(state, player)))
-
-
-def _stardewvalleyworldgen_has_ancient_fruit(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Ancient Seeds', player)) or (state.has('Ancient Seeds Recipe', player))) and (True) and (_stardewvalleyworldgen_has_seed_maker(state, player))
-
-
-def _stardewvalleyworldgen_has_dried_mushrooms_magma_cap(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_dehydrator(state, player))
-
-
-def _stardewvalleyworldgen_has_mango_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_blackberry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_red_cabbage_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_walleye(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_horse_the_book(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_bat_wing(state: "CollectionState", player: int) -> bool:
-    return (True) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (True))
-
-
-def _stardewvalleyworldgen_has_jazz_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Jazz Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_sunflower_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_parsnip(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_parsnip_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_rat_problem(state: "CollectionState", player: int) -> bool:
-    return (True) and (True)
-
-
-def _stardewvalleyworldgen_has_seaweed(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_sunflower(state: "CollectionState", player: int) -> bool:
-    return ((True) or (True)) and (_stardewvalleyworldgen_has_sunflower_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_kale_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_treasure_appraisal_guide(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 48)) and (True) and (_stardewvalleyworldgen_has_artifact_trove(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_tea_leaves(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 8)) and (_stardewvalleyworldgen_has_tea_sapling(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_eel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_pancakes(state: "CollectionState", player: int) -> bool:
-    return (state.has('The Queen of Sauce', player)) and (state.has('Summer', player)) and (True) and (_stardewvalleyworldgen_has_chicken_egg(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_taro_tuber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Taro Tuber', player)) and (True) and (True) and (_stardewvalleyworldgen_has_bone_fragment(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_prismatic_shard(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 40)) and (True)
-
-
-def _stardewvalleyworldgen_has_bee_house(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 3)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_emerald(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_void_essence(state: "CollectionState", player: int) -> bool:
-    return (True) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (True))
+def _stardewvalleyworldgen_has_potato(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_potato_seeds(state, player))
 
 
 def _stardewvalleyworldgen_has_quality_bobber(state: "CollectionState", player: int) -> bool:
     return (state.has('Quality Bobber Recipe', player)) and (state.has('Copper Bar (Logic event)', player)) and (True) and (_stardewvalleyworldgen_has_solar_essence(state, player))
 
 
-def _stardewvalleyworldgen_has_wheat_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_summer_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 4)) and (_stardewvalleyworldgen_has_spice_berry(state, player)) and (_stardewvalleyworldgen_has_grape(state, player)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_jade(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_the_alleyway_buffet(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Progressive Axe', player, 2)) and (state.has('Progressive Pickaxe', player, 2))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_explosive_ammo(state: "CollectionState", player: int) -> bool:
-    return (state.has('Combat Level', player, 8)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_wheat(state: "CollectionState", player: int) -> bool:
-    return ((True) or (True)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_pickles_tea_leaves(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_tea_leaves(state, player)) and (_stardewvalleyworldgen_has_preserves_jar(state, player))
-
-
-def _stardewvalleyworldgen_has_magma_geode(state: "CollectionState", player: int) -> bool:
-    return (True) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_lava_eel(state, player)))
-
-
-def _stardewvalleyworldgen_has_blueberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_sardine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_purple_mushroom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mushroom Boxes', player)) or (True) or (True)
-
-
-def _stardewvalleyworldgen_has_queen_of_sauce_cookbook(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 12)) and (state.has('Progressive Slingshot', player)) and (state.has('Progressive Pickaxe', player, 4)) and (state.has('Combat Level', player, 8)) and (state.has('Mining Level', player, 8)) and (state.has('Fishing Level', player, 10)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Open Professor Snail Cave', player)) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (_stardewvalleyworldgen_has_banana(state, player)) and (_stardewvalleyworldgen_has_amethyst(state, player)) and (_stardewvalleyworldgen_has_aquamarine(state, player)) and (_stardewvalleyworldgen_has_emerald(state, player)) and (_stardewvalleyworldgen_has_ruby(state, player)) and (_stardewvalleyworldgen_has_topaz(state, player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5))) and (True) and (_stardewvalleyworldgen_has_flute_block(state, player)) and (_stardewvalleyworldgen_has_melon_seeds(state, player)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player)) and (_stardewvalleyworldgen_has_garlic_seeds(state, player)) and (True) and (True) and (_stardewvalleyworldgen_has_fossilized_ribs(state, player)) and (True) and (_stardewvalleyworldgen_has_fossilized_spine(state, player)) and (_stardewvalleyworldgen_has_fossilized_tail(state, player)) and (True) and (True) and (True) and (True) and (True) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_broken_cd(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_seed_maker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_octopus(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_lionfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((True) or (True))
-
-
-def _stardewvalleyworldgen_has_pale_ale(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_hops(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
-
-
-def _stardewvalleyworldgen_has_apricot_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_lava_eel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (True)
-
-
-def _stardewvalleyworldgen_has_stardew_valley_almanac(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_hot_pepper(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_pepper_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_lobster(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True)
-
-
-def _stardewvalleyworldgen_has_earth_crystal(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 4)) or (True) or ((True) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_any_fish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (True)) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (True)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (True)) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((True) or (True))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((True) or (True))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True))
-
-
-def _stardewvalleyworldgen_has_way_of_the_wind_pt_1(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 3)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_duck_feather(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_furnace(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player)) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_keg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_broken_glasses(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_pumpkin(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_pumpkin_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_potato_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_tilapia(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_deluxe_fertilizer(state: "CollectionState", player: int) -> bool:
-    return (state.has('Deluxe Fertilizer Recipe', player)) and (state.has('Iridium Bar (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_bomb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player, 6)) and (state.has('Iron Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_cactus_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cactus Seeds', player)) and (True) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_artifact_trove(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_omni_geode(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_way_of_the_wind_pt_2(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 8)) and (state.has('Power: Way Of The Wind pt. 1', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_orange_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_smallmouth_bass(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_mayonnaise_machine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_earth_crystal(state, player)) and (state.has('Copper Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_starfruit_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True))) and (True)
-
-
-def _stardewvalleyworldgen_has_hops_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_strawberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_ancient_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Ancient Seeds Recipe', player)) and (state.has('Received Progression Percent', player, 20))
-
-
-def _stardewvalleyworldgen_has_beet(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_beet_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_cauliflower(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_cauliflower_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_friendship_101(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 16)) and (True) and (state.has('Received Progression Percent', player, 8))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_jotpk_max_buff(state: "CollectionState", player: int) -> bool:
-    return True
-
-
-def _stardewvalleyworldgen_has_flute_block(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_pomegranate(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_pomegranate_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_egg_brown(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True)
-
-
-def _stardewvalleyworldgen_has_void_egg_starter(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (True)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_void_salmon(state, player)))
-
-
-def _stardewvalleyworldgen_has_pearl(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_blobfish(state, player))) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
-
-
-def _stardewvalleyworldgen_has_dorado(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_salmon(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_fairy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fairy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 4)) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_refined_quartz(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_furnace(state, player)) and (True)) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))
-
-
-def _stardewvalleyworldgen_has_chanterelle(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mushroom Boxes', player)) or ((state.has('Fall', player)) and (True))
-
-
 def _stardewvalleyworldgen_has_animal_catalogue(state: "CollectionState", player: int) -> bool:
     return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and (True)
 
 
-def _stardewvalleyworldgen_has_blue_discus(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True)
+def _stardewvalleyworldgen_has_rhubarb_pie(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) and (True) and (True) and (_stardewvalleyworldgen_has_rhubarb(state, player)) and (True) and (True)
 
 
-def _stardewvalleyworldgen_has_parsnip_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_hardwood(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Axe', player)) and ((True) or (True))
-
-
-def _stardewvalleyworldgen_has_slime_egg_press(state: "CollectionState", player: int) -> bool:
-    return (state.has('Combat Level', player, 6)) and (_stardewvalleyworldgen_has_coal(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player)) and (_stardewvalleyworldgen_has_battery_pack(state, player))
-
-
-def _stardewvalleyworldgen_has_raccoon_journal(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True)) or ((state.has('Received Progression Percent', player, 2)) and (True) and (True) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_yam_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Yam Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_artichoke_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Artichoke Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_carrot_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Carrot Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_fishing_chest(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))
-
-
-def _stardewvalleyworldgen_has_book_of_stars(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_cranberry_candy(state: "CollectionState", player: int) -> bool:
-    return (state.has('The Queen of Sauce', player)) and (state.has('Winter', player)) and (True) and (_stardewvalleyworldgen_has_apple(state, player)) and (_stardewvalleyworldgen_has_cranberries(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_spice_berry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_blueberry(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_blueberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_broccoli_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Broccoli Seeds', player)) and (True) and (True) and (_stardewvalleyworldgen_has_moss(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_tulip_bulb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Tulip Bulb', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_quality_fertilizer(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 16)) or ((state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player)))
-
-
-def _stardewvalleyworldgen_has_pepper_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_omni_geode(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (True) or (True) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (True)
-
-
-def _stardewvalleyworldgen_has_halibut(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_bok_choy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_red_cabbage(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_red_cabbage_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_juice_potato(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_potato(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
-
-
-def _stardewvalleyworldgen_has_pomegranate_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_jotpk_medium_buff(state: "CollectionState", player: int) -> bool:
+def _stardewvalleyworldgen_has_jotpk_big_buff(state: "CollectionState", player: int) -> bool:
     return True
-
-
-def _stardewvalleyworldgen_has_anchovy(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_radish_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Radish Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_spangle_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spangle Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_amaranth_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Amaranth Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_grape(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) or ((True) and (_stardewvalleyworldgen_has_grape_starter(state, player)))
-
-
-def _stardewvalleyworldgen_has_cherry_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cherry Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_monster_compendium(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 16)) and (((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_mining_monthly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_battery_pack(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_lightning_rod(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or (_stardewvalleyworldgen_has_solar_panel(state, player))
-
-
-def _stardewvalleyworldgen_has_peach(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_peach_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_large_egg_brown(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_apple_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_bean_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bean Starter', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_moss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_albacore(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_bok_choy(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_bok_choy_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_crimsonfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (True)
-
-
-def _stardewvalleyworldgen_has_pumpkin_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_coal(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player)) or (True)
-
-
-def _stardewvalleyworldgen_has_spring_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))
-
-
-def _stardewvalleyworldgen_has_peach_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
 
 
 def _stardewvalleyworldgen_has_bullhead(state: "CollectionState", player: int) -> bool:
     return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))
 
 
+def _stardewvalleyworldgen_has_honey(state: "CollectionState", player: int) -> bool:
+    return (True) or ((_stardewvalleyworldgen_has_bee_house(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))))
+
+
+def _stardewvalleyworldgen_has_corn_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Corn Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_moss(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_solar_panel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Solar Panel Recipe', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_chicken_egg(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))
+
+
+def _stardewvalleyworldgen_has_summer_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 4)) and (_stardewvalleyworldgen_has_spice_berry(state, player)) and (_stardewvalleyworldgen_has_grape(state, player)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_garlic_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_void_essence(state: "CollectionState", player: int) -> bool:
+    return (True) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (True))
+
+
+def _stardewvalleyworldgen_has_wheat_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_albacore(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_horse_the_book(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_monster_compendium(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 16)) and (((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((True) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_scarecrow(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_jade(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_hardwood(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Axe', player)) and ((True) or (True))
+
+
 def _stardewvalleyworldgen_has_squid(state: "CollectionState", player: int) -> bool:
     return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_amaranth(state: "CollectionState", player: int) -> bool:
-    return (True) and (_stardewvalleyworldgen_has_amaranth_seeds(state, player))
 
 
 def _stardewvalleyworldgen_has_dwarvish_safety_manual(state: "CollectionState", player: int) -> bool:
     return ((state.has('Shipping Bin', player)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
 
 
-def _stardewvalleyworldgen_has_coffee_bean_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Coffee Bean', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player))) and (True)
+def _stardewvalleyworldgen_has_juice_potato(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_potato(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
 
 
-def _stardewvalleyworldgen_has_melon_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_ol_slitherlegs(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_eggplant_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Eggplant Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_winter_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_dehydrator(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_fire_quartz(state, player))
-
-
-def _stardewvalleyworldgen_has_jewels_of_the_sea(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 20)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+def _stardewvalleyworldgen_has_blobfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
 
 
 def _stardewvalleyworldgen_has_any_egg(state: "CollectionState", player: int) -> bool:
     return (_stardewvalleyworldgen_has_chicken_egg(state, player)) or (_stardewvalleyworldgen_has_duck_egg(state, player))
 
 
+def _stardewvalleyworldgen_has_price_catalogue(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_beet(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_beet_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_the_diamond_hunter(state: "CollectionState", player: int) -> bool:
+    return (True) and (True) and (_stardewvalleyworldgen_has_diamond(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_fossilized_tail(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_flute_block(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_hops_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_fossilized_spine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_powdermelon_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_strawberry(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_strawberry_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_rabbit_s_foot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_taro_tuber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Taro Tuber', player)) and (True) and (True) and (_stardewvalleyworldgen_has_bone_fragment(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_pickles_tea_leaves(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_tea_leaves(state, player)) and (_stardewvalleyworldgen_has_preserves_jar(state, player))
+
+
+def _stardewvalleyworldgen_has_red_cabbage_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_oil_maker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 8)) and (True) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_cherry_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cherry Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_egg_brown(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True)
+
+
+def _stardewvalleyworldgen_has_amaranth_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Amaranth Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_void_mayonnaise(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_mayonnaise_machine(state, player)) and (_stardewvalleyworldgen_has_void_egg_starter(state, player))
+
+
+def _stardewvalleyworldgen_has_truffle_oil(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_truffle(state, player)) and (_stardewvalleyworldgen_has_oil_maker(state, player))
+
+
+def _stardewvalleyworldgen_has_parsnip(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_parsnip_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_way_of_the_wind_pt_1(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 3)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_pearl(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_blobfish(state, player))) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
+
+
+def _stardewvalleyworldgen_has_topaz(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_book_of_stars(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_purple_mushroom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mushroom Boxes', player)) or (True) or (True)
+
+
+def _stardewvalleyworldgen_has_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True)
+
+
+def _stardewvalleyworldgen_has_truffle(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_cranberries(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_cranberry_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_dorado(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_the_alleyway_buffet(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Axe', player, 2)) and (state.has('Progressive Pickaxe', player, 2))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_hot_pepper(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_pepper_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_tomato_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Tomato Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_artifact_trove(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_omni_geode(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_battery_pack(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_lightning_rod(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or (_stardewvalleyworldgen_has_solar_panel(state, player))
+
+
+def _stardewvalleyworldgen_has_duck_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_pufferfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_fall_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 6)) and (_stardewvalleyworldgen_has_common_mushroom(state, player)) and (_stardewvalleyworldgen_has_wild_plum(state, player)) and (state.has('Fall', player)) and (_stardewvalleyworldgen_has_blackberry(state, player))
+
+
+def _stardewvalleyworldgen_has_kale(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_kale_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_apricot_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_cauliflower_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_blackberry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_peach(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_peach_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_recycling_machine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_bone_fragment(state: "CollectionState", player: int) -> bool:
+    return (True) or ((True) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3))))
+
+
 def _stardewvalleyworldgen_has_poppy_seeds(state: "CollectionState", player: int) -> bool:
     return (state.has('Poppy Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_coal(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player)) or (True)
+
+
+def _stardewvalleyworldgen_has_starfruit_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True))) and (True)
+
+
+def _stardewvalleyworldgen_has_pineapple(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_pineapple_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_bat_wing(state: "CollectionState", player: int) -> bool:
+    return (True) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (True))
+
+
+def _stardewvalleyworldgen_has_grape_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_carrot_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Carrot Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_large_egg_brown(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_dehydrator(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_fire_quartz(state, player))
+
+
+def _stardewvalleyworldgen_has_ancient_fruit(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Ancient Seeds', player)) or (state.has('Ancient Seeds Recipe', player))) and (True) and (_stardewvalleyworldgen_has_seed_maker(state, player))
+
+
+def _stardewvalleyworldgen_has_largemouth_bass(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))
+
+
+def _stardewvalleyworldgen_has_broken_glasses(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
+
+
+def _stardewvalleyworldgen_has_seaweed(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_loom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 7)) and (True) and (True) and (_stardewvalleyworldgen_has_tapper(state, player))
+
+
+def _stardewvalleyworldgen_has_explosive_ammo(state: "CollectionState", player: int) -> bool:
+    return (state.has('Combat Level', player, 8)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_rat_problem(state: "CollectionState", player: int) -> bool:
+    return (True) and (True)
+
+
+def _stardewvalleyworldgen_has_beet_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_melon_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_broccoli_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Broccoli Seeds', player)) and (True) and (True) and (_stardewvalleyworldgen_has_moss(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_jewels_of_the_sea(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 20)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_sardine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_pomegranate_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_super_cucumber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_hops(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_hops_starter(state, player))
+
+
+def _stardewvalleyworldgen_has_yam_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Yam Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_earth_crystal(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 4)) or (True) or ((True) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_bean_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bean Starter', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_way_of_the_wind_pt_2(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 8)) and (state.has('Power: Way Of The Wind pt. 1', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_stardew_valley_almanac(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_crimsonfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (True)
+
+
+def _stardewvalleyworldgen_has_smallmouth_bass(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_common_mushroom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (True))
+
+
+def _stardewvalleyworldgen_has_pina_colada(state: "CollectionState", player: int) -> bool:
+    return (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True)))
+
+
+def _stardewvalleyworldgen_has_wild_plum(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_cranberry_candy(state: "CollectionState", player: int) -> bool:
+    return (state.has('The Queen of Sauce', player)) and (state.has('Winter', player)) and (True) and (_stardewvalleyworldgen_has_apple(state, player)) and (_stardewvalleyworldgen_has_cranberries(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_cherry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_cherry_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_blue_discus(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True)
+
+
+def _stardewvalleyworldgen_has_spice_berry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_pomegranate(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_pomegranate_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_the_art_o_crabbing(state: "CollectionState", player: int) -> bool:
+    return (state.has("Book: The Art O' Crabbing", player)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_queen_of_sauce_cookbook(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 12)) and (state.has('Progressive Slingshot', player)) and (state.has('Progressive Pickaxe', player, 4)) and (state.has('Combat Level', player, 8)) and (state.has('Mining Level', player, 8)) and (state.has('Fishing Level', player, 10)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Open Professor Snail Cave', player)) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (True) and (_stardewvalleyworldgen_has_banana(state, player)) and (_stardewvalleyworldgen_has_amethyst(state, player)) and (_stardewvalleyworldgen_has_aquamarine(state, player)) and (_stardewvalleyworldgen_has_emerald(state, player)) and (_stardewvalleyworldgen_has_ruby(state, player)) and (_stardewvalleyworldgen_has_topaz(state, player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5))) and (True) and (_stardewvalleyworldgen_has_flute_block(state, player)) and (_stardewvalleyworldgen_has_melon_seeds(state, player)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player)) and (_stardewvalleyworldgen_has_garlic_seeds(state, player)) and (True) and (True) and (_stardewvalleyworldgen_has_fossilized_ribs(state, player)) and (True) and (_stardewvalleyworldgen_has_fossilized_spine(state, player)) and (_stardewvalleyworldgen_has_fossilized_tail(state, player)) and (True) and (True) and (True) and (True) and (True) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_anchovy(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_refined_quartz(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_furnace(state, player)) and (True)) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))
+
+
+def _stardewvalleyworldgen_has_bomb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player, 6)) and (state.has('Iron Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_blueberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bait(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fishing Level', player, 2)) and (True)
+
+
+def _stardewvalleyworldgen_has_lingcod(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_ol_slitherlegs(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_stingray(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)
+
+
+def _stardewvalleyworldgen_has_cave_jelly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (True)
+
+
+def _stardewvalleyworldgen_has_duck_feather(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_red_cabbage(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_red_cabbage_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_prismatic_shard(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 40)) and (True)
+
+
+def _stardewvalleyworldgen_has_pumpkin_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_blueberry(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_blueberry_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_ruby(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_seed_maker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_coffee_bean_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Coffee Bean', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player))) and (True)
+
+
+def _stardewvalleyworldgen_has_lightning_rod(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (_stardewvalleyworldgen_has_bat_wing(state, player))
+
+
+def _stardewvalleyworldgen_has_winter_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_lobster(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
+
+
+def _stardewvalleyworldgen_has_mayonnaise_machine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_earth_crystal(state, player)) and (state.has('Copper Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_spangle_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spangle Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_woodcutter_s_weekly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_pumpkin(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_pumpkin_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_large_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (True) and (True) and (True) and (True) and (True))) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_wool(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Barn', player, 3)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_cactus_fruit(state: "CollectionState", player: int) -> bool:
+    return (True) or (((True) or (True)) and (_stardewvalleyworldgen_has_cactus_seeds(state, player)))
+
+
+def _stardewvalleyworldgen_has_lionfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((True) or (True))
+
+
+def _stardewvalleyworldgen_has_potato_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_chanterelle(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mushroom Boxes', player)) or ((state.has('Fall', player)) and (True))
+
+
+def _stardewvalleyworldgen_has_ancient_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Ancient Seeds Recipe', player)) and (state.has('Received Progression Percent', player, 20))
+
+
+def _stardewvalleyworldgen_has_crab_pot(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_rhubarb_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_tea_leaves(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 8)) and (_stardewvalleyworldgen_has_tea_sapling(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_eggplant_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Eggplant Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_octopus(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_pale_ale(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_hops(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
+
+
+def _stardewvalleyworldgen_has_legend(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))
+
+
+def _stardewvalleyworldgen_has_rhubarb(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_rhubarb_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_amethyst(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_void_egg_starter(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (True)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_void_salmon(state, player)))
+
+
+def _stardewvalleyworldgen_has_magma_geode(state: "CollectionState", player: int) -> bool:
+    return (True) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_lava_eel(state, player)))
+
+
+def _stardewvalleyworldgen_has_strawberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_mango_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_banana_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Banana Sapling', player)) and (True) and (True) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bee_house(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 3)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
+
+
+def _stardewvalleyworldgen_has_kale_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_wheat(state: "CollectionState", player: int) -> bool:
+    return ((True) or (True)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_salmonberry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spring', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_sashimi(state: "CollectionState", player: int) -> bool:
+    return (state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player))
+
+
+def _stardewvalleyworldgen_has_goblin_problem(state: "CollectionState", player: int) -> bool:
+    return (True) and ((state.has('Progressive Fishing Rod', player)) or (_stardewvalleyworldgen_has_void_mayonnaise(state, player)))
+
+
+def _stardewvalleyworldgen_has_cactus_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cactus Seeds', player)) and (True) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_broken_cd(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
+
+
+def _stardewvalleyworldgen_has_jazz_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Jazz Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_solar_essence(state: "CollectionState", player: int) -> bool:
+    return (True) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (True))
+
+
+def _stardewvalleyworldgen_has_banana(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_banana_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_deluxe_fertilizer(state: "CollectionState", player: int) -> bool:
+    return (state.has('Deluxe Fertilizer Recipe', player)) and (state.has('Iridium Bar (Logic event)', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_keg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
+
+
+def _stardewvalleyworldgen_has_shad(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_bok_choy(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_bok_choy_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_spring_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))
+
+
+def _stardewvalleyworldgen_has_orange_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_powdermelon(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_powdermelon_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_jotpk_medium_buff(state: "CollectionState", player: int) -> bool:
+    return True
+
+
+def _stardewvalleyworldgen_has_fishing_chest(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))
+
+
+def _stardewvalleyworldgen_has_friendship_101(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 16)) and (True) and (state.has('Received Progression Percent', player, 8))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_starfruit(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_starfruit_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_slime_egg_press(state: "CollectionState", player: int) -> bool:
+    return (state.has('Combat Level', player, 6)) and (_stardewvalleyworldgen_has_coal(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player)) and (_stardewvalleyworldgen_has_battery_pack(state, player))
+
+
+def _stardewvalleyworldgen_has_pepper_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_fire_quartz(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 4)) or (True) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_walleye(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_cranberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True)) or ((True) and (True))) and (True)
+
+
+def _stardewvalleyworldgen_has_bait_and_bobber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_golden_pumpkin(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
+
+
+def _stardewvalleyworldgen_has_lava_eel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (True)
+
+
+def _stardewvalleyworldgen_has_mining_monthly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_apple(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_apple_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_cauliflower(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_cauliflower_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_taro_root(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_taro_tuber(state, player))
+
+
+def _stardewvalleyworldgen_has_sweet_gem_berry(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_rare_seed(state, player))
+
+
+def _stardewvalleyworldgen_has_pancakes(state: "CollectionState", player: int) -> bool:
+    return (state.has('The Queen of Sauce', player)) and (state.has('Summer', player)) and (True) and (_stardewvalleyworldgen_has_chicken_egg(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_diamond(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_tapper(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_preserves_jar(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 4)) and (True) and (True) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_halibut(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_book_of_mysteries(state: "CollectionState", player: int) -> bool:
+    return (state.has('Power: Book of Mysteries', player)) and (state.has('Received Progression Percent', player, 8)) and (True) and (state.has("Mr Qi's Plane Ride", player))
+
+
+def _stardewvalleyworldgen_has_rainbow_trout(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_midnight_carp(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_tulip_bulb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Tulip Bulb', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_summer_squash_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer Squash Seeds', player)) and (True) and (True) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jotpk_small_buff(state: "CollectionState", player: int) -> bool:
+    return True
+
+
+def _stardewvalleyworldgen_has_aquamarine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_furnace(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player)) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_apple_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_eel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_jotpk_max_buff(state: "CollectionState", player: int) -> bool:
+    return True
+
+
+def _stardewvalleyworldgen_has_combat_quarterly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_radish_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Radish Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_grape(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) or ((True) and (_stardewvalleyworldgen_has_grape_starter(state, player)))
+
+
+def _stardewvalleyworldgen_has_tree_fertilizer(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Foraging Level', player, 7)) and (True) and (True)) or ((state.has('Foraging Level', player, 7)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_artichoke_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Artichoke Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_emerald(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((True) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_rice_shoot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rice Shoot', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_tilapia(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_treasure_appraisal_guide(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 48)) and (True) and (_stardewvalleyworldgen_has_artifact_trove(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_tea_sapling(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_summer_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_spring_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_fall_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (True) and (_stardewvalleyworldgen_has_winter_seeds(state, player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_omni_geode(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (True) or (True) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (True)
+
+
+def _stardewvalleyworldgen_has_melon(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_melon_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_salmon(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_sunflower_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bok_choy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_apricot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_apricot_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_mango(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (True) and (_stardewvalleyworldgen_has_mango_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_fairy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fairy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_peach_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_sunflower(state: "CollectionState", player: int) -> bool:
+    return ((True) or (True)) and (_stardewvalleyworldgen_has_sunflower_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_cherry_bomb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player)) and (state.has('Copper Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_pineapple_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pineapple Seeds', player)) and (True) and (True) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_dried_mushrooms_magma_cap(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_dehydrator(state, player))
+
+
+def _stardewvalleyworldgen_has_parsnip_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 4)) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_quality_fertilizer(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 16)) or ((state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player)))
+
+
+def _stardewvalleyworldgen_has_woody_s_secret(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Axe', player, 2)) and (state.has('Foraging Level', player, 5))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_raccoon_journal(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (True)) or ((state.has('Received Progression Percent', player, 2)) and (True) and (True) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_any_fish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (True)) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (True)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (True)) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((True) or (True))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((True) or (True))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (True)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (True)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (True))
+
+
+def _stardewvalleyworldgen_has_fish_smoker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Progressive Fishing Rod', player, 2)) and (_stardewvalleyworldgen_has_cave_jelly(state, player))
+
+
+def _stardewvalleyworldgen_has_amaranth(state: "CollectionState", player: int) -> bool:
+    return (True) and (_stardewvalleyworldgen_has_amaranth_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_cloth(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_wool(state, player)) and (_stardewvalleyworldgen_has_loom(state, player))) or ((True) and (_stardewvalleyworldgen_has_aquamarine(state, player)))
 
 
 # Helper definitions for frontend evaluation
@@ -7981,483 +7981,248 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("To Stardew Valley", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Farmhouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farmhouse to Farm", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Farmhouse to Cellar", player),
-        True_()
+        Has('Progressive House', 3)
     )
 
     world.set_rule(
         multiworld.get_entrance("Farmhouse Cooking", player),
-        True_()
+        Or(Has('Foraging Level', 9), Has('Progressive House'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Watch Queen of Sauce", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Backwoods", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Bus Stop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Forest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Farmcave", player),
-        True_()
+        Has('The Queen of Sauce')
     )
 
     world.set_rule(
         multiworld.get_entrance("Farm to Greenhouse", player),
-        True_()
+        Has('Greenhouse')
     )
 
     world.set_rule(
         multiworld.get_entrance("Farm to Coop", player),
-        True_()
+        Has('Progressive Coop')
     )
 
     world.set_rule(
         multiworld.get_entrance("Farm to Barn", player),
-        True_()
+        Has('Progressive Barn')
     )
 
     world.set_rule(
         multiworld.get_entrance("Farm to Shed", player),
-        True_()
+        Has('Progressive Shed')
     )
 
     world.set_rule(
         multiworld.get_entrance("Farm to Slime Hutch", player),
-        True_()
+        Has('Slime Hutch')
     )
 
     world.set_rule(
         multiworld.get_entrance("Grow Spring Crops", player),
-        True_()
+        Has('Spring')
     )
 
     world.set_rule(
         multiworld.get_entrance("Grow Summer Crops", player),
-        True_()
+        Has('Summer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Grow Fall Crops", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Winter Crops", player),
-        True_()
+        Has('Fall')
     )
 
     world.set_rule(
         multiworld.get_entrance("Use Shipping Bin", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_entrance("Start Fishing", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Backwoods to Mountain", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bus Stop to Town", player),
-        True_()
+        Has('Progressive Fishing Rod')
     )
 
     world.set_rule(
         multiworld.get_entrance("Bus Stop to Desert", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bus Stop to Tunnel Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Town", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), Has('Shipping Bin')), Has('Bus Repair'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest to Secret Woods", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Wizard Tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Marnie's Ranch", player),
-        True_()
+        Has('Progressive Axe', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest to Leah's Cottage", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest to Sewer", player),
-        True_()
+        Has('Rusty Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest to Mastery Cave", player),
-        True_()
+        Has('Mastery Of The Five Ways')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Complete Raccoon Requests", player),
-        True_()
+        And(Or(Has('Traveling Merchant: Friday'), Has('Traveling Merchant: Monday'), Has('Traveling Merchant: Saturday'), Has('Traveling Merchant: Sunday'), Has('Traveling Merchant: Thursday'), Has('Traveling Merchant: Tuesday'), Has('Traveling Merchant: Wednesday')), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Fish In Waterfall", player),
-        True_()
+        And(Has('Fishing Level', 5), Has('Progressive Fishing Rod', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Flower Dance", player),
-        True_()
+        Has('Spring')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Trout Derby", player),
-        True_()
+        Has('Summer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Festival of Ice", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Spring Crops in Greenhouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Summer Crops in Greenhouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Fall Crops in Greenhouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Winter Crops in Greenhouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Indoor Crops in Greenhouse", player),
-        True_()
+        Has('Winter')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mountain to Railroad", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Tent", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Carpenter Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to The Mines", player),
-        True_()
+        Has('Railroad Boulder Removed')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mountain to Quarry", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Adventurer's Guild", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Town", player),
-        True_()
+        Has('Bridge Repair')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mountain to Maru's Room", player),
-        True_()
+        And(True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mountain to Leo TreeHouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tunnel Entrance to Bus Tunnel", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Community Center", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Beach", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Hospital", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Pierre's General Store", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Saloon", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Alex's House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Trailer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Mayor's Manor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Sam's House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Haley's House", player),
-        True_()
+        Has('Treehouse')
     )
 
     world.set_rule(
         multiworld.get_entrance("Town to Sewer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Clint's Blacksmith", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Museum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to JojaMart", player),
-        True_()
+        Has('Rusty Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Purchase Movie Ticket", player),
-        True_()
+        Has('Progressive Movie Theater', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy Experience Books from the bookseller", player),
-        True_()
+        Has('Received Progression Percent', 8)
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Egg Festival", player),
-        True_()
+        Has('Spring')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Stardew Valley Fair", player),
-        True_()
+        Has('Fall')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Spirit's Eve", player),
-        True_()
+        Has('Fall')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Feast of the Winter Star", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach to Willy's Fish Shop", player),
-        True_()
+        Has('Winter')
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach to Elliott's House", player),
-        True_()
+        And(True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach to Tide Pools", player),
-        True_()
+        Has('Beach Bridge')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Luau", player),
-        True_()
+        Has('Summer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Dance of the Moonlight Jellies", player),
-        True_()
+        Has('Summer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend Night Market", player),
-        True_()
+        Has('Winter')
     )
 
     world.set_rule(
         multiworld.get_entrance("Attend SquidFest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Railroad to Bathhouse Entrance", player),
-        True_()
+        Has('Winter')
     )
 
     world.set_rule(
         multiworld.get_entrance("Railroad to Witch Warp Cave", player),
-        True_()
+        Has('Dark Talisman')
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewer to Mutant Bug Lair", player),
-        True_()
+        And(True_(), True_(), Has('Rusty Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Wizard Tower to Wizard Basement", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Use Desert Obelisk", player),
-        True_()
+        Has('Desert Obelisk')
     )
 
     world.set_rule(
         multiworld.get_entrance("Use Island Obelisk", player),
-        True_()
+        Has('Island Obelisk')
     )
 
     world.set_rule(
         multiworld.get_entrance("Carpenter Shop to Sebastian's Room", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Adventurer's Guild to Marlon's Bedroom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Access Crafts Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Access Pantry", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Access Fish Tank", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Access Boiler Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Access Bulletin Board", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Access Vault", player),
-        True_()
+        And(Or(And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_())), Has('Received Progression Percent', 48))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hospital to Harvey's Room", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pierre's General Store to Sunroom", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
@@ -8467,7 +8232,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Play Junimo Kart", player),
-        True_()
+        And(Has('Junimo Kart: Extra Life', 2), Has('Skull Key'))
     )
 
     world.set_rule(
@@ -8482,52 +8247,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Reach Junimo Kart 2", player),
-        True_()
+        Has('Junimo Kart: Extra Life', 4)
     )
 
     world.set_rule(
         multiworld.get_entrance("Reach Junimo Kart 3", player),
-        True_()
+        Has('Junimo Kart: Extra Life', 6)
     )
 
     world.set_rule(
         multiworld.get_entrance("Reach Junimo Kart 4", player),
-        True_()
+        Has('Junimo Kart: Extra Life', 8)
     )
 
     world.set_rule(
         multiworld.get_entrance("Upgrade Copper Tools", player),
-        True_()
+        And(Has('Copper Bar (Logic event)'), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Enter Abandoned Joja Mart", player),
-        True_()
+        Has('Progressive Movie Theater')
     )
 
     world.set_rule(
         multiworld.get_entrance("Enter Movie Theater", player),
-        True_()
+        Has('Progressive Movie Theater', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Fish Shop to Boat Tunnel", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bathhouse Entrance to Locker Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Locker Room to Public Bath", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Witch Warp Cave to Witch's Swamp", player),
-        True_()
+        Has('Boat Repair')
     )
 
     world.set_rule(
@@ -8536,573 +8286,443 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Witch's Hut to Wizard Basement", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Quarry to Quarry Mine Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Quarry Mine Entrance to Quarry Mine", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert to Skull Cavern Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert to Oasis", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Attend Desert Festival", player),
-        True_()
+        And(Has('Bus Repair'), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Oasis to Casino", player),
-        True_()
+        Has('Club Card')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Cavern Entrance to Skull Cavern", player),
-        True_()
+        Has('Skull Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine to Skull Cavern Floor 25", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 50", player),
-        True_()
+        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine to Skull Cavern Floor 75", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 100", player),
-        True_()
+        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), Has('Combat Level', 8), Has('Mining Level', 8), Has('Progressive Pickaxe', 3))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine to Skull Cavern Floor 125", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 150", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 175", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 200", player),
-        True_()
+        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), Has('Combat Level', 10), Has('Mining Level', 10), Has('Progressive Pickaxe', 4))
     )
 
     world.set_rule(
         multiworld.get_entrance("Enter the Dangerous Skull Cavern", player),
-        True_()
+        And(True_(), Has('Skull Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Talk to Mines Dwarf", player),
-        True_()
+        And(Has('Dwarvish Translation Guide'), Has('Progressive Pickaxe', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 5", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 10", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 15", player),
-        True_()
+        Has('Progressive Mine Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 20", player),
-        True_()
+        Has('Progressive Mine Elevator', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 25", player),
-        True_()
+        Has('Progressive Mine Elevator', 3)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 30", player),
-        True_()
+        Has('Progressive Mine Elevator', 4)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 35", player),
-        True_()
+        Has('Progressive Mine Elevator', 5)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 40", player),
-        True_()
+        Has('Progressive Mine Elevator', 6)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 45", player),
-        True_()
+        And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), Has('Combat Level', 2), Has('Mining Level', 2), Has('Progressive Mine Elevator', 7), Has('Progressive Pickaxe'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 50", player),
-        True_()
+        Has('Progressive Mine Elevator', 8)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 55", player),
-        True_()
+        Has('Progressive Mine Elevator', 9)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 60", player),
-        True_()
+        Has('Progressive Mine Elevator', 10)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 65", player),
-        True_()
+        Has('Progressive Mine Elevator', 11)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 70", player),
-        True_()
+        Has('Progressive Mine Elevator', 12)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 75", player),
-        True_()
+        Has('Progressive Mine Elevator', 13)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 80", player),
-        True_()
+        Has('Progressive Mine Elevator', 14)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 85", player),
-        True_()
+        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), Has('Combat Level', 4), Has('Mining Level', 4), Has('Progressive Mine Elevator', 15), Has('Progressive Pickaxe', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 90", player),
-        True_()
+        Has('Progressive Mine Elevator', 16)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 95", player),
-        True_()
+        Has('Progressive Mine Elevator', 17)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 100", player),
-        True_()
+        Has('Progressive Mine Elevator', 18)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 105", player),
-        True_()
+        Has('Progressive Mine Elevator', 19)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 110", player),
-        True_()
+        Has('Progressive Mine Elevator', 20)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 115", player),
-        True_()
+        Has('Progressive Mine Elevator', 21)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to The Mines - Floor 120", player),
-        True_()
+        Has('Progressive Mine Elevator', 22)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to the Dangerous Mines - Floor 20", player),
-        True_()
+        And(True_(), Has('Progressive Mine Elevator', 24))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to the Dangerous Mines - Floor 60", player),
-        True_()
+        And(True_(), Has('Progressive Mine Elevator', 24))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig to the Dangerous Mines - Floor 100", player),
-        True_()
+        And(True_(), Has('Progressive Mine Elevator', 24))
     )
 
     world.set_rule(
         multiworld.get_entrance("Upgrade Iron Tools", player),
-        True_()
+        And(Has('Iron Bar (Logic event)'), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Upgrade Gold Tools", player),
-        True_()
+        And(Has('Gold Bar (Logic event)'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Upgrade Iridium Tools", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Summer Fall Crops in Summer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Summer Fall Crops in Fall", player),
-        True_()
+        And(Has('Iridium Bar (Logic event)'), Has('Received Progression Percent', 6), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Sunday", player),
-        True_()
+        Has('Traveling Merchant: Sunday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Monday", player),
-        True_()
+        Has('Traveling Merchant: Monday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Tuesday", player),
-        True_()
+        Has('Traveling Merchant: Tuesday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Wednesday", player),
-        True_()
+        Has('Traveling Merchant: Wednesday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Thursday", player),
-        True_()
+        Has('Traveling Merchant: Thursday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Friday", player),
-        True_()
+        Has('Traveling Merchant: Friday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy from Traveling Merchant Saturday", player),
-        True_()
+        Has('Traveling Merchant: Saturday')
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy From Raccoon", player),
-        True_()
+        Has('Progressive Raccoon', 3)
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy Year 1 Books from the Bookseller", player),
-        True_()
+        Has('Received Progression Percent', 16)
     )
 
     world.set_rule(
         multiworld.get_entrance("Buy Year 3 Books from the Bookseller", player),
-        True_()
+        Has('Received Progression Percent', 32)
     )
 
     world.set_rule(
         multiworld.get_entrance("Take the Boat to Ginger Island", player),
-        True_()
+        And(Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')), Has('Boat Repair'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Island South to West", player),
-        True_()
+        Has('Island West Turtle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Island South to North", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island South to East", player),
-        True_()
+        Has('Island North Turtle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Island South to Southeast", player),
-        True_()
+        Has('Island Resort')
     )
 
     world.set_rule(
         multiworld.get_entrance("Use Island Resort", player),
-        True_()
+        Has('Island Resort')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Docks to Volcano", player),
-        True_()
+        Has('Parrot Express')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Docks to Dig Site", player),
-        True_()
+        And(Has('Dig Site Bridge'), Has('Parrot Express'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Docks to Jungle", player),
-        True_()
+        Has('Parrot Express')
     )
 
     world.set_rule(
         multiworld.get_entrance("Island West to Island Farmhouse", player),
-        True_()
+        Has('Island Farmhouse')
     )
 
     world.set_rule(
         multiworld.get_entrance("Island West to Gourmand Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island West to Crystal Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island West to Shipwreck", player),
-        True_()
+        Has('Island Farmhouse')
     )
 
     world.set_rule(
         multiworld.get_entrance("Island West to Qi Walnut Room", player),
-        True_()
+        Has('Qi Walnut Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("Use Farm Obelisk", player),
-        True_()
+        Has('Farm Obelisk')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Jungle to Docks", player),
-        True_()
+        Has('Parrot Express')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Jungle to Dig Site", player),
-        True_()
+        And(Has('Dig Site Bridge'), Has('Parrot Express'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Jungle to Volcano", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Spring Crops on Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Summer Crops on Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Fall Crops on Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Winter Crops on Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Indoor Crops on Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island East to Leo Hut", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island East to Island Shrine", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island Southeast to Pirate Cove", player),
-        True_()
+        Has('Parrot Express')
     )
 
     world.set_rule(
         multiworld.get_entrance("Talk to Island Trader", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island North to Field Office", player),
-        True_()
+        Has('Island Trader')
     )
 
     world.set_rule(
         multiworld.get_entrance("Island North to Dig Site", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island North to Volcano Entrance", player),
-        True_()
+        Has('Dig Site Bridge')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Volcano to Dig Site", player),
-        True_()
+        And(Has('Dig Site Bridge'), Has('Parrot Express'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Volcano to Jungle", player),
-        True_()
+        Has('Parrot Express')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Volcano to Docks", player),
-        True_()
+        Has('Parrot Express')
     )
 
     world.set_rule(
         multiworld.get_entrance("Climb to Volcano Floor 5", player),
-        True_()
+        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8), Has('Mining Level', 8), Has('Progressive Pickaxe', 4), Has('Progressive Watering Can'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Volcano River to Secret Beach", player),
-        True_()
+        Has('Progressive Watering Can', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Talk to Volcano Dwarf", player),
-        True_()
+        Has('Dwarvish Translation Guide')
     )
 
     world.set_rule(
         multiworld.get_entrance("Climb to Volcano Floor 10", player),
-        True_()
+        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8), Has('Mining Level', 8), Has('Progressive Pickaxe', 4), Has('Progressive Watering Can'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Island Cooking", player),
-        True_()
+        Or(Has('Foraging Level', 9), Has('Progressive House'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dig Site to Professor Snail Cave", player),
-        True_()
+        Has('Open Professor Snail Cave')
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Dig Site to Volcano", player),
-        True_()
+        And(Has('Dig Site Bridge'), Has('Parrot Express'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Dig Site to Docks", player),
-        True_()
+        And(Has('Dig Site Bridge'), Has('Parrot Express'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Parrot Express Dig Site to Jungle", player),
-        True_()
+        And(Has('Dig Site Bridge'), Has('Parrot Express'))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Level 1 Farming", player),
-        True_()
+        Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 2), Has('Progressive Hoe'), Has('Progressive Watering Can'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 3), Has('Progressive Hoe'), Has('Progressive Watering Can'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 4), Has('Progressive Hoe', 2), Has('Progressive Watering Can', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 5), Has('Progressive Hoe', 2), Has('Progressive Watering Can', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 6), Has('Progressive Hoe', 3), Has('Progressive Watering Can', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 7), Has('Progressive Hoe', 3), Has('Progressive Watering Can', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 8), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 10 Farming", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), Has('Farming Level', 9), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Collect All Rarecrows", player),
-        True_()
+        And(Has('Rarecrow #1'), Has('Rarecrow #2'), Has('Rarecrow #3'), Has('Rarecrow #4'), Has('Rarecrow #5'), Has('Rarecrow #6'), Has('Rarecrow #7'), Has('Rarecrow #8'))
     )
 
     world.set_rule(
         multiworld.get_location("Crop Order", player),
-        True_()
+        And(Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4), Has('Received Progression Percent', 16), Has('Shipping Bin'), Has('Special Order Board'))
     )
 
     world.set_rule(
@@ -9112,12 +8732,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Raising Animals", player),
-        True_()
+        And(True_(), Has('Progressive Coop'))
     )
 
     world.set_rule(
         multiworld.get_location("Advancement", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -9252,37 +8872,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Copper Bar (Logic event)", player),
-        True_()
+        And(True_(), Has('Copper Ore (Logic event)'))
     )
 
     world.set_rule(
         multiworld.get_location("Iron Bar (Logic event)", player),
-        True_()
+        And(True_(), Has('Iron Ore (Logic event)'))
     )
 
     world.set_rule(
         multiworld.get_location("Gold Bar (Logic event)", player),
-        True_()
+        And(True_(), Has('Gold Ore (Logic event)'))
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Bar (Logic event)", player),
-        True_()
+        And(True_(), Has('Iridium Ore (Logic event)'))
     )
 
     world.set_rule(
         multiworld.get_location("Copper Ore (Logic event)", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 3)), True_(), Has('Progressive Pan'))
     )
 
     world.set_rule(
         multiworld.get_location("Iron Ore (Logic event)", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 3)), True_(), Has('Progressive Pan', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Gold Ore (Logic event)", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 3)), True_(), Has('Progressive Pan', 3))
     )
 
     world.set_rule(
@@ -9292,37 +8912,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pot Of Gold", player),
-        True_()
+        Has('Spring')
     )
 
     world.set_rule(
         multiworld.get_location("Level 1 Foraging", player),
-        True_()
+        Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 2), Has('Progressive Axe'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 3), Has('Progressive Axe'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 4), Has('Progressive Axe', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Cow's Delight", player),
-        True_()
+        And(True_(), Has('Fall'))
     )
 
     world.set_rule(
@@ -9331,198 +8951,153 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Help Wanted: Gathering 1", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Copper Pan Cutscene", player),
-        True_()
+        Has('Glittering Boulder Removed')
     )
 
     world.set_rule(
         multiworld.get_location("Robin's Lost Axe", player),
-        True_()
+        Has('Spring')
     )
 
     world.set_rule(
         multiworld.get_location("Blackberry Basket", player),
-        True_()
+        Has('Fall')
     )
 
     world.set_rule(
         multiworld.get_location("Crop Research", player),
-        True_()
+        And(True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Robin's Request", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Aquatic Research", player),
-        True_()
+        And(True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Island Ingredients", player),
-        True_()
+        And(True_(), True_(), Or(Has('Boat Repair'), Has('Island Obelisk')), True_(), Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4), Has('Received Progression Percent', 16), Has('Shipping Bin'), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Tropical Fish", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Introductions", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("How To Win Friends", player),
-        True_()
+        And(True_(), True_(), True_(), Or(Has('Boat Repair'), Has('Island Obelisk')), Has('Island Resort'), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Jodi's Request", player),
-        True_()
+        And(True_(), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_location("Mayor's \"Shorts\"", player),
-        True_()
+        And(True_(), Has('Fall'), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Pam Is Thirsty", player),
-        True_()
+        And(True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Carving Pumpkins", player),
-        True_()
+        And(True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_location("A Winter Mystery", player),
-        True_()
+        Has('Winter')
     )
 
     world.set_rule(
         multiworld.get_location("Fresh Fruit", player),
-        True_()
+        And(True_(), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_location("A Soldier's Star", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 16), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Mayor's Need", player),
-        True_()
+        And(True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Pam Needs Juice", player),
-        True_()
+        And(True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_location("A Favor For Clint", player),
-        True_()
+        And(Has('Iron Bar (Logic event)'), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Granny's Gift", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Help Wanted: Item Delivery 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Help Wanted: Item Delivery 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Help Wanted: Item Delivery 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Help Wanted: Item Delivery 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Bridge Repair", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bamboo Pole Cutscene", player),
-        True_()
+        And(Has('Spring'), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_location("Juicy Bugs Wanted!", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Catch A Squid", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Community Cleanup", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Marnie's Request", player),
-        True_()
+        And(True_(), True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_location("Farming Mastery", player),
-        True_()
+        And(Or(And(True_(), True_()), And(True_(), Or(True_(), True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), Or(True_(), True_())), And(True_(), True_())), True_(), Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Foraging Mastery", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), True_(), Has('Foraging Level', 10), Has('Progressive Axe', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Fishing Mastery", player),
-        True_()
+        And(True_(), Has('Fishing Level', 10), Has('Progressive Fishing Rod', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Mining Mastery", player),
-        True_()
+        And(True_(), True_(), Has('Mining Level', 10), Has('Progressive Pickaxe', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Combat Mastery", player),
-        True_()
+        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), Has('Combat Level', 10))
     )
 
     world.set_rule(
         multiworld.get_location("Krobus Stardrop", player),
-        True_()
+        And(Has('Received Progression Percent', 5), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Dark Talisman", player),
-        True_()
+        And(True_(), True_(), Has('Rusty Key'))
     )
 
     world.set_rule(
@@ -9532,182 +9107,182 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("A Dark Reagent", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Staff Of Power", player),
-        True_()
+        And(Has('Iridium Bar (Logic event)'), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Barn Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent'), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Big Barn Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Progressive Barn'), Has('Received Progression Percent', 3), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Deluxe Barn Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Progressive Barn', 2), Has('Received Progression Percent', 6), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Coop Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Big Coop Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Progressive Coop'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Deluxe Coop Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Progressive Coop', 2), Has('Received Progression Percent', 5), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Fish Pond Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Progressive Fishing Rod'), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Mill Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Shed Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Received Progression Percent', 3), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Big Shed Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Progressive Shed'), Has('Received Progression Percent', 5), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Silo Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), Has('Copper Bar (Logic event)'))
     )
 
     world.set_rule(
         multiworld.get_location("Slime Hutch Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Iridium Bar (Logic event)'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Stable Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Iron Bar (Logic event)'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Well Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')))
     )
 
     world.set_rule(
         multiworld.get_location("Shipping Bin Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), Or(And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), Has('Shipping Bin')))
     )
 
     world.set_rule(
         multiworld.get_location("Kitchen Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Kids Room Blueprint", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Progressive House'), Has('Received Progression Percent', 16), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Cellar Blueprint", player),
-        True_()
+        And(True_(), True_(), Has('Progressive House', 2), Has('Received Progression Percent', 25), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Robin's Project", player),
-        True_()
+        And(True_(), Has('Foraging Level', 10), Has('Progressive Axe', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Robin's Resource Rush", player),
-        True_()
+        And(True_(), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8), Has('Foraging Level', 10), Has('Mining Level', 8), Has('Progressive Axe', 4), Has('Progressive Pickaxe', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Slimes", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Void Spirits", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Bats", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Skeletons", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Cave Insects", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Duggies", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Dust Sprites", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Rock Crabs", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Mummies", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Pepper Rex", player),
-        True_()
+        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Serpents", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Monster Eradication: Magma Sprites", player),
-        True_()
+        Or(And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Complete Community Center", player),
-        True_()
+        And(CanReachLocation('Complete Boiler Room'), CanReachLocation('Complete Bulletin Board'), CanReachLocation('Complete Crafts Room'), CanReachLocation('Complete Fish Tank'), CanReachLocation('Complete Pantry'), CanReachLocation('Complete Vault'))
     )
 
     world.set_rule(
         multiworld.get_location("Complete Crafts Room", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Fall'), Has('Foraging Level', 9), Has('Received Progression Percent', 40), Has('Winter'), Has('Winter'), Has('Winter'), Has('Winter'))
     )
 
     world.set_rule(
@@ -9717,52 +9292,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Winter Foraging Bundle", player),
-        True_()
+        And(Has('Winter'), Has('Winter'), Has('Winter'), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Foraging Bundle", player),
-        True_()
+        And(True_(), True_(), Has('Foraging Level', 9))
     )
 
     world.set_rule(
         multiworld.get_location("Sticky Bundle", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 40))
     )
 
     world.set_rule(
         multiworld.get_location("Fall Foraging Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_location("Green Rain Bundle", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 16))
     )
 
     world.set_rule(
         multiworld.get_location("Complete Pantry", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Or(And(True_(), Has('Farming Level', 5)), And(True_(), Has('Farming Level', 2)), And(True_(), Has('Farming Level', 3)), Has('Farming Level', 10)), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Slime Farmer Bundle", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Quality Crops Bundle", player),
-        True_()
+        And(True_(), Or(And(True_(), Has('Farming Level', 5)), And(True_(), Has('Farming Level', 2)), And(True_(), Has('Farming Level', 3)), Has('Farming Level', 10)))
     )
 
     world.set_rule(
         multiworld.get_location("Fall Crops Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Rare Crops Bundle", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -9777,77 +9352,77 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Complete Fish Tank", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Fishing Level', 4), Has('Progressive Fishing Rod', 4), Has('Progressive Fishing Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Spring Fishing Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("River Fish Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Progressive Fishing Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Summer Fishing Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fall Fishing Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Quality Fish Bundle", player),
-        True_()
+        And(True_(), True_(), Has('Fishing Level', 4), Has('Progressive Fishing Rod', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Night Fishing Bundle", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Complete Boiler Room", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Demolition Bundle", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Recycling Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Engineer's Bundle", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Complete Bulletin Board", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Received Progression Percent', 8), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Dye Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Bartender's Bundle", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Home Cook's Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Received Progression Percent', 8))
     )
 
     world.set_rule(
@@ -9857,12 +9432,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Enchanter's Bundle", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Complete Vault", player),
-        True_()
+        And(True_(), Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')), True_(), True_(), True_(), Has('Received Progression Percent', 40), Has('Shipping Bin'))
     )
 
     world.set_rule(
@@ -9872,97 +9447,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Gambler's Bundle", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 40))
     )
 
     world.set_rule(
         multiworld.get_location("Qi's Helper Bundle", player),
-        True_()
+        And(True_(), Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("10,000g Bundle", player),
-        True_()
+        And(Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Large Pack", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Deluxe Pack", player),
-        True_()
+        And(Has('Progressive Backpack'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Pierre's Prime Produce", player),
-        True_()
+        And(Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Pierre's Notice", player),
-        True_()
+        And(True_(), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_location("Gus' Famous Omelet", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Wanted: Lobster", player),
-        True_()
+        And(True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_location("Fish Stew", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Boots 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Boots 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Gun 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Ammo 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Cowboy 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Gun 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Gun 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Ammo 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Cowboy 2", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
@@ -9971,282 +9501,212 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("JotPK: Super Gun", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("JotPK: Ammo 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Crumble Cavern", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Slippery Slopes", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: The Gem Sea Giant", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Slomp's Stomp", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Ghastly Galleon", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Glowshroom Grotto", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Red Hot Rollercoaster", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Sunset Speedway (Victory)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junimo Kart: Secret Level", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Gifts for George", player),
-        True_()
+        And(Has('Received Progression Percent', 16), Has('Special Order Board'), Has('Spring'), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_location("Knee Therapy", player),
-        True_()
+        And(True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("The Strong Stuff", player),
-        True_()
+        And(True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Fish Casserole", player),
-        True_()
+        And(True_(), True_(), Has('Fall'))
     )
 
     world.set_rule(
         multiworld.get_location("Rock Rejuvenation", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Received Progression Percent', 16), Has('Special Order Board'), Has('Spring'))
     )
 
     world.set_rule(
         multiworld.get_location("Clint's Attempt", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 5 Donations", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 10 Donations", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 15 Donations", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 20 Donations", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 25 Donations", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 30 Donations", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 35 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 40 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 50 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 60 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 70 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 80 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 90 Donations", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 95 Donations", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Or(And(True_(), True_(), True_()), True_()), Or(And(True_(), True_(), True_()), True_()), Or(And(True_(), True_(), True_()), True_(), Has('Progressive Pan', 4)), Or(And(True_(), True_(), True_()), True_(), Has('Progressive Pan', 4)), Or(And(True_(), True_(), True_()), True_(), Has('Progressive Pan', 4)), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), Has('Magnifying Glass')), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Received Progression Percent', 40), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 11 Minerals", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 21 Minerals", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 31 Minerals", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 41 Minerals", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 50 Minerals", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 3 Artifacts", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 6 Artifacts", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 9 Artifacts", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 11 Artifacts", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 15 Artifacts", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 20 Artifacts", player),
-        True_()
+        And(True_(), Has('Traveling Merchant Metal Detector'))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: Dwarf Scrolls", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent', 32), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: Skeleton Front", player),
-        True_()
+        And(Has('Received Progression Percent', 32), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: Skeleton Middle", player),
-        True_()
+        And(Has('Received Progression Percent', 12), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: Skeleton Back", player),
-        True_()
+        And(Or(True_(), True_(), True_()), Or(True_(), True_()), Has('Received Progression Percent', 28), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Museumsanity: Ancient Seed", player),
-        True_()
+        And(Has('Received Progression Percent', 20), Has('Traveling Merchant Metal Detector', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Fragments of the past", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Archaeology", player),
-        True_()
+        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("The Missing Bundle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Purchase Training Rod", player),
-        True_()
+        And(True_(), True_(), Or(And(True_(), Has('Farming Level', 5)), And(True_(), Has('Farming Level', 2)), And(True_(), Has('Farming Level', 3)), Has('Farming Level', 10)), Has('Fishing Level', 4), Has('Progressive Fishing Rod', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Purchase Fiberglass Rod", player),
-        True_()
+        And(Has('Fishing Level', 2), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Purchase Iridium Rod", player),
-        True_()
+        And(Has('Fishing Level', 6), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Goblin Problem", player),
-        True_()
+        And(Or(True_(), Has('Progressive Fishing Rod')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Magic Ink", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Grim Reaper statue", player),
         True_()
     )
 
@@ -10257,32 +9717,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 6 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 5), Has('Progressive Axe', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 6), Has('Progressive Axe', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 7), Has('Progressive Axe', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 8), Has('Progressive Axe', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 10 Foraging", player),
-        True_()
+        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 9), Has('Progressive Axe', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Strange Note", player),
-        True_()
+        And(True_(), Has('Magnifying Glass'))
     )
 
     world.set_rule(
@@ -10292,86 +9752,36 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Mysterious Qi", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Exotic Spirits", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #3 (Alien)", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("The Skull Key", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Qi's Challenge", player),
-        True_()
+        Has('Skull Key')
     )
 
     world.set_rule(
         multiworld.get_location("Cryptic Note", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Entrance Cutscene", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 5 Elevator", player),
-        True_()
+        Has('Magnifying Glass')
     )
 
     world.set_rule(
         multiworld.get_location("Forging Ahead", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Help Wanted: Slay Monsters 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 10 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 10 Elevator", player),
-        True_()
+        And(True_(), Has('Copper Ore (Logic event)'))
     )
 
     world.set_rule(
         multiworld.get_location("Smelting", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 15 Elevator", player),
-        True_()
+        Has('Copper Bar (Logic event)')
     )
 
     world.set_rule(
         multiworld.get_location("Initiation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 20 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 20 Elevator", player),
         True_()
     )
 
@@ -10382,882 +9792,577 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 1 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 25 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 30 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 35 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_(), Has('Combat Level'))
     )
 
     world.set_rule(
         multiworld.get_location("Prismatic Jelly", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 40 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 40 Elevator", player),
-        True_()
+        And(Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 2), Has('Progressive Pickaxe'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 45 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 50 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 50 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_(), Has('Combat Level', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 3), Has('Progressive Pickaxe'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 55 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 60 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 60 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_(), Has('Combat Level', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 4), Has('Progressive Pickaxe', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 65 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 70 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 70 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_(), Has('Combat Level', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 5), Has('Progressive Pickaxe', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 75 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_(), Has('Combat Level', 5))
     )
 
     world.set_rule(
         multiworld.get_location("Cave Patrol", player),
-        True_()
+        And(Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("A Curious Substance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 80 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 80 Elevator", player),
-        True_()
+        And(Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 6), Has('Progressive Pickaxe', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 85 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 90 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 90 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 7), Has('Progressive Pickaxe', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 95 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 100 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 100 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 7))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 8), Has('Progressive Pickaxe', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 105 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 110 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 110 Elevator", player),
-        True_()
+        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Level 10 Mining", player),
-        True_()
+        And(True_(), Has('Mining Level', 9), Has('Progressive Pickaxe', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 10 Combat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 115 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mines Floor 120 Treasure", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floor 120 Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Hoe Upgrade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Pickaxe Upgrade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Axe Upgrade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Watering Can Upgrade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Trash Can Upgrade", player),
-        True_()
+        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 9))
     )
 
     world.set_rule(
         multiworld.get_location("Iron Hoe Upgrade", player),
-        True_()
+        Has('Progressive Hoe')
     )
 
     world.set_rule(
         multiworld.get_location("Iron Pickaxe Upgrade", player),
-        True_()
+        Has('Progressive Pickaxe')
     )
 
     world.set_rule(
         multiworld.get_location("Iron Axe Upgrade", player),
-        True_()
+        Has('Progressive Axe')
     )
 
     world.set_rule(
         multiworld.get_location("Iron Watering Can Upgrade", player),
-        True_()
+        Has('Progressive Watering Can')
     )
 
     world.set_rule(
         multiworld.get_location("Iron Trash Can Upgrade", player),
-        True_()
+        Has('Progressive Trash Can')
     )
 
     world.set_rule(
         multiworld.get_location("Iron Pan Upgrade", player),
-        True_()
+        Has('Progressive Pan')
     )
 
     world.set_rule(
         multiworld.get_location("Gold Hoe Upgrade", player),
-        True_()
+        Has('Progressive Hoe', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Gold Pickaxe Upgrade", player),
-        True_()
+        Has('Progressive Pickaxe', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Gold Axe Upgrade", player),
-        True_()
+        Has('Progressive Axe', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Gold Watering Can Upgrade", player),
-        True_()
+        Has('Progressive Watering Can', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Gold Trash Can Upgrade", player),
-        True_()
+        Has('Progressive Trash Can', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Gold Pan Upgrade", player),
-        True_()
+        Has('Progressive Pan', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Hoe Upgrade", player),
-        True_()
+        Has('Progressive Hoe', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Pickaxe Upgrade", player),
-        True_()
+        Has('Progressive Pickaxe', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Axe Upgrade", player),
-        True_()
+        Has('Progressive Axe', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Watering Can Upgrade", player),
-        True_()
+        Has('Progressive Watering Can', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Trash Can Upgrade", player),
-        True_()
+        Has('Progressive Trash Can', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Pan Upgrade", player),
-        True_()
+        Has('Progressive Pan', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Level 1 Fishing", player),
-        True_()
+        Has('Progressive Fishing Rod', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Fishing", player),
-        True_()
+        And(Has('Fishing Level'), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 2), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 4), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 5), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 6), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 7), Has('Progressive Fishing Rod', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 8), Has('Progressive Fishing Rod', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 10 Fishing", player),
-        True_()
+        And(Has('Fishing Level', 9), Has('Progressive Fishing Rod', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Aquatic Overpopulation", player),
-        True_()
+        And(Has('Fishing Level', 10), Has('Progressive Fishing Rod', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Biome Balance", player),
-        True_()
+        And(Has('Fishing Level', 10), Has('Progressive Fishing Rod', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
     )
 
     world.set_rule(
         multiworld.get_location("Catch a Lingcod", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Help Wanted: Fishing 1", player),
-        True_()
+        And(True_(), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Apricot", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cherry", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Parsnip", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Green Bean", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cauliflower", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Potato", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Tulip", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Kale", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Blue Jazz", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Garlic", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Unmilled Rice", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Carrot", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Strawberry", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Rhubarb", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Orange", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Peach", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Melon", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Tomato", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Blueberry", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Hot Pepper", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Radish", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Poppy", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Summer Spangle", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Hops", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Red Cabbage", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Powdermelon", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Summer Squash", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Banana", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Mango", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Pineapple", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Starfruit", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Taro Root", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Apple", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Pomegranate", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Eggplant", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Pumpkin", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Bok Choy", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Yam", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cranberries", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Fairy Rose", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Amaranth", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Grape", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Artichoke", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Broccoli", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Sweet Gem Berry", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Beet", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Wheat", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Corn", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Sunflower", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Ancient Fruit", player),
-        True_()
+        And(True_(), Or(True_(), True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Coffee Bean", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cactus Fruit", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Demetrius's Breakthrough", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Sunday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Sunday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Sunday Item 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Monday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Monday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Monday Item 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Tuesday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Tuesday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Tuesday Item 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Wednesday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Wednesday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Wednesday Item 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Thursday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Thursday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Thursday Item 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Friday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Friday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Friday Item 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Saturday Item 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Saturday Item 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Traveling Merchant Saturday Item 3", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 1", player),
-        True_()
+        And(True_(), Has('Progressive Raccoon', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 2", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 1'), Has('Progressive Raccoon', 3), Has('Received Progression Percent', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 3", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 2'), Has('Progressive Raccoon', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 4", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 3'), Has('Progressive Raccoon', 5))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 5", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 4'), Has('Progressive Raccoon', 6))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 6", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 5'), Has('Progressive Raccoon', 7))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 7", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 6'), Has('Progressive Raccoon', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Raccoon Request 8", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Egg Hunt Victory", player),
-        True_()
+        And(True_(), CanReachLocation('Raccoon Request 7'), Has('Progressive Raccoon', 9))
     )
 
     world.set_rule(
         multiworld.get_location("Egg Festival: Strawberry Seeds", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Calico Race", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Calico Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Emily's Outfit Services", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Free Cactis", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin'))
     )
 
     world.set_rule(
@@ -11271,188 +10376,118 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Desert Scholar", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Calico Pizza", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sour Salad", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Skull Cave Casserole", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mountain Chili", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Warrior Smoothie", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Dance with someone", player),
-        True_()
+        Or(And(True_(), Has('Fall')), And(True_(), Has('Fall')), And(True_(), Has('Fall')), And(True_(), Has('Spring')), And(True_(), Has('Spring')), And(True_(), Has('Spring')), And(True_(), Has('Summer')), And(True_(), Has('Summer')), And(True_(), Has('Summer')), And(True_(), Has('Winter')), And(True_(), Has('Winter')), And(True_(), Has('Winter')))
     )
 
     world.set_rule(
         multiworld.get_location("Rarecrow #5 (Woman)", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Tub o' Flowers Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Luau Soup", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Trout Derby Reward 1", player),
-        True_()
+        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod'), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Trout Derby Reward 2", player),
-        True_()
+        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod'), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Trout Derby Reward 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dance of the Moonlight Jellies", player),
-        True_()
+        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod'), Has('Summer'))
     )
 
     world.set_rule(
         multiworld.get_location("Moonlight Jellies Banner", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Starport Decal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Smashing Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Grange Display", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #1 (Turnip Head)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fair Stardrop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Spirit's Eve Maze", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Rarecrow #2 (Witch)", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Jack-O-Lantern Recipe", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Win Fishing Competition", player),
-        True_()
+        And(Has('Fishing Level', 5), Has('Progressive Fishing Rod', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Rarecrow #4 (Snowman)", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Mermaid Pearl", player),
-        True_()
+        Has('Magnifying Glass')
     )
 
     world.set_rule(
         multiworld.get_location("Rarecrow #7 (Tanuki)", player),
-        True_()
+        And(True_(), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Rarecrow #8 (Tribal Mask)", player),
-        True_()
+        And(True_(), Has('Shipping Bin'))
     )
 
     world.set_rule(
         multiworld.get_location("Lupini: Red Eagle", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Lupini: Portrait Of A Mermaid", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Lupini: Solar Kingdom", player),
-        True_()
+        Has('Shipping Bin')
     )
 
     world.set_rule(
         multiworld.get_location("Secret Santa", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Legend of the Winter Star", player),
-        True_()
+        Or(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("SquidFest Day 1 Copper", player),
-        True_()
+        And(Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("SquidFest Day 1 Iron", player),
-        True_()
+        And(True_(), Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("SquidFest Day 2 Copper", player),
-        True_()
+        And(Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
     )
 
     world.set_rule(
         multiworld.get_location("SquidFest Day 2 Iron", player),
-        True_()
+        And(True_(), Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
     )
 
     world.set_rule(
@@ -11467,77 +10502,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Repair Boat Anchor", player),
-        True_()
+        Has('Iridium Bar (Logic event)')
     )
 
     world.set_rule(
         multiworld.get_location("Island West Turtle", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Island North Turtle'), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Island Resort", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Combat Level', 8), Has('Fishing Level', 10), Has('Island Farmhouse'), Has('Mining Level', 8), Has('Open Professor Snail Cave'), Has('Progressive Fishing Rod', 4), Has('Progressive Pickaxe', 4), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Island Farmhouse", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Combat Level', 8), Has('Fishing Level', 10), Has('Mining Level', 8), Has('Open Professor Snail Cave'), Has('Progressive Fishing Rod', 4), Has('Progressive Pickaxe', 4), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Island Mailbox", player),
-        True_()
+        And(True_(), Has('Island Farmhouse'))
     )
 
     world.set_rule(
         multiworld.get_location("Farm Obelisk", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Combat Level', 8), Has('Fishing Level', 10), Has('Island Mailbox'), Has('Mining Level', 8), Has('Open Professor Snail Cave'), Has('Progressive Fishing Rod', 4), Has('Progressive Pickaxe', 4), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Parrot Express", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("The Pirate's Wife", player),
-        True_()
+        And(True_(), True_(), Has('Received Progression Percent', 16))
     )
 
     world.set_rule(
         multiworld.get_location("Dig Site Bridge", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Island West Turtle'), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Island Trader", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Island Farmhouse'), Has('Progressive Slingshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Volcano Bridge", player),
-        True_()
+        And(True_(), True_(), Has('Island West Turtle'))
     )
 
     world.set_rule(
         multiworld.get_location("Volcano Exit Shortcut", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Volcano Caldera Treasure", player),
-        True_()
+        And(True_(), Has('Island West Turtle'))
     )
 
     world.set_rule(
         multiworld.get_location("Leo's Parrot", player),
-        True_()
+        Or(True_(), True_(), True_(), True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Complete Island Field Office", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Open Professor Snail Cave'))
     )
 
     world.set_rule(

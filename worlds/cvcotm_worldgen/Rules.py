@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, False_, Has, HasAny, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -105,745 +105,330 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Catacomb to Stairway", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Stairway to Audience", player),
-        True_()
+        HasAny(['Double', 'Roc Wing'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Bottom", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Top", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Chapel", player),
-        True_()
+        Or(And(True_(), True_()), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Gallery", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Warehouse", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Waterway", player),
-        True_()
+        Or(False_(), Has('Maiden Detonator'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Observation", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_entrance("Ceremonial Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Machine Bottom to Top", player),
-        True_()
+        Has('Last Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Corridor to Gallery", player),
-        True_()
+        Or(False_(), Has('Maiden Detonator'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Escape the Gallery Pit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Into the Corridor Pit", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Dip Into Waterway End", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_entrance("Climb to Chapel Top", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Arena Passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Gallery to Corridor", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Gallery Upper to Lower", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Gallery Lower to Upper", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Into Warehouse Main", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Into Waterway Main", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Onward to Waterway End", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Start Game", player),
-        True_()
+        Or(True_(), Has('Cleansing'))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Sealed Room: Main shaft left fake wall", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Push crate treasure room", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Lower", player),
-        True_()
+        HasAny(['Double', 'Roc Wing'])
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Earth Demon dash room", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Tackle block treasure room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Earth Demon bone pit - Lower", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Earth Demon bone pit - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Below right column save room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Right column fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Right column Spirit room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Muddy Mudman platforms room - Lower", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Muddy Mudman platforms room - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Slide space zone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Pre-Cerberus lone Skeleton room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Pre-Cerberus Hopper treasure room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catacomb: Behind Cerberus", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Mummies' fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyss Staircase: Lower fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyss Staircase: Loopback drop", player),
-        True_()
+        HasAny(['Double', 'Roc Wing'])
     )
 
     world.set_rule(
         multiworld.get_location("Abyss Staircase: Roc ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyss Staircase: Upper fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Skeleton foyer fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Main gallery fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Below coyote jump", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Push crate gallery", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Past coyote jump", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Tackle block gallery", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Wicked roc chamber - Lower", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Wicked roc chamber - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Upper Devil Tower hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Right exterior - Lower", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Right exterior - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Right exterior fake wall", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: 100 meter skelly dash hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Lower Devil Tower hallway fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Audience Room: Behind Necromancer", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower roc ledge", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower push crate room", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Left", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Right", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Left roc ledge", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Right-brained ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Outer Wall: Fake Nightmare floor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Triumph Hallway: Skeleton slopes fake wall", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Triumph Hallway: Entrance Flame Armor climb", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Foxy platforms ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Knight fox meeting room", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Boneheaded argument wall kicks room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Foxy fake wall", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Skelly-rang wall kicks room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Fake Lilim wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Thunderous zone fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Thunderous zone lone Stone Armor room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Top lone Stone Armor room", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Stone fox hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Pre-Iron Golem fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Behind Iron Golem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eternal Corridor: Midway fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eternal Corridor: Skelly-rang wall kicks room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eternal Corridor: Skelly-rang fake wall", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Flame Armor climb room", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Lower chapel push crate room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Lower chapel fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Beastly wall kicks room - Brain side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Beastly wall kicks room - Brawn side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Middle chapel fake wall", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Middle chapel push crate room", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Sharp mind climb room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Upper chapel fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Upper chapel Marionette wall kicks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Upper belfry fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chapel Tower: Iron maiden switch", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Behind Adramelech iron maiden", player),
-        True_()
+        Or(False_(), Has('Maiden Detonator'))
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Upper", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Lower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Gallery: Conveyor platform ride", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Conveyor upper push crate room", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Conveyor lower push crate room", player),
-        True_()
+        Has('Heavy Ring')
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Lower", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Upper", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy mantis tackle hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Gallery: Handy bee hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Gallery: Myconid fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Gallery: Crumble bridge fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Gallery: Behind Dragon Zombies", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Entrance push crate room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Forever pushing room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Crate-nudge fox room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Crate-nudge fake wall", player),
-        True_()
+        Has('Tackle')
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Succubus shaft roc ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Fake Lilith wall", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Optional puzzle ceiling fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Holy fox hideout - Left", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Holy fox hideout - Right roc ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Forest Armor's domain fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Behind Death", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Behind Death fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Warehouse: Dryad expulsion chamber", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Entrance fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Before illusory wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Beyond illusory wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Ice Armor's domain fake wall", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Brain freeze room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Middle lone Ice Armor room", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc fake ceiling", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Wicked Fishhead moat - Bottom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Wicked Fishhead moat - Top", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Lizard-man turf - Bottom", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Lizard-man turf - Top", player),
-        True_()
+        Or(True_(), Has('Cleansing'))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc exit shaft", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Behind Camilla", player),
-        True_()
+        Or(True_(), Has('Cleansing'))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc exit shaft fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Wind Armor rampart", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Legion plaza fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Legion plaza Minotaur hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Siren balcony fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Evil Pillar pit fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Alraune garden", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Dark Armor's domain fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Catoblepeas hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Near warp room fake wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Observation Tower: Behind Hugh", player),
-        True_()
+        Has('Roc Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Ceremonial Room: Fake floor", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Dracula", player),
-        True_()
+        Has('Roc Wing')
     )

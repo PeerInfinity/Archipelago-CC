@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -675,173 +675,88 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("To Registry", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Outside From Registry", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Tunnels From Outside", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("To Lobby From Outside", player),
-        True_()
+        Has('Key for Front Door')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Underground Lake From Underground Tunnels", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Outside From Underground", player),
-        True_()
+        Has('Key for Underground Lake')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Underground Tunnels From Underground Lake", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Windlenot's Body From Underground Lake", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Blue Tunnels From Underground Lake", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Lake From Windlenot's Body", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Lake From Underground Blue Tunnels", player),
-        True_()
+        Has('Key for Underground Lake')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office Elevator From Underground Blue Tunnels", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Blue Tunnels From Office Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Office From Office Elevator", player),
-        True_()
+        Has('Key for Office Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office Elevator From Office", player),
-        True_()
+        Has('Key for Office Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Workshop", player),
-        True_()
+        Has('Key for Workshop')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Office", player),
-        True_()
+        Has('Key for Office')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Ash Capture From Office", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Office From Workshop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wood Capture From Workshop", player),
-        True_()
+        HasAll(['Crawling', 'Key for Bedroom Elevator'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Bedroom Elevator", player),
-        True_()
+        HasAll(['Crawling', 'Key for Bedroom Elevator'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Bedroom Elevator From Bedroom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Metal Capture From Bedroom", player),
-        True_()
+        Has('Key for Bedroom')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Lobby", player),
-        True_()
+        Has('Key for Office')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Library From Lobby", player),
-        True_()
+        Has('Key for Library')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Theater From Lobby", player),
-        True_()
+        Has('Viewed Egyptian Hieroglyphics Explained')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Prehistoric From Lobby", player),
-        True_()
+        Has('Key for Prehistoric Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Egypt From Lobby", player),
-        True_()
+        Has('Key for Egypt Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Tar River From Lobby", player),
-        True_()
+        And(True_(), CanReachRegion('Tar River'), Has('Crawling'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Outside From Lobby", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Water Capture From Lobby", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Crystal Capture From Lobby", player),
-        True_()
+        Has('Key for Front Door')
     )
 
     world.set_rule(
@@ -851,87 +766,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Library", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Maintenance Tunnels From Library", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wax Capture From Library", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Library From Maintenance Tunnels", player),
-        True_()
+        Has('Key for Library')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Maintenance Tunnels", player),
-        True_()
+        Has('Key for Three Floor Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Generator From Maintenance Tunnels", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Maintenance Tunnels From Generator", player),
-        True_()
+        Has('Key for Generator Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Generator From Beth's Body", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Lobby From Theater", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Theater Back Hallway From Theater", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Theater From Theater Back Hallway", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player),
-        True_()
+        CanReachRegion('Three Floor Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Maintenance Tunnels From Theater Back Hallway", player),
-        True_()
+        Has('Crawling')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Projector Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Theater Back Hallway From Clock Tower Staircase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Clock Tower", player),
-        True_()
+        Has('Key for Projector Room')
     )
 
     world.set_rule(
@@ -940,253 +805,83 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Clock Tower Staircase From Clock Chains", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Clock Tower Staircase From Clock Tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Theater Back Hallway From Projector Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Metal Capture From Projector Room", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("To Lobby From Prehistoric", player),
-        True_()
+        Has('Key for Prehistoric Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Greenhouse", player),
-        True_()
+        Has('Key for Greenhouse')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Ocean From Prehistoric", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Oil Capture From Prehistoric", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Metal Capture From Prehistoric", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Prehistoric From Greenhouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Sand Capture From Greenhouse", player),
-        True_()
+        Has('Key for Ocean Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Prehistoric From Ocean", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Maze Staircase From Ocean", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Crystal Capture From Ocean", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Sand Capture From Ocean", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Ocean From Maze Staircase", player),
-        True_()
+        Has('Key for Ocean Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Maze From Maze Staircase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Maze Staircase From Maze", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Tar River", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Maze From Tar River", player),
-        True_()
+        CanReachRegion('Projector Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Tar River", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Oil Capture From Tar River", player),
-        True_()
+        And(True_(), Has('Crawling'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Egypt", player),
-        True_()
+        Has('Key for Egypt Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Burial From Egypt", player),
-        True_()
+        CanReachRegion('Egypt')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Blue Maze From Egypt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Cloth Capture From Egypt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Egypt From Burial", player),
-        True_()
+        Has('Crawling')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Shaman From Burial", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Ash Capture From Burial", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Cloth Capture From Burial", player),
-        True_()
+        Has('Key for Shaman Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Burial From Shaman", player),
-        True_()
+        Has('Key for Shaman Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Gods Room From Shaman", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wax Capture From Shaman", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Shaman From Gods Room", player),
-        True_()
+        CanReachRegion('Clock Tower')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Anansi From Gods Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wood Capture From Gods Room", player),
-        True_()
+        CanReachRegion('Maintenance Tunnels')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Norse Stone From Gods Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Gods Room From Norse Stone", player),
-        True_()
+        Has('Aligned Planets')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Gods Room From Anansi", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Pegasus From Anansi", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wax Capture From Anansi", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Anansi From Pegasus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Werewolf From Pegasus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wood Capture From Pegasus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Pegasus From Werewolf", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Night Staircase From Werewolf", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Werewolf From Night Staircase", player),
-        True_()
+        CanReachRegion('Gods Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Janitor Closet", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To UFO From Night Staircase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Night Staircase From Janitor Closet", player),
-        True_()
+        Has('Key for Janitor Closet')
     )
 
     world.set_rule(
@@ -1195,133 +890,58 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Cloth Capture From Janitor Closet", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Night Staircase From UFO", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("To Orrery From UFO", player),
-        True_()
+        Has('Viewed Fortune')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Inventions From UFO", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To UFO From Orrery", player),
-        True_()
+        Has('Key for UFO Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Egypt From Blue Maze", player),
-        True_()
+        Has('Crawling')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Blue Maze Bottom", player),
-        True_()
+        Has('Key for Three Floor Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Blue Maze Top", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Fortune Teller", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Inventions From Blue Maze", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Wood Capture From Blue Maze", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Maintenance Tunnels From Three Floor Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Blue Maze From Three Floor Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Blue Maze From Fortune Teller", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Blue Maze From Inventions", player),
-        True_()
+        Has('Key for Three Floor Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To UFO From Inventions", player),
-        True_()
+        Has('Key for UFO Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Torture From Inventions", player),
-        True_()
+        Has('Key for Torture Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Inventions From Torture", player),
-        True_()
+        Has('Key for Torture Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Puzzle Room Mastermind From Torture", player),
-        True_()
+        Has('Key for Puzzle Room')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Guillotine From Torture", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Torture From Guillotine", player),
-        True_()
+        And(True_(), Has('Viewed Page 17'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Torture", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Puzzle Room Marbles From Puzzle Room Mastermind", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Puzzle Room Mastermind From Puzzle Room Marbles", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Skull Bridge From Puzzle Room Marbles", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Puzzle Room Marbles From Skull Bridge", player),
-        True_()
+        Has('Key for Puzzle Room')
     )
 
     world.set_rule(
@@ -1330,303 +950,63 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Skull Bridge From Slide Room", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("To Lobby From Slide Room", player),
-        True_()
+        Has('Lost Your Head')
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Puzzle Solved Combination Lock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Gears", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Stone Henge", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Puzzle Solved Office Elevator", player),
-        True_()
+        And(Or(CanReachRegion('Office'), CanReachRegion('Underground Lake')), Has('Key for Office Elevator'))
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Three Floor Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Mailbox", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Orange Symbol", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Silver Symbol", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Green Symbol", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: White Symbol", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Brown Symbol", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Tan Symbol", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Windlenot's Ghost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Egyptian Hieroglyphics Explained", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Windlenot's Body", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Scrapbook", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Desk Drawer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Atlantis Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Tape Recorder Heard", player),
-        True_()
+        And(Or(CanReachRegion('Blue Maze'), CanReachRegion('Maintenance Tunnels')), Has('Key for Three Floor Elevator'))
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Workshop Drawers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Workshop Drawers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Basilisk Bone Fragments", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Professor Windlenot's Diary", player),
-        True_()
+        HasAll(['Crawling', 'Key for Bedroom Elevator'])
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Theater Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Museum Brochure", player),
-        True_()
+        Has('Viewed Egyptian Hieroglyphics Explained')
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Slide", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Transforming Mask", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Library Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained In Search of the Unexplained", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained South American Pictographs", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Mythology of the Stars", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Black Book", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Library Cabinet", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Library Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Beth's Address Book", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Final Riddle: Beth's Body Page 17", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beth's Body", player),
-        True_()
+        And(CanReachRegion('Slide Room'), Has('Lost Your Head'))
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Theater", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Beth's Note", player),
-        True_()
+        Has('Viewed Theater Movie')
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Clock Tower Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Clock Chains", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Chains", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Beth's Ghost", player),
-        True_()
+        CanReachRegion('Three Floor Elevator')
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Clock Tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Shaman Security Camera", player),
-        True_()
+        Has('Set Time')
     )
 
     world.set_rule(
         multiworld.get_location("Jukebox", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Theater Movie", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Viewed Theater Movie", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Eagles Nest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Set Skull Dial: Prehistoric", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Greenhouse", player),
-        True_()
+        And(True_(), CanReachRegion('Clock Tower'))
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Atlantis", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Organ", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Museum Blueprints", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Ocean", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Sirens Song Heard", player),
-        True_()
+        CanReachRegion('Office')
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Maze Door", player),
-        True_()
+        Has('Viewed Theater Movie')
     )
 
     world.set_rule(
@@ -1635,118 +1015,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Set Skull Dial: Tar River", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Puzzle Solved Columns of RA", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Burial Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Egypt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Egyptian Sphinx Heard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Set Skull Dial: Egypt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Chinese Solitaire", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Merrick's Notebook", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Chinese Solitaire", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Set Skull Dial: Burial", player),
-        True_()
+        Has('Viewed Egyptian Hieroglyphics Explained')
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Shaman Drums", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Shaman Hut", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Lyre", player),
-        True_()
+        CanReachRegion('Clock Tower')
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Red Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Lyre", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Set Skull Dial: Gods Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Final Riddle: Norse God Stone Message", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Norse Stone", player),
-        True_()
+        CanReachRegion('Maintenance Tunnels')
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Anansi Music Box", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Ancient Astrology", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Skeleton", player),
-        True_()
+        Has('Set Song')
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Anansi Music Box", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Set Skull Dial: Werewolf", player),
-        True_()
+        Has('Set Song')
     )
 
     world.set_rule(
@@ -1756,102 +1046,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved UFO Symbols", player),
-        True_()
+        CanReachRegion('Library')
     )
 
     world.set_rule(
         multiworld.get_location("Storage: UFO", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Final Riddle: Planets Aligned", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Orrery", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Fortune Teller Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Elevator Writing", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flashback Memory Obtained Merrick's Ghost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Final Riddle: Fortune Teller", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Viewed Fortune", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Alchemy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Alchemy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Gallows", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Gallows", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Gallows Information Plaque", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Final Riddle: Guillotine Dropped", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Guillotine", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Mastermind", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Hint Found: Mastermind Information Plaque", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Marble Flipper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Skull Bridge", player),
-        True_()
+        CanReachRegion('Library')
     )
 
     world.set_rule(
@@ -1901,10 +1101,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Metal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mystery Solved", player),
         True_()
     )

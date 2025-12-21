@@ -83,9 +83,12 @@
             "name": "Cave: Powered Blaster chest",
             "id": 91630179862865,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clip Extension",
+                "count": 1
+              }
             },
             "item": {
               "name": "Volcanic Key",
@@ -115,9 +118,12 @@
             "name": "Cave: Guard (Boss)",
             "id": 91630179862887,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clip Extension",
+                "count": 1
+              }
             },
             "item": {
               "name": "Clip Extension",
@@ -255,9 +261,12 @@
             "name": "Arctic: Under snow",
             "id": 91630179862872,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Flamethrower",
+                "count": 1
+              }
             },
             "item": {
               "name": "Faster Reload",
@@ -287,9 +296,12 @@
             "name": "Arctic: Jacket chest",
             "id": 91630179862874,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Flamethrower",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ice Trap",
@@ -333,27 +345,36 @@
             "name": "Volcanic entrance",
             "connected_region": "Volcanic",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Powered Blaster",
+                "count": 1
+              }
             }
           },
           {
             "name": "Arctic entrance",
             "connected_region": "Arctic",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Powered Blaster",
+                "count": 1
+              }
             }
           },
           {
             "name": "Swamp entrance",
             "connected_region": "Swamp",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Powered Blaster",
+                "count": 1
+              }
             }
           },
           {
@@ -371,9 +392,12 @@
             "name": "Hub: Hidden near Arctic",
             "id": 91630179862875,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Powered Blaster",
+                "count": 1
+              }
             },
             "item": {
               "name": "Faster Reload",
@@ -435,9 +459,12 @@
             "name": "Hub: Ninja scare (Boss?)",
             "id": 91630179862891,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Cave Key",
+                "count": 1
+              }
             },
             "item": {
               "name": "Life Extension",
@@ -601,9 +628,12 @@
             "name": "Electrical: Tesla orb",
             "id": 91630179862894,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Volt Laser",
+                "count": 1
+              }
             },
             "item": {
               "name": "Jacket",

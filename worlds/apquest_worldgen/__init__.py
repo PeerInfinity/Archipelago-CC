@@ -75,6 +75,7 @@ class APQuestWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = APQuestWorldGenOptions
     options: APQuestWorldGenOptions
 
+    origin_region_name: str = "Overworld"
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 

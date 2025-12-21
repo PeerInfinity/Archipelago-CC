@@ -2701,7 +2701,7 @@
             "name": "West Sand Hall Left->Aqueduct Bottom",
             "connected_region": "Aqueduct Bottom",
             "access_rule": {
-              "rule": "True_",
+              "rule": "False_",
               "options": [],
               "args": {}
             }
@@ -3250,7 +3250,7 @@
             "name": "East Tunnel Top Right->Crab Hole Bottom Left",
             "connected_region": "Crab Hole Bottom Left",
             "access_rule": {
-              "rule": "True_",
+              "rule": "False_",
               "options": [],
               "args": {}
             }
@@ -3314,9 +3314,11 @@
             "name": "Energy Tank, Gauntlet",
             "id": 82005,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Landing Site"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -3336,9 +3338,11 @@
             "name": "Bomb",
             "id": 82007,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Landing Site"
+              }
             },
             "item": {
               "name": "Spazer",
@@ -3358,9 +3362,31 @@
             "name": "Energy Tank, Terminator",
             "id": 82008,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Lower Mushrooms Left"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Gauntlet Top"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Reserve Tank",
@@ -3380,9 +3406,11 @@
             "name": "Reserve Tank, Brinstar",
             "id": 82017,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Green Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Charge Beam",
@@ -3402,9 +3430,11 @@
             "name": "Charge Beam",
             "id": 82023,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Ice Beam",
@@ -3424,9 +3454,11 @@
             "name": "Morphing Ball",
             "id": 82026,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Blue Brinstar Elevator Bottom"
+              }
             },
             "item": {
               "name": "Morph Ball",
@@ -3446,9 +3478,11 @@
             "name": "Energy Tank, Brinstar Ceiling",
             "id": 82029,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Blue Brinstar Elevator Bottom"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3468,9 +3502,11 @@
             "name": "Energy Tank, Etecoons",
             "id": 82030,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Etecoons Bottom"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -3490,9 +3526,11 @@
             "name": "Energy Tank, Waterway",
             "id": 82033,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -3512,9 +3550,11 @@
             "name": "Energy Tank, Brinstar Gate",
             "id": 82035,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Grappling Beam",
@@ -3534,9 +3574,11 @@
             "name": "X-Ray Scope",
             "id": 82038,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Red Tower Top Left"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -3556,9 +3598,11 @@
             "name": "Spazer",
             "id": 82042,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "East Tunnel Right"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -3578,9 +3622,11 @@
             "name": "Energy Tank, Kraid",
             "id": 82043,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Warehouse Zeela Room Left"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3600,9 +3646,11 @@
             "name": "Kraid",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "KraidRoomIn"
+              }
             },
             "item": {
               "name": "Kraid",
@@ -3622,9 +3670,11 @@
             "name": "Varia Suit",
             "id": 82048,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "KraidRoomIn"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -3644,9 +3694,11 @@
             "name": "Ice Beam",
             "id": 82050,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Business Center"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3666,9 +3718,11 @@
             "name": "Energy Tank, Crocomire",
             "id": 82052,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Crocomire Room Top"
+              }
             },
             "item": {
               "name": "Reserve Tank",
@@ -3688,9 +3742,11 @@
             "name": "Hi-Jump Boots",
             "id": 82053,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Business Center"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3710,9 +3766,11 @@
             "name": "Grapple Beam",
             "id": 82060,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Crocomire Room Top"
+              }
             },
             "item": {
               "name": "Reserve Tank",
@@ -3732,9 +3790,24 @@
             "name": "Reserve Tank, Norfair",
             "id": 82061,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bubble Mountain"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bubble Mountain Top"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Spring Ball",
@@ -3754,9 +3827,11 @@
             "name": "Speed Booster",
             "id": 82066,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Bubble Mountain Top"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3776,9 +3851,11 @@
             "name": "Wave Beam",
             "id": 82068,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Bubble Mountain Top"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3798,9 +3875,11 @@
             "name": "Ridley",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "RidleyRoomIn"
+              }
             },
             "item": {
               "name": "Ridley",
@@ -3820,9 +3899,11 @@
             "name": "Energy Tank, Ridley",
             "id": 82078,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "RidleyRoomIn"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3842,9 +3923,11 @@
             "name": "Screw Attack",
             "id": 82079,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Screw Attack Bottom"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -3864,9 +3947,11 @@
             "name": "Energy Tank, Firefleas",
             "id": 82080,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Firefleas"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -3886,9 +3971,11 @@
             "name": "Reserve Tank, Wrecked Ship",
             "id": 82129,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -3908,9 +3995,11 @@
             "name": "Energy Tank, Wrecked Ship",
             "id": 82132,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Back"
+              }
             },
             "item": {
               "name": "Screw Attack",
@@ -3930,9 +4019,11 @@
             "name": "Phantoon",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "PhantoonRoomIn"
+              }
             },
             "item": {
               "name": "Phantoon",
@@ -3952,9 +4043,11 @@
             "name": "Right Super, Wrecked Ship",
             "id": 82134,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Missile",
@@ -3974,9 +4067,11 @@
             "name": "Gravity Suit",
             "id": 82135,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "X-Ray Scope",
@@ -3996,9 +4091,24 @@
             "name": "Energy Tank, Mama turtle",
             "id": 82138,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Mama Turtle"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Main Street Bottom"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Gravity Suit",
@@ -4018,9 +4128,11 @@
             "name": "Plasma Beam",
             "id": 82143,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Toilet Top"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -4040,9 +4152,11 @@
             "name": "Reserve Tank, Maridia",
             "id": 82145,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Left Sandpit"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -4062,9 +4176,11 @@
             "name": "Spring Ball",
             "id": 82150,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Oasis Bottom"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4084,9 +4200,11 @@
             "name": "Energy Tank, Botwoon",
             "id": 82152,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Post Botwoon"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4106,9 +4224,11 @@
             "name": "Draygon",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Draygon Room Bottom"
+              }
             },
             "item": {
               "name": "Draygon",
@@ -4128,9 +4248,11 @@
             "name": "Space Jump",
             "id": 82154,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Draygon Room Bottom"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -4150,9 +4272,11 @@
             "name": "Mother Brain",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Golden Four"
+              }
             },
             "item": {
               "name": "Mother Brain",
@@ -4172,9 +4296,11 @@
             "name": "Spore Spawn",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Spore Spawn",
@@ -4194,9 +4320,11 @@
             "name": "Botwoon",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Aqueduct Bottom"
+              }
             },
             "item": {
               "name": "Botwoon",
@@ -4216,9 +4344,11 @@
             "name": "Crocomire",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Crocomire Room Top"
+              }
             },
             "item": {
               "name": "Crocomire",
@@ -4238,9 +4368,11 @@
             "name": "Golden Torizo",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Screw Attack Bottom"
+              }
             },
             "item": {
               "name": "Golden Torizo",
@@ -4260,9 +4392,11 @@
             "name": "Power Bomb (Crateria surface)",
             "id": 82000,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Landing Site"
+              }
             },
             "item": {
               "name": "Varia Suit",
@@ -4282,9 +4416,11 @@
             "name": "Missile (outside Wrecked Ship bottom)",
             "id": 82001,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "West Ocean Left"
+              }
             },
             "item": {
               "name": "Hi-Jump Boots",
@@ -4304,9 +4440,11 @@
             "name": "Missile (outside Wrecked Ship top)",
             "id": 82002,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Speed Booster",
@@ -4326,9 +4464,11 @@
             "name": "Missile (outside Wrecked Ship middle)",
             "id": 82003,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4348,9 +4488,11 @@
             "name": "Missile (Crateria moat)",
             "id": 82004,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Moat Left"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -4370,9 +4512,11 @@
             "name": "Missile (Crateria bottom)",
             "id": 82006,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Landing Site"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4392,9 +4536,24 @@
             "name": "Missile (Crateria gauntlet right)",
             "id": 82009,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Gauntlet Top"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wave Beam",
@@ -4414,9 +4573,24 @@
             "name": "Missile (Crateria gauntlet left)",
             "id": 82010,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Gauntlet Top"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Bomb",
@@ -4436,9 +4610,11 @@
             "name": "Super Missile (Crateria)",
             "id": 82011,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Landing Site"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4458,9 +4634,11 @@
             "name": "Missile (Crateria middle)",
             "id": 82012,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Landing Site"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4480,9 +4658,11 @@
             "name": "Power Bomb (green Brinstar bottom)",
             "id": 82013,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Etecoons Bottom"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -4502,9 +4682,11 @@
             "name": "Super Missile (pink Brinstar)",
             "id": 82014,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4524,9 +4706,11 @@
             "name": "Missile (green Brinstar below super missile)",
             "id": 82015,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Green Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -4546,9 +4730,11 @@
             "name": "Super Missile (green Brinstar top)",
             "id": 82016,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Green Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4568,9 +4754,11 @@
             "name": "Missile (green Brinstar behind missile)",
             "id": 82018,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Green Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4590,9 +4778,11 @@
             "name": "Missile (green Brinstar behind reserve tank)",
             "id": 82019,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Green Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4612,9 +4802,11 @@
             "name": "Missile (pink Brinstar top)",
             "id": 82021,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4634,9 +4826,11 @@
             "name": "Missile (pink Brinstar bottom)",
             "id": 82022,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4656,9 +4850,11 @@
             "name": "Power Bomb (pink Brinstar)",
             "id": 82024,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Big Pink"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4678,9 +4874,11 @@
             "name": "Missile (green Brinstar pipe)",
             "id": 82025,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Green Hill Zone Top Right"
+              }
             },
             "item": {
               "name": "Space Jump",
@@ -4700,9 +4898,24 @@
             "name": "Power Bomb (blue Brinstar)",
             "id": 82027,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Blue Brinstar Elevator Bottom"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Morph Ball Room Left"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Bomb",
@@ -4722,9 +4935,11 @@
             "name": "Missile (blue Brinstar middle)",
             "id": 82028,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Blue Brinstar Elevator Bottom"
+              }
             },
             "item": {
               "name": "Bomb",
@@ -4744,9 +4959,11 @@
             "name": "Super Missile (green Brinstar bottom)",
             "id": 82031,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Etecoons Supers"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4766,9 +4983,11 @@
             "name": "Missile (blue Brinstar bottom)",
             "id": 82034,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Blue Brinstar Elevator Bottom"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -4788,9 +5007,11 @@
             "name": "Missile (blue Brinstar top)",
             "id": 82036,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Blue Brinstar Elevator Bottom"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4810,9 +5031,11 @@
             "name": "Missile (blue Brinstar behind missile)",
             "id": 82037,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Blue Brinstar Elevator Bottom"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4832,9 +5055,11 @@
             "name": "Power Bomb (red Brinstar sidehopper room)",
             "id": 82039,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Red Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4854,9 +5079,11 @@
             "name": "Power Bomb (red Brinstar spike room)",
             "id": 82040,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Red Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4876,9 +5103,11 @@
             "name": "Missile (red Brinstar spike room)",
             "id": 82041,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Red Brinstar Elevator"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -4898,9 +5127,11 @@
             "name": "Missile (Kraid)",
             "id": 82044,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Warehouse Zeela Room Left"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -4920,9 +5151,11 @@
             "name": "Missile (lava room)",
             "id": 82049,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Cathedral"
+              }
             },
             "item": {
               "name": "Missile",
@@ -4942,9 +5175,24 @@
             "name": "Missile (below Ice Beam)",
             "id": 82051,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Crocomire Speedway Bottom"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Business Center"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Bomb",
@@ -4964,9 +5212,11 @@
             "name": "Missile (above Crocomire)",
             "id": 82054,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Grapple Escape"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -4986,9 +5236,11 @@
             "name": "Missile (Hi-Jump Boots)",
             "id": 82055,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Business Center"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -5008,9 +5260,11 @@
             "name": "Energy Tank (Hi-Jump Boots)",
             "id": 82056,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Business Center"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5030,9 +5284,11 @@
             "name": "Power Bomb (Crocomire)",
             "id": 82057,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Crocomire Room Top"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -5052,9 +5308,11 @@
             "name": "Missile (below Crocomire)",
             "id": 82058,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Crocomire Room Top"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -5074,9 +5332,11 @@
             "name": "Missile (Grapple Beam)",
             "id": 82059,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Crocomire Room Top"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5096,9 +5356,24 @@
             "name": "Missile (Norfair Reserve Tank)",
             "id": 82062,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bubble Mountain"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bubble Mountain Top"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Super Missile",
@@ -5118,9 +5393,24 @@
             "name": "Missile (bubble Norfair green door)",
             "id": 82063,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bubble Mountain"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bubble Mountain Top"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Missile",
@@ -5140,9 +5430,11 @@
             "name": "Missile (bubble Norfair)",
             "id": 82064,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Bubble Mountain"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5162,9 +5454,11 @@
             "name": "Missile (Speed Booster)",
             "id": 82065,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Bubble Mountain Top"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5184,9 +5478,11 @@
             "name": "Missile (Wave Beam)",
             "id": 82067,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Bubble Mountain Top"
+              }
             },
             "item": {
               "name": "Reserve Tank",
@@ -5206,9 +5502,11 @@
             "name": "Missile (Gold Torizo)",
             "id": 82070,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "LN Above GT"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5228,9 +5526,11 @@
             "name": "Super Missile (Gold Torizo)",
             "id": 82071,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Screw Attack Bottom"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5250,9 +5550,11 @@
             "name": "Missile (Mickey Mouse room)",
             "id": 82073,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "LN Entrance"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -5272,9 +5574,11 @@
             "name": "Missile (lower Norfair above fire flea room)",
             "id": 82074,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Firefleas"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5294,9 +5598,11 @@
             "name": "Power Bomb (lower Norfair above fire flea room)",
             "id": 82075,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Firefleas Top"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5316,9 +5622,11 @@
             "name": "Power Bomb (Power Bombs of shame)",
             "id": 82076,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wasteland"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -5338,9 +5646,11 @@
             "name": "Missile (lower Norfair near Wave Beam)",
             "id": 82077,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Firefleas"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5360,9 +5670,11 @@
             "name": "Missile (Wrecked Ship middle)",
             "id": 82128,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5382,9 +5694,11 @@
             "name": "Missile (Gravity Suit)",
             "id": 82130,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5404,9 +5718,11 @@
             "name": "Missile (Wrecked Ship top)",
             "id": 82131,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5426,9 +5742,11 @@
             "name": "Super Missile (Wrecked Ship left)",
             "id": 82133,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Wrecked Ship Main"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -5448,9 +5766,11 @@
             "name": "Missile (green Maridia shinespark)",
             "id": 82136,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Main Street Bottom"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5470,9 +5790,11 @@
             "name": "Super Missile (green Maridia)",
             "id": 82137,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Main Street Bottom"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5492,9 +5814,24 @@
             "name": "Missile (green Maridia tatori)",
             "id": 82139,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Mama Turtle"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Main Street Bottom"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Plasma Beam",
@@ -5514,9 +5851,11 @@
             "name": "Super Missile (yellow Maridia)",
             "id": 82140,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Watering Hole Bottom"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5536,9 +5875,11 @@
             "name": "Missile (yellow Maridia super missile)",
             "id": 82141,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Watering Hole Bottom"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -5558,9 +5899,11 @@
             "name": "Missile (yellow Maridia false wall)",
             "id": 82142,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Beach"
+              }
             },
             "item": {
               "name": "Power Bomb",
@@ -5580,9 +5923,11 @@
             "name": "Missile (left Maridia sand pit room)",
             "id": 82144,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Left Sandpit"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5602,9 +5947,11 @@
             "name": "Missile (right Maridia sand pit room)",
             "id": 82146,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Right Sandpit"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -5624,9 +5971,11 @@
             "name": "Power Bomb (right Maridia sand pit room)",
             "id": 82147,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Right Sandpit"
+              }
             },
             "item": {
               "name": "Energy Tank",
@@ -5646,9 +5995,11 @@
             "name": "Missile (pink Maridia)",
             "id": 82148,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Aqueduct"
+              }
             },
             "item": {
               "name": "Missile",
@@ -5668,9 +6019,11 @@
             "name": "Super Missile (pink Maridia)",
             "id": 82149,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Aqueduct"
+              }
             },
             "item": {
               "name": "Super Missile",
@@ -5690,9 +6043,11 @@
             "name": "Missile (Draygon)",
             "id": 82151,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Precious Room Top"
+              }
             },
             "item": {
               "name": "Missile",

@@ -19,37 +19,7 @@ def set_rules(world: "World") -> None:
     player = world.player
     multiworld = world.multiworld
 
-    # Entrance rules
-    world.set_rule(
-        multiworld.get_entrance("New Board", player),
-        True_()
-    )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("Tile 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tile 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tile 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tile 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tile 5", player),
-        True_()
-    )
-
     world.set_rule(
         multiworld.get_location("Tile 6", player),
         True_()
