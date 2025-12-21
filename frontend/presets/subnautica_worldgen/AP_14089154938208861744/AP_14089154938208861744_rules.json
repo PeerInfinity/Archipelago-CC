@@ -12,21 +12,6 @@
   },
   "regions": {
     "1": {
-      "Menu": {
-        "name": "Menu",
-        "exits": [
-          {
-            "name": "MenuToStart",
-            "connected_region": "Planet 4546B",
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            }
-          }
-        ],
-        "locations": []
-      },
       "Planet 4546B": {
         "name": "Planet 4546B",
         "exits": [],
@@ -2131,9 +2116,19 @@
             "name": "Neptune Launch",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Ion Battery",
+                  "Ion Power Cell",
+                  "Neptune Boosters",
+                  "Neptune Cockpit",
+                  "Neptune Fuel Reserve",
+                  "Neptune Gantry",
+                  "Neptune Launch Platform"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -2179,9 +2174,11 @@
             "name": "Repair Aurora Drive",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "Aurora Drive Room - Upgrade Console"
+              }
             },
             "item": {
               "name": "Repair Aurora Drive",
@@ -2198,7 +2195,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "Planet 4546B"
       ],
       "available": []
     }

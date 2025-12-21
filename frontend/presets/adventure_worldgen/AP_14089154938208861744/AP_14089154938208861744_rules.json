@@ -34,36 +34,50 @@
             "name": "YellowCastlePort",
             "connected_region": "YellowCastle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Yellow Key",
+                "count": 1
+              }
             }
           },
           {
             "name": "WhiteCastlePort",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "White Key",
+                "count": 1
+              }
             }
           },
           {
             "name": "BlackCastlePort",
             "connected_region": "BlackCastle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Key",
+                "count": 1
+              }
             }
           },
           {
             "name": "CreditsWall",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Black Key",
+                  "Bridge"
+                ]
+              }
             }
           }
         ],
@@ -232,9 +246,14 @@
             "name": "Slay Yorgle",
             "id": 118000209,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Freeincarnate",
@@ -281,9 +300,14 @@
             "name": "Chalice Home",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chalice",
+                  "Yellow Key"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -312,18 +336,26 @@
             "name": "WhiteCastleSecretPassage",
             "connected_region": "WhiteCastleVault",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Bridge",
+                "count": 1
+              }
             }
           },
           {
             "name": "WhiteCastlePeekPassage",
             "connected_region": "WhiteCastlePreVaultPeek",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
@@ -430,9 +462,14 @@
             "name": "Slay Grundle",
             "id": 118000210,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Yellow Key",
@@ -461,9 +498,14 @@
             "name": "BlackCastleVaultEntrance",
             "connected_region": "BlackCastleVault",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
@@ -520,9 +562,14 @@
             "name": "Slay Rhindle",
             "id": 118000208,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Slow Rhindle",
@@ -584,9 +631,12 @@
             "name": "CreditsToFarSide",
             "connected_region": "CreditsRoomFarSide",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Magnet",
+                "count": 1
+              }
             }
           }
         ],

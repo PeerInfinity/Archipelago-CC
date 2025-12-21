@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -3095,7 +3095,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player),
-        True_()
+        And(True_(), Or(True_(), True_(), Has('Hookshot')))
     )
 
     world.set_rule(
@@ -3110,12 +3110,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganon's Tower - Maze Chest", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Outset Island - Great Fairy", player),
-        True_()
+        CanReachRegion('Outset Fairy Fountain')
     )
 
     world.set_rule(
@@ -3134,48 +3134,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("The Great Sea - Salvage Corp Gift", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Windfall Island - Jail - Tingle - First Gift", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Windfall Island - Jail - Tingle - Second Gift", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Windfall Island - Maggie - Free Item", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Windfall Island - Tott - Teach Rhythm", player),
-        True_()
+        Has('Wind Waker')
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Alcove With Water Jugs", player),
-        True_()
+        Has('DRC Small Key')
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Big Key Chest", player),
-        True_()
+        And(True_(), True_(), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Bird's Nest", player),
-        True_()
+        Has('DRC Small Key', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boarded Up Chest", player),
-        True_()
+        Has('DRC Small Key')
     )
 
     world.set_rule(
@@ -3190,107 +3170,97 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player),
-        True_()
+        And(Or(And(True_(), Has('Hookshot')), True_(), Has('Grappling Hook')), Has('DRC Small Key', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Dark Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dragon Roost Cavern - First Room", player),
-        True_()
+        Has('DRC Small Key', 4)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Miniboss", player),
-        True_()
+        Has('DRC Small Key', 4)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Pot Room Chest", player),
-        True_()
+        Has('DRC Small Key', 4)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Rat Room", player),
-        True_()
+        Has('DRC Small Key', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Rat Room Boarded Up Chest", player),
-        True_()
+        Has('DRC Small Key', 2)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Under Rope Bridge", player),
-        True_()
+        And(Or(True_(), Has('Grappling Hook')), Has('DRC Small Key', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Big Key Chest", player),
-        True_()
+        And(True_(), True_(), HasAll(['Boomerang', 'Grappling Hook']))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest Across Red Hanging Flower", player),
-        True_()
+        And(True_(), True_(), HasAll(['Boomerang', 'Grappling Hook']))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest in Locked Tree Trunk", player),
-        True_()
+        And(True_(), True_(), HasAll(['Boomerang', 'Grappling Hook']))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Climb to Top Using Boko Baba Bulbs", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Double Mothula Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forbidden Woods - First Room", player),
-        True_()
+        And(True_(), True_(), True_(), Or(True_(), Has('Grappling Hook')))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Hole in Tree", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Inside Hollow Tree's Mouth", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Morth Pit", player),
-        True_()
+        And(True_(), True_(), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player),
-        True_()
+        And(True_(), True_(), True_(), Or(True_(), True_()), HasAll(['FW Small Key', 'Grappling Hook']))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player),
-        True_()
+        And(True_(), True_(), Or(True_(), True_()), HasAll(['FW Small Key', 'Grappling Hook']))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Left Chest", player),
-        True_()
+        And(True_(), True_(), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Right Chest", player),
-        True_()
+        And(True_(), True_(), Has('Grappling Hook'))
     )
 
     world.set_rule(
@@ -3300,57 +3270,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Chest Behind Bombable Walls", player),
-        True_()
+        Has('Bombs')
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - First Chest Guarded by Armos Knights", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Floating Platforms Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of the Gods - Hop Across Floating Boxes", player),
-        True_()
+        And(True_(), Or(And(True_(), True_()), And(True_(), Has('Hookshot')), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Light Two Torches", player),
-        True_()
+        Has('Bombs')
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Second Chest Guarded by Armos Knights", player),
-        True_()
+        And(True_(), True_(), Has('Bombs'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Shoot Eye Above Skulls Room Chest", player),
-        True_()
+        And(True_(), Has('Bombs'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Skulls Room Chest", player),
-        True_()
+        Has('Bombs')
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Stone Tablet", player),
-        True_()
+        And(True_(), Has('Wind Waker'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Top of Floating Platforms Room", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Big Key Chest", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Or(And(True_(), True_()), And(Or(True_(), True_(), Has('Skull Hammer')), True_(), True_()), True_()), Has('Power Bracelets'))
     )
 
     world.set_rule(
@@ -3360,17 +3325,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Destructible Walls", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Statues", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest In Three Blocks Room", player),
-        True_()
+        And(True_(), True_(), True_(), Or(True_(), True_()), Has('Power Bracelets'))
     )
 
     world.set_rule(
@@ -3380,27 +3345,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - End of Foggy Room With Floormasters", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Kill All Floormasters in Foggy Room", player),
-        True_()
+        And(True_(), True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Left Chest", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Right Chest", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Crypt Room", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -3410,22 +3375,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest in First Crypt", player),
-        True_()
+        And(True_(), Or(True_(), True_()), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Big Key Chest", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Seven Armos", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Stone Head", player),
-        True_()
+        And(True_(), HasAll(['Hookshot', 'Iron Boots']))
     )
 
     world.set_rule(
@@ -3435,7 +3400,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player),
-        True_()
+        And(True_(), Or(And(True_(), True_(), Has('Hookshot')), And(True_(), True_(), Or(True_(), True_()), Has('Iron Boots')), And(True_(), True_(), True_(), Has('Hookshot'))))
     )
 
     world.set_rule(
@@ -3450,22 +3415,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest in Left Alcove", player),
-        True_()
+        And(True_(), True_(), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Kill All Enemies in Tall Basement Room", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - Destroy All Cracked Floors", player),
-        True_()
+        And(True_(), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - First Chest", player),
-        True_()
+        And(True_(), Has('Iron Boots'))
     )
 
     world.set_rule(
@@ -3480,12 +3445,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Miniboss Room", player),
-        True_()
+        Or(True_(), Has('Hookshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Wizzrobe Miniboss Room", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -3524,18 +3489,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Ice Ring Isle - Cave - Chest", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Lower Floor Chest", player),
-        True_()
+        Has('Skull Hammer')
     )
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Upper Floor Chest", player),
-        True_()
+        And(True_(), Has('Skull Hammer'))
     )
 
     world.set_rule(
@@ -3545,7 +3505,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Angular Isles - Cave", player),
-        True_()
+        And(True_(), Or(True_(), Has('Hookshot')))
     )
 
     world.set_rule(
@@ -3564,23 +3524,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Pawprint Isle - Chuchu Cave - Chest", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Scale the Wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Diamond Steppe Island - Warp Maze Cave - First Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Diamond Steppe Island - Warp Maze Cave - Second Chest", player),
-        True_()
+        Has('Grappling Hook')
     )
 
     world.set_rule(
@@ -3590,35 +3535,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cliff Plateau Isles - Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cliff Plateau Isles - Highest Isle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Thorned Fairy Island - Great Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eastern Fairy Island - Great Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Western Fairy Island - Great Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Southern Fairy Island - Great Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Northern Fairy Island - Great Fairy", player),
-        True_()
+        Or(And(True_(), True_(), Has('Grappling Hook')), True_())
     )

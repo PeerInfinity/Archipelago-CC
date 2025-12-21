@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Has, HasAll, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -169,333 +169,133 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Menu -> ACDC Overworld", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ACDC Overworld -> ACDC Cyberworld", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> SciLab Overworld", player),
-        True_()
+        Has('SubPET')
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> Yoka Overworld", player),
-        True_()
+        Has('Needle')
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> Beach Overworld", player),
-        True_()
+        Has('PETCase')
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Cyberworld -> SciLab Cyberworld", player),
-        True_()
+        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Cyberworld -> Yoka Cyberworld", player),
-        True_()
+        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Cyberworld -> Beach Cyberworld", player),
-        True_()
+        And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Overworld -> SciLab Cyberworld", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("SciLab Overworld -> ACDC Overworld", player),
-        True_()
+        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Overworld -> Yoka Overworld", player),
-        True_()
+        Has('Needle')
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Overworld -> Beach Overworld", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("SciLab Cyberworld -> ACDC Cyberworld", player),
-        True_()
+        Has('PETCase')
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player),
-        True_()
+        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("SciLab Cyberworld -> Deep Undernet", player),
-        True_()
+        And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Yoka Cyberworld", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Yoka Overworld -> ACDC Overworld", player),
-        True_()
+        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> SciLab Overworld", player),
-        True_()
+        Has('SubPET')
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Beach Overworld", player),
-        True_()
+        Has('PETCase')
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Yoka Cyberworld -> ACDC Cyberworld", player),
-        True_()
+        And(True_(), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player),
-        True_()
+        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach Overworld -> ACDC Overworld", player),
-        True_()
+        And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Overworld -> SciLab Overworld", player),
-        True_()
+        Has('SubPET')
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Overworld -> Yoka Overworld", player),
-        True_()
+        Has('Needle')
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Overworld -> WWW Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach Cyberworld -> ACDC Cyberworld", player),
-        True_()
+        Has('Progressive Undernet Rank', 8)
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> SciLab Cyberworld", player),
-        True_()
+        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Yoka Cyberworld", player),
-        True_()
+        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
-        True_()
+        And(True_(), Has('Press'))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("ACDC SonicWav W Trade", player),
-        True_()
+        Has('SonicWav W')
     )
 
     world.set_rule(
         multiworld.get_location("ACDC Bubbler C Trade", player),
-        True_()
+        Has('Bubbler C')
     )
 
     world.set_rule(
         multiworld.get_location("ACDC Recov120 S Trade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC School Desk", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC Class 5B Bookshelf", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 1 Entrance BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 1 North Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 1 Far West BMD 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 1 KeyDataA BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 1 KeyDataB BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 1 KeyDataC BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 2 South BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 2 Entrance BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 2 Mainframe BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 2 CodeA BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 2 CodeB BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("School 2 CodeC BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC Dog House BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC Lan's Security Panel BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC Yai's Phone BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC NumberMan Display BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC Tank BMD 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC Tank BMD 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC School Server BMD 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC School Server BMD 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC School Blackboard BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 01", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 02", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 03", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 04", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 05", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 06", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 07", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Numberman Code 08", player),
-        True_()
+        Has('Recov120 S')
     )
 
     world.set_rule(
@@ -614,1036 +414,271 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Mayl's HP BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yai's HP BMD 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yai's HP BMD 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dex's HP BMD 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dex's HP BMD 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Mayl's HP PMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC 1 Southwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC 1 Northeast BMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("ACDC 1 PMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC 2 Center BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC 2 North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC 3 Southwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("ACDC 3 Northeast BMD", player),
-        True_()
+        And(Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8)), Has('WWW ID'))
     )
 
     world.set_rule(
         multiworld.get_location("SciLab Shake1 S Trade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab Garbage Can", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab Vending Machine BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab Virus Lab Door BMD 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab Virus Lab Door BMD 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab Dad's Computer BMD", player),
-        True_()
+        Has('Shake1 S')
     )
 
     world.set_rule(
         multiworld.get_location("SciLab Dad's Computer PMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Please deliver this", player),
-        True_()
+        And(CanReachRegion('ACDC Cyberworld'), CanReachRegion('ACDC Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: My Navi is sick", player),
-        True_()
+        Has('Recov30 *')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help me with my son!", player),
-        True_()
+        And(CanReachRegion('ACDC Cyberworld'), CanReachRegion('Yoka Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Transmission error", player),
-        True_()
+        CanReachRegion('Yoka Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Chip Prices", player),
-        True_()
+        And(CanReachRegion('ACDC Cyberworld'), CanReachRegion('SciLab Cyberworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: I'm broke?!", player),
-        True_()
+        And(CanReachRegion('Yoka Cyberworld'), CanReachRegion('Yoka Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Rare chips for cheap!", player),
-        True_()
+        CanReachRegion('ACDC Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Be my boyfriend", player),
-        True_()
+        CanReachRegion('Beach Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Will you deliver?", player),
-        True_()
+        And(CanReachRegion('ACDC Cyberworld'), CanReachRegion('Beach Overworld'), CanReachRegion('Yoka Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Somebody, please help!", player),
-        True_()
+        CanReachRegion('ACDC Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Looking for condor", player),
-        True_()
+        And(CanReachRegion('ACDC Overworld'), CanReachRegion('Beach Overworld'), CanReachRegion('Yoka Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help with rehab", player),
-        True_()
+        CanReachRegion('Beach Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help with rehab bonus", player),
-        True_()
+        CanReachRegion('Beach Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Old Master", player),
-        True_()
+        And(CanReachRegion('ACDC Overworld'), CanReachRegion('Beach Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Catching gang members", player),
-        True_()
+        And(CanReachRegion('Yoka Cyberworld'), Has('Press'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Please adopt a virus!", player),
-        True_()
+        CanReachRegion('SciLab Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes", player),
-        True_()
+        And(CanReachRegion('Beach Overworld'), CanReachRegion('Deep Undernet'), CanReachRegion('Undernet'), HasAll(['Magnum1 A', 'Press']))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes - Treasure", player),
-        True_()
+        And(CanReachLocation('Job: Legendary Tomes'), CanReachRegion('ACDC Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! First Child", player),
-        True_()
+        CanReachRegion('Yoka Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Second Child", player),
-        True_()
+        CanReachRegion('Yoka Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Third Child", player),
-        True_()
+        CanReachRegion('Yoka Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Fourth Child", player),
-        True_()
+        CanReachRegion('Yoka Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Hide and seek! Completion", player),
-        True_()
+        CanReachRegion('Yoka Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Finding the blue Navi", player),
-        True_()
+        CanReachRegion('Undernet')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Give your support", player),
-        True_()
+        CanReachRegion('Beach Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Job: Stamp collecting", player),
-        True_()
+        And(CanReachRegion('ACDC Cyberworld'), CanReachRegion('Beach Cyberworld'), CanReachRegion('Beach Overworld'), CanReachRegion('SciLab Cyberworld'), CanReachRegion('Yoka Cyberworld'))
     )
 
     world.set_rule(
         multiworld.get_location("Job: Help with a will", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab 1 East BMD", player),
-        True_()
+        And(CanReachRegion('ACDC Cyberworld'), CanReachRegion('ACDC Overworld'), CanReachRegion('Beach Overworld'), CanReachRegion('Undernet'), CanReachRegion('Yoka Cyberworld'), CanReachRegion('Yoka Overworld'))
     )
 
     world.set_rule(
         multiworld.get_location("SciLab 1 WWW BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab 2 South BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab 2 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Mr Quiz", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Quiz Master", player),
-        True_()
+        Has('WWW ID')
     )
 
     world.set_rule(
         multiworld.get_location("Yoka FireSwrd P Trade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Inn Jars", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Zoo Garbage", player),
-        True_()
+        Has('FireSwrd P')
     )
 
     world.set_rule(
         multiworld.get_location("Zoo Panda PMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 1 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 1 North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 1 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 2 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 2 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 2 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 3 North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 3 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 3 Path BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 3 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 4 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 4 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zoo 4 Southeast BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka TV BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Armor BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Hot Spring BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Ticket Machine BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Giraffe BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka Panda BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tamako's HP BMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Tamako's HP PMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Comedian", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 01", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 02", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 03", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 04", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 05", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 06", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 07", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 08", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 09", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 10", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 11", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 12", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 13", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 14", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 15", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 16", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 17", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 18", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 19", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 20", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 21", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 22", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 23", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 24", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 25", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 26", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 27", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 28", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 29", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 30", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 31", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chocolate Shop 32", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka 1 North BMD", player),
-        True_()
+        Has('Humor')
     )
 
     world.set_rule(
         multiworld.get_location("Yoka 1 WWW BMD", player),
-        True_()
+        Has('WWW ID')
     )
 
     world.set_rule(
         multiworld.get_location("Yoka 1 PMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka 2 Lower BMD", player),
-        True_()
+        And(Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8)), Has('Press'))
     )
 
     world.set_rule(
         multiworld.get_location("Yoka 2 Upper BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital Quiz Queen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades Quiz King", player),
-        True_()
+        Has('Press')
     )
 
     world.set_rule(
         multiworld.get_location("Hospital DynaWav V Trade", player),
-        True_()
+        Has('DynaWave V')
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN WideSwrd C Trade", player),
-        True_()
+        Has('WideSwrd C')
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN HoleMetr H Trade", player),
-        True_()
+        Has('HoleMetr H')
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN Shadow J Trade", player),
-        True_()
+        Has('Shadow J')
     )
 
     world.set_rule(
         multiworld.get_location("Hades GrabBack K Trade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Department Store", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Hospital Plaque", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Hospital Pink Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Hospital Tree", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Hospital Hidden Conversation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Hospital Girl", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN Kiosk", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN Boxes", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN Poster", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades Boat Dock", player),
-        True_()
+        Has('GrabBack K')
     )
 
     world.set_rule(
         multiworld.get_location("Hades South BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades Gargoyle BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 1 North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 1 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 1 Center BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 2 Island BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 2 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 2 Southwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 3 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 3 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 3 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 4 North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 4 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 4 Southeast BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 5 Island BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 5 Northeast BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital 5 Southwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Hospital Bed BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach TV BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Vending Machine BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach News Van BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Battle Console BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Security System BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach Broadcast Computer BMD", player),
-        True_()
+        Has('Press')
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN Security Panel PMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN Main Console PMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 6 TV BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach 1 BMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Beach 1 PMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Beach 2 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach 2 West BMD", player),
-        True_()
+        Has('Press')
     )
 
     world.set_rule(
         multiworld.get_location("Villain", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 1 South BMD", player),
-        True_()
+        Has('BlckMnd')
     )
 
     world.set_rule(
         multiworld.get_location("Undernet 1 WWW BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 2 Lower BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 2 Upper BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 3 South BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 3 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 4 Pillar Prog", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 4 Top North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 4 Bottom West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 4 Top Pillar BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 5 Upper BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 5 Lower BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 6 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 6 Central BMD", player),
-        True_()
+        Has('WWW ID')
     )
 
     world.set_rule(
         multiworld.get_location("Undernet 7 PMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 7 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 7 Northeast BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 7 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 7 Upper BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW Control Room 1 Screen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW Wily's Desk", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW Wall BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 1 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 1 West BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 1 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 2 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 2 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 3 East BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 3 North BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 4 Central BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("WWW 4 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Alpha Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 1 South BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 1 Northeast BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 1 Northwest BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 2 Island BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 2 Lower BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 2 Upper BMD", player),
-        True_()
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
     )
 
     world.set_rule(
         multiworld.get_location("Secret 3 Island BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 3 South BMD", player),
-        True_()
+        Has('Press')
     )
 
     world.set_rule(
         multiworld.get_location("Secret 3 BugFrag BMD", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Serenade", player),
-        True_()
+        Has('Press')
     )

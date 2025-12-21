@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, Has, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -135,28 +135,18 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Hub entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cave entrance", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Volcanic entrance", player),
-        True_()
+        Has('Powered Blaster')
     )
 
     world.set_rule(
         multiworld.get_entrance("Arctic entrance", player),
-        True_()
+        Has('Powered Blaster')
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp entrance", player),
-        True_()
+        Has('Powered Blaster')
     )
 
     world.set_rule(
@@ -170,48 +160,18 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Cave: After Wallboss", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave: Balcony", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave: Spike pit", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Cave: Powered Blaster chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave: Wallboss (Boss)", player),
-        True_()
+        Has('Clip Extension')
     )
 
     world.set_rule(
         multiworld.get_location("Cave: Guard (Boss)", player),
-        True_()
+        Has('Clip Extension')
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Hot coals", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Volcanic: Under bridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Volcanic: Behind wall", player),
-        True_()
+        Or(True_(), Has('Ice Spreadshot'))
     )
 
     world.set_rule(
@@ -225,18 +185,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Arctic: Before pipes", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arctic: After Guard", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Arctic: Under snow", player),
-        True_()
+        Has('Flamethrower')
     )
 
     world.set_rule(
@@ -246,7 +196,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Jacket chest", player),
-        True_()
+        Has('Flamethrower')
     )
 
     world.set_rule(
@@ -256,41 +206,16 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hub: Hidden near Arctic", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hub: Hidden near Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hub: Hidden near Swamp", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hub: Console login", player),
-        True_()
+        Has('Powered Blaster')
     )
 
     world.set_rule(
         multiworld.get_location("Hub: Ninja scare (Boss?)", player),
-        True_()
+        Has('Cave Key')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Bramble room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Swamp: Down the chimney", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Swamp: Wall maze", player),
         True_()
     )
 
@@ -305,43 +230,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Elevator: Ninja (Boss)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Electrical: Volt Laser chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Electrical: Generator (Boss)", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Electrical: Tesla orb", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Electrical: Near generator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Electrical: Behind wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Electrical: Before Malakhov", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Electrical: Malakhov (Boss)", player),
-        True_()
+        Has('Volt Laser')
     )
 
     world.set_rule(

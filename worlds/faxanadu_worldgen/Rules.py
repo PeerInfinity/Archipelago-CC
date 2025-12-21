@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, Has, HasAll, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -46,150 +46,85 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Menu -> Eolis", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Eolis -> Path to Apolune", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Path to Apolune -> Apolune", player),
-        True_()
+        HasAll(['Key Jack', 'Progressive Sword'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Apolune -> Tower of Trunk", player),
-        True_()
+        Has('Key Jack')
     )
 
     world.set_rule(
         multiworld.get_entrance("Apolune -> Path to Forepaw", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Path to Forepaw -> Forepaw", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forepaw -> Trunk", player),
-        True_()
+        Has('Mattock')
     )
 
     world.set_rule(
         multiworld.get_entrance("Trunk -> Joker Spring", player),
-        True_()
+        Has('Key Joker')
     )
 
     world.set_rule(
         multiworld.get_entrance("Trunk -> Tower of Fortress", player),
-        True_()
+        Has('Key Jack')
     )
 
     world.set_rule(
         multiworld.get_entrance("Trunk -> Path to Mascon", player),
-        True_()
+        And(HasAll(['Joker Spring Flow', 'Key Queen', 'Ring of Ruby', 'Sky Spring Flow', 'Tower of Fortress Spring Flow']), Has('Progressive Sword', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Mascon -> Tower of Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Path to Mascon -> Mascon", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mascon -> Path to Victim", player),
-        True_()
+        And(Has('Key Queen'), Has('Red Potion', 4))
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Victim -> Tower of Suffer", player),
-        True_()
+        Has('Key Queen')
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Victim -> Victim", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Victim -> Mist", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mist -> Useless Tower", player),
-        True_()
+        HasAll(['Key King', 'Unlock Wingboots'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Mist -> Tower of Mist", player),
-        True_()
+        Has('Key King')
     )
 
     world.set_rule(
         multiworld.get_entrance("Mist -> Path to Conflate", player),
-        True_()
+        Has('Key Ace')
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Conflate -> Helm Branch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Path to Conflate -> Conflate", player),
-        True_()
+        Has('Key King')
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Conflate -> Branches", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Branches -> Path to Daybreak", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Path to Daybreak -> Daybreak", player),
-        True_()
+        Has('Key King')
     )
 
     world.set_rule(
         multiworld.get_entrance("Daybreak -> Dartmoor Castle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dartmoor Castle -> Dartmoor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dartmoor Castle -> Fraternal Castle", player),
-        True_()
+        Has('Ring of Dworf')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dartmoor Castle -> Evil Fortress", player),
-        True_()
+        Has('Demons Ring')
     )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("Eolis Guru", player),
-        True_()
-    )
-
     world.set_rule(
         multiworld.get_location("Eolis Key Jack", player),
         True_()
@@ -217,227 +152,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Path to Apolune Magic Shield", player),
-        True_()
+        Has('Key King')
     )
 
     world.set_rule(
         multiworld.get_location("Path to Apolune Death", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Apolune Small Shield", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Apolune Hand Dagger", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Apolune Deluge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Apolune Red Potion", player),
-        True_()
+        Has('Key Ace')
     )
 
     world.set_rule(
         multiworld.get_location("Apolune Key Jack", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Trunk Hidden Mattock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Trunk Hidden Hourglass", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Trunk Boss Mattock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Forepaw Hidden Red Potion", player),
-        True_()
+        Or(Has('Deluge'), Has('Progressive Sword', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Path to Forepaw Glove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Long Sword", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Studded Mail", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Small Shield", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Key Jack", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forepaw Key Queen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trunk Hidden Ointment", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trunk Hidden Red Potion", player),
-        True_()
+        HasAll(['Deluge', 'Unlock Wingboots'])
     )
 
     world.set_rule(
         multiworld.get_location("Trunk Red Potion", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Sky Spring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joker Spring Ruby Ring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joker Spring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Poison 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Poison 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Hidden Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Ointment", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Boss Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Elixir", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Fortress Guru", player),
-        True_()
+        Has('Sky Spring Flow')
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Fortress Spring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Mascon Hidden Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mascon Large Shield", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mascon Thunder", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mascon Mattock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mascon Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mascon Key Jack", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mascon Key Queen", player),
-        True_()
+        Has('Spring Elixir')
     )
 
     world.set_rule(
         multiworld.get_location("Misty Shop Death", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty Shop Hourglass", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty Shop Elixir", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty Shop Red Potion", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
@@ -447,241 +207,41 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of Suffer Hidden Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Suffer Hidden Hourglass", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Suffer Pendant", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Victim Full Plate", player),
-        True_()
+        Or(Has('Deluge'), Has('Progressive Sword', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Victim Mattock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Victim Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Victim Key King", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Victim Key Queen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Victim Tavern", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mist Hidden Poison 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mist Hidden Poison 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mist Hidden Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty Magic Hall", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Misty House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Useless Tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Mist Hidden Ointment", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Mist Elixir", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Mist Black Onyx", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Conflate Hidden Ointment", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Conflate Poison", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Helm Branch Hidden Glove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Helm Branch Battle Helmet", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Conflate Giant Blade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Conflate Magic Shield", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Conflate Wingboots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Conflate Red Potion", player),
-        True_()
+        Has('Black Onyx')
     )
 
     world.set_rule(
         multiworld.get_location("Conflate Guru", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Branches Hidden Ointment", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Branches Poison", player),
-        True_()
+        Has('Progressive Armor', 3)
     )
 
     world.set_rule(
         multiworld.get_location("Branches Hidden Mattock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Branches Hidden Hourglass", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Daybreak Hidden Wingboots 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Daybreak Magical Rod", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Daybreak Hidden Wingboots 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Daybreak Poison", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Path to Daybreak Glove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Daybreak Battle Suit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Daybreak Tilte", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Daybreak Giant Blade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Daybreak Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Daybreak Key King", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Daybreak Key Queen", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Dartmoor Castle Hidden Hourglass", player),
-        True_()
+        Has('Unlock Wingboots')
     )
 
     world.set_rule(
         multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dartmoor Giant Blade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dartmoor Red Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dartmoor Key King", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fraternal Castle Hidden Ointment", player),
         True_()
     )
 
@@ -691,66 +251,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Fraternal Castle Poison 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fraternal Castle Poison 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fraternal Castle Poison 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fraternal Castle Hidden Hourglass", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fraternal Castle Dragon Slayer", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Fraternal Castle Guru", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil Fortress Ointment", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil Fortress Poison 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil Fortress Glove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil Fortress Poison 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil Fortress Poison 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil Fortress Hidden Glove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evil One", player),
-        True_()
+        Has('Progressive Sword', 4)
     )

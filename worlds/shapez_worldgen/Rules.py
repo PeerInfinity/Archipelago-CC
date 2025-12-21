@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, Has, HasAny, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -428,27 +428,27 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Placing belts", player),
-        True_()
+        Has('Belt')
     )
 
     world.set_rule(
         multiworld.get_entrance("Extracting shapes from patches", player),
-        True_()
+        HasAny(['Chaining Extractor', 'Extractor'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Using the wires layer", player),
-        True_()
+        Has('Wires')
     )
 
     world.set_rule(
         multiworld.get_entrance("Placing any building", player),
-        True_()
+        HasAny(['Balancer', 'Belt', 'Belt Reader', 'Chaining Extractor', 'Color Mixer', 'Compact Merger', 'Compact Splitter', 'Cutter', 'Display', 'Double Painter', 'Extractor', 'Item Filter', 'Painter', 'Quad Cutter', 'Quad Painter', 'Rotator', 'Rotator (180°)', 'Rotator (CCW)', 'Stacker', 'Storage', 'Switch', 'Trash', 'Tunnel', 'Tunnel Tier II', 'Wires'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Transporting shapes over the canvas", player),
-        True_()
+        HasAny(['Belt', 'Compact Merger', 'Compact Splitter'])
     )
 
     world.set_rule(
@@ -458,7 +458,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Rotating clockwise", player),
-        True_()
+        Has('Rotator')
     )
 
     world.set_rule(
@@ -468,22 +468,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Storing shapes", player),
-        True_()
+        Has('Storage')
     )
 
     world.set_rule(
         multiworld.get_entrance("Trashing shapes", player),
-        True_()
+        Has('Trash')
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting with (double) painter", player),
-        True_()
+        HasAny(['Double Painter', 'Painter'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Copying and placing blueprints", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Blueprints'))
     )
 
     world.set_rule(
@@ -493,7 +493,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Using all main buildings", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
@@ -507,18 +507,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Delivering unprocessed", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Cutting in single half", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting in single piece", player),
-        True_()
+        Or(And(True_(), True_()), Has('Quad Cutter'))
     )
 
     world.set_rule(
@@ -538,22 +533,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Painting with a quad painter or stitching", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Why windmill, why?", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Quad painting a half-half shape", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Quad painting a half shape", player),
-        True_()
+        Or(And(True_(), True_()), True_())
     )
 
     world.set_rule(
@@ -698,705 +693,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful half shape", player),
-        True_()
-    )
-    # Location rules
-    world.set_rule(
-        multiworld.get_location("My eyes no longer hurt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Getting into it", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("GPS", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("I need trains", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 1 Additional", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier II", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier II", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier II", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier II", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("It's a mess", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oops", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 5", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 6", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 7", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 8", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 9", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 11", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 12", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 13", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 14", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 15", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 16", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 17", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 18", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 19", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 20 Additional", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 20 Additional 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 20", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 21", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 22", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 23", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 24", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 25", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wires", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Goal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier III", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier III", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier III", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier III", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier IV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier IV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier IV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier IV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier V", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier V", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier V", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier V", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Faster", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier VI", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier VI", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier VI", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier VI", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier VII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier VII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier VII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier VII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belt Upgrade Tier VIII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Miner Upgrade Tier VIII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Processors Upgrade Tier VIII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painting Upgrade Tier VIII", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Even faster", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Painter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cutter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rotater", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wait, they stack?", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stack overflow", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Get rid of them", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Now it's easy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copy-Pasta", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Computer Guy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The next dimension", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Perfectionist", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The logo!", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("To the moon", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("It's piling up", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("I'll use it later", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("I've seen that before ...", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Memories from the past", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Preparing to launch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("SpaceY", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Efficiency 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Branding specialist 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Efficiency 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Branding specialist 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 22", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 25", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 10", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 17", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 7", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 20", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 13", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 14", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 24", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 8", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 9", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 18", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 36", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 11", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 12", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 19", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 21", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 23", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 29", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 31", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 32", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 6", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 15", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 27", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 30", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 33", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 34", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 35", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 38", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 40", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 41", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 42", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 43", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 44", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 45", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 46", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 47", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 48", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 16", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 5", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 37", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 49", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 50", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 26", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 28", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shapesanity 39", player),
         True_()
     )

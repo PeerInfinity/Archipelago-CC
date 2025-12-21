@@ -143,6 +143,7 @@ class FactorioWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = FactorioWorldGenOptions
     options: FactorioWorldGenOptions
 
+    origin_region_name: str = "Nauvis"
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, Has, HasAll, HasAny
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -132,307 +132,122 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Heat Man Stage", player),
-        True_()
+        And(HasAll(['Heat Man Access Codes']), Has('Item 2 - Rocket'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Air Man Stage", player),
-        True_()
+        HasAll(['Air Man Access Codes'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wood Man Stage", player),
-        True_()
+        HasAll(['Wood Man Access Codes'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bubble Man Stage", player),
-        True_()
+        HasAll(['Bubble Man Access Codes'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Quick Man Stage", player),
-        True_()
+        And(HasAll(['Quick Man Access Codes']), Has('Time Stopper'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Flash Man Stage", player),
-        True_()
+        HasAll(['Flash Man Access Codes'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Metal Man Stage", player),
-        True_()
+        HasAll(['Metal Man Access Codes'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Crash Man Stage", player),
-        True_()
+        HasAll(['Crash Man Access Codes'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 1", player),
-        True_()
+        HasAll(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 2", player),
-        True_()
+        HasAll(['Wily Stage 1 - Completed'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 3", player),
-        True_()
+        HasAll(['Wily Stage 2 - Completed'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 4", player),
-        True_()
+        HasAll(['Wily Stage 3 - Completed'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 5", player),
-        True_()
+        HasAll(['Wily Stage 4 - Completed'])
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 6", player),
-        True_()
+        HasAll(['Wily Stage 5 - Completed'])
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Heat Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Atomic Fire - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Item 1 - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Heat Man Stage - 1-Up", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Air Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Air Shooter - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Item 2 - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wood Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Leaf Shield - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bubble Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bubble Lead - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quick Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quick Boomerang - Received", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Quick Man Stage - 1-Up 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quick Man Stage - E-Tank", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quick Man Stage - 1-Up 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quick Man Stage - 1-Up 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flash Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Time Stopper - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Item 3 - Received", player),
-        True_()
+        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
     )
 
     world.set_rule(
         multiworld.get_location("Flash Man Stage - 1-Up", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flash Man Stage - E-Tank", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Blade - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Man Stage - E-Tank 1", player),
-        True_()
+        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
     )
 
     world.set_rule(
         multiworld.get_location("Metal Man Stage - 1-Up", player),
-        True_()
+        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket'])
     )
 
     world.set_rule(
         multiworld.get_location("Metal Man Stage - E-Tank 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Crash Man - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Crash Bomber - Received", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Crash Man Stage - E-Tank", player),
-        True_()
+        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket'])
     )
 
     world.set_rule(
         multiworld.get_location("Crash Man Stage - 1-Up", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mecha Dragon - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 1 - Completed", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 1 - 1-Up", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Picopico-kun - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 2 - Completed", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 2 - E-Tank 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 2 - 1-Up 1", player),
-        True_()
+        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 2 - 1-Up 2", player),
-        True_()
+        Has('Crash Bomber')
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 2 - E-Tank 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Guts Tank - Defeated", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 3 - Completed", player),
-        True_()
+        Has('Crash Bomber')
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 3 - E-Tank", player),
-        True_()
+        Has('Crash Bomber')
     )
 
     world.set_rule(
         multiworld.get_location("Boobeam Trap - Defeated", player),
-        True_()
+        And(HasAny(['Crash Bomber']), Has('Crash Bomber'))
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 4 - Completed", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 4 - 1-Up 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wily Stage 4 - E-Tank 1", player),
-        True_()
+        And(HasAny(['Crash Bomber']), Has('Crash Bomber'))
     )
 
     world.set_rule(
@@ -447,5 +262,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),
-        True_()
+        HasAny(['Bubble Lead'])
     )

@@ -137,6 +137,7 @@ class SubnauticaWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = SubnauticaWorldGenOptions
     options: SubnauticaWorldGenOptions
 
+    origin_region_name: str = "Planet 4546B"
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachRegion, False_, Has, HasAll, HasAny, Not, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -215,203 +215,128 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Tutorial", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Start Game", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Lake desolation -> Lower lake desolation", player),
-        True_()
+        Or(False_(), True_(), Has('Talaria Attachment'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Upper lake desolation", player),
-        True_()
+        And(True_(), CanReachRegion('Upper Lake Serene'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Skeleton Shaft", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upper lake desolation -> Lake desolation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upper lake desolation -> Eastern lake desolation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lower lake desolation -> Lake desolation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lower lake desolation -> Eastern lake desolation", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Eastern lake desolation -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Eastern lake desolation -> Library", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Eastern lake desolation -> Lower lake desolation", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Eastern lake desolation -> Upper lake desolation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Library -> Eastern lake desolation", player),
-        True_()
+        And(True_(), CanReachRegion('Upper Lake Serene'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Library top", player),
-        True_()
+        Or(True_(), Has('Talaria Attachment'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Varndagroth tower left", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Library top -> Library", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Varndagroth tower left -> Library", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Varndagroth tower right (upper)", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Varndagroth tower right (lower)", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Sealed Caves (Sirens)", player),
-        True_()
+        And(True_(), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Refugee Camp", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Varndagroth tower right (upper) -> Varndagroth tower left", player),
-        True_()
+        And(Has('Timespinner Spindle'), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (upper) -> Varndagroth tower right (elevator)", player),
-        True_()
+        Has('Elevator Keycard')
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Varndagroth tower left", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Varndagroth tower right (elevator)", player),
-        True_()
+        Has('Elevator Keycard')
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Sealed Caves (Sirens)", player),
-        True_()
+        And(True_(), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Military Fortress", player),
-        True_()
+        HasAll(['Killed Aelana', 'Killed Maw', 'Killed Twins'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Varndagroth tower right (elevator) -> Varndagroth tower right (upper)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Varndagroth tower right (elevator) -> Varndagroth tower right (lower)", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Varndagroth tower left", player),
-        True_()
+        Has('Elevator Keycard')
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Varndagroth tower right (lower)", player),
-        True_()
+        Has('Elevator Keycard')
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Space time continuum", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Varndagroth tower right (lower)", player),
-        True_()
+        HasAll(['Killed Aelana', 'Killed Maw', 'Killed Twins'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Temporal Gyre", player),
-        True_()
+        And(True_(), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Military Fortress (hangar)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Military Fortress (hangar) -> Military Fortress", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
@@ -425,173 +350,108 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Lab Entrance -> Military Fortress (hangar)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Main Lab -> Lab Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Main Lab -> Lab Research", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> The lab (upper)", player),
-        True_()
+        And(True_(), Or(Not(True_()), Has('Lab Access Genza')))
     )
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Main Lab", player),
-        True_()
+        And(True_(), Has('Lab Access Genza'))
     )
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Emperors tower (courtyard)", player),
-        True_()
+        Or(And(True_(), Has('Talaria Attachment')), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Ancient Pyramid (entrance)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Emperors tower (courtyard) -> The lab (upper)", player),
-        True_()
+        HasAll(['Timespinner Gear 1', 'Timespinner Gear 2', 'Timespinner Gear 3', 'Timespinner Spindle', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Emperors tower (courtyard) -> Emperors tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Emperors tower -> Emperors tower (courtyard)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skeleton Shaft -> Lake desolation", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Skeleton Shaft -> Sealed Caves (Xarion)", player),
-        True_()
+        Has('Security Keycard A')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skeleton Shaft -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sealed Caves (Xarion) -> Skeleton Shaft", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Xarion) -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Refugee Camp -> Forest", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Refugee Camp -> Library", player),
-        True_()
+        And(True_(), Or(True_(), True_()), HasAll(['Timespinner Spindle', 'Timespinner Wheel']))
     )
 
     world.set_rule(
         multiworld.get_entrance("Refugee Camp -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest -> Refugee Camp", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Left Side forest Caves", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest -> Caves of Banishment (Sirens)", player),
-        True_()
+        Or(False_(), True_(), Has('Talaria Attachment'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Castle Ramparts", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Left Side forest Caves -> Forest", player),
-        True_()
+        Or(True_(), Not(True_()), Has('Drawbridge Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Side forest Caves -> Upper Lake Serene", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Side forest Caves -> Lower Lake Serene", player),
-        True_()
+        Or(False_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Side forest Caves -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upper Lake Serene -> Left Side forest Caves", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Upper Lake Serene -> Lower Lake Serene", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lower Lake Serene -> Upper Lake Serene", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lower Lake Serene -> Left Side forest Caves", player),
-        True_()
+        Or(False_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lower Lake Serene -> Caves of Banishment (upper)", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (upper) -> Lower Lake Serene", player),
-        True_()
+        Or(False_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (upper) -> Caves of Banishment (Maw)", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (upper) -> Space time continuum", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
@@ -601,132 +461,82 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Caves of Banishment (Sirens)", player),
-        True_()
+        HasAny(['Gas Mask', 'Talaria Attachment'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Caves of Banishment (Flooded)", player),
-        True_()
+        Or(False_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Caves of Banishment (Sirens) -> Forest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Castle Ramparts -> Forest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Castle Ramparts -> Castle Keep", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Ramparts -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Castle Keep -> Castle Ramparts", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Castle Basement", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Royal towers (lower)", player),
-        True_()
+        And(True_(), Or(True_(), Not(True_())))
     )
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Royal towers (lower) -> Castle Keep", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Royal towers (lower) -> Royal towers", player),
-        True_()
+        Or(True_(), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Royal towers (lower) -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Royal towers -> Royal towers (lower)", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Royal towers -> Royal towers (upper)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Royal towers (upper) -> Royal towers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Temporal Gyre -> Military Fortress", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (entrance) -> Ancient Pyramid (left)", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (entrance) -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Ancient Pyramid (left) -> Ancient Pyramid (entrance)", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (left) -> Ancient Pyramid (right)", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (left) -> Space time continuum", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (right) -> Ancient Pyramid (left)", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (right) -> Space time continuum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Teleport back to start", player),
-        True_()
+        Or(False_(), Has('Twin Pyramid Key'))
     )
 
     world.set_rule(
@@ -816,7 +626,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (entrance)", player),
-        True_()
+        Or(And(True_(), Not(True_())), True_(), True_())
     )
 
     world.set_rule(
@@ -825,338 +635,163 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Tutorial: Yo Momma 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tutorial: Yo Momma 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation: Starter chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation: Starter chest 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation: Starter chest 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Lower): Timespinner Wheel room", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Lake Desolation: Forget me not chest", player),
-        True_()
+        And(True_(), CanReachRegion('Upper Lake Serene'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Lower): Chicken chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Upper): Oxygen recovery room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Upper): Secret room", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Double jump cave platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Upper): Double jump cave floor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Upper): Sparrow chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Upper): Crash site pedestal", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 1", player),
-        True_()
+        Has('Killed Maw')
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation (Lower): Not so secret room", player),
-        True_()
+        Has('Killed Maw')
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Tank chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Desolation: Kitty Boss", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Basement", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Warp gate", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Librarian", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Reading nook chest", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: Storage room chest 1", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: Storage room chest 2", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: Storage room chest 3", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C', 'Security Keycard D'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 2 (Lachiem)", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 1 (Windaria)", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 3 (Emperor Nuvius)", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Library: V terminal 1 (War of the Sisters)", player),
-        True_()
+        HasAll(['Library Keycard V', 'Tablet'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: V terminal 2 (Lake Desolation Map)", player),
-        True_()
+        HasAll(['Library Keycard V', 'Tablet'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: V terminal 3 (Vilete)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Backer room chest 5", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Backer room chest 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Backer room chest 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Backer room chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Library: Backer room chest 1", player),
-        True_()
+        HasAll(['Library Keycard V', 'Tablet'])
     )
 
     world.set_rule(
         multiworld.get_location("Library: Backer room terminal (Vandagray Metropolis Map)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Varndagroth Towers (Left): Elevator Key not required", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Varndagroth Towers (Left): Ye olde Timespinner", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Left): Bottom floor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Varndagroth Towers (Left): Air vents secret", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C'])
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Left): Elevator chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Varndagroth Towers: Bridge", player),
-        True_()
+        Has('Elevator Keycard')
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Elevator card chest", player),
-        True_()
+        Or(True_(), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Air vents right chest", player),
-        True_()
+        Or(True_(), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Air vents left chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Varndagroth Towers (Right): Bottom floor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Varndagroth Towers (Right): Elevator chest", player),
-        True_()
+        Or(True_(), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Varndagroth", player),
-        True_()
+        HasAny(['Security Keycard A', 'Security Keycard B', 'Security Keycard C'])
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Spider Hell", player),
-        True_()
+        Has('Security Keycard A')
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Medbay terminal (Bleakness Research)", player),
-        True_()
+        And(True_(), Has('Tablet'))
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Water hook", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Siren room underwater right", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Siren room underwater left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Sirens): Cave after sirens chest 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Sirens): Cave after sirens chest 2", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: Bomber chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Military Fortress: Close combat room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Military Fortress: Soldiers bridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Military Fortress: Giantess room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Military Fortress: Giantess bridge", player),
-        True_()
+        And(True_(), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: B door chest 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: B door chest 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: Pedestal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lab: Coffee break", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Lower trash right", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
@@ -1166,37 +801,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Below lab entrance", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Trash jump room", player),
-        True_()
+        Or(True_(), Not(True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Experiment #13", player),
-        True_()
+        Or(Not(True_()), Has('Lab Access Experiment'))
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Sentry platform terminal (Origins)", player),
-        True_()
+        And(Or(True_(), Not(True_()), Has('Lab Access Genza')), Has('Tablet'))
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Experiment 13 terminal (W.R.E.C Farewell)", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Left terminal (Biotechnology)", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Dynamo Works", player),
-        True_()
+        Or(And(True_(), Has('Lab Access Dynamo')), Not(True_()))
     )
 
     world.set_rule(
@@ -1206,42 +841,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Middle terminal (Amadeus Laboratory Map)", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Right terminal (Experiment #11)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lab: Genza (Blob Mom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lab: Download and chest room chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lab: Lab secret", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Download and chest room terminal (Experiment #13)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Emperor's Tower: Courtyard bottom chest", player),
-        True_()
+        Has('Tablet')
     )
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Courtyard floor secret", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1250,501 +865,236 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Emperor's Tower: Galactic sage room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Emperor's Tower: Bottom right tower", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Emperor's Tower: Wayyyy up there", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Emperor's Tower: Left tower balcony", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Emperor's Tower: Emperor's Chambers chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Emperor's Tower: Emperor's Chambers pedestal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Killed Emperor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Xarion): Skeleton", player),
-        True_()
+        Or(And(True_(), Has('Timespinner Wheel')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Shroom jump room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Xarion): Double shroom room", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Jacksquat room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Xarion): Below Jacksquat room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Xarion): Secret room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sealed Caves (Xarion): Bottom left room", player),
-        True_()
+        Or(And(True_(), Has('Talaria Attachment')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Last chance before Xarion", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Xarion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Refugee Camp: Neliste's Bra", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Refugee Camp: Storage chest 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Refugee Camp: Storage chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Refugee Camp: Storage chest 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest: Refugee camp roof", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Bat jump ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest: Green platform secret", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest: Rats guarded chest", player),
-        True_()
+        Or(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Waterfall chest 1", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Waterfall chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest: Batcave", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: In the moat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest: Before Serene single bat cave", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Under the eels", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Past the eels", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Upper): Rat nest", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Upper): Double jump cave platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Upper): Double jump cave floor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Upper): Cave secret", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene: Before Big Bird", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene: Behind the vines", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene: Pyramid keys room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Upper): Chicken ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Lower): Deep dive", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Lower): Water spikes room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Serene (Lower): Underwater secret", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin'])
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): T chest", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Underwater pedestal", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Shroom jump room", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Secret room", player),
-        True_()
+        And(True_(), Or(True_(), Has('Water Mask')))
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Bottom left room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caves of Banishment (Maw): Single shroom room", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 1", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 2", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 3", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 4", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Pedestal", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Last chance before Maw", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Plasma Crystal", player),
-        True_()
+        HasAny(['Gas Mask', 'Talaria Attachment'])
     )
 
     world.set_rule(
         multiworld.get_location("Killed Maw", player),
-        True_()
+        Has('Gas Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Mineshaft", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caves of Banishment (Sirens): Wyvern room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caves of Banishment (Sirens): Siren room above water chest", player),
-        True_()
+        HasAny(['Gas Mask', 'Talaria Attachment'])
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater left chest", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater right chest", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater right ground", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Water hook", player),
-        True_()
+        Has('Water Mask')
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: Bomber chest", player),
-        True_()
+        Or(True_(), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: Freeze the engineer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Ramparts: Giantess guarded room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Ramparts: Knight and archer guarded room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Ramparts: Pedestal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Keep: Under the twins", player),
-        True_()
+        Or(True_(), Has('Talaria Attachment'))
     )
 
     world.set_rule(
         multiworld.get_location("Killed Twins", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Advisor jump", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Twins", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall', 'Succubus Hairpin', 'Timespinner Wheel'])
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Royal guard tiny room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Basement: Secret pedestal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Basement: Clean the castle basement", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Basement: Giantess guarded chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Basement: Omelette chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Basement: Just an egg", player),
-        True_()
+        Or(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Yas queen room", player),
-        True_()
+        HasAny(['Plasma Geyser', 'Plasma Orb', 'Royal Ring'])
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Floor secret", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Pre-climb gap", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Long balcony", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Past bottom struggle juggle", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Bottom struggle juggle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Right tower freebie", player),
-        True_()
+        Or(And(True_(), Has('Timespinner Wheel')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Top struggle juggle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: No struggle required", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Left tower small balcony", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Left tower royal guard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Before Aelana", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Killed Aelana", player),
-        True_()
+        Or(And(True_(), Has('Timespinner Wheel')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Aelana's attic", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Aelana's chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Royal Towers: Aelana's pedestal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ancient Pyramid: Why not it's right there", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ancient Pyramid: Conviction guarded room", player),
-        True_()
+        HasAny(['Celestial Sash', 'Lightwall'])
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Pit secret room", player),
-        True_()
+        And(True_(), Or(True_(), Has('Water Mask')))
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Regret chest", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Nightmare Door chest", player),
-        True_()
+        Or(True_(), Has('Water Mask'))
     )
 
     world.set_rule(
         multiworld.get_location("Killed Nightmare", player),
-        True_()
+        And(Or(True_(), Has('Water Mask')), HasAll(['Timespinner Gear 1', 'Timespinner Gear 2', 'Timespinner Gear 3', 'Timespinner Spindle', 'Timespinner Wheel']))
     )

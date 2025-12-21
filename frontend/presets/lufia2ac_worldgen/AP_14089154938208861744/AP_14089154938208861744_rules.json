@@ -35,9 +35,12 @@
             "name": "FinalFloorEntrance",
             "connected_region": "FinalFloor",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             }
           }
         ],
@@ -126,9 +129,12 @@
             "name": "Blue chest 6",
             "id": 11272197,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 1
+              }
             },
             "item": {
               "name": "Boom turban",
@@ -142,9 +148,12 @@
             "name": "Blue chest 7",
             "id": 11272198,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 1
+              }
             },
             "item": {
               "name": "Snow sword",
@@ -158,9 +167,12 @@
             "name": "Blue chest 8",
             "id": 11272199,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 1
+              }
             },
             "item": {
               "name": "Agony helm",
@@ -174,9 +186,12 @@
             "name": "Blue chest 9",
             "id": 11272200,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 1
+              }
             },
             "item": {
               "name": "Aqua helm",
@@ -190,9 +205,12 @@
             "name": "Blue chest 10",
             "id": 11272201,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 1
+              }
             },
             "item": {
               "name": "Dragon spear",
@@ -206,9 +224,12 @@
             "name": "Blue chest 11",
             "id": 11272202,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 2
+              }
             },
             "item": {
               "name": "Dark mirror",
@@ -222,9 +243,12 @@
             "name": "Blue chest 12",
             "id": 11272203,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 2
+              }
             },
             "item": {
               "name": "Flame shield",
@@ -238,9 +262,12 @@
             "name": "Blue chest 13",
             "id": 11272204,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 2
+              }
             },
             "item": {
               "name": "Dragon spear",
@@ -254,9 +281,12 @@
             "name": "Blue chest 14",
             "id": 11272205,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 2
+              }
             },
             "item": {
               "name": "Boom turban",
@@ -270,9 +300,12 @@
             "name": "Blue chest 15",
             "id": 11272206,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 2
+              }
             },
             "item": {
               "name": "Dark mirror",
@@ -286,9 +319,12 @@
             "name": "Blue chest 16",
             "id": 11272207,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 3
+              }
             },
             "item": {
               "name": "Air whip",
@@ -302,9 +338,12 @@
             "name": "Blue chest 17",
             "id": 11272208,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 3
+              }
             },
             "item": {
               "name": "Agony helm",
@@ -318,9 +357,12 @@
             "name": "Blue chest 18",
             "id": 11272209,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 3
+              }
             },
             "item": {
               "name": "Sizzle sword",
@@ -334,9 +376,12 @@
             "name": "Blue chest 19",
             "id": 11272210,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 3
+              }
             },
             "item": {
               "name": "Gades blade",
@@ -350,9 +395,12 @@
             "name": "Blue chest 20",
             "id": 11272211,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 3
+              }
             },
             "item": {
               "name": "Dia ring",
@@ -366,9 +414,12 @@
             "name": "Blue chest 21",
             "id": 11272212,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Catfish jwl.",
@@ -382,9 +433,12 @@
             "name": "Blue chest 22",
             "id": 11272213,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Dragon spear",
@@ -398,9 +452,12 @@
             "name": "Blue chest 23",
             "id": 11272214,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Agony helm",
@@ -414,9 +471,12 @@
             "name": "Blue chest 24",
             "id": 11272215,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Sky sword",
@@ -430,9 +490,12 @@
             "name": "Blue chest 25",
             "id": 11272216,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Earth jewel",
@@ -463,9 +526,12 @@
             "name": "Chest access 11-15",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 1
+              }
             },
             "item": {
               "name": "Progressive chest access",
@@ -480,9 +546,12 @@
             "name": "Chest access 16-20",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 2
+              }
             },
             "item": {
               "name": "Progressive chest access",
@@ -497,9 +566,12 @@
             "name": "Chest access 21-25",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 3
+              }
             },
             "item": {
               "name": "Progressive chest access",
@@ -514,9 +586,12 @@
             "name": "Iris treasure 4",
             "id": 11273119,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris armor",
@@ -530,9 +605,12 @@
             "name": "Iris treasure 3",
             "id": 11273118,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris helmet",
@@ -546,9 +624,12 @@
             "name": "Iris treasure 6",
             "id": 11273121,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris jewel",
@@ -562,9 +643,12 @@
             "name": "Iris treasure 8",
             "id": 11273123,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris pot",
@@ -578,9 +662,12 @@
             "name": "Iris treasure 5",
             "id": 11273120,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris ring",
@@ -594,9 +681,12 @@
             "name": "Iris treasure 2",
             "id": 11273117,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris shield",
@@ -610,9 +700,12 @@
             "name": "Iris treasure 7",
             "id": 11273122,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris staff",
@@ -626,9 +719,12 @@
             "name": "Iris treasure 1",
             "id": 11273116,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris sword",
@@ -642,9 +738,12 @@
             "name": "Iris treasure 9",
             "id": 11273124,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Iris tiara",
@@ -681,9 +780,12 @@
             "name": "Boss",
             "id": 11272642,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Progressive chest access",
+                "count": 4
+              }
             },
             "item": {
               "name": "Ancient key",

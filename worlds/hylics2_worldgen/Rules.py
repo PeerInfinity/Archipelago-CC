@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, Has, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -149,23 +149,8 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Menu New Game", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Afterlife To Waynehouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Afterlife To New Muldul", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Afterlife To Viewax", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -185,7 +170,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Foglast", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -195,17 +180,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Hylemxylem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Waynehouse To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Waynehouse To Afterlife", player),
-        True_()
+        And(And(True_(), True_()), True_())
     )
 
     world.set_rule(
@@ -214,28 +189,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("World To Waynehouse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("World To New Muldul", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("World To Drill Castle", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("World To Viewax", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Arcade Island", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -260,82 +220,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("World To Foglast", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Sage Airship", player),
-        True_()
+        And(And(True_(), True_(), True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Hylemxylem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("New Muldul To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("New Muldul To Afterlife", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("New Muldul To New Muldul Vault", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("New Muldul Vault To New Muldul", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Viewax To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Viewax To Afterlife", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Airship To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arcade Island To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("TV Island To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("TV Island To Afterlife", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Juice Ranch To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Shield Facility To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Shield Facility To Afterlife", player),
-        True_()
+        And(And(True_(), True_()), True_())
     )
 
     world.set_rule(
@@ -349,122 +244,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Worm Pod To Afterlife", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Foglast To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Foglast To Afterlife", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Drill Castle To World", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Drill Castle To Sage Labyrinth", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sage Labyrinth To Drill Castle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sage Labyrinth To Afterlife", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sage Airship To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hylemxylem To World", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hylemxylem To Afterlife", player),
         True_()
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Afterlife: Mangled Wayne", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Afterlife: Jar near Mangled Wayne", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Afterlife: Jar under Pool", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Afterlife: TV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waynehouse: Toilet", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waynehouse: Basement Pot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waynehouse: Basement Pot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waynehouse: Basement Pot 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waynehouse: Sarcophagus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waynehouse: TV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("New Muldul: Shop Ceiling Pot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("New Muldul: Shop Ceiling Pot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("New Muldul: Flag Banana", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("New Muldul: Pot near Vault", player),
         True_()
     )
 
@@ -474,22 +259,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("New Muldul: Underground Pot", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("New Muldul: Underground Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("New Muldul: Juice Trade", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("New Muldul: Basement Suitcase", player),
         True_()
     )
 
@@ -504,18 +274,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("New Muldul: Talk to Pongorma", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("New Muldul: Rescued Blerol 1", player),
-        True_()
+        Or(And(And(True_(), True_()), Or(True_(), True_())), True_())
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Rescued Blerol 2", player),
-        True_()
+        Or(And(And(True_(), True_()), Or(True_(), True_())), True_())
     )
 
     world.set_rule(
@@ -539,26 +304,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Viewax's Edifice: Fountain Banana", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Viewax's Edifice: Dedusmuln's Suitcase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Viewax's Edifice: Dedusmuln's Campfire", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Viewax's Edifice: Talk to Dedusmuln", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Viewax's Edifice: Canopic Jar", player),
         True_()
     )
@@ -570,7 +315,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Shielded Key", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -585,7 +330,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Tower Chest", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -655,96 +400,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: TV", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Airship: Talk to Somsnosa", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade Island: Shielded Key", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade 2: Flying Machine Banana", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade 2: Paper Cup Detour", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade 2: Peak Muscle Applique", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade 2: Double Banana 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade 2: Double Banana 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arcade 2: Cave Burrito", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("TV Island: TV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: Juice 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: Juice 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: Juice 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: Ledge Rancher", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: Battle with Somsnosa", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: Fridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juice Ranch: TV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Worm Pod: Key", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: West Sarcophagus", player),
         True_()
     )
 
@@ -775,47 +435,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Foglast: Roof Sarcophagus", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Under Lair Sarcophagus 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Under Lair Sarcophagus 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Under Lair Sarcophagus 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Sage Sarcophagus", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Sage Item 1", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Sage Item 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: TV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Drill Castle: Ledge Banana", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -834,93 +489,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Drill Castle: Roof Banana", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Drill Castle: TV", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_location("Sage Labyrinth: 1F Chest Near Fountain", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: 1F Hidden Sarcophagus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: 1F Four Statues Chest 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: 1F Four Statues Chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B1 Double Chest 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B1 Double Chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B1 Single Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B1 Enemy Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B1 Hidden Sarcophagus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B1 Hole Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B2 Hidden Sarcophagus 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: B2 Hidden Sarcophagus 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: 2F Sarcophagus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Boss Secret Chest 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Boss Secret Chest 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Sage Labyrinth: Motor Hunter Sarcophagus", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -954,47 +529,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Sage Airship: Bottom Level Pot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Airship: Flesh Pot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Airship: Top Jar", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Sage Airship: TV", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Jar", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Lower Reservoir Key", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Fountain Banana", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: East Island Banana", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: East Island Chest", player),
         True_()
     )
 
@@ -1065,5 +600,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Defeat Gibby", player),
-        True_()
+        And(Has('UPPER CHAMBER KEY'), Has('VESSEL ROOM KEY'))
     )

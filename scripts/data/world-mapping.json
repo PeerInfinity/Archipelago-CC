@@ -856,7 +856,7 @@
   },
   "Paint": {
     "exporter_path": "exporter/games/paint.py",
-    "exporter_size": 7350,
+    "exporter_size": 8602,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

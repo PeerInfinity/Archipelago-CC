@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Overworld", "Top Left Room", "Bottom Right Room", "Right Room", "Final Boss Room"]
+    region_names = ["Overworld", "Top Left Room", "Bottom Right Room", "Right Room", "Final Boss Room"]
 
     regions = {}
     for region_name in region_names:
@@ -43,7 +43,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Overworld"], "MenuToStart")
     _create_entrance(regions["Overworld"], regions["Bottom Right Room"], "Overworld to Bottom Right Room")
     _create_entrance(regions["Overworld"], regions["Right Room"], "Overworld to Right Room")
     _create_entrance(regions["Overworld"], regions["Top Left Room"], "Overworld to Top Left Room")
