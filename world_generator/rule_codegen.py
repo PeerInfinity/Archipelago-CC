@@ -1,5 +1,5 @@
 """
-Rule code generator - converts CC format rules to Python Rule Builder code.
+Rule code generator - converts AST format rules to Python Rule Builder code.
 
 This module transforms JSON rule definitions into Python source code
 that uses the Rule Builder pattern.
@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 
 
 class RuleCodeGenerator:
-    """Generates Python Rule Builder code from CC format rules."""
+    """Generates Python Rule Builder code from AST format rules."""
 
     def __init__(self, game_name: str = "", settings: Dict[str, Any] = None) -> None:
         self.required_imports: Set[str] = set()
@@ -20,7 +20,7 @@ class RuleCodeGenerator:
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
         self.known_helpers: Set[str] = set()
-        self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> CC format body
+        self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
 
     def reset(self) -> None:
@@ -51,7 +51,7 @@ class RuleCodeGenerator:
         rules. The frontend will look them up from the helpers dict instead.
 
         Args:
-            rule: Rule dict in CC format
+            rule: Rule dict in AST format
             visited: Set of helper names already visited (for cycle detection)
             depth: Current expansion depth. Only expand at depth 0 (top level).
 
@@ -100,7 +100,7 @@ class RuleCodeGenerator:
                             if i < len(args):
                                 param_to_arg[param] = args[i]
                             elif param in defaults:
-                                # Convert default value to CC format constant
+                                # Convert default value to AST format constant
                                 param_to_arg[param] = {'type': 'constant', 'value': defaults[param]}
                         # Substitute parameter references in the expanded body
                         if param_to_arg:
@@ -474,10 +474,10 @@ class RuleCodeGenerator:
 
     def generate(self, rule: Optional[Dict[str, Any]]) -> str:
         """
-        Convert a CC format rule to Python Rule Builder expression.
+        Convert an AST format rule to Python Rule Builder expression.
 
         Args:
-            rule: Rule dict in CC format, or None
+            rule: Rule dict in AST format, or None
 
         Returns:
             Python expression string using Rule Builder classes
@@ -499,7 +499,34 @@ class RuleCodeGenerator:
             else:
                 return repr(rule)
 
-        rule_type = rule.get('type', '')
+        # Check for 'type' key (AST format) or 'rule' key (Rule Builder format)
+        rule_type = rule.get('type', '') or ''
+
+        # If no 'type', check for 'rule' key (Rule Builder format from exporter)
+        if not rule_type:
+            rb_rule = rule.get('rule', '')
+            if rb_rule:
+                # Map Rule Builder format rule names to converter types
+                rb_to_type = {
+                    'And': 'and',
+                    'Or': 'or',
+                    'Not': 'not',
+                    'Has': 'item_check',
+                    'HasAll': 'group_check',
+                    'HasAny': 'group_check',
+                    'HasGroup': 'group_check',
+                    'Count': 'count_check',
+                    'CanReach': 'can_reach',
+                    'CanReachLocation': 'location_check',
+                    'True_': 'constant',
+                    'False_': 'constant',
+                    'Helper': 'helper',
+                }
+                rule_type = rb_to_type.get(rb_rule, '')
+
+                # Convert Rule Builder format to Python code
+                if rule_type:
+                    return self._convert_rule_builder_format(rule, rb_rule, rule_type)
 
         # Dispatch based on rule type
         converters = {
@@ -533,6 +560,99 @@ class RuleCodeGenerator:
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
+        return 'True_()'
+
+    def _convert_rule_builder_format(self, rule: Dict[str, Any], rb_rule: str, rule_type: str) -> str:
+        """Convert Rule Builder format rules (with 'rule' key) to Python expressions."""
+        args = rule.get('args', {})
+        children = rule.get('children', [])
+
+        if rb_rule == 'True_':
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if rb_rule == 'False_':
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if rb_rule == 'Has':
+            item_name = args.get('item_name', '')
+            self.required_imports.add('Has')
+            return f'Has({repr(item_name)})'
+
+        if rb_rule == 'And':
+            if not children:
+                self.required_imports.add('True_')
+                return 'True_()'
+            child_exprs = [self._convert_rule(child) for child in children]
+            self.required_imports.add('And')
+            return f'And({", ".join(child_exprs)})'
+
+        if rb_rule == 'Or':
+            if not children:
+                self.required_imports.add('False_')
+                return 'False_()'
+            child_exprs = [self._convert_rule(child) for child in children]
+            self.required_imports.add('Or')
+            return f'Or({", ".join(child_exprs)})'
+
+        if rb_rule == 'Not':
+            if children:
+                child_expr = self._convert_rule(children[0])
+            else:
+                child_expr = 'True_()'
+                self.required_imports.add('True_')
+            self.required_imports.add('Not')
+            return f'Not({child_expr})'
+
+        if rb_rule == 'Count':
+            item_name = args.get('item_name', '')
+            count = args.get('count', 1)
+            self.required_imports.add('Count')
+            return f'Count({repr(item_name)}, {count})'
+
+        if rb_rule == 'HasAll':
+            items = args.get('items', [])
+            if not items:
+                self.required_imports.add('True_')
+                return 'True_()'
+            self.required_imports.add('HasAll')
+            return f'HasAll({repr(items)})'
+
+        if rb_rule == 'HasAny':
+            items = args.get('items', [])
+            if not items:
+                self.required_imports.add('False_')
+                return 'False_()'
+            self.required_imports.add('HasAny')
+            return f'HasAny({repr(items)})'
+
+        if rb_rule == 'HasGroup':
+            group = args.get('group', '')
+            self.required_imports.add('HasGroup')
+            return f'HasGroup({repr(group)})'
+
+        if rb_rule == 'CanReach':
+            region = args.get('region', '')
+            self.required_imports.add('CanReach')
+            return f'CanReach({repr(region)})'
+
+        if rb_rule == 'CanReachLocation':
+            location = args.get('location', '')
+            self.required_imports.add('CanReachLocation')
+            return f'CanReachLocation({repr(location)})'
+
+        if rb_rule == 'Helper':
+            # Convert to the format expected by _convert_helper
+            helper_rule = {
+                'type': 'helper',
+                'name': args.get('name', ''),
+                'args': args.get('args', [])
+            }
+            return self._convert_helper(helper_rule)
+
+        # Unknown Rule Builder rule - return True_() as placeholder
+        self.required_imports.add('True_')
         return 'True_()'
 
     def _convert_name(self, rule: Dict[str, Any]) -> str:
@@ -810,7 +930,7 @@ class RuleCodeGenerator:
 
         first_arg = args[0]
 
-        # Handle 'set' type with 'elements' array (CC format)
+        # Handle 'set' type with 'elements' array (AST format)
         # Example: {"type": "set", "elements": [{"type": "constant", "value": "Item1"}, ...]}
         if first_arg.get('type') == 'set':
             elements = first_arg.get('elements', [])
@@ -1340,12 +1460,12 @@ class RuleCodeGenerator:
         return f'Conditional(test={test_code}, if_true={if_true_code}, if_false={if_false_code})'
 
 
-def cc_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:
+def ast_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:
     """
-    Convert a CC format rule to Python Rule Builder expression.
+    Convert an AST format rule to Python Rule Builder expression.
 
     Args:
-        rule: Rule dict in CC format
+        rule: Rule dict in AST format
 
     Returns:
         Tuple of (python_expression, required_imports)
@@ -1363,14 +1483,18 @@ def is_trivial_rule(rule: Optional[Dict[str, Any]]) -> bool:
         return True
     if not isinstance(rule, dict):
         return rule is True
+    # Check for type='constant' format (older format)
     if rule.get('type') == 'constant' and rule.get('value') is True:
+        return True
+    # Check for rule='True_' format (Rule Builder format)
+    if rule.get('rule') == 'True_':
         return True
     return False
 
 
 class HelperCodeGenerator:
     """
-    Generates Python helper functions from CC format rule definitions.
+    Generates Python helper functions from AST format rule definitions.
 
     This class converts helper function bodies (which are rule definitions)
     into actual Python code that can be executed at runtime.
@@ -2294,9 +2418,9 @@ class HelperCodeGenerator:
         return f"state.prog_items[player].get('{key_escaped}', 0)"
 
     def _expr_sum_of(self, expr: Dict[str, Any]) -> str:
-        """Generate sum() expression from sum_of CC format.
+        """Generate sum() expression from sum_of AST format.
 
-        CC export format: {
+        AST export format: {
             "type": "sum_of",
             "iterator_info": {
                 "target": {...},  // tuple of variable names

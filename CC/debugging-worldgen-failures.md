@@ -343,7 +343,7 @@ print(f'Error: {cv.get(\"error\")}')
 | `world_generator/extractors.py` | Extracts data from rules.json |
 | `world_generator/templates.py` | Generates Python world code |
 | `world_generator/rule_codegen.py` | Converts rules to Python code |
-| `rule_builder/cc_format.py` | Parses CC format rules |
+| `rule_builder/ast_format.py` | Parses AST format rules |
 | `scripts/test/test-world-generator.py` | Test script |
 | `scripts/output/world-generator/test-results-canonical.json` | Canonical mode results |
 | `scripts/output/world-generator/test-results-random.json` | Random mode results |

@@ -21,7 +21,7 @@ from .extractors import (
     extract_locations,
     extract_regions,
 )
-from .rule_codegen import cc_rule_to_python
+from .rule_codegen import ast_rule_to_python
 
 __all__ = [
     'WorldGenerator',
@@ -29,5 +29,5 @@ __all__ = [
     'extract_items',
     'extract_locations',
     'extract_regions',
-    'cc_rule_to_python',
+    'ast_rule_to_python',
 ]

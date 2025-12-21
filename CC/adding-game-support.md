@@ -6,7 +6,7 @@ This guide explains how to expand the world generator to support more games from
 
 The world generator creates standalone Archipelago worlds from `rules.json` files exported by the CC frontend. The process involves:
 
-1. **Rule Parsing**: Converting CC format rules to Rule Builder objects
+1. **Rule Parsing**: Converting AST format rules to Rule Builder objects
 2. **Code Generation**: Generating Python world files from extracted data
 3. **Testing**: Validating the generated world produces equivalent results
 
@@ -56,7 +56,7 @@ import json
 import sys
 sys.path.insert(0, '.')
 from pathlib import Path
-from rule_builder.cc_format import parse_cc_rule, is_cc_format
+from rule_builder.ast_format import parse_ast_rule, is_ast_format
 from rule_builder.rules import RuleWorldMixin
 
 class DummyWorld(RuleWorldMixin):
@@ -82,8 +82,8 @@ print(f'Found {len(rules)} rules')
 failed = []
 for name, rule in rules:
     try:
-        if is_cc_format(rule):
-            parsed = parse_cc_rule(rule, DummyWorld)
+        if is_ast_format(rule):
+            parsed = parse_ast_rule(rule, DummyWorld)
     except Exception as e:
         failed.append((name, str(e)))
         print(f'  ✗ {name}: {e}')
@@ -126,7 +126,7 @@ python scripts/test/test-world-generator.py --include-list "Game Name WorldGen.y
 
 ### Step 4: Add to Test Suite
 
-Update `scripts/test/test_cc_format_parsing.py` to include the new game:
+Update `scripts/test/test_ast_format_parsing.py` to include the new game:
 
 ```python
 games_to_test = [
@@ -140,7 +140,7 @@ games_to_test = [
 ```bash
 git add frontend/presets/game_directory/ frontend/presets/game_directory_worldgen/ \
        frontend/presets/preset_files.json scripts/data/world-mapping.json \
-       scripts/test/test_cc_format_parsing.py worlds/game_directory_worldgen/ \
+       scripts/test/test_ast_format_parsing.py worlds/game_directory_worldgen/ \
        scripts/output/world-generator/test-results.json
 
 git commit -m "Add Game Name support and worldgen world"
@@ -157,8 +157,8 @@ When a game uses an unsupported rule type, you need to add parsing support.
 
 | File | Purpose |
 |------|---------|
-| `rule_builder/cc_format.py` | Parses CC format rules into Rule Builder objects |
-| `world_generator/rule_codegen.py` | Generates Python code from CC format rules |
+| `rule_builder/ast_format.py` | Parses AST format rules into Rule Builder objects |
+| `world_generator/rule_codegen.py` | Generates Python code from AST format rules |
 
 ### Step 1: Understand the Rule Structure
 
@@ -192,13 +192,13 @@ for ex in examples[:5]:
 "
 ```
 
-### Step 2: Add Parser in cc_format.py
+### Step 2: Add Parser in ast_format.py
 
-Add a parsing function in `rule_builder/cc_format.py`:
+Add a parsing function in `rule_builder/ast_format.py`:
 
 ```python
 def _parse_new_rule_type(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
-    """Parse new_rule_type from CC format.
+    """Parse new_rule_type from AST format.
 
     Expected format:
     {
@@ -249,7 +249,7 @@ self.converters = {
 
 ### Step 4: Handle Nested Constants
 
-Many CC format rules wrap values in constant objects:
+Many AST format rules wrap values in constant objects:
 
 ```python
 def _extract_value(value: Any, default: Any = None) -> Any:
@@ -265,7 +265,7 @@ Run the parsing test on a game that uses the new rule type:
 
 ```bash
 source .venv/bin/activate
-python scripts/test/test_cc_format_parsing.py
+python scripts/test/test_ast_format_parsing.py
 ```
 
 ---
@@ -409,18 +409,18 @@ python scripts/test/test-world-generator.py --include-list "Game Name WorldGen.y
 
 | Rule Type | Description | File |
 |-----------|-------------|------|
-| `constant` | Boolean true/false | `cc_format.py` |
-| `item_check` | Check if player has item | `cc_format.py` |
-| `group_check` | Check if player has items from group | `cc_format.py` |
-| `and` | All conditions must be true | `cc_format.py` |
-| `or` | Any condition must be true | `cc_format.py` |
-| `can_reach` | Check if region is reachable | `cc_format.py` |
-| `location_check` | Check if location is accessible | `cc_format.py` |
-| `can_reach_entrance` | Check if entrance is reachable | `cc_format.py` |
-| `state_method` | Call a state method (has_all, has_any, etc.) | `cc_format.py` |
-| `conditional` | If-then-else logic | `cc_format.py` |
-| `helper` | Call a helper function | `cc_format.py` |
-| `compare` | Comparison operations (>=, <=, etc.) | `cc_format.py` |
+| `constant` | Boolean true/false | `ast_format.py` |
+| `item_check` | Check if player has item | `ast_format.py` |
+| `group_check` | Check if player has items from group | `ast_format.py` |
+| `and` | All conditions must be true | `ast_format.py` |
+| `or` | Any condition must be true | `ast_format.py` |
+| `can_reach` | Check if region is reachable | `ast_format.py` |
+| `location_check` | Check if location is accessible | `ast_format.py` |
+| `can_reach_entrance` | Check if entrance is reachable | `ast_format.py` |
+| `state_method` | Call a state method (has_all, has_any, etc.) | `ast_format.py` |
+| `conditional` | If-then-else logic | `ast_format.py` |
+| `helper` | Call a helper function | `ast_format.py` |
+| `compare` | Comparison operations (>=, <=, etc.) | `ast_format.py` |
 
 ---
 
@@ -467,7 +467,7 @@ Check `ITEMPOOL_COUNTS` and `LOCKED_PLACEMENTS` in the generated `__init__.py`.
 
 ### Rule parsing fails with "Unknown rule type"
 
-Add a handler for the new rule type in `rule_builder/cc_format.py`.
+Add a handler for the new rule type in `rule_builder/ast_format.py`.
 
 ### Generated world has different sphere order
 

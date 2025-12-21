@@ -1133,7 +1133,7 @@ export class PathAnalyzerLogic {
     const ruleName = rule.rule;
     const args = rule.args || {};
 
-    // Handle converted helpers (from CC format)
+    // Handle converted helpers (from AST format)
     if (rule._original_ast_type === 'helper' || rule._converted_from_cc) {
       return {
         type: 'helper',
