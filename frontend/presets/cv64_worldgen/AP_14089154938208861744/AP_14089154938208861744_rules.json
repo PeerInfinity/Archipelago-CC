@@ -28,63 +28,84 @@
             "name": "Warp 1",
             "connected_region": "Castle Wall: main area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 1
+              }
             }
           },
           {
             "name": "Warp 2",
             "connected_region": "Tunnel: second half",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 2
+              }
             }
           },
           {
             "name": "Warp 3",
             "connected_region": "Underground Waterway: main area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 3
+              }
             }
           },
           {
             "name": "Warp 4",
             "connected_region": "Duel Tower",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 4
+              }
             }
           },
           {
             "name": "Warp 5",
             "connected_region": "Room of Clocks",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 5
+              }
             }
           },
           {
             "name": "Warp 6",
             "connected_region": "Clock Tower: middle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 6
+              }
             }
           },
           {
             "name": "Warp 7",
             "connected_region": "Castle Keep: exterior",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Special1",
+                "count": 7
+              }
             }
           }
         ],
@@ -521,9 +542,12 @@
             "name": "Left Tower door",
             "connected_region": "Castle Wall: left tower",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Left Tower Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -817,9 +841,12 @@
             "name": "To maze gate",
             "connected_region": "Villa: maze",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Garden Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1297,9 +1324,12 @@
             "name": "From Storeroom door",
             "connected_region": "Villa: main interior",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Storeroom Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -1399,18 +1429,24 @@
             "name": "From maze gate",
             "connected_region": "Villa: servants entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Garden Key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Copper door",
             "connected_region": "Villa: crypt",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Copper Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2346,18 +2382,40 @@
             "name": "Lower sealed cracked wall",
             "connected_region": "Castle Center: big crystal",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Magical Nitro",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Mandragora",
+                    "count": 2
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Upper cracked wall",
             "connected_region": "Castle Center: library",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Magical Nitro",
+                  "Mandragora"
+                ]
+              }
             }
           }
         ],
@@ -3385,9 +3443,12 @@
             "name": "Execution gate",
             "connected_region": "Tower of Execution: gated ledge",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Execution Key",
+                "count": 1
+              }
             }
           },
           {
@@ -3530,9 +3591,12 @@
             "name": "To Science Door 2",
             "connected_region": "Tower of Science: spiky conveyors",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Science Key2",
+                "count": 1
+              }
             }
           }
         ],
@@ -3616,9 +3680,12 @@
             "name": "From Science Door 2",
             "connected_region": "Tower of Science: turret lab",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Science Key2",
+                "count": 1
+              }
             }
           },
           {
@@ -3937,9 +4004,12 @@
             "name": "To Clocktower Door 1",
             "connected_region": "Clock Tower: middle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clocktower Key1",
+                "count": 1
+              }
             }
           }
         ],
@@ -3985,18 +4055,24 @@
             "name": "From Clocktower Door 1",
             "connected_region": "Clock Tower: start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clocktower Key1",
+                "count": 1
+              }
             }
           },
           {
             "name": "To Clocktower Door 2",
             "connected_region": "Clock Tower: end",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clocktower Key2",
+                "count": 1
+              }
             }
           }
         ],
@@ -4058,18 +4134,24 @@
             "name": "From Clocktower Door 2",
             "connected_region": "Clock Tower: middle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clocktower Key2",
+                "count": 1
+              }
             }
           },
           {
             "name": "Clocktower Door 3",
             "connected_region": "Castle Keep: exterior",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Clocktower Key3",
+                "count": 1
+              }
             }
           }
         ],
