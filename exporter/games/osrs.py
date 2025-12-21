@@ -29,6 +29,12 @@ class OSRSGameExportHandler(GenericGameExportHandler):
         """Export OSRS-specific settings including QP location data."""
         settings = super().get_settings_data(world, multiworld, player)
 
+        # For worldgen worlds, qp_items is already loaded from _worldgen_settings.json
+        # by the base exporter, so we don't need to compute it here
+        module_path = type(world).__module__
+        if module_path.endswith('_worldgen') or '_worldgen.' in module_path:
+            return settings
+
         # Export quest point data as a mapping of item_name -> qp_value
         # This allows the computed quest_points helper to sum QP values
         qp_items = {}

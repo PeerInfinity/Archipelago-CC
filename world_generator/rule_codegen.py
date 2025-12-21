@@ -522,12 +522,25 @@ class RuleCodeGenerator:
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
+                    'Compare': 'compare',
+                    'Constant': 'constant',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
                 # Convert Rule Builder format to Python code
                 if rule_type:
                     return self._convert_rule_builder_format(rule, rb_rule, rule_type)
+
+                # Check for helper calls exported with the helper name as the rule value
+                # Format: {"rule": "helper_name", "_original_ast_type": "helper", ...}
+                if rule.get('_original_ast_type') == 'helper':
+                    # Convert to AST format helper for processing
+                    helper_rule = {
+                        'type': 'helper',
+                        'name': rb_rule,
+                        'args': rule.get('args', [])
+                    }
+                    return self._convert_helper(helper_rule)
 
         # Dispatch based on rule type
         converters = {
@@ -663,6 +676,28 @@ class RuleCodeGenerator:
                 'args': args.get('args', [])
             }
             return self._convert_helper(helper_rule)
+
+        if rb_rule == 'Compare':
+            # Convert Rule Builder format Compare to AST format
+            compare_rule = {
+                'type': 'compare',
+                'left': args.get('left', {}),
+                'op': args.get('op', ''),
+                'right': args.get('right', {})
+            }
+            return self._convert_compare(compare_rule)
+
+        if rb_rule == 'Constant':
+            # Handle Constant rule
+            value = args.get('value')
+            if value is True:
+                self.required_imports.add('True_')
+                return 'True_()'
+            elif value is False:
+                self.required_imports.add('False_')
+                return 'False_()'
+            else:
+                return repr(value)
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
