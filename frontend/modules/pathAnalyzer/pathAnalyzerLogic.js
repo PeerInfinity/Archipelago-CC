@@ -686,7 +686,8 @@ export class PathAnalyzerLogic {
 
     if (!rule || !snapshotInterface) return nodes;
 
-    if (this.isLeafNodeType(rule.type)) {
+    // Check if this is a leaf node (handles both AST and Rule Builder formats)
+    if (this.isLeafRule(rule)) {
       let evaluationResult;
       try {
         // Evaluate the rule using the provided interface as context
@@ -726,15 +727,21 @@ export class PathAnalyzerLogic {
           }
         }
       }
-    } else if (rule.type === 'and' || rule.type === 'or') {
-      for (const condition of rule.conditions || []) {
-        const childNodes = this.analyzeRuleForNodes(
-          condition,
-          snapshotInterface
-        );
-        Object.keys(nodes).forEach((key) => {
-          nodes[key].push(...childNodes[key]);
-        });
+    } else {
+      // Check if this is a compound rule (And/Or) in either format
+      const compoundType = this.getCompoundRuleType(rule);
+      if (compoundType) {
+        // Get child rules (handles both AST and Rule Builder formats)
+        const childRules = this.getChildRules(rule);
+        for (const childRule of childRules) {
+          const childNodes = this.analyzeRuleForNodes(
+            childRule,
+            snapshotInterface
+          );
+          Object.keys(nodes).forEach((key) => {
+            nodes[key].push(...childNodes[key]);
+          });
+        }
       }
     }
 
@@ -772,6 +779,22 @@ export class PathAnalyzerLogic {
       return overrides.get(ruleId);
     }
 
+    // Handle Rule Builder format compound rules (And/Or)
+    const compoundType = this.getCompoundRuleType(rule);
+    if (compoundType) {
+      const childRules = this.getChildRules(rule);
+      if (compoundType === 'and') {
+        return childRules.every((child) =>
+          this.evaluateRuleWithOverrides(child, overrides, snapshotInterface)
+        );
+      } else if (compoundType === 'or') {
+        return childRules.some((child) =>
+          this.evaluateRuleWithOverrides(child, overrides, snapshotInterface)
+        );
+      }
+    }
+
+    // Handle AST format rules
     switch (rule.type) {
       case 'constant':
         return rule.value;
@@ -799,22 +822,6 @@ export class PathAnalyzerLogic {
             this.evaluateRuleWithOverrides(arg, overrides, snapshotInterface)
           )
         );
-      case 'and':
-        return (rule.conditions || []).every((condition) =>
-          this.evaluateRuleWithOverrides(
-            condition,
-            overrides,
-            snapshotInterface
-          )
-        );
-      case 'or':
-        return (rule.conditions || []).some((condition) =>
-          this.evaluateRuleWithOverrides(
-            condition,
-            overrides,
-            snapshotInterface
-          )
-        );
       case 'not': {
         const operandResult = this.evaluateRuleWithOverrides(
           rule.operand,
@@ -824,6 +831,8 @@ export class PathAnalyzerLogic {
         return operandResult === undefined ? undefined : !operandResult;
       }
       default:
+        // Fall back to the standard rule evaluator for any unhandled types
+        // This includes Rule Builder leaf rules
         return snapshotInterface.evaluateRule(rule);
     }
   }
@@ -872,10 +881,11 @@ export class PathAnalyzerLogic {
 
   /**
    * Checks if a node type is a leaf node type
-   * @param {string} nodeType - The type of the logic node
+   * @param {string} nodeType - The type of the logic node (AST format)
    * @return {boolean} - True if it's a leaf node type, false otherwise
    */
   isLeafNodeType(nodeType) {
+    // AST format leaf types
     return [
       'constant',
       'item_check',
@@ -889,6 +899,98 @@ export class PathAnalyzerLogic {
       'value',
       'setting_check',
     ].includes(nodeType);
+  }
+
+  /**
+   * Checks if a rule is a compound rule (And/Or)
+   * Handles both AST format (rule.type) and Rule Builder format (rule.rule)
+   * @param {Object} rule - The rule object
+   * @return {string|null} - 'and' or 'or' if compound, null otherwise
+   */
+  getCompoundRuleType(rule) {
+    if (!rule) return null;
+
+    // AST format
+    if (rule.type === 'and' || rule.type === 'or') {
+      return rule.type;
+    }
+
+    // Rule Builder format (capitalized)
+    if (rule.rule === 'And') {
+      return 'and';
+    }
+    if (rule.rule === 'Or') {
+      return 'or';
+    }
+
+    return null;
+  }
+
+  /**
+   * Gets child rules from a compound rule
+   * Handles both AST format (rule.conditions) and Rule Builder format (rule.children)
+   * @param {Object} rule - The compound rule object
+   * @return {Array} - Array of child rules
+   */
+  getChildRules(rule) {
+    if (!rule) return [];
+
+    // AST format uses 'conditions'
+    if (rule.conditions && Array.isArray(rule.conditions)) {
+      return rule.conditions;
+    }
+
+    // Rule Builder format uses 'children'
+    if (rule.children && Array.isArray(rule.children)) {
+      return rule.children;
+    }
+
+    return [];
+  }
+
+  /**
+   * Checks if a rule is a leaf node
+   * Handles both AST format (rule.type) and Rule Builder format (rule.rule)
+   * @param {Object} rule - The rule object
+   * @return {boolean} - True if it's a leaf node
+   */
+  isLeafRule(rule) {
+    if (!rule) return false;
+
+    // AST format
+    if (rule.type && this.isLeafNodeType(rule.type)) {
+      return true;
+    }
+
+    // Rule Builder format - check for leaf rules
+    if (rule.rule && !rule.type) {
+      // Rule Builder compound types (not leaf nodes)
+      const ruleBuilderCompoundTypes = ['And', 'Or', 'Not'];
+
+      // If it's a compound type, it's not a leaf
+      if (ruleBuilderCompoundTypes.includes(rule.rule)) {
+        return false;
+      }
+
+      // Check if it has children - if so, it's compound (not a leaf)
+      if (rule.children && rule.children.length > 0) {
+        return false;
+      }
+
+      // Check if it's a converted helper (has _original_ast_type field)
+      if (rule._original_ast_type) {
+        return true;
+      }
+
+      // All other Rule Builder rules without children are leaf nodes
+      // This includes: True_, False_, Has, HasAll, HasAny, HasCount,
+      // CountCheck, Constant, List, CanReach, CanReachRegion, CanAccess,
+      // SettingCheck, StateMethod, Helper, ProgressiveCheck, GroupCheck,
+      // and game-specific helpers like has_misery_mire_medallion
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -917,6 +1019,11 @@ export class PathAnalyzerLogic {
       displayColor = '#f44336';
     } else {
       displayColor = '#9e9e9e';
+    }
+
+    // Handle Rule Builder format (rule.rule instead of rule.type)
+    if (rule.rule && !rule.type) {
+      return this._extractRuleBuilderNodeData(rule, displayColor);
     }
 
     switch (rule.type) {
@@ -1012,6 +1119,143 @@ export class PathAnalyzerLogic {
     }
 
     return null;
+  }
+
+  /**
+   * Extract node data from a Rule Builder format rule
+   * @param {Object} rule - The Rule Builder format rule
+   * @param {string} displayColor - The color to use for display
+   * @return {Object|null} - The extracted node data or null if extraction failed
+   */
+  _extractRuleBuilderNodeData(rule, displayColor) {
+    if (!rule || !rule.rule) return null;
+
+    const ruleName = rule.rule;
+    const args = rule.args || {};
+
+    // Handle converted helpers (from CC format)
+    if (rule._original_ast_type === 'helper' || rule._converted_from_cc) {
+      return {
+        type: 'helper',
+        name: ruleName,
+        args: Object.values(args),
+        display: `Helper: ${ruleName}`,
+        displayColor,
+        identifier: `helper_${ruleName}`,
+      };
+    }
+
+    // Handle common Rule Builder rules
+    switch (ruleName) {
+      case 'True_':
+        return {
+          type: 'constant',
+          value: true,
+          display: 'Always True',
+          displayColor,
+          identifier: 'constant_true',
+        };
+
+      case 'False_':
+        return {
+          type: 'constant',
+          value: false,
+          display: 'Always False',
+          displayColor,
+          identifier: 'constant_false',
+        };
+
+      case 'Has': {
+        const itemName = args.item_name || args.item || '';
+        if (!itemName) return null;
+        return {
+          type: 'item_check',
+          item: itemName,
+          display: `Need item: ${itemName}`,
+          displayColor,
+          identifier: `item_${itemName}`,
+        };
+      }
+
+      case 'HasCount':
+      case 'CountCheck': {
+        const itemName = args.item_name || args.item || '';
+        const count = args.count ?? 1;
+        if (!itemName) return null;
+        return {
+          type: 'count_check',
+          item: itemName,
+          count: count,
+          display: `Need ${count}× ${itemName}`,
+          displayColor,
+          identifier: `count_${itemName}_${count}`,
+        };
+      }
+
+      case 'HasAll':
+      case 'HasAny': {
+        const items = args.items || [];
+        const itemNames = items.map(i => i.item_name || i).join(', ');
+        return {
+          type: ruleName.toLowerCase(),
+          items: items,
+          display: `${ruleName}: ${itemNames}`,
+          displayColor,
+          identifier: `${ruleName.toLowerCase()}_${itemNames}`,
+        };
+      }
+
+      case 'CanReach':
+      case 'CanReachRegion':
+      case 'CanAccess': {
+        const region = args.region || args.region_name || '';
+        return {
+          type: 'region_check',
+          region: region,
+          display: `Can reach: ${region}`,
+          displayColor,
+          identifier: `reach_${region}`,
+        };
+      }
+
+      case 'GroupCheck': {
+        const groupName = args.group || '';
+        const count = args.count ?? 1;
+        if (!groupName) return null;
+        return {
+          type: 'group_check',
+          group: groupName,
+          count: count,
+          display: `Need ${count} of group: ${groupName}`,
+          displayColor,
+          identifier: `group_${groupName}_${count}`,
+        };
+      }
+
+      case 'Helper': {
+        const helperName = args.name || args.helper_name || '';
+        return {
+          type: 'helper',
+          name: helperName,
+          args: Object.values(args),
+          display: `Helper: ${helperName}`,
+          displayColor,
+          identifier: `helper_${helperName}`,
+        };
+      }
+
+      default:
+        // For unknown Rule Builder rules (likely game-specific helpers),
+        // treat them as helper functions
+        return {
+          type: 'helper',
+          name: ruleName,
+          args: Object.values(args),
+          display: `Helper: ${ruleName}`,
+          displayColor,
+          identifier: `helper_${ruleName}`,
+        };
+    }
   }
 
   /**
