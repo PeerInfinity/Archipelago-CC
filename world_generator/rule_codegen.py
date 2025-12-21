@@ -499,7 +499,13 @@ class RuleCodeGenerator:
             else:
                 return repr(rule)
 
+        # Support both CC format (uses 'type' key) and rule builder format (uses 'rule' key)
+        # Rule builder format has 'rule' like: {"rule": "Compare", "args": {...}}
+        # CC format has 'type' like: {"type": "compare", ...}
         rule_type = rule.get('type', '')
+        if not rule_type:
+            # Try rule builder format - normalize to lowercase for lookup
+            rule_type = rule.get('rule', '').lower()
 
         # Dispatch based on rule type
         converters = {
@@ -525,11 +531,31 @@ class RuleCodeGenerator:
             'binary_op': self._convert_binary_op,
             'sum': self._convert_sum,
             'setting_value': self._convert_setting_value,
+            # Rule builder format aliases (lowercase)
+            'true_': self._convert_constant,
+            'false_': self._convert_constant,
+            'has': self._convert_item_check,
+            'hasall': self._convert_item_check,
+            'hasany': self._convert_item_check,
+            'countitem': self._convert_count_check,
+            'canreachregion': self._convert_can_reach_region,
+            'canreachlocation': self._convert_location_check,
+            'canreachentrance': self._convert_can_reach_entrance,
         }
 
         converter = converters.get(rule_type)
         if converter:
             return converter(rule)
+
+        # Check if this might be a helper call (rule builder format)
+        # Rule builder format has: {"rule": "helper_name", "args": [...], "_original_ast_type": "helper"}
+        if rule.get('_original_ast_type') == 'helper':
+            return self._convert_helper(rule)
+
+        # Check if the rule type looks like a helper name (underscore-separated or camelCase)
+        if rule_type and rule_type not in ('', 'true_', 'false_') and self.known_helpers and rule_type in self.known_helpers:
+            # It's a known helper - convert as helper call
+            return self._convert_helper(rule)
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
@@ -565,7 +591,19 @@ class RuleCodeGenerator:
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
         """Convert constant true/false rule."""
-        value = rule.get('value', True)
+        # Support both CC format ('value' key) and rule builder format (nested in 'args')
+        if 'args' in rule and isinstance(rule['args'], dict) and 'value' in rule['args']:
+            # Rule builder format: {"rule": "Constant", "args": {"value": 1.0}}
+            value = rule['args']['value']
+        else:
+            # CC format: {"type": "constant", "value": true}
+            value = rule.get('value', True)
+
+        # For numeric constants (like 1.0 for Paint thresholds), return as-is
+        if isinstance(value, (int, float)):
+            return repr(value)
+
+        # For boolean constants, return True_() or False_()
         if value:
             self.required_imports.add('True_')
             return 'True_()'
@@ -892,9 +930,18 @@ class RuleCodeGenerator:
         Pattern: state.prog_items[player][item_name] OP count
         Converts to: Has(item_name, count)
         """
-        left = rule.get('left', {})
-        op = rule.get('op', '')
-        right = rule.get('right', {})
+        # Support both CC format (direct keys) and rule builder format (nested in 'args')
+        if 'args' in rule and isinstance(rule['args'], dict):
+            # Rule builder format: {"rule": "Compare", "args": {"left": ..., "op": ..., "right": ...}}
+            args = rule['args']
+            left = args.get('left', {})
+            op = args.get('op', '')
+            right = args.get('right', {})
+        else:
+            # CC format: {"type": "compare", "left": ..., "op": ..., "right": ...}
+            left = rule.get('left', {})
+            op = rule.get('op', '')
+            right = rule.get('right', {})
 
         # Try to recognize the pattern: state.prog_items[player][item_name] >= count
         result = self._try_convert_prog_items_compare(left, op, right)
@@ -1240,7 +1287,8 @@ class RuleCodeGenerator:
 
     def _convert_helper(self, rule: Dict[str, Any]) -> str:
         """Convert helper rule to HelperCall()."""
-        helper_name = rule.get('name', '')
+        # Support both CC format ('name' key) and rule builder format ('rule' key)
+        helper_name = rule.get('name', '') or rule.get('rule', '')
         args = rule.get('args', [])
 
         # If we know about this helper, generate a proper HelperCall

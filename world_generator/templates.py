@@ -315,11 +315,11 @@ def generate_regions_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Build region list - always include Menu (required by Archipelago)
-    # Preserve original order from JSON (Menu first if not already present)
+    # Build region list - preserve exactly what's in the original data
+    # Note: We no longer add "Menu" automatically. Instead, if the original world
+    # doesn't have Menu, we set origin_region_name in the world class to point
+    # to the actual start region (see generate_init_py).
     region_names = list(data.regions.keys())
-    if "Menu" not in region_names:
-        region_names.insert(0, "Menu")
     # Escape quotes in region names
     region_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in region_names)
 
@@ -335,12 +335,7 @@ def generate_regions_py(data: ExtractedData) -> str:
     # Build entrance connections
     entrance_lines = []
 
-    # Add entrance from Menu to start region if Menu wasn't in original data
-    if "Menu" not in data.regions:
-        start_region = data.start_region.replace('"', '\\"')
-        entrance_lines.append(
-            f'    _create_entrance(regions["Menu"], regions["{start_region}"], "MenuToStart")'
-        )
+    # Note: We no longer add MenuToStart entrance. The world uses origin_region_name instead.
 
     for exit_name, exit_data in data.exits.items():
         source = exit_data.source_region.replace('"', '\\"')
@@ -1192,6 +1187,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         use_auto_indirect_conditions_section = ''
 
+    # Build origin_region_name section
+    # This is needed when the starting region is not "Menu" (which is the default)
+    # The original world may use a different starting region (e.g., "Canvas" for Paint)
+    if data.start_region and data.start_region != "Menu":
+        start_region_escaped = data.start_region.replace('\\', '\\\\').replace('"', '\\"')
+        origin_region_section = f'''
+    origin_region_name: str = "{start_region_escaped}"'''
+    else:
+        origin_region_section = ''
+
     # Build fill_slot_data content
     # Check if slot_data fields match option names - if so, generate dynamic references
     # NOTE: We only dynamically reference 'randomize_items' since that's the only option
@@ -1284,7 +1289,7 @@ class {world_class}(RuleWorldMixin, World):
     options: {class_name}Options
 {base_id_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
-    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}
+    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}{origin_region_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.id for name, data in item_table.items() if data.id is not None

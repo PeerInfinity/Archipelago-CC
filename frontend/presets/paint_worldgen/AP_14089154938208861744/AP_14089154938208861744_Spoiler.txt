@@ -16,7 +16,7 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 No
+Randomize Items:                 Yes
 Canvas Size Increment:           100
 Logic Percent:                   80
 

@@ -87,7 +87,7 @@ class PaintWorldGenWorld(RuleWorldMixin, World):
 
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
-
+    origin_region_name: str = "Canvas"
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
@@ -102,146 +102,9 @@ class PaintWorldGenWorld(RuleWorldMixin, World):
         "Everything": frozenset(["Progressive Canvas Width", "Progressive Canvas Height", "Progressive Color Depth (Red)", "Progressive Color Depth (Green)", "Progressive Color Depth (Blue)", "Free-Form Select", "Select", "Eraser/Color Eraser", "Fill With Color", "Pick Color", "Magnifier", "Pencil", "Brush", "Airbrush", "Text", "Line", "Curve", "Rectangle", "Polygon", "Ellipse", "Rounded Rectangle", "Additional Palette Color", "Undo Trap", "Clear Image Trap", "Invert Colors Trap", "Flip Horizontal Trap", "Flip Vertical Trap"]),
     }
 
-    # Canonical item placements - where items belong in the "vanilla" game
-    # Used by exporter to distinguish canonical placements from always-locked items
-    canonical_placements: ClassVar[Dict[str, str]] = {
-        "Similarity: 1.0%": "Additional Palette Color",
-        "Similarity: 2.0%": "Additional Palette Color",
-        "Similarity: 3.0%": "Progressive Color Depth (Green)",
-        "Similarity: 4.0%": "Progressive Color Depth (Blue)",
-        "Similarity: 5.0%": "Additional Palette Color",
-        "Similarity: 6.0%": "Additional Palette Color",
-        "Similarity: 7.0%": "Additional Palette Color",
-        "Similarity: 8.0%": "Additional Palette Color",
-        "Similarity: 9.0%": "Progressive Canvas Width",
-        "Similarity: 10.0%": "Additional Palette Color",
-        "Similarity: 11.0%": "Additional Palette Color",
-        "Similarity: 12.0%": "Additional Palette Color",
-        "Similarity: 13.0%": "Pick Color",
-        "Similarity: 14.0%": "Additional Palette Color",
-        "Similarity: 15.0%": "Curve",
-        "Similarity: 16.0%": "Progressive Color Depth (Red)",
-        "Similarity: 17.0%": "Progressive Color Depth (Red)",
-        "Similarity: 18.0%": "Progressive Color Depth (Blue)",
-        "Similarity: 19.0%": "Progressive Canvas Width",
-        "Similarity: 20.0%": "Additional Palette Color",
-        "Similarity: 21.0%": "Additional Palette Color",
-        "Similarity: 22.0%": "Progressive Color Depth (Blue)",
-        "Similarity: 23.0%": "Additional Palette Color",
-        "Similarity: 24.0%": "Additional Palette Color",
-        "Similarity: 25.0%": "Progressive Canvas Height",
-        "Similarity: 26.0%": "Line",
-        "Similarity: 27.0%": "Eraser/Color Eraser",
-        "Similarity: 28.0%": "Progressive Canvas Height",
-        "Similarity: 29.0%": "Progressive Canvas Height",
-        "Similarity: 30.0%": "Additional Palette Color",
-        "Similarity: 31.0%": "Additional Palette Color",
-        "Similarity: 32.0%": "Additional Palette Color",
-        "Similarity: 33.0%": "Additional Palette Color",
-        "Similarity: 34.0%": "Additional Palette Color",
-        "Similarity: 35.0%": "Additional Palette Color",
-        "Similarity: 36.0%": "Additional Palette Color",
-        "Similarity: 37.0%": "Additional Palette Color",
-        "Similarity: 38.0%": "Additional Palette Color",
-        "Similarity: 39.0%": "Additional Palette Color",
-        "Similarity: 40.0%": "Additional Palette Color",
-        "Similarity: 41.0%": "Additional Palette Color",
-        "Similarity: 42.0%": "Additional Palette Color",
-        "Similarity: 43.0%": "Additional Palette Color",
-        "Similarity: 44.0%": "Additional Palette Color",
-        "Similarity: 45.0%": "Pencil",
-        "Similarity: 46.0%": "Additional Palette Color",
-        "Similarity: 47.0%": "Progressive Color Depth (Green)",
-        "Similarity: 48.0%": "Additional Palette Color",
-        "Similarity: 49.0%": "Additional Palette Color",
-        "Similarity: 50.0%": "Select",
-        "Similarity: 50.5%": "Additional Palette Color",
-        "Similarity: 51.0%": "Additional Palette Color",
-        "Similarity: 51.5%": "Additional Palette Color",
-        "Similarity: 52.0%": "Additional Palette Color",
-        "Similarity: 52.5%": "Text",
-        "Similarity: 53.0%": "Progressive Color Depth (Red)",
-        "Similarity: 53.5%": "Progressive Canvas Width",
-        "Similarity: 54.0%": "Additional Palette Color",
-        "Similarity: 54.5%": "Additional Palette Color",
-        "Similarity: 55.0%": "Additional Palette Color",
-        "Similarity: 55.5%": "Additional Palette Color",
-        "Similarity: 56.0%": "Additional Palette Color",
-        "Similarity: 56.5%": "Additional Palette Color",
-        "Similarity: 57.0%": "Additional Palette Color",
-        "Similarity: 57.5%": "Additional Palette Color",
-        "Similarity: 58.0%": "Progressive Canvas Width",
-        "Similarity: 58.5%": "Additional Palette Color",
-        "Similarity: 59.0%": "Additional Palette Color",
-        "Similarity: 59.5%": "Additional Palette Color",
-        "Similarity: 60.0%": "Progressive Color Depth (Green)",
-        "Similarity: 60.5%": "Additional Palette Color",
-        "Similarity: 61.0%": "Additional Palette Color",
-        "Similarity: 61.5%": "Additional Palette Color",
-        "Similarity: 62.0%": "Additional Palette Color",
-        "Similarity: 62.5%": "Additional Palette Color",
-        "Similarity: 63.0%": "Additional Palette Color",
-        "Similarity: 63.5%": "Rounded Rectangle",
-        "Similarity: 64.0%": "Additional Palette Color",
-        "Similarity: 64.5%": "Additional Palette Color",
-        "Similarity: 65.0%": "Additional Palette Color",
-        "Similarity: 65.5%": "Additional Palette Color",
-        "Similarity: 66.0%": "Additional Palette Color",
-        "Similarity: 66.5%": "Additional Palette Color",
-        "Similarity: 67.0%": "Progressive Color Depth (Red)",
-        "Similarity: 67.5%": "Additional Palette Color",
-        "Similarity: 68.0%": "Additional Palette Color",
-        "Similarity: 68.5%": "Additional Palette Color",
-        "Similarity: 69.0%": "Progressive Color Depth (Red)",
-        "Similarity: 69.5%": "Additional Palette Color",
-        "Similarity: 70.0%": "Additional Palette Color",
-        "Similarity: 70.25%": "Progressive Color Depth (Green)",
-        "Similarity: 70.5%": "Additional Palette Color",
-        "Similarity: 70.75%": "Fill With Color",
-        "Similarity: 71.0%": "Additional Palette Color",
-        "Similarity: 71.25%": "Additional Palette Color",
-        "Similarity: 71.5%": "Rectangle",
-        "Similarity: 71.75%": "Additional Palette Color",
-        "Similarity: 72.0%": "Additional Palette Color",
-        "Similarity: 72.25%": "Additional Palette Color",
-        "Similarity: 72.5%": "Additional Palette Color",
-        "Similarity: 72.75%": "Additional Palette Color",
-        "Similarity: 73.0%": "Progressive Color Depth (Red)",
-        "Similarity: 73.25%": "Additional Palette Color",
-        "Similarity: 73.5%": "Airbrush",
-        "Similarity: 73.75%": "Additional Palette Color",
-        "Similarity: 74.0%": "Additional Palette Color",
-        "Similarity: 74.25%": "Free-Form Select",
-        "Similarity: 74.5%": "Progressive Color Depth (Green)",
-        "Similarity: 74.75%": "Additional Palette Color",
-        "Similarity: 75.0%": "Additional Palette Color",
-        "Similarity: 75.25%": "Progressive Color Depth (Green)",
-        "Similarity: 75.5%": "Additional Palette Color",
-        "Similarity: 75.75%": "Additional Palette Color",
-        "Similarity: 76.0%": "Additional Palette Color",
-        "Similarity: 76.25%": "Progressive Color Depth (Blue)",
-        "Similarity: 76.5%": "Progressive Color Depth (Blue)",
-        "Similarity: 76.75%": "Additional Palette Color",
-        "Similarity: 77.0%": "Additional Palette Color",
-        "Similarity: 77.25%": "Additional Palette Color",
-        "Similarity: 77.5%": "Additional Palette Color",
-        "Similarity: 77.75%": "Additional Palette Color",
-        "Similarity: 78.0%": "Additional Palette Color",
-        "Similarity: 78.25%": "Progressive Color Depth (Blue)",
-        "Similarity: 78.5%": "Additional Palette Color",
-        "Similarity: 78.75%": "Additional Palette Color",
-        "Similarity: 79.0%": "Ellipse",
-        "Similarity: 79.25%": "Additional Palette Color",
-        "Similarity: 79.5%": "Additional Palette Color",
-        "Similarity: 79.75%": "Additional Palette Color",
-        "Similarity: 80.0%": "Polygon",
-    }
-
     def generate_early(self) -> None:
-        """Push starting items and disable randomization for seed 1."""
+        """Push starting items as precollected."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -297,29 +160,6 @@ class PaintWorldGenWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
-
-    def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
-            self._place_original_items()
-
-    def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
-            location = self.multiworld.get_location(location_name, self.player)
-
-            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
-            if location.item is not None:
-                continue
-
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
-
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
-                if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
