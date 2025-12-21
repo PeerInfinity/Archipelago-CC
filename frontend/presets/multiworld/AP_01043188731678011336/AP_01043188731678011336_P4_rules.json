@@ -26,8 +26,9 @@
             "name": "GameStart",
             "connected_region": "Overworld",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -40,39 +41,55 @@
             "name": "YellowCastlePort",
             "connected_region": "YellowCastle",
             "access_rule": {
-              "type": "item_check",
-              "item": "Yellow Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Yellow Key"
+              }
             }
           },
           {
             "name": "WhiteCastlePort",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "type": "item_check",
-              "item": "White Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "White Key"
+              }
             }
           },
           {
             "name": "BlackCastlePort",
             "connected_region": "BlackCastle",
             "access_rule": {
-              "type": "item_check",
-              "item": "Black Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Black Key"
+              }
             }
           },
           {
             "name": "CreditsWall",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Black Key"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Black Key"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Bridge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Bridge"
+                  }
                 }
               ]
             }
@@ -83,8 +100,9 @@
             "name": "Blue Labyrinth 0",
             "id": 118000004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 Pons",
@@ -98,8 +116,9 @@
             "name": "Blue Labyrinth 1",
             "id": 118000006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Time Piece",
@@ -113,8 +132,9 @@
             "name": "Catacombs",
             "id": 118000009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "13 Coins",
@@ -128,8 +148,9 @@
             "name": "Adjacent to Catacombs",
             "id": 118000012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bombs (3)",
@@ -143,8 +164,9 @@
             "name": "Southwest of Catacombs",
             "id": 118000014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Time Piece",
@@ -158,8 +180,9 @@
             "name": "White Castle Gate",
             "id": 118000015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yarn",
@@ -173,8 +196,9 @@
             "name": "Black Castle Gate",
             "id": 118000016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Random Cosmetic",
@@ -188,8 +212,9 @@
             "name": "Yellow Castle Gate",
             "id": 118000017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Rupees (20)",
@@ -203,8 +228,9 @@
             "name": "Northeast of Catacombs",
             "id": 118000028,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "25 Pons",
@@ -218,8 +244,9 @@
             "name": "Southeast of Catacombs",
             "id": 118000029,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yarn",
@@ -233,15 +260,22 @@
             "name": "Slay Rhindle",
             "id": 118000208,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Right Difficulty Switch"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sword"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sword"
+                  }
                 }
               ]
             },
@@ -263,8 +297,9 @@
             "name": "YellowCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -273,8 +308,9 @@
             "name": "Inside Yellow Castle",
             "id": 118000018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yarn",
@@ -288,15 +324,22 @@
             "name": "Chalice Home",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Chalice"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Chalice"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Yellow Key"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Yellow Key"
+                  }
                 }
               ]
             },
@@ -318,31 +361,42 @@
             "name": "WhiteCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "WhiteCastleSecretPassage",
             "connected_region": "WhiteCastleVault",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bridge"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bridge"
+              }
             }
           },
           {
             "name": "WhiteCastlePeekPassage",
             "connected_region": "WhiteCastlePreVaultPeek",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Bridge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Bridge"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Magnet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Magnet"
+                  }
                 }
               ]
             }
@@ -353,8 +407,9 @@
             "name": "RedMaze0",
             "id": 118000023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Golden Feather",
@@ -368,8 +423,9 @@
             "name": "RedMaze1",
             "id": 118000026,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "25 Pons",
@@ -389,8 +445,9 @@
             "name": "WhiteCastleFromPeek",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -399,8 +456,9 @@
             "name": "Red Maze Vault Entrance",
             "id": 118000183,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Health Pon",
@@ -420,8 +478,9 @@
             "name": "WhiteCastleReturnPassage",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -430,8 +489,9 @@
             "name": "Red Maze Vault",
             "id": 118000025,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Time Piece",
@@ -445,15 +505,22 @@
             "name": "Slay Yorgle",
             "id": 118000209,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Right Difficulty Switch"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sword"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sword"
+                  }
                 }
               ]
             },
@@ -475,23 +542,31 @@
             "name": "BlackCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "BlackCastleVaultEntrance",
             "connected_region": "BlackCastleVault",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Bridge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Bridge"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Magnet"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Magnet"
+                  }
                 }
               ]
             }
@@ -502,8 +577,9 @@
             "name": "Dungeon0",
             "id": 118000019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "13 Coins",
@@ -517,8 +593,9 @@
             "name": "Dungeon1",
             "id": 118000021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Relic (Cool Cow)",
@@ -532,8 +609,9 @@
             "name": "Black Castle Foyer",
             "id": 118000027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Relic (Train)",
@@ -547,15 +625,22 @@
             "name": "Slay Grundle",
             "id": 118000210,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Right Difficulty Switch"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sword"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sword"
+                  }
                 }
               ]
             },
@@ -577,8 +662,9 @@
             "name": "BlackCastleReturnPassage",
             "connected_region": "BlackCastle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -587,8 +673,9 @@
             "name": "Dungeon Vault",
             "id": 118000181,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bombs (3)",
@@ -608,16 +695,20 @@
             "name": "CreditsExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "CreditsToFarSide",
             "connected_region": "CreditsRoomFarSide",
             "access_rule": {
-              "type": "item_check",
-              "item": "Magnet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Magnet"
+              }
             }
           }
         ],
@@ -626,8 +717,9 @@
             "name": "Credits Left Side",
             "id": 118000030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seashell",
@@ -647,8 +739,9 @@
             "name": "CreditsFromFarSide",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -657,8 +750,9 @@
             "name": "Credits Right Side",
             "id": 118000190,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Time Piece",
@@ -1026,14 +1120,14 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "bat_logic": 1,
-        "connector_multi_slot": 0,
-        "death_link": 0,
-        "difficulty_switch_a": 2,
-        "difficulty_switch_b": 2,
-        "dragon_rando_type": 1,
-        "dragon_slay_check": 1,
+        "accessibility": "full",
+        "bat_logic": "can_break",
+        "connector_multi_slot": "false",
+        "death_link": "false",
+        "difficulty_switch_a": "hard_with_unlock_item",
+        "difficulty_switch_b": "hard_with_unlock_item",
+        "dragon_rando_type": "shuffle",
+        "dragon_slay_check": "true",
         "exclude_locations": [],
         "freeincarnate_max": 17,
         "grundle_min_speed": 1,
@@ -1046,7 +1140,7 @@
         "progression_balancing": 50,
         "rhindle_min_speed": 2,
         "rhindle_speed": 3,
-        "start_castle": 0,
+        "start_castle": "yellow",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],

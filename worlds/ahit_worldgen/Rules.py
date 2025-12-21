@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachLocation, CanReachRegion, Conditional, False_, Has, HelperCall, Not, True_
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -233,867 +233,1816 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Save File -> Spaceship", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Telescope -> Mafia Town", player),
-        Has("Time Piece", 0)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Battle of the Birds", player),
-        Has("Time Piece", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Subcon Forest", player),
-        Has("Time Piece", 17)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Alpine Skyline", player),
-        Has("Time Piece", 13)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Time's End", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Time Piece", 35))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Time Piece", 13))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (Has("Time Piece", 5))
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 7", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 3", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 5", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 4", player),
-        False_()
+        multiworld.get_entrance("Mafia Town - Act 1", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 6", player),
-        False_()
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 3", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 2", player),
-        False_()
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town Entrance WTMT", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player),
-        (CanReachRegion("The Big Parade")) & (True_())
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town Entrance BB", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player),
-        (CanReachRegion("The Big Parade")) & (True_())
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 2: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 3: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town Entrance SCFOS", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player),
-        (CanReachRegion("The Big Parade")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player),
-        (CanReachRegion("The Big Parade")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player),
-        (CanReachRegion("The Big Parade")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
-        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player),
-        (CanReachRegion("The Big Parade")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
-        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
-        (CanReachRegion("The Subcon Well")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player),
-        (CanReachRegion("The Big Parade")) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Finale A", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Finale B", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 2", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 4", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 3", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Act 5", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Finale A: Connection 1", player),
-        ((True_()) & ((HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
-        ((CanReachRegion("Barrel Battle")) & (True_())) & ((CanReachRegion("Down with the Mafia!")) & (True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
-        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
-        ((CanReachRegion("Dead Bird Studio")) & (True_())) & ((CanReachRegion("Train Rush")) & (True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Battle of the Birds - Finale A: Connection 2", player),
-        ((True_()) & ((HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
-        ((CanReachRegion("Dead Bird Studio")) & (True_())) & ((CanReachRegion("Train Rush")) & (True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 4: Connection 1", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (True_())
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale", player),
-        False_()
+        multiworld.get_entrance("Mafia Town Entrance DWTM", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Act 2", player),
-        Has("Snatcher's Contract - The Subcon Well")
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Act 3", player),
-        Has("Snatcher's Contract - Toilet of Doom")
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Act 4", player),
-        Has("Snatcher's Contract - Queen Vanessa's Manor")
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Act 5", player),
-        Has("Snatcher's Contract - Mail Delivery Service")
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player),
-        (CanReachRegion("Murder on the Owl Express")) & (True_())
+        multiworld.get_entrance("Mafia Town Entrance HUMT", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
-        (CanReachRegion("Cheating the Race")) & (True_())
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 4: Connection 2", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (True_())
+        multiworld.get_entrance("Battle of the Birds - Finale A: Connection 2", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player),
-        (CanReachRegion("Murder on the Owl Express")) & (True_())
+        multiworld.get_entrance("Mafia Town Entrance CTR", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
-        (CanReachRegion("Cheating the Race")) & (True_())
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (True_())
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player),
-        (CanReachRegion("Murder on the Owl Express")) & (True_())
+        multiworld.get_entrance("Mafia Town Entrance TGV", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
-        (CanReachRegion("Cheating the Race")) & (True_())
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player),
-        (CanReachRegion("Murder on the Owl Express")) & (True_())
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        multiworld.get_entrance("Mafia Town - Act 6: Connection 1", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
-        (CanReachRegion("Cheating the Race")) & (True_())
+        multiworld.get_entrance("Mafia Town - Act 7: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Finale A", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Finale B", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("DBS -> Elevator Area", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("DBS -> Post Elevator Area", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("DBS -> Badge Seller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
-        ((True_()) & (Has("Hookshot Badge"))) & (True_())
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player),
-        (CanReachRegion("Murder on the Owl Express")) & (True_())
+        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        multiworld.get_entrance("PP -> Badge Seller", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
-        (CanReachRegion("Cheating the Race")) & (True_())
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
-        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Alpine Skyline - Finale", player),
-        (Has("Birdhouse Cleared")) & (Has("Lava Cake Cleared")) & (Has("Twilight Bell Cleared")) & (Has("Windmill Cleared"))
+        multiworld.get_entrance("TR -> Badge Seller", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("AFR -> Alpine Skyline Area", player),
-        Has("Hookshot Badge")
+        multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Curly Tail Trail Portal - Entrance 1", player),
-        Has("Windmill Cleared")
+        multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        ((Conditional(test=Not(False_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))) & (HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
+        True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Time Rift - The Twilight Bell Portal - Entrance 1", player),
-        Has("Twilight Bell Cleared")
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Finale B: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("DBS Basement -> Elevator Area", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Finale", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Act 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Act 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Act 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Act 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Act 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest Entrance CO", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mafia Town - Act 4: Connection 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest Entrance SW", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest Entrance TOD", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest Entrance QVM", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
-        ((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest Entrance MDS", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest Entrance YCHE", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("YCHE -> YCHE - Post Fight", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Alpine Skyline - Finale", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Alpine Skyline - Free Roam", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("AFR -> Alpine Skyline Area", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Curly Tail Trail Portal - Entrance 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Time Rift - The Twilight Bell Portal - Entrance 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Battle of the Birds - Finale A: Connection 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("-> Alpine Skyline Area (TIHS)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (Has("Hookshot Badge"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Lava Cake", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Windmill", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Hookshot Badge"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ASA -> Badge Seller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("TIHS -> Alpine Skyline Area (TIHS)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("MT Area -> MT Area (HUMT)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("MT Area -> Badge Seller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("MT Area (HUMT) -> Badge Seller", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player),
-        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(False_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("SF Area -> Badge Seller", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
-        (Has("Hookshot Badge")) & (Has("TOD Access"))
+        True_()
     )
-    # Register indirect conditions for proper sphere calculation
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Subcon Well"),
-        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("The Big Parade"),
-        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Barrel Battle"),
-        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Down with the Mafia!"),
-        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Train Rush"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dead Bird Studio"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Train Rush"),
-        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Murder on the Owl Express"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Cheating the Race"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Murder on the Owl Express"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Cheating the Race"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Murder on the Owl Express"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Cheating the Race"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Murder on the Owl Express"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Cheating the Race"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Murder on the Owl Express"),
-        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Cheating the Race"),
-        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player)
+
+    world.set_rule(
+        multiworld.get_entrance("Time's End - Act 1", player),
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Spaceship - Rumbi Abuse", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Mafia Boss Shop Item", player),
-        (Has("Time Piece", 12)) & (Has("Time Piece", 5))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Gallery)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - The Lab)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome to Mafia Town - Umbrella", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Welcome to Mafia Town)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Barrel Battle)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (She Came from Outer Space)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Hallway Brewing Crate", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia HQ - Freezer Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Secret Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia HQ - Bathroom Stall Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Down with the Mafia!)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Heating Up Mafia Town)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("HUMT Access", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Cheating the Race)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Golden Vault)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio)", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Murder on the Owl Express - Cafeteria", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Murder on the Owl Express - Luggage Room Top", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Murder on the Owl Express - Luggage Room Bottom", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Murder on the Owl Express - Raven Suite Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Murder on the Owl Express - Raven Suite Top", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Murder on the Owl Express - Lounge Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Murder on the Owl Express)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Picture Perfect - Behind Badge Seller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Picture Perfect - Hats Buy Building", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Picture Perfect)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Train Rush)", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Big Parade)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Award Ceremony)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Window Platform", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cardboard Conductor", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Above Conductor Sign", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio Basement - Logo Wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Disco Room", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio Basement - Small Room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio Basement - Vent Pipe", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Tightrope", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cameras", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Locked Room", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio Basement)", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Dead Bird Studio)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Behind Cardboard Planet", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Near Time Rift Gate", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Top of Metal Bar", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Lava Lamp", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Above Horse Picture", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Green Screen", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: In The Corner", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio (Rift) - Page: Above TV Room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - The Owl Express)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - The Moon)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Up the Ladder", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Red Building Top", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Behind Water Tower", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Side of House", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dead Bird Studio - Tightrope Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Tepee Chest", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Conductor Chest", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("Umbrella"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Contractual Obligations - Cherry Bomb Bone Cage", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Contractual Obligations)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Snatcher's Contract - The Subcon Well", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Well - Hookshot Badge Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Well - Above Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Well - On Pipe", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Well - Mushroom", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Subcon Well)", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        (Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=(False_()) & (Not(False_())), if_true=True_(), if_false=Has("Progressive Painting Unlock")))) & (Conditional(test=Not(False_()), if_true=True_(), if_false=((True_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)))) | (Has("Umbrella")))) & (Has("Hookshot Badge"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("TOD Access", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Queen Vanessa's Manor - Cellar", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Queen Vanessa's Manor - Bedroom Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Queen Vanessa's Manor - Hall Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Queen Vanessa's Manor - Chandelier", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Queen Vanessa's Manor)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Mail Delivery Service)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("AFR Access", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Purrloined Village: Horned Stone", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Purrloined Village: Chest Reward", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,))) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Gate Puzzle", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Twilight Path", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - Goat Village: Below Hookpoint", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - Goat Village: Hidden Branch", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        ((Conditional(test=Not(False_()), if_true=True_(), if_false=((False_()) & (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)))) | (Has("Umbrella")))) & (Has("AFR Access")) & (Has("Hookshot Badge"))) & (Has("Hookshot Badge"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Bird Pass Fork", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) & (Has("Hookshot Badge"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Ember Summit", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Outpost Horn", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Windy Passage", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Birdhouse: Triple Crow Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Birdhouse: Dweller Platforms Relic", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Birdhouse: Brewing Crate House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Birdhouse: Hay Bale", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Birdhouse: Outer Edge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Birdhouse)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Birdhouse Cleared", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Lava Cake: Center Fence Cage", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Lava Cake: Outer Island Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Lava Cake: Dweller Pillars", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Lava Cake: Top Cake", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Lava Cake)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lava Cake Cleared", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Windmill: Inside Pon Cluster", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Windmill: Entrance", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Windmill: Dropdown", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Windmill: House Window", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Windmill)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Windmill Cleared", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Twilight Bell: Wide Purple Platform", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline - The Twilight Bell: Ice Platform", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (The Twilight Bell)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Twilight Bell Cleared", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Illness has Spread)", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("TIHS Access", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Alpine Skyline)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline (Rift) - Page: Windmill Island Ledge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline (Rift) - Page: Lonely Birdhouse Top", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Alpine Skyline (Rift) - Page: Below Aqueduct", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - The Twilight Bell)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Curly Tail Trail)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Old Man (Seaside Spaghetti)", player),
-        (CanReachRegion("Barrel Battle")) | (CanReachRegion("Cheating the Race")) | (CanReachRegion("Down with the Mafia!")) | (CanReachRegion("The Golden Vault")) | (CanReachRegion("Welcome to Mafia Town"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Old Man (Steel Beams)", player),
-        (CanReachRegion("Barrel Battle")) | (CanReachRegion("Cheating the Race")) | (CanReachRegion("Down with the Mafia!")) | (CanReachRegion("The Golden Vault")) | (CanReachRegion("Welcome to Mafia Town"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Blue Vault", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Green Vault", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Red Vault", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Blue Vault Brewing Crate", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Plaza Under Boxes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Small Boat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Staircase Pon Cluster", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Palm Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Port", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Docks Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Ice Hat Cage", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Hidden Buttons Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Dweller Boxes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Ledge Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Yellow Sphere Building Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Beneath Scaffolding", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - On Scaffolding", player),
-        (CanReachRegion("Barrel Battle")) | (CanReachRegion("Cheating the Race")) | (CanReachRegion("Heating Up Mafia Town")) | (CanReachRegion("She Came from Outer Space")) | (CanReachRegion("The Golden Vault")) | (CanReachRegion("Welcome to Mafia Town"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Cargo Ship", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Beach Alcove", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Wood Cage", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Beach Patio", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Steel Beam Nest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Ruined Tower", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Hot Air Balloon", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Camera Badge 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Camera Badge 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Chest Beneath Aqueduct", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Secret Cave", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (Has("HUMT Access"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Crow Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Above Boats", player),
-        (Has("HUMT Access")) | (Has("Hookshot Badge"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Slip Slide Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia Town - Behind Faucet", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Clock Tower Chest", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Lighthouse", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Mafia Geek Platform", player),
-        (CanReachRegion("Barrel Battle")) | (CanReachRegion("Cheating the Race")) | (CanReachRegion("Down with the Mafia!")) | (CanReachRegion("Heating Up Mafia Town")) | (CanReachRegion("The Golden Vault")) | (CanReachRegion("Welcome to Mafia Town"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Behind HQ Chest", player),
-        (CanReachLocation("Act Completion (Heating Up Mafia Town)")) | (CanReachRegion("Cheating the Race")) | (CanReachRegion("Down with the Mafia!")) | (CanReachRegion("The Golden Vault"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Mafia of Cooks)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia of Cooks - Page: Fish Pile", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia of Cooks - Page: Trash Mound", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia of Cooks - Page: Beside Red Building", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia of Cooks - Page: Behind Shipping Containers", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia of Cooks - Page: Top of Boat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mafia of Cooks - Page: Below Dock", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Sewers)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Bazaar)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Village - Tree Top Ice Cube", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Village - Graveyard Ice Cube", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Village - House Top", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Village - Ice Cube House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Village - Stump Platform Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Giant Tree Climb", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Ice Cube Shack", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Swamp Gravestone", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Near Well", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Tree A", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Tree B", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Ice Wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Treehouse", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Swamp Tree Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Burning House", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Burning Tree Climb", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Burning Stump Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Burning Forest Treehouse", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Spider Bone Cage A", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Spider Bone Cage B", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Triple Spider Bounce", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Noose Treehouse", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Long Tree Climb Chest", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Manor Rooftop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Infinite Yarn Bush", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Magnet Badge Bush", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Stump", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Floating Rocks", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Dweller Platforming Tree A", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Platforming Tree B", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Giant Time Piece", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Gallows", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Green and Purple Dweller Rocks", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Shack", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Tall Tree Hookshot Swing", player),
-        Has("Hookshot Badge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Snatcher's Contract - Toilet of Doom", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Snatcher's Contract - Queen Vanessa's Manor", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Snatcher's Contract - Mail Delivery Service", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Village - Snatcher Statue Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Subcon Forest - Boss Arena Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Your Contract has Expired)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Act Completion (Time Rift - Sleepy Subcon)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Behind Entrance Area", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Near Wrecking Ball", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Behind Crane", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Wrecked Treehouse", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Behind 2nd Rift Gate", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Rotating Platform", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Behind 3rd Rift Gate", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Frozen Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sleepy Subcon - Page: Secret Library", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Pipe)", player),
-        Has("Hookshot Badge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Village)", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))) | (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) | (Has("Umbrella"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Seller - Item 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Seller - Item 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Seller - Item 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Seller - Item 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Finale - Frozen Item", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Hookshot Badge"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        (HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))) & (Has("Hookshot Badge"))
+        True_()
     )

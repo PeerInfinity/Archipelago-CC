@@ -458,7 +458,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
   // Detect Rule Builder format: has 'rule' key but no 'type' key
   // Rule Builder format: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
-  // CC format: {"type": "item_check", "item": "Sword"}
+  // AST format: {"type": "item_check", "item": "Sword"}
   if (rule.rule && !rule.type) {
     return evaluateRuleBuilderRule(rule, context, depth, localScope);
   }
@@ -4396,7 +4396,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
  * Rule Builder format uses {"rule": "RuleName", "options": [], "args": {...}} or
  * {"rule": "And/Or", "options": [], "children": [...]} for composite rules.
  *
- * This provides native support for Rule Builder rules without converting to CC format.
+ * This provides native support for Rule Builder rules without converting to AST format.
  *
  * @param {Object} rule - Rule in Rule Builder format
  * @param {Object} context - The snapshot interface for evaluation
@@ -4474,7 +4474,7 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         log('warn', '[evaluateRuleBuilderRule] Has rule missing item_name');
         return undefined;
       }
-      // Delegate to CC format evaluation
+      // Delegate to AST format evaluation
       return evaluateRule({ type: 'item_check', item: itemName, count }, context, depth + 1, localScope);
     }
 
@@ -4676,7 +4676,7 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     }
 
     // HelperCall: Rule Builder rule that wraps a helper function
-    // The body_data contains the CC format rule to evaluate
+    // The body_data contains the AST format rule to evaluate
     case 'HelperCall': {
       const bodyData = args.body_data;
       if (bodyData) {

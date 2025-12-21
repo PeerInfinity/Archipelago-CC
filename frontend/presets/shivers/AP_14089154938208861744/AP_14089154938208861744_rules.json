@@ -19,8 +19,9 @@
             "name": "To Registry",
             "connected_region": "Registry",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,8 +34,9 @@
             "name": "To Outside From Registry",
             "connected_region": "Outside",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -47,16 +49,20 @@
             "name": "To Underground Tunnels From Outside",
             "connected_region": "Underground Tunnels",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Lobby From Outside",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Front Door"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Front Door"
+              }
             }
           }
         ],
@@ -65,8 +71,9 @@
             "name": "Puzzle Solved Combination Lock",
             "id": 27114,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Office Elevator",
@@ -80,8 +87,9 @@
             "name": "Puzzle Solved Gears",
             "id": 27000,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Always Available in Pegasus Room",
@@ -95,8 +103,9 @@
             "name": "Puzzle Solved Stone Henge",
             "id": 27001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Bedroom",
@@ -110,36 +119,35 @@
             "name": "Puzzle Solved Office Elevator",
             "id": 27110,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "state_method",
-                      "method": "can_reach_region",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Office"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Office"
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "can_reach_region",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Underground Lake"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Underground Lake"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Key for Office Elevator"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Key for Office Elevator"
+                  }
                 }
               ]
             },
@@ -155,36 +163,35 @@
             "name": "Puzzle Solved Three Floor Elevator",
             "id": 27112,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "state_method",
-                      "method": "can_reach_region",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Blue Maze"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Blue Maze"
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "can_reach_region",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Maintenance Tunnels"
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Maintenance Tunnels"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Key for Three Floor Elevator"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Key for Three Floor Elevator"
+                  }
                 }
               ]
             },
@@ -200,8 +207,9 @@
             "name": "Puzzle Hint Found: Mailbox",
             "id": 27054,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -215,8 +223,9 @@
             "name": "Puzzle Hint Found: Orange Symbol",
             "id": 27055,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Underground Lake",
@@ -230,8 +239,9 @@
             "name": "Puzzle Hint Found: Silver Symbol",
             "id": 27056,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Shaman Room",
@@ -245,8 +255,9 @@
             "name": "Puzzle Hint Found: Green Symbol",
             "id": 27057,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Office",
@@ -260,8 +271,9 @@
             "name": "Puzzle Hint Found: White Symbol",
             "id": 27058,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal Always Available in Ocean",
@@ -275,8 +287,9 @@
             "name": "Puzzle Hint Found: Brown Symbol",
             "id": 27059,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sand Always Available in Ocean",
@@ -290,8 +303,9 @@
             "name": "Puzzle Hint Found: Tan Symbol",
             "id": 27060,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cloth Pot Bottom",
@@ -310,16 +324,20 @@
             "name": "To Underground Lake From Underground Tunnels",
             "connected_region": "Underground Lake",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Underground Lake"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Underground Lake"
+              }
             }
           },
           {
             "name": "To Outside From Underground",
             "connected_region": "Outside",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -332,24 +350,29 @@
             "name": "To Underground Tunnels From Underground Lake",
             "connected_region": "Underground Tunnels",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Underground Lake"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Underground Lake"
+              }
             }
           },
           {
             "name": "To Windlenot's Body From Underground Lake",
             "connected_region": "Windlenot's Body",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Underground Blue Tunnels From Underground Lake",
             "connected_region": "Underground Blue Tunnels",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -358,8 +381,9 @@
             "name": "Flashback Memory Obtained Windlenot's Ghost",
             "id": 27026,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -378,8 +402,9 @@
             "name": "To Underground Lake From Windlenot's Body",
             "connected_region": "Underground Lake",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -388,8 +413,9 @@
             "name": "Flashback Memory Obtained Egyptian Hieroglyphics Explained",
             "id": 27031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cloth Always Available in Egypt",
@@ -403,8 +429,9 @@
             "name": "Windlenot's Body",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Viewed Egyptian Hieroglyphics Explained",
@@ -424,16 +451,20 @@
             "name": "To Underground Lake From Underground Blue Tunnels",
             "connected_region": "Underground Lake",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Office Elevator From Underground Blue Tunnels",
             "connected_region": "Office Elevator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Office Elevator"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Office Elevator"
+              }
             }
           }
         ],
@@ -446,16 +477,18 @@
             "name": "To Underground Blue Tunnels From Office Elevator",
             "connected_region": "Underground Blue Tunnels",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Office From Office Elevator",
             "connected_region": "Office",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -468,55 +501,56 @@
             "name": "To Office Elevator From Office",
             "connected_region": "Office Elevator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Office Elevator"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Office Elevator"
+              }
             }
           },
           {
             "name": "To Workshop",
             "connected_region": "Workshop",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Workshop"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Workshop"
+              }
             }
           },
           {
             "name": "To Lobby From Office",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Office"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Office"
+              }
             }
           },
           {
             "name": "To Bedroom Elevator From Office",
             "connected_region": "Bedroom Elevator",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "set",
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Crawling"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key for Bedroom Elevator"
-                    }
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             }
           },
           {
             "name": "To Ash Capture From Office",
             "connected_region": "Ash Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -525,8 +559,9 @@
             "name": "Flashback Memory Obtained Scrapbook",
             "id": 27028,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -540,8 +575,9 @@
             "name": "Storage: Desk Drawer",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal Pot Bottom DUPE",
@@ -555,8 +591,9 @@
             "name": "Puzzle Hint Found: Atlantis Map",
             "id": 27062,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crawling",
@@ -570,8 +607,9 @@
             "name": "Puzzle Hint Found: Tape Recorder Heard",
             "id": 27069,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Janitor Closet",
@@ -585,23 +623,14 @@
             "name": "Puzzle Solved Bedroom Elevator",
             "id": 27111,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "set",
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Crawling"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key for Bedroom Elevator"
-                    }
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             },
             "item": {
               "name": "Water Pot Bottom",
@@ -620,16 +649,18 @@
             "name": "To Office From Workshop",
             "connected_region": "Office",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Wood Capture From Workshop",
             "connected_region": "Wood Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -638,8 +669,9 @@
             "name": "Puzzle Solved Workshop Drawers",
             "id": 27002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Always Available in Bedroom",
@@ -653,8 +685,9 @@
             "name": "Storage: Workshop Drawers",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Pot Bottom DUPE",
@@ -668,8 +701,9 @@
             "name": "Puzzle Hint Found: Basilisk Bone Fragments",
             "id": 27061,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cloth Pot Top",
@@ -688,31 +722,25 @@
             "name": "To Office From Bedroom Elevator",
             "connected_region": "Office",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "set",
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Crawling"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key for Bedroom Elevator"
-                    }
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Crawling",
+                  "Key for Bedroom Elevator"
+                ]
+              }
             }
           },
           {
             "name": "To Bedroom",
             "connected_region": "Bedroom",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Bedroom"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Bedroom"
+              }
             }
           }
         ],
@@ -725,16 +753,18 @@
             "name": "To Bedroom Elevator From Bedroom",
             "connected_region": "Bedroom Elevator",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Metal Capture From Bedroom",
             "connected_region": "Metal Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -743,8 +773,9 @@
             "name": "Flashback Memory Obtained Professor Windlenot's Diary",
             "id": 27039,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -763,66 +794,84 @@
             "name": "To Office From Lobby",
             "connected_region": "Office",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Office"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Office"
+              }
             }
           },
           {
             "name": "To Library From Lobby",
             "connected_region": "Library",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Library"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Library"
+              }
             }
           },
           {
             "name": "To Theater From Lobby",
             "connected_region": "Theater",
             "access_rule": {
-              "type": "item_check",
-              "item": "Viewed Egyptian Hieroglyphics Explained"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Viewed Egyptian Hieroglyphics Explained"
+              }
             }
           },
           {
             "name": "To Prehistoric From Lobby",
             "connected_region": "Prehistoric",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Prehistoric Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Prehistoric Room"
+              }
             }
           },
           {
             "name": "To Egypt From Lobby",
             "connected_region": "Egypt",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Egypt Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Egypt Room"
+              }
             }
           },
           {
             "name": "To Tar River From Lobby",
             "connected_region": "Tar River",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "oil_capturable",
-                  "args": []
+                  "rule": "oil_capturable",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Tar River"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Tar River"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Crawling"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Crawling"
+                  }
                 }
               ]
             }
@@ -831,126 +880,182 @@
             "name": "To Outside From Lobby",
             "connected_region": "Outside",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Front Door"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Front Door"
+              }
             }
           },
           {
             "name": "To Water Capture From Lobby",
             "connected_region": "Water Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Crystal Capture From Lobby",
             "connected_region": "Crystal Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Victory",
             "connected_region": "Victory",
             "access_rule": {
-              "type": "compare",
-              "left": {
-                "type": "binary_op",
+              "rule": "Compare",
+              "options": [],
+              "args": {
                 "left": {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "binary_op",
+                  "rule": "Arithmetic",
+                  "options": [],
+                  "args": {
                     "left": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "binary_op",
+                      "rule": "Arithmetic",
+                      "options": [],
+                      "args": {
                         "left": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "binary_op",
+                          "rule": "Arithmetic",
+                          "options": [],
+                          "args": {
                             "left": {
-                              "type": "binary_op",
-                              "left": {
-                                "type": "binary_op",
+                              "rule": "Arithmetic",
+                              "options": [],
+                              "args": {
                                 "left": {
-                                  "type": "helper",
-                                  "name": "water_capturable",
-                                  "args": []
+                                  "rule": "Arithmetic",
+                                  "options": [],
+                                  "args": {
+                                    "left": {
+                                      "rule": "Arithmetic",
+                                      "options": [],
+                                      "args": {
+                                        "left": {
+                                          "rule": "Arithmetic",
+                                          "options": [],
+                                          "args": {
+                                            "left": {
+                                              "rule": "Arithmetic",
+                                              "options": [],
+                                              "args": {
+                                                "left": {
+                                                  "rule": "Arithmetic",
+                                                  "options": [],
+                                                  "args": {
+                                                    "left": {
+                                                      "rule": "water_capturable",
+                                                      "options": [],
+                                                      "args": [],
+                                                      "_original_ast_type": "helper",
+                                                      "_converted_from_cc": true
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                      "rule": "wax_capturable",
+                                                      "options": [],
+                                                      "args": [],
+                                                      "_original_ast_type": "helper",
+                                                      "_converted_from_cc": true
+                                                    }
+                                                  }
+                                                },
+                                                "op": "+",
+                                                "right": {
+                                                  "rule": "ash_capturable",
+                                                  "options": [],
+                                                  "args": [],
+                                                  "_original_ast_type": "helper",
+                                                  "_converted_from_cc": true
+                                                }
+                                              }
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                              "rule": "oil_capturable",
+                                              "options": [],
+                                              "args": [],
+                                              "_original_ast_type": "helper",
+                                              "_converted_from_cc": true
+                                            }
+                                          }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                          "rule": "cloth_capturable",
+                                          "options": [],
+                                          "args": [],
+                                          "_original_ast_type": "helper",
+                                          "_converted_from_cc": true
+                                        }
+                                      }
+                                    },
+                                    "op": "+",
+                                    "right": {
+                                      "rule": "wood_capturable",
+                                      "options": [],
+                                      "args": [],
+                                      "_original_ast_type": "helper",
+                                      "_converted_from_cc": true
+                                    }
+                                  }
                                 },
                                 "op": "+",
                                 "right": {
-                                  "type": "helper",
-                                  "name": "wax_capturable",
-                                  "args": []
+                                  "rule": "crystal_capturable",
+                                  "options": [],
+                                  "args": [],
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_cc": true
                                 }
-                              },
-                              "op": "+",
-                              "right": {
-                                "type": "helper",
-                                "name": "ash_capturable",
-                                "args": []
                               }
                             },
                             "op": "+",
                             "right": {
-                              "type": "helper",
-                              "name": "oil_capturable",
-                              "args": []
+                              "rule": "sand_capturable",
+                              "options": [],
+                              "args": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true
                             }
-                          },
-                          "op": "+",
-                          "right": {
-                            "type": "helper",
-                            "name": "cloth_capturable",
-                            "args": []
                           }
                         },
                         "op": "+",
                         "right": {
-                          "type": "helper",
-                          "name": "wood_capturable",
-                          "args": []
+                          "rule": "metal_capturable",
+                          "options": [],
+                          "args": [],
+                          "_original_ast_type": "helper",
+                          "_converted_from_cc": true
                         }
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "helper",
-                        "name": "crystal_capturable",
-                        "args": []
                       }
                     },
                     "op": "+",
                     "right": {
-                      "type": "helper",
-                      "name": "sand_capturable",
-                      "args": []
+                      "rule": "lightning_capturable",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
                     }
-                  },
-                  "op": "+",
-                  "right": {
-                    "type": "helper",
-                    "name": "metal_capturable",
-                    "args": []
                   }
                 },
-                "op": "+",
+                "op": ">=",
                 "right": {
-                  "type": "helper",
-                  "name": "lightning_capturable",
-                  "args": []
-                }
-              },
-              "op": ">=",
-              "right": {
-                "type": "attribute",
-                "object": {
-                  "type": "setting_value",
-                  "setting": "ixupi_captures_needed"
+                  "rule": "SettingValue",
+                  "options": [],
+                  "args": {
+                    "setting": "ixupi_captures_needed"
+                  }
                 },
-                "attr": "value"
-              }
+                "_original_ast_type": "compare"
+              },
+              "_converted_from_cc": true
             }
           }
         ],
@@ -959,8 +1064,11 @@
             "name": "Puzzle Solved Theater Door",
             "id": 27004,
             "access_rule": {
-              "type": "item_check",
-              "item": "Viewed Egyptian Hieroglyphics Explained"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Viewed Egyptian Hieroglyphics Explained"
+              }
             },
             "item": {
               "name": "Key for Torture Room",
@@ -974,8 +1082,9 @@
             "name": "Flashback Memory Obtained Museum Brochure",
             "id": 27029,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -989,21 +1098,22 @@
             "name": "Storage: Slide",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Slide Room"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Slide Room"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Lost Your Head"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Lost Your Head"
+                  }
                 }
               ]
             },
@@ -1019,8 +1129,9 @@
             "name": "Storage: Transforming Mask",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water Pot Top DUPE",
@@ -1039,24 +1150,29 @@
             "name": "To Lobby From Library",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Library"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Library"
+              }
             }
           },
           {
             "name": "To Maintenance Tunnels From Library",
             "connected_region": "Maintenance Tunnels",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Wax Capture From Library",
             "connected_region": "Wax Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1065,8 +1181,9 @@
             "name": "Puzzle Solved Library Statue",
             "id": 27003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Three Floor Elevator",
@@ -1080,8 +1197,9 @@
             "name": "Flashback Memory Obtained In Search of the Unexplained",
             "id": 27030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Egypt Room",
@@ -1095,8 +1213,9 @@
             "name": "Flashback Memory Obtained South American Pictographs",
             "id": 27032,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax Always Available in Anansi Room",
@@ -1110,8 +1229,9 @@
             "name": "Flashback Memory Obtained Mythology of the Stars",
             "id": 27033,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -1125,8 +1245,9 @@
             "name": "Flashback Memory Obtained Black Book",
             "id": 27034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Ocean Room",
@@ -1140,8 +1261,9 @@
             "name": "Storage: Library Cabinet",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil Pot Top DUPE",
@@ -1155,8 +1277,9 @@
             "name": "Storage: Library Statue",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sand Pot Bottom DUPE",
@@ -1175,24 +1298,31 @@
             "name": "To Library From Maintenance Tunnels",
             "connected_region": "Library",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Three Floor Elevator From Maintenance Tunnels",
             "connected_region": "Three Floor Elevator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Three Floor Elevator"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Three Floor Elevator"
+              }
             }
           },
           {
             "name": "To Generator From Maintenance Tunnels",
             "connected_region": "Generator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Generator Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Generator Room"
+              }
             }
           }
         ],
@@ -1201,8 +1331,9 @@
             "name": "Flashback Memory Obtained Beth's Address Book",
             "id": 27037,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -1221,54 +1352,64 @@
             "name": "To Maintenance Tunnels From Generator",
             "connected_region": "Maintenance Tunnels",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Beth's Body From Generator",
             "connected_region": "Beth's Body",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "setting_value",
-                      "setting": "puzzle_hints_required"
-                    },
-                    "attr": "value"
-                  },
-                  "if_true": {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "can_reach_region",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Theater"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Viewed Norse Stone"
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "SettingValue",
+                      "options": [],
+                      "args": {
+                        "setting": "puzzle_hints_required"
                       }
-                    ]
+                    },
+                    "if_true": {
+                      "rule": "And",
+                      "options": [],
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "options": [],
+                          "args": {
+                            "region_name": "Theater"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Viewed Norse Stone"
+                          }
+                        }
+                      ]
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "_original_ast_type": "conditional"
                   },
-                  "if_false": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "helper",
-                  "name": "beths_body_available",
-                  "args": []
+                  "rule": "beths_body_available",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 }
               ]
             }
@@ -1283,8 +1424,9 @@
             "name": "To Generator From Beth's Body",
             "connected_region": "Generator",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1293,8 +1435,9 @@
             "name": "Final Riddle: Beth's Body Page 17",
             "id": 27052,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Projector Room",
@@ -1308,8 +1451,9 @@
             "name": "Beth's Body",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Viewed Page 17",
@@ -1329,16 +1473,18 @@
             "name": "To Lobby From Theater",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Theater Back Hallway From Theater",
             "connected_region": "Theater Back Hallway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1347,8 +1493,11 @@
             "name": "Storage: Theater",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Viewed Theater Movie"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Viewed Theater Movie"
+              }
             },
             "item": {
               "name": "Empty",
@@ -1362,8 +1511,9 @@
             "name": "Puzzle Hint Found: Beth's Note",
             "id": 27115,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -1382,38 +1532,42 @@
             "name": "To Theater From Theater Back Hallway",
             "connected_region": "Theater",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Clock Tower Staircase From Theater Back Hallway",
             "connected_region": "Clock Tower Staircase",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Three Floor Elevator"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Three Floor Elevator"
+              }
             }
           },
           {
             "name": "To Maintenance Tunnels From Theater Back Hallway",
             "connected_region": "Maintenance Tunnels",
             "access_rule": {
-              "type": "item_check",
-              "item": "Crawling"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Crawling"
+              }
             }
           },
           {
             "name": "To Projector Room",
             "connected_region": "Projector Room",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Projector Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Projector Room"
+              }
             }
           }
         ],
@@ -1422,14 +1576,11 @@
             "name": "Puzzle Solved Clock Tower Door",
             "id": 27005,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Three Floor Elevator"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Three Floor Elevator"
+              }
             },
             "item": {
               "name": "Ash Always Available in Office",
@@ -1448,45 +1599,49 @@
             "name": "To Theater Back Hallway From Clock Tower Staircase",
             "connected_region": "Theater Back Hallway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Clock Tower",
             "connected_region": "Clock Tower",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Clock Chains From Clock Tower Staircase",
             "connected_region": "Clock Chains",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "attribute",
-                "object": {
-                  "type": "setting_value",
-                  "setting": "puzzle_hints_required"
-                },
-                "attr": "value"
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "can_reach_region",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Bedroom"
+              "rule": "Conditional",
+              "options": [],
+              "args": {
+                "test": {
+                  "rule": "SettingValue",
+                  "options": [],
+                  "args": {
+                    "setting": "puzzle_hints_required"
                   }
-                ]
+                },
+                "if_true": {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Bedroom"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_",
+                  "options": [],
+                  "args": {}
+                },
+                "_original_ast_type": "conditional"
               },
-              "if_false": {
-                "type": "constant",
-                "value": true
-              }
+              "_converted_from_cc": true
             }
           }
         ],
@@ -1499,8 +1654,9 @@
             "name": "To Clock Tower Staircase From Clock Chains",
             "connected_region": "Clock Tower Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1509,8 +1665,9 @@
             "name": "Puzzle Solved Clock Chains",
             "id": 27006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -1524,8 +1681,9 @@
             "name": "Clock Chains",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Time",
@@ -1545,8 +1703,9 @@
             "name": "To Clock Tower Staircase From Clock Tower",
             "connected_region": "Clock Tower Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1555,8 +1714,9 @@
             "name": "Flashback Memory Obtained Beth's Ghost",
             "id": 27024,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ash Pot Bottom",
@@ -1570,8 +1730,11 @@
             "name": "Storage: Clock Tower",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Set Time"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Set Time"
+              }
             },
             "item": {
               "name": "Water Pot Bottom DUPE",
@@ -1585,8 +1748,9 @@
             "name": "Puzzle Hint Found: Shaman Security Camera",
             "id": 27068,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal Always Available in Lobby",
@@ -1600,42 +1764,42 @@
             "name": "Jukebox",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "setting_value",
-                      "setting": "puzzle_hints_required"
-                    },
-                    "attr": "value"
-                  },
-                  "if_true": {
-                    "type": "state_method",
-                    "method": "can_reach_region",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Anansi"
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "SettingValue",
+                      "options": [],
+                      "args": {
+                        "setting": "puzzle_hints_required"
                       }
-                    ]
+                    },
+                    "if_true": {
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Anansi"
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "_original_ast_type": "conditional"
                   },
-                  "if_false": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "state_method",
-                  "method": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Clock Tower"
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Clock Tower"
+                  }
                 }
               ]
             },
@@ -1657,16 +1821,18 @@
             "name": "To Theater Back Hallway From Projector Room",
             "connected_region": "Theater Back Hallway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Metal Capture From Projector Room",
             "connected_region": "Metal Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1675,8 +1841,9 @@
             "name": "Flashback Memory Obtained Theater Movie",
             "id": 27035,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax Always Available in Library",
@@ -1690,8 +1857,9 @@
             "name": "Viewed Theater Movie",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Viewed Theater Movie",
@@ -1711,40 +1879,51 @@
             "name": "To Lobby From Prehistoric",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Prehistoric Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Prehistoric Room"
+              }
             }
           },
           {
             "name": "To Greenhouse",
             "connected_region": "Greenhouse",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Greenhouse"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Greenhouse"
+              }
             }
           },
           {
             "name": "To Ocean From Prehistoric",
             "connected_region": "Ocean",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Ocean Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Ocean Room"
+              }
             }
           },
           {
             "name": "To Oil Capture From Prehistoric",
             "connected_region": "Oil Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Metal Capture From Prehistoric",
             "connected_region": "Metal Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1753,8 +1932,9 @@
             "name": "Storage: Eagles Nest",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax Pot Top DUPE",
@@ -1768,8 +1948,9 @@
             "name": "Set Skull Dial: Prehistoric",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Skull Dial: Prehistoric",
@@ -1789,16 +1970,18 @@
             "name": "To Prehistoric From Greenhouse",
             "connected_region": "Prehistoric",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Sand Capture From Greenhouse",
             "connected_region": "Sand Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1807,8 +1990,9 @@
             "name": "Storage: Greenhouse",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cloth Pot Top DUPE",
@@ -1827,32 +2011,38 @@
             "name": "To Prehistoric From Ocean",
             "connected_region": "Prehistoric",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Ocean Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Ocean Room"
+              }
             }
           },
           {
             "name": "To Maze Staircase From Ocean",
             "connected_region": "Maze Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Crystal Capture From Ocean",
             "connected_region": "Crystal Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Sand Capture From Ocean",
             "connected_region": "Sand Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1861,14 +2051,11 @@
             "name": "Puzzle Solved Atlantis",
             "id": 27007,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Office"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Office"
+              }
             },
             "item": {
               "name": "Key for Generator Room",
@@ -1882,8 +2069,9 @@
             "name": "Puzzle Solved Organ",
             "id": 27008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil Pot Top",
@@ -1897,8 +2085,9 @@
             "name": "Flashback Memory Obtained Museum Blueprints",
             "id": 27036,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Always Available in Gods Room",
@@ -1912,8 +2101,9 @@
             "name": "Storage: Ocean",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lightning Pot Top DUPE",
@@ -1927,8 +2117,9 @@
             "name": "Puzzle Hint Found: Sirens Song Heard",
             "id": 27063,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water Always Available in Lobby",
@@ -1947,22 +2138,20 @@
             "name": "To Ocean From Maze Staircase",
             "connected_region": "Ocean",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Maze From Maze Staircase",
             "connected_region": "Maze",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Projector Room"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Projector Room"
+              }
             }
           }
         ],
@@ -1971,8 +2160,11 @@
             "name": "Puzzle Solved Maze Door",
             "id": 27009,
             "access_rule": {
-              "type": "item_check",
-              "item": "Viewed Theater Movie"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Viewed Theater Movie"
+              }
             },
             "item": {
               "name": "Key for Puzzle Room",
@@ -1991,16 +2183,18 @@
             "name": "To Maze Staircase From Maze",
             "connected_region": "Maze Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Tar River",
             "connected_region": "Tar River",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2013,24 +2207,31 @@
             "name": "To Maze From Tar River",
             "connected_region": "Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Lobby From Tar River",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "helper",
-                  "name": "oil_capturable",
-                  "args": []
+                  "rule": "oil_capturable",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Crawling"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Crawling"
+                  }
                 }
               ]
             }
@@ -2039,8 +2240,9 @@
             "name": "To Oil Capture From Tar River",
             "connected_region": "Oil Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2049,9 +2251,11 @@
             "name": "Storage: Tar River",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "oil_capturable",
-              "args": []
+              "rule": "oil_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Wax Pot Bottom DUPE",
@@ -2065,8 +2269,9 @@
             "name": "Set Skull Dial: Tar River",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Skull Dial: Tar River",
@@ -2086,38 +2291,42 @@
             "name": "To Lobby From Egypt",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Egypt Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Egypt Room"
+              }
             }
           },
           {
             "name": "To Burial From Egypt",
             "connected_region": "Burial",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Egypt"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Egypt"
+              }
             }
           },
           {
             "name": "To Blue Maze From Egypt",
             "connected_region": "Blue Maze",
             "access_rule": {
-              "type": "item_check",
-              "item": "Crawling"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Crawling"
+              }
             }
           },
           {
             "name": "To Cloth Capture From Egypt",
             "connected_region": "Cloth Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2126,8 +2335,11 @@
             "name": "Puzzle Solved Columns of RA",
             "id": 27010,
             "access_rule": {
-              "type": "item_check",
-              "item": "Viewed Egyptian Hieroglyphics Explained"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Viewed Egyptian Hieroglyphics Explained"
+              }
             },
             "item": {
               "name": "Key for Workshop",
@@ -2141,8 +2353,9 @@
             "name": "Puzzle Solved Burial Door",
             "id": 27011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Pot Bottom",
@@ -2156,8 +2369,9 @@
             "name": "Storage: Egypt",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cloth Pot Bottom DUPE",
@@ -2171,8 +2385,9 @@
             "name": "Puzzle Hint Found: Egyptian Sphinx Heard",
             "id": 27064,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -2186,8 +2401,9 @@
             "name": "Set Skull Dial: Egypt",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Skull Dial: Egypt",
@@ -2207,32 +2423,38 @@
             "name": "To Egypt From Burial",
             "connected_region": "Egypt",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Shaman From Burial",
             "connected_region": "Shaman",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Shaman Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Shaman Room"
+              }
             }
           },
           {
             "name": "To Ash Capture From Burial",
             "connected_region": "Ash Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Cloth Capture From Burial",
             "connected_region": "Cloth Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2241,8 +2463,9 @@
             "name": "Puzzle Solved Chinese Solitaire",
             "id": 27012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -2256,8 +2479,9 @@
             "name": "Flashback Memory Obtained Merrick's Notebook",
             "id": 27038,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ash Always Available in Burial Room",
@@ -2271,8 +2495,9 @@
             "name": "Storage: Chinese Solitaire",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sand Pot Top DUPE",
@@ -2286,8 +2511,9 @@
             "name": "Set Skull Dial: Burial",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Skull Dial: Burial",
@@ -2307,30 +2533,31 @@
             "name": "To Burial From Shaman",
             "connected_region": "Burial",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Shaman Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Shaman Room"
+              }
             }
           },
           {
             "name": "To Gods Room From Shaman",
             "connected_region": "Gods Room",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Clock Tower"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Clock Tower"
+              }
             }
           },
           {
             "name": "To Wax Capture From Shaman",
             "connected_region": "Wax Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2339,14 +2566,11 @@
             "name": "Puzzle Solved Shaman Drums",
             "id": 27013,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Clock Tower"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Clock Tower"
+              }
             },
             "item": {
               "name": "Metal Always Available in Prehistoric",
@@ -2360,8 +2584,9 @@
             "name": "Storage: Shaman Hut",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty",
@@ -2380,38 +2605,40 @@
             "name": "To Shaman From Gods Room",
             "connected_region": "Shaman",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Anansi From Gods Room",
             "connected_region": "Anansi",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Maintenance Tunnels"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Maintenance Tunnels"
+              }
             }
           },
           {
             "name": "To Wood Capture From Gods Room",
             "connected_region": "Wood Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Norse Stone From Gods Room",
             "connected_region": "Norse Stone",
             "access_rule": {
-              "type": "item_check",
-              "item": "Aligned Planets"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Aligned Planets"
+              }
             }
           }
         ],
@@ -2420,8 +2647,9 @@
             "name": "Puzzle Solved Lyre",
             "id": 27014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Bedroom Elevator",
@@ -2435,14 +2663,11 @@
             "name": "Puzzle Solved Red Door",
             "id": 27015,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Maintenance Tunnels"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Maintenance Tunnels"
+              }
             },
             "item": {
               "name": "Easier Lyre",
@@ -2456,8 +2681,9 @@
             "name": "Storage: Lyre",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Pot Top DUPE",
@@ -2471,8 +2697,9 @@
             "name": "Set Skull Dial: Gods Room",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Skull Dial: Gods Room",
@@ -2492,8 +2719,9 @@
             "name": "To Gods Room From Norse Stone",
             "connected_region": "Gods Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2502,8 +2730,9 @@
             "name": "Final Riddle: Norse God Stone Message",
             "id": 27051,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Always Available in Projector Room",
@@ -2517,8 +2746,9 @@
             "name": "Norse Stone",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Viewed Norse Stone",
@@ -2538,30 +2768,29 @@
             "name": "To Gods Room From Anansi",
             "connected_region": "Gods Room",
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Gods Room"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Gods Room"
+              }
             }
           },
           {
             "name": "To Pegasus From Anansi",
             "connected_region": "Pegasus",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Wax Capture From Anansi",
             "connected_region": "Wax Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2570,8 +2799,11 @@
             "name": "Puzzle Solved Anansi Music Box",
             "id": 27019,
             "access_rule": {
-              "type": "item_check",
-              "item": "Set Song"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Set Song"
+              }
             },
             "item": {
               "name": "Wax Pot Top",
@@ -2585,8 +2817,9 @@
             "name": "Flashback Memory Obtained Ancient Astrology",
             "id": 27027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Always Available in Blue Maze",
@@ -2600,8 +2833,9 @@
             "name": "Storage: Skeleton",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Pot Top DUPE",
@@ -2615,8 +2849,11 @@
             "name": "Storage: Anansi Music Box",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Set Song"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Set Song"
+              }
             },
             "item": {
               "name": "Empty",
@@ -2635,24 +2872,27 @@
             "name": "To Anansi From Pegasus",
             "connected_region": "Anansi",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Werewolf From Pegasus",
             "connected_region": "Werewolf",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Wood Capture From Pegasus",
             "connected_region": "Wood Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2665,16 +2905,18 @@
             "name": "To Pegasus From Werewolf",
             "connected_region": "Pegasus",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Night Staircase From Werewolf",
             "connected_region": "Night Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2683,8 +2925,9 @@
             "name": "Set Skull Dial: Werewolf",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Set Skull Dial: Werewolf",
@@ -2704,24 +2947,29 @@
             "name": "To Werewolf From Night Staircase",
             "connected_region": "Werewolf",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Janitor Closet",
             "connected_region": "Janitor Closet",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Janitor Closet"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Janitor Closet"
+              }
             }
           },
           {
             "name": "To UFO From Night Staircase",
             "connected_region": "UFO",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2734,25 +2982,29 @@
             "name": "To Night Staircase From Janitor Closet",
             "connected_region": "Night Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Water Capture From Janitor Closet",
             "connected_region": "Water Capture",
             "access_rule": {
-              "type": "helper",
-              "name": "cloth_capturable",
-              "args": []
+              "rule": "cloth_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           },
           {
             "name": "To Cloth Capture From Janitor Closet",
             "connected_region": "Cloth Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2761,9 +3013,11 @@
             "name": "Storage: Janitor Closet",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "cloth_capturable",
-              "args": []
+              "rule": "cloth_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Lightning Pot Bottom DUPE",
@@ -2782,24 +3036,31 @@
             "name": "To Night Staircase From UFO",
             "connected_region": "Night Staircase",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Orrery From UFO",
             "connected_region": "Orrery",
             "access_rule": {
-              "type": "item_check",
-              "item": "Viewed Fortune"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Viewed Fortune"
+              }
             }
           },
           {
             "name": "To Inventions From UFO",
             "connected_region": "Inventions",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for UFO Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for UFO Room"
+              }
             }
           }
         ],
@@ -2808,14 +3069,11 @@
             "name": "Puzzle Solved UFO Symbols",
             "id": 27018,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Library"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Library"
+              }
             },
             "item": {
               "name": "Sand Pot Bottom",
@@ -2829,14 +3087,11 @@
             "name": "Storage: UFO",
             "id": null,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Library"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "Library"
+              }
             },
             "item": {
               "name": "Wood Pot Bottom DUPE",
@@ -2855,8 +3110,9 @@
             "name": "To UFO From Orrery",
             "connected_region": "UFO",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2865,8 +3121,9 @@
             "name": "Final Riddle: Planets Aligned",
             "id": 27050,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ash Pot Top",
@@ -2880,8 +3137,9 @@
             "name": "Orrery",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Aligned Planets",
@@ -2901,48 +3159,60 @@
             "name": "To Egypt From Blue Maze",
             "connected_region": "Egypt",
             "access_rule": {
-              "type": "item_check",
-              "item": "Crawling"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Crawling"
+              }
             }
           },
           {
             "name": "To Three Floor Elevator From Blue Maze Bottom",
             "connected_region": "Three Floor Elevator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Three Floor Elevator"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Three Floor Elevator"
+              }
             }
           },
           {
             "name": "To Three Floor Elevator From Blue Maze Top",
             "connected_region": "Three Floor Elevator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Three Floor Elevator"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Three Floor Elevator"
+              }
             }
           },
           {
             "name": "To Fortune Teller",
             "connected_region": "Fortune Teller",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Inventions From Blue Maze",
             "connected_region": "Inventions",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Wood Capture From Blue Maze",
             "connected_region": "Wood Capture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2951,8 +3221,9 @@
             "name": "Puzzle Solved Fortune Teller Door",
             "id": 27016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Always Available in Workshop",
@@ -2971,16 +3242,18 @@
             "name": "To Maintenance Tunnels From Three Floor Elevator",
             "connected_region": "Maintenance Tunnels",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Blue Maze From Three Floor Elevator",
             "connected_region": "Blue Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2989,8 +3262,9 @@
             "name": "Puzzle Hint Found: Elevator Writing",
             "id": 27067,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for UFO Room",
@@ -3009,8 +3283,9 @@
             "name": "To Blue Maze From Fortune Teller",
             "connected_region": "Blue Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3019,8 +3294,9 @@
             "name": "Flashback Memory Obtained Merrick's Ghost",
             "id": 27025,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sand Pot Top",
@@ -3034,8 +3310,9 @@
             "name": "Final Riddle: Fortune Teller",
             "id": 27049,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -3049,8 +3326,9 @@
             "name": "Viewed Fortune",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Viewed Fortune",
@@ -3070,24 +3348,31 @@
             "name": "To Blue Maze From Inventions",
             "connected_region": "Blue Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To UFO From Inventions",
             "connected_region": "UFO",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for UFO Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for UFO Room"
+              }
             }
           },
           {
             "name": "To Torture From Inventions",
             "connected_region": "Torture",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Torture Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Torture Room"
+              }
             }
           }
         ],
@@ -3096,8 +3381,9 @@
             "name": "Puzzle Solved Alchemy",
             "id": 27017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Key for Prehistoric Room",
@@ -3111,8 +3397,9 @@
             "name": "Storage: Alchemy",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil Pot Bottom DUPE",
@@ -3131,46 +3418,64 @@
             "name": "To Inventions From Torture",
             "connected_region": "Inventions",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Torture Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Torture Room"
+              }
             }
           },
           {
             "name": "To Puzzle Room Mastermind From Torture",
             "connected_region": "Puzzle Room Mastermind",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Puzzle Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Puzzle Room"
+              }
             }
           },
           {
             "name": "To Guillotine From Torture",
             "connected_region": "Guillotine",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "setting_value",
-                      "setting": "puzzle_hints_required"
+                  "rule": "Conditional",
+                  "options": [],
+                  "args": {
+                    "test": {
+                      "rule": "SettingValue",
+                      "options": [],
+                      "args": {
+                        "setting": "puzzle_hints_required"
+                      }
                     },
-                    "attr": "value"
+                    "if_true": {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Viewed Egyptian Hieroglyphics Explained"
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_",
+                      "options": [],
+                      "args": {}
+                    },
+                    "_original_ast_type": "conditional"
                   },
-                  "if_true": {
-                    "type": "item_check",
-                    "item": "Viewed Egyptian Hieroglyphics Explained"
-                  },
-                  "if_false": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "_converted_from_cc": true
                 },
                 {
-                  "type": "item_check",
-                  "item": "Viewed Page 17"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Viewed Page 17"
+                  }
                 }
               ]
             }
@@ -3181,8 +3486,9 @@
             "name": "Puzzle Solved Gallows",
             "id": 27020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Easier Lyre",
@@ -3196,8 +3502,9 @@
             "name": "Storage: Gallows",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal Pot Top DUPE",
@@ -3211,8 +3518,9 @@
             "name": "Puzzle Hint Found: Gallows Information Plaque",
             "id": 27065,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil Always Available in Prehistoric Room",
@@ -3231,8 +3539,9 @@
             "name": "To Torture From Guillotine",
             "connected_region": "Torture",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3241,8 +3550,9 @@
             "name": "Final Riddle: Guillotine Dropped",
             "id": 27053,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax Always Available in Shaman Room",
@@ -3256,8 +3566,9 @@
             "name": "Guillotine",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lost Your Head",
@@ -3277,16 +3588,20 @@
             "name": "To Torture",
             "connected_region": "Torture",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key for Puzzle Room"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key for Puzzle Room"
+              }
             }
           },
           {
             "name": "To Puzzle Room Marbles From Puzzle Room Mastermind",
             "connected_region": "Puzzle Room Marbles",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3295,8 +3610,9 @@
             "name": "Puzzle Solved Mastermind",
             "id": 27021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Pot Top",
@@ -3310,8 +3626,9 @@
             "name": "Puzzle Hint Found: Mastermind Information Plaque",
             "id": 27066,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal Pot Top",
@@ -3330,16 +3647,18 @@
             "name": "To Puzzle Room Mastermind From Puzzle Room Marbles",
             "connected_region": "Puzzle Room Mastermind",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Skull Bridge From Puzzle Room Marbles",
             "connected_region": "Skull Bridge",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3348,8 +3667,9 @@
             "name": "Puzzle Solved Marble Flipper",
             "id": 27022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -3368,17 +3688,20 @@
             "name": "To Puzzle Room Marbles From Skull Bridge",
             "connected_region": "Puzzle Room Marbles",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Slide Room",
             "connected_region": "Slide Room",
             "access_rule": {
-              "type": "helper",
-              "name": "all_skull_dials_set",
-              "args": []
+              "rule": "all_skull_dials_set",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             }
           }
         ],
@@ -3387,8 +3710,9 @@
             "name": "Storage: Skull Bridge",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ash Pot Top DUPE",
@@ -3402,9 +3726,11 @@
             "name": "Puzzle Solved Skull Dial Door",
             "id": 27023,
             "access_rule": {
-              "type": "helper",
-              "name": "all_skull_dials_set",
-              "args": []
+              "rule": "all_skull_dials_set",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Wax Pot Bottom",
@@ -3423,16 +3749,20 @@
             "name": "To Skull Bridge From Slide Room",
             "connected_region": "Skull Bridge",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "To Lobby From Slide Room",
             "connected_region": "Lobby",
             "access_rule": {
-              "type": "item_check",
-              "item": "Lost Your Head"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Lost Your Head"
+              }
             }
           }
         ],
@@ -3446,9 +3776,11 @@
             "name": "Ixupi Captured Water",
             "id": 27040,
             "access_rule": {
-              "type": "helper",
-              "name": "water_capturable",
-              "args": []
+              "rule": "water_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Metal Pot Top",
@@ -3469,9 +3801,11 @@
             "name": "Ixupi Captured Wax",
             "id": 27041,
             "access_rule": {
-              "type": "helper",
-              "name": "wax_capturable",
-              "args": []
+              "rule": "wax_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Key for Library",
@@ -3492,9 +3826,11 @@
             "name": "Ixupi Captured Ash",
             "id": 27042,
             "access_rule": {
-              "type": "helper",
-              "name": "ash_capturable",
-              "args": []
+              "rule": "ash_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Crystal Pot Bottom",
@@ -3515,9 +3851,11 @@
             "name": "Ixupi Captured Oil",
             "id": 27043,
             "access_rule": {
-              "type": "helper",
-              "name": "oil_capturable",
-              "args": []
+              "rule": "oil_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Lightning Pot Top",
@@ -3538,9 +3876,11 @@
             "name": "Ixupi Captured Cloth",
             "id": 27044,
             "access_rule": {
-              "type": "helper",
-              "name": "cloth_capturable",
-              "args": []
+              "rule": "cloth_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Water Pot Top",
@@ -3561,9 +3901,11 @@
             "name": "Ixupi Captured Wood",
             "id": 27045,
             "access_rule": {
-              "type": "helper",
-              "name": "wood_capturable",
-              "args": []
+              "rule": "wood_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Key for Greenhouse",
@@ -3584,9 +3926,11 @@
             "name": "Ixupi Captured Crystal",
             "id": 27046,
             "access_rule": {
-              "type": "helper",
-              "name": "crystal_capturable",
-              "args": []
+              "rule": "crystal_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Wood Pot Bottom",
@@ -3607,9 +3951,11 @@
             "name": "Ixupi Captured Sand",
             "id": 27047,
             "access_rule": {
-              "type": "helper",
-              "name": "sand_capturable",
-              "args": []
+              "rule": "sand_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Oil Pot Bottom",
@@ -3630,9 +3976,11 @@
             "name": "Ixupi Captured Metal",
             "id": 27048,
             "access_rule": {
-              "type": "helper",
-              "name": "metal_capturable",
-              "args": []
+              "rule": "metal_capturable",
+              "options": [],
+              "args": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true
             },
             "item": {
               "name": "Lightning Pot Bottom",
@@ -3653,8 +4001,9 @@
             "name": "Mystery Solved",
             "id": 27116,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
@@ -5035,20 +5384,20 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "early_beth": 1,
-        "early_lightning": 0,
-        "elevators_stay_solved": 1,
+        "accessibility": "full",
+        "early_beth": "true",
+        "early_lightning": "false",
+        "elevators_stay_solved": "true",
         "exclude_locations": [],
-        "front_door_usable": 0,
-        "full_pots": 0,
-        "include_information_plaques": 0,
+        "front_door_usable": "false",
+        "full_pots": "pieces",
+        "include_information_plaques": "false",
         "item_links": [],
         "ixupi_captures_needed": 10,
-        "ixupi_captures_priority": 1,
-        "lobby_access": 1,
+        "ixupi_captures_priority": "true",
+        "lobby_access": "early",
         "local_items": [],
-        "location_pot_pieces": 2,
+        "location_pot_pieces": "any_world",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [
@@ -5064,8 +5413,8 @@
           "Ixupi Captured Wood"
         ],
         "progression_balancing": 50,
-        "puzzle_collect_behavior": 1,
-        "puzzle_hints_required": 1,
+        "puzzle_collect_behavior": "prevent_out_of_logic_access",
+        "puzzle_hints_required": "true",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []

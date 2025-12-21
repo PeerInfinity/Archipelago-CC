@@ -251,7 +251,7 @@ def test_rule_from_dict_integration():
 def main():
     """Run all tests."""
     print("=" * 60)
-    print("CC Format Native Parsing Tests")
+    print("AST Format Native Parsing Tests")
     print("=" * 60 + "\n")
 
     # Run basic tests

@@ -19,40 +19,45 @@
             "name": "Menu -> Distant Roost",
             "connected_region": "Distant Roost",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Menu -> Distant Roost (2)",
             "connected_region": "Distant Roost (2)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Menu -> Titanic Plains",
             "connected_region": "Titanic Plains",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Menu -> Titanic Plains (2)",
             "connected_region": "Titanic Plains (2)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Menu -> Verdant Falls",
             "connected_region": "Verdant Falls",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -65,8 +70,9 @@
             "name": "Distant Roost -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -75,8 +81,11 @@
             "name": "Distant Roost: Chest 1",
             "id": 38558,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -90,8 +99,11 @@
             "name": "Distant Roost: Chest 2",
             "id": 38559,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -105,8 +117,11 @@
             "name": "Distant Roost: Chest 3",
             "id": 38560,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -120,8 +135,11 @@
             "name": "Distant Roost: Chest 4",
             "id": 38561,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Money",
@@ -135,8 +153,11 @@
             "name": "Distant Roost: Chest 5",
             "id": 38562,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -150,8 +171,11 @@
             "name": "Distant Roost: Chest 6",
             "id": 38563,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -165,8 +189,11 @@
             "name": "Distant Roost: Chest 7",
             "id": 38564,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Money",
@@ -180,8 +207,11 @@
             "name": "Distant Roost: Chest 8",
             "id": 38565,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -195,8 +225,11 @@
             "name": "Distant Roost: Chest 9",
             "id": 38566,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -210,8 +243,11 @@
             "name": "Distant Roost: Chest 10",
             "id": 38567,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -225,8 +261,11 @@
             "name": "Distant Roost: Shrine 1",
             "id": 38578,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Distant Roost (2)",
@@ -240,8 +279,11 @@
             "name": "Distant Roost: Shrine 2",
             "id": 38579,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -255,8 +297,11 @@
             "name": "Distant Roost: Shrine 3",
             "id": 38580,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Money",
@@ -270,8 +315,11 @@
             "name": "Distant Roost: Shrine 4",
             "id": 38581,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Money",
@@ -285,8 +333,11 @@
             "name": "Distant Roost: Shrine 5",
             "id": 38582,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Wetland Aspect",
@@ -300,8 +351,11 @@
             "name": "Distant Roost: Radio Scanner 1",
             "id": 38599,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -315,8 +369,11 @@
             "name": "Distant Roost: Newt Altar 1",
             "id": 38600,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -335,8 +392,9 @@
             "name": "Distant Roost (2) -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -345,8 +403,11 @@
             "name": "Distant Roost (2): Chest 1",
             "id": 38602,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -360,8 +421,11 @@
             "name": "Distant Roost (2): Chest 2",
             "id": 38603,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -375,8 +439,11 @@
             "name": "Distant Roost (2): Chest 3",
             "id": 38604,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Progressive Stage",
@@ -390,8 +457,11 @@
             "name": "Distant Roost (2): Chest 4",
             "id": 38605,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Progressive Stage",
@@ -405,8 +475,11 @@
             "name": "Distant Roost (2): Chest 5",
             "id": 38606,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -420,8 +493,11 @@
             "name": "Distant Roost (2): Chest 6",
             "id": 38607,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Beads of Fealty",
@@ -435,8 +511,11 @@
             "name": "Distant Roost (2): Chest 7",
             "id": 38608,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -450,8 +529,11 @@
             "name": "Distant Roost (2): Chest 8",
             "id": 38609,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -465,8 +547,11 @@
             "name": "Distant Roost (2): Chest 9",
             "id": 38610,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Titanic Plains (2)",
@@ -480,8 +565,11 @@
             "name": "Distant Roost (2): Chest 10",
             "id": 38611,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Void Fields",
@@ -495,8 +583,11 @@
             "name": "Distant Roost (2): Shrine 1",
             "id": 38622,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -510,8 +601,11 @@
             "name": "Distant Roost (2): Shrine 2",
             "id": 38623,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -525,8 +619,11 @@
             "name": "Distant Roost (2): Shrine 3",
             "id": 38624,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -540,8 +637,11 @@
             "name": "Distant Roost (2): Shrine 4",
             "id": 38625,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -555,8 +655,11 @@
             "name": "Distant Roost (2): Shrine 5",
             "id": 38626,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Money",
@@ -570,8 +673,11 @@
             "name": "Distant Roost (2): Radio Scanner 1",
             "id": 38643,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -585,8 +691,11 @@
             "name": "Distant Roost (2): Newt Altar 1",
             "id": 38644,
             "access_rule": {
-              "type": "item_check",
-              "item": "Distant Roost (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Distant Roost (2)"
+              }
             },
             "item": {
               "name": "Money",
@@ -605,8 +714,9 @@
             "name": "Titanic Plains -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -615,8 +725,11 @@
             "name": "Titanic Plains: Chest 1",
             "id": 38910,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -630,8 +743,11 @@
             "name": "Titanic Plains: Chest 2",
             "id": 38911,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Progressive Stage",
@@ -645,8 +761,11 @@
             "name": "Titanic Plains: Chest 3",
             "id": 38912,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -660,8 +779,11 @@
             "name": "Titanic Plains: Chest 4",
             "id": 38913,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Money",
@@ -675,8 +797,11 @@
             "name": "Titanic Plains: Chest 5",
             "id": 38914,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -690,8 +815,11 @@
             "name": "Titanic Plains: Chest 6",
             "id": 38915,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Money",
@@ -705,8 +833,11 @@
             "name": "Titanic Plains: Chest 7",
             "id": 38916,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Money",
@@ -720,8 +851,11 @@
             "name": "Titanic Plains: Chest 8",
             "id": 38917,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -735,8 +869,11 @@
             "name": "Titanic Plains: Chest 9",
             "id": 38918,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Money",
@@ -750,8 +887,11 @@
             "name": "Titanic Plains: Chest 10",
             "id": 38919,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Sky Meadow",
@@ -765,8 +905,11 @@
             "name": "Titanic Plains: Shrine 1",
             "id": 38930,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -780,8 +923,11 @@
             "name": "Titanic Plains: Shrine 2",
             "id": 38931,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Rallypoint Delta",
@@ -795,8 +941,11 @@
             "name": "Titanic Plains: Shrine 3",
             "id": 38932,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -810,8 +959,11 @@
             "name": "Titanic Plains: Shrine 4",
             "id": 38933,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -825,8 +977,11 @@
             "name": "Titanic Plains: Shrine 5",
             "id": 38934,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -840,8 +995,11 @@
             "name": "Titanic Plains: Radio Scanner 1",
             "id": 38951,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -855,8 +1013,11 @@
             "name": "Titanic Plains: Newt Altar 1",
             "id": 38952,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -875,8 +1036,9 @@
             "name": "Titanic Plains (2) -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -885,8 +1047,11 @@
             "name": "Titanic Plains (2): Chest 1",
             "id": 38954,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -900,8 +1065,11 @@
             "name": "Titanic Plains (2): Chest 2",
             "id": 38955,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -915,8 +1083,11 @@
             "name": "Titanic Plains (2): Chest 3",
             "id": 38956,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -930,8 +1101,11 @@
             "name": "Titanic Plains (2): Chest 4",
             "id": 38957,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -945,8 +1119,11 @@
             "name": "Titanic Plains (2): Chest 5",
             "id": 38958,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Progressive Stage",
@@ -960,8 +1137,11 @@
             "name": "Titanic Plains (2): Chest 6",
             "id": 38959,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Hidden Realm: Gilded Coast",
@@ -975,8 +1155,11 @@
             "name": "Titanic Plains (2): Chest 7",
             "id": 38960,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Item Scrap, Red",
@@ -990,8 +1173,11 @@
             "name": "Titanic Plains (2): Chest 8",
             "id": 38961,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Money",
@@ -1005,8 +1191,11 @@
             "name": "Titanic Plains (2): Chest 9",
             "id": 38962,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -1020,8 +1209,11 @@
             "name": "Titanic Plains (2): Chest 10",
             "id": 38963,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1035,8 +1227,11 @@
             "name": "Titanic Plains (2): Shrine 1",
             "id": 38974,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1050,8 +1245,11 @@
             "name": "Titanic Plains (2): Shrine 2",
             "id": 38975,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1065,8 +1263,11 @@
             "name": "Titanic Plains (2): Shrine 3",
             "id": 38976,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -1080,8 +1281,11 @@
             "name": "Titanic Plains (2): Shrine 4",
             "id": 38977,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -1095,8 +1299,11 @@
             "name": "Titanic Plains (2): Shrine 5",
             "id": 38978,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Titanic Plains",
@@ -1110,8 +1317,11 @@
             "name": "Titanic Plains (2): Radio Scanner 1",
             "id": 38995,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1125,8 +1335,11 @@
             "name": "Titanic Plains (2): Newt Altar 1",
             "id": 38996,
             "access_rule": {
-              "type": "item_check",
-              "item": "Titanic Plains (2)"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Titanic Plains (2)"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1145,8 +1358,9 @@
             "name": "Verdant Falls -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1155,8 +1369,11 @@
             "name": "Verdant Falls: Chest 1",
             "id": 39482,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Scorched Acres",
@@ -1170,8 +1387,11 @@
             "name": "Verdant Falls: Chest 2",
             "id": 39483,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1185,8 +1405,11 @@
             "name": "Verdant Falls: Chest 3",
             "id": 39484,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -1200,8 +1423,11 @@
             "name": "Verdant Falls: Chest 4",
             "id": 39485,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Money",
@@ -1215,8 +1441,11 @@
             "name": "Verdant Falls: Chest 5",
             "id": 39486,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1230,8 +1459,11 @@
             "name": "Verdant Falls: Chest 6",
             "id": 39487,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1245,8 +1477,11 @@
             "name": "Verdant Falls: Chest 7",
             "id": 39488,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1260,8 +1495,11 @@
             "name": "Verdant Falls: Chest 8",
             "id": 39489,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Money",
@@ -1275,8 +1513,11 @@
             "name": "Verdant Falls: Chest 9",
             "id": 39490,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1290,8 +1531,11 @@
             "name": "Verdant Falls: Chest 10",
             "id": 39491,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -1305,8 +1549,11 @@
             "name": "Verdant Falls: Shrine 1",
             "id": 39502,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1320,8 +1567,11 @@
             "name": "Verdant Falls: Shrine 2",
             "id": 39503,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Money",
@@ -1335,8 +1585,11 @@
             "name": "Verdant Falls: Shrine 3",
             "id": 39504,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Money",
@@ -1350,8 +1603,11 @@
             "name": "Verdant Falls: Shrine 4",
             "id": 39505,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -1365,8 +1621,11 @@
             "name": "Verdant Falls: Shrine 5",
             "id": 39506,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Money",
@@ -1380,8 +1639,11 @@
             "name": "Verdant Falls: Radio Scanner 1",
             "id": 39523,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -1395,8 +1657,11 @@
             "name": "Verdant Falls: Newt Altar 1",
             "id": 39524,
             "access_rule": {
-              "type": "item_check",
-              "item": "Verdant Falls"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Verdant Falls"
+              }
             },
             "item": {
               "name": "Hidden Realm: A Moment, Whole",
@@ -1415,8 +1680,9 @@
             "name": "Abandoned Aqueduct -> OrderedStage_2",
             "connected_region": "OrderedStage_2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1425,8 +1691,11 @@
             "name": "Abandoned Aqueduct: Chest 1",
             "id": 38998,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -1440,8 +1709,11 @@
             "name": "Abandoned Aqueduct: Chest 2",
             "id": 38999,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1455,8 +1727,11 @@
             "name": "Abandoned Aqueduct: Chest 3",
             "id": 39000,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1470,8 +1745,11 @@
             "name": "Abandoned Aqueduct: Chest 4",
             "id": 39001,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1485,8 +1763,11 @@
             "name": "Abandoned Aqueduct: Chest 5",
             "id": 39002,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Money",
@@ -1500,8 +1781,11 @@
             "name": "Abandoned Aqueduct: Chest 6",
             "id": 39003,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Money",
@@ -1515,8 +1799,11 @@
             "name": "Abandoned Aqueduct: Chest 7",
             "id": 39004,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1530,8 +1817,11 @@
             "name": "Abandoned Aqueduct: Chest 8",
             "id": 39005,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -1545,8 +1835,11 @@
             "name": "Abandoned Aqueduct: Chest 9",
             "id": 39006,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -1560,8 +1853,11 @@
             "name": "Abandoned Aqueduct: Chest 10",
             "id": 39007,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -1575,8 +1871,11 @@
             "name": "Abandoned Aqueduct: Shrine 1",
             "id": 39018,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Sundered Grove",
@@ -1590,8 +1889,11 @@
             "name": "Abandoned Aqueduct: Shrine 2",
             "id": 39019,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -1605,8 +1907,11 @@
             "name": "Abandoned Aqueduct: Shrine 3",
             "id": 39020,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Verdant Falls",
@@ -1620,8 +1925,11 @@
             "name": "Abandoned Aqueduct: Shrine 4",
             "id": 39021,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1635,8 +1943,11 @@
             "name": "Abandoned Aqueduct: Shrine 5",
             "id": 39022,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1650,8 +1961,11 @@
             "name": "Abandoned Aqueduct: Radio Scanner 1",
             "id": 39039,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1665,8 +1979,11 @@
             "name": "Abandoned Aqueduct: Newt Altar 1",
             "id": 39040,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abandoned Aqueduct"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1685,8 +2002,9 @@
             "name": "Wetland Aspect -> OrderedStage_2",
             "connected_region": "OrderedStage_2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1695,8 +2013,11 @@
             "name": "Wetland Aspect: Chest 1",
             "id": 38778,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -1710,8 +2031,11 @@
             "name": "Wetland Aspect: Chest 2",
             "id": 38779,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Boss Item",
@@ -1725,8 +2049,11 @@
             "name": "Wetland Aspect: Chest 3",
             "id": 38780,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -1740,8 +2067,11 @@
             "name": "Wetland Aspect: Chest 4",
             "id": 38781,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1755,8 +2085,11 @@
             "name": "Wetland Aspect: Chest 5",
             "id": 38782,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1770,8 +2103,11 @@
             "name": "Wetland Aspect: Chest 6",
             "id": 38783,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1785,8 +2121,11 @@
             "name": "Wetland Aspect: Chest 7",
             "id": 38784,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -1800,8 +2139,11 @@
             "name": "Wetland Aspect: Chest 8",
             "id": 38785,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -1815,8 +2157,11 @@
             "name": "Wetland Aspect: Chest 9",
             "id": 38786,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -1830,8 +2175,11 @@
             "name": "Wetland Aspect: Chest 10",
             "id": 38787,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1845,8 +2193,11 @@
             "name": "Wetland Aspect: Shrine 1",
             "id": 38798,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -1860,8 +2211,11 @@
             "name": "Wetland Aspect: Shrine 2",
             "id": 38799,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1875,8 +2229,11 @@
             "name": "Wetland Aspect: Shrine 3",
             "id": 38800,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -1890,8 +2247,11 @@
             "name": "Wetland Aspect: Shrine 4",
             "id": 38801,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -1905,8 +2265,11 @@
             "name": "Wetland Aspect: Shrine 5",
             "id": 38802,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1920,8 +2283,11 @@
             "name": "Wetland Aspect: Radio Scanner 1",
             "id": 38819,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Money",
@@ -1935,8 +2301,11 @@
             "name": "Wetland Aspect: Newt Altar 1",
             "id": 38820,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wetland Aspect"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wetland Aspect"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -1955,8 +2324,9 @@
             "name": "Rallypoint Delta -> OrderedStage_3",
             "connected_region": "OrderedStage_3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1965,8 +2335,11 @@
             "name": "Rallypoint Delta: Chest 1",
             "id": 38822,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -1980,8 +2353,11 @@
             "name": "Rallypoint Delta: Chest 2",
             "id": 38823,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -1995,8 +2371,11 @@
             "name": "Rallypoint Delta: Chest 3",
             "id": 38824,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Money",
@@ -2010,8 +2389,11 @@
             "name": "Rallypoint Delta: Chest 4",
             "id": 38825,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Item Scrap, Red",
@@ -2025,8 +2407,11 @@
             "name": "Rallypoint Delta: Chest 5",
             "id": 38826,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Money",
@@ -2040,8 +2425,11 @@
             "name": "Rallypoint Delta: Chest 6",
             "id": 38827,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -2055,8 +2443,11 @@
             "name": "Rallypoint Delta: Chest 7",
             "id": 38828,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Money",
@@ -2070,8 +2461,11 @@
             "name": "Rallypoint Delta: Chest 8",
             "id": 38829,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Boss Item",
@@ -2085,8 +2479,11 @@
             "name": "Rallypoint Delta: Chest 9",
             "id": 38830,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -2100,8 +2497,11 @@
             "name": "Rallypoint Delta: Chest 10",
             "id": 38831,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -2115,8 +2515,11 @@
             "name": "Rallypoint Delta: Shrine 1",
             "id": 38842,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Hidden Realm: Bulwark's Ambry",
@@ -2130,8 +2533,11 @@
             "name": "Rallypoint Delta: Shrine 2",
             "id": 38843,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2145,8 +2551,11 @@
             "name": "Rallypoint Delta: Shrine 3",
             "id": 38844,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -2160,8 +2569,11 @@
             "name": "Rallypoint Delta: Shrine 4",
             "id": 38845,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Siren's Call",
@@ -2175,8 +2587,11 @@
             "name": "Rallypoint Delta: Shrine 5",
             "id": 38846,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2190,8 +2605,11 @@
             "name": "Rallypoint Delta: Radio Scanner 1",
             "id": 38863,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -2205,8 +2623,11 @@
             "name": "Rallypoint Delta: Newt Altar 1",
             "id": 38864,
             "access_rule": {
-              "type": "item_check",
-              "item": "Rallypoint Delta"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2225,8 +2646,9 @@
             "name": "Scorched Acres -> OrderedStage_3",
             "connected_region": "OrderedStage_3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2235,8 +2657,11 @@
             "name": "Scorched Acres: Chest 1",
             "id": 40318,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2250,8 +2675,11 @@
             "name": "Scorched Acres: Chest 2",
             "id": 40319,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -2265,8 +2693,11 @@
             "name": "Scorched Acres: Chest 3",
             "id": 40320,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Money",
@@ -2280,8 +2711,11 @@
             "name": "Scorched Acres: Chest 4",
             "id": 40321,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -2295,8 +2729,11 @@
             "name": "Scorched Acres: Chest 5",
             "id": 40322,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Money",
@@ -2310,8 +2747,11 @@
             "name": "Scorched Acres: Chest 6",
             "id": 40323,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -2325,8 +2765,11 @@
             "name": "Scorched Acres: Chest 7",
             "id": 40324,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Money",
@@ -2340,8 +2783,11 @@
             "name": "Scorched Acres: Chest 8",
             "id": 40325,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2355,8 +2801,11 @@
             "name": "Scorched Acres: Chest 9",
             "id": 40326,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2370,8 +2819,11 @@
             "name": "Scorched Acres: Chest 10",
             "id": 40327,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2385,8 +2837,11 @@
             "name": "Scorched Acres: Shrine 1",
             "id": 40338,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -2400,8 +2855,11 @@
             "name": "Scorched Acres: Shrine 2",
             "id": 40339,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Money",
@@ -2415,8 +2873,11 @@
             "name": "Scorched Acres: Shrine 3",
             "id": 40340,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2430,8 +2891,11 @@
             "name": "Scorched Acres: Shrine 4",
             "id": 40341,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -2445,8 +2909,11 @@
             "name": "Scorched Acres: Shrine 5",
             "id": 40342,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Commencement",
@@ -2460,8 +2927,11 @@
             "name": "Scorched Acres: Radio Scanner 1",
             "id": 40359,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Money",
@@ -2475,8 +2945,11 @@
             "name": "Scorched Acres: Newt Altar 1",
             "id": 40360,
             "access_rule": {
-              "type": "item_check",
-              "item": "Scorched Acres"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Scorched Acres"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -2495,8 +2968,9 @@
             "name": "Abyssal Depths -> OrderedStage_4",
             "connected_region": "OrderedStage_4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2505,8 +2979,11 @@
             "name": "Abyssal Depths: Chest 1",
             "id": 38690,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -2520,8 +2997,11 @@
             "name": "Abyssal Depths: Chest 2",
             "id": 38691,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -2535,8 +3015,11 @@
             "name": "Abyssal Depths: Chest 3",
             "id": 38692,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -2550,8 +3033,11 @@
             "name": "Abyssal Depths: Chest 4",
             "id": 38693,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2565,8 +3051,11 @@
             "name": "Abyssal Depths: Chest 5",
             "id": 38694,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -2580,8 +3069,11 @@
             "name": "Abyssal Depths: Chest 6",
             "id": 38695,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -2595,8 +3087,11 @@
             "name": "Abyssal Depths: Chest 7",
             "id": 38696,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -2610,8 +3105,11 @@
             "name": "Abyssal Depths: Chest 8",
             "id": 38697,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -2625,8 +3123,11 @@
             "name": "Abyssal Depths: Chest 9",
             "id": 38698,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -2640,8 +3141,11 @@
             "name": "Abyssal Depths: Chest 10",
             "id": 38699,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Money",
@@ -2655,8 +3159,11 @@
             "name": "Abyssal Depths: Shrine 1",
             "id": 38710,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2670,8 +3177,11 @@
             "name": "Abyssal Depths: Shrine 2",
             "id": 38711,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2685,8 +3195,11 @@
             "name": "Abyssal Depths: Shrine 3",
             "id": 38712,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Radar Scanner",
@@ -2700,8 +3213,11 @@
             "name": "Abyssal Depths: Shrine 4",
             "id": 38713,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2715,8 +3231,11 @@
             "name": "Abyssal Depths: Shrine 5",
             "id": 38714,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -2730,8 +3249,11 @@
             "name": "Abyssal Depths: Radio Scanner 1",
             "id": 38731,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -2745,8 +3267,11 @@
             "name": "Abyssal Depths: Newt Altar 1",
             "id": 38732,
             "access_rule": {
-              "type": "item_check",
-              "item": "Abyssal Depths"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -2765,8 +3290,9 @@
             "name": "Siren's Call -> OrderedStage_4",
             "connected_region": "OrderedStage_4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2775,8 +3301,11 @@
             "name": "Siren's Call: Chest 1",
             "id": 39878,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -2790,8 +3319,11 @@
             "name": "Siren's Call: Chest 2",
             "id": 39879,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -2805,8 +3337,11 @@
             "name": "Siren's Call: Chest 3",
             "id": 39880,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2820,8 +3355,11 @@
             "name": "Siren's Call: Chest 4",
             "id": 39881,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -2835,8 +3373,11 @@
             "name": "Siren's Call: Chest 5",
             "id": 39882,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Money",
@@ -2850,8 +3391,11 @@
             "name": "Siren's Call: Chest 6",
             "id": 39883,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -2865,8 +3409,11 @@
             "name": "Siren's Call: Chest 7",
             "id": 39884,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2880,8 +3427,11 @@
             "name": "Siren's Call: Chest 8",
             "id": 39885,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2895,8 +3445,11 @@
             "name": "Siren's Call: Chest 9",
             "id": 39886,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2910,8 +3463,11 @@
             "name": "Siren's Call: Chest 10",
             "id": 39887,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -2925,8 +3481,11 @@
             "name": "Siren's Call: Shrine 1",
             "id": 39898,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2940,8 +3499,11 @@
             "name": "Siren's Call: Shrine 2",
             "id": 39899,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2955,8 +3517,11 @@
             "name": "Siren's Call: Shrine 3",
             "id": 39900,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -2970,8 +3535,11 @@
             "name": "Siren's Call: Shrine 4",
             "id": 39901,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -2985,8 +3553,11 @@
             "name": "Siren's Call: Shrine 5",
             "id": 39902,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -3000,8 +3571,11 @@
             "name": "Siren's Call: Radio Scanner 1",
             "id": 39919,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Legendary Item",
@@ -3015,8 +3589,11 @@
             "name": "Siren's Call: Newt Altar 1",
             "id": 39920,
             "access_rule": {
-              "type": "item_check",
-              "item": "Siren's Call"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Siren's Call"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -3035,8 +3612,9 @@
             "name": "Sundered Grove -> OrderedStage_4",
             "connected_region": "OrderedStage_4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3045,8 +3623,11 @@
             "name": "Sundered Grove: Chest 1",
             "id": 39790,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Dio's Best Friend",
@@ -3060,8 +3641,11 @@
             "name": "Sundered Grove: Chest 2",
             "id": 39791,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Money",
@@ -3075,8 +3659,11 @@
             "name": "Sundered Grove: Chest 3",
             "id": 39792,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Hidden Realm: A Moment, Fractured",
@@ -3090,8 +3677,11 @@
             "name": "Sundered Grove: Chest 4",
             "id": 39793,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Money",
@@ -3105,8 +3695,11 @@
             "name": "Sundered Grove: Chest 5",
             "id": 39794,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -3120,8 +3713,11 @@
             "name": "Sundered Grove: Chest 6",
             "id": 39795,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3135,8 +3731,11 @@
             "name": "Sundered Grove: Chest 7",
             "id": 39796,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Equipment",
@@ -3150,8 +3749,11 @@
             "name": "Sundered Grove: Chest 8",
             "id": 39797,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3165,8 +3767,11 @@
             "name": "Sundered Grove: Chest 9",
             "id": 39798,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Lunar Coin",
@@ -3180,8 +3785,11 @@
             "name": "Sundered Grove: Chest 10",
             "id": 39799,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -3195,8 +3803,11 @@
             "name": "Sundered Grove: Shrine 1",
             "id": 39810,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -3210,8 +3821,11 @@
             "name": "Sundered Grove: Shrine 2",
             "id": 39811,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Money",
@@ -3225,8 +3839,11 @@
             "name": "Sundered Grove: Shrine 3",
             "id": 39812,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Item Scrap, White",
@@ -3240,8 +3857,11 @@
             "name": "Sundered Grove: Shrine 4",
             "id": 39813,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3255,8 +3875,11 @@
             "name": "Sundered Grove: Shrine 5",
             "id": 39814,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Item Scrap, Green",
@@ -3270,8 +3893,11 @@
             "name": "Sundered Grove: Radio Scanner 1",
             "id": 39831,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "Abyssal Depths",
@@ -3285,8 +3911,11 @@
             "name": "Sundered Grove: Newt Altar 1",
             "id": 39832,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sundered Grove"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sundered Grove"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -3305,16 +3934,18 @@
             "name": "Sky Meadow -> Hidden Realm: Bulwark's Ambry",
             "connected_region": "Hidden Realm: Bulwark's Ambry",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Sky Meadow -> OrderedStage_5",
             "connected_region": "OrderedStage_5",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3323,8 +3954,11 @@
             "name": "Sky Meadow: Chest 1",
             "id": 39922,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Abandoned Aqueduct",
@@ -3338,8 +3972,11 @@
             "name": "Sky Meadow: Chest 2",
             "id": 39923,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Money",
@@ -3353,8 +3990,11 @@
             "name": "Sky Meadow: Chest 3",
             "id": 39924,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3368,8 +4008,11 @@
             "name": "Sky Meadow: Chest 4",
             "id": 39925,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Lunar Item",
@@ -3383,8 +4026,11 @@
             "name": "Sky Meadow: Chest 5",
             "id": 39926,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3398,8 +4044,11 @@
             "name": "Sky Meadow: Chest 6",
             "id": 39927,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Money",
@@ -3413,8 +4062,11 @@
             "name": "Sky Meadow: Chest 7",
             "id": 39928,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -3428,8 +4080,11 @@
             "name": "Sky Meadow: Chest 8",
             "id": 39929,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3443,8 +4098,11 @@
             "name": "Sky Meadow: Chest 9",
             "id": 39930,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "1000 Exp",
@@ -3458,8 +4116,11 @@
             "name": "Sky Meadow: Chest 10",
             "id": 39931,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -3473,8 +4134,11 @@
             "name": "Sky Meadow: Shrine 1",
             "id": 39942,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -3488,8 +4152,11 @@
             "name": "Sky Meadow: Shrine 2",
             "id": 39943,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Hidden Realm: Bazaar Between Time",
@@ -3503,8 +4170,11 @@
             "name": "Sky Meadow: Shrine 3",
             "id": 39944,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -3518,8 +4188,11 @@
             "name": "Sky Meadow: Shrine 4",
             "id": 39945,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Boss Item",
@@ -3533,8 +4206,11 @@
             "name": "Sky Meadow: Shrine 5",
             "id": 39946,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Common Item",
@@ -3548,8 +4224,11 @@
             "name": "Sky Meadow: Radio Scanner 1",
             "id": 39963,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Uncommon Item",
@@ -3563,8 +4242,11 @@
             "name": "Sky Meadow: Newt Altar 1",
             "id": 39964,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Money",
@@ -3583,16 +4265,18 @@
             "name": "Commencement -> Victory",
             "connected_region": "Victory",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Commencement -> Petrichor V",
             "connected_region": "Petrichor V",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3605,15 +4289,22 @@
             "name": "OrderedStage_5 -> Hidden Realm: A Moment, Fractured",
             "connected_region": "Hidden Realm: A Moment, Fractured",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Hidden Realm: A Moment, Fractured"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Hidden Realm: A Moment, Fractured"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Stage 5"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Stage 5"
+                  }
                 }
               ]
             }
@@ -3622,15 +4313,22 @@
             "name": "OrderedStage_5 -> Commencement",
             "connected_region": "Commencement",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Commencement"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Commencement"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Stage 5"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Stage 5"
+                  }
                 }
               ]
             }
@@ -3641,8 +4339,11 @@
             "name": "Stage 5",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Meadow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Meadow"
+              }
             },
             "item": {
               "name": "Stage 5",
@@ -3662,38 +4363,52 @@
             "name": "OrderedStage_1 -> Hidden Realm: Bazaar Between Time",
             "connected_region": "Hidden Realm: Bazaar Between Time",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 1
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 1"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Hidden Realm: Bazaar Between Time"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Hidden Realm: Bazaar Between Time"
+                  }
                 }
               ]
             }
@@ -3702,46 +4417,61 @@
             "name": "OrderedStage_1 -> Hidden Realm: Gilded Coast",
             "connected_region": "Hidden Realm: Gilded Coast",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "OrderedStage_1 -> Abandoned Aqueduct",
             "connected_region": "Abandoned Aqueduct",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 1
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 1"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Abandoned Aqueduct"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Abandoned Aqueduct"
+                  }
                 }
               ]
             }
@@ -3750,38 +4480,52 @@
             "name": "OrderedStage_1 -> Wetland Aspect",
             "connected_region": "Wetland Aspect",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 1
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 1"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Wetland Aspect"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Wetland Aspect"
+                  }
                 }
               ]
             }
@@ -3796,38 +4540,52 @@
             "name": "OrderedStage_2 -> Rallypoint Delta",
             "connected_region": "Rallypoint Delta",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 2
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 2
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 2"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 2"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rallypoint Delta"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rallypoint Delta"
+                  }
                 }
               ]
             }
@@ -3836,38 +4594,52 @@
             "name": "OrderedStage_2 -> Scorched Acres",
             "connected_region": "Scorched Acres",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 2
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 2
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 2"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 2"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Scorched Acres"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Scorched Acres"
+                  }
                 }
               ]
             }
@@ -3882,38 +4654,52 @@
             "name": "OrderedStage_3 -> Abyssal Depths",
             "connected_region": "Abyssal Depths",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 3
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 3
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 3"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Abyssal Depths"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Abyssal Depths"
+                  }
                 }
               ]
             }
@@ -3922,38 +4708,52 @@
             "name": "OrderedStage_3 -> Siren's Call",
             "connected_region": "Siren's Call",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 3
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 3
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 3"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Siren's Call"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Siren's Call"
+                  }
                 }
               ]
             }
@@ -3962,38 +4762,52 @@
             "name": "OrderedStage_3 -> Sundered Grove",
             "connected_region": "Sundered Grove",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 3
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 3
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 3"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sundered Grove"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sundered Grove"
+                  }
                 }
               ]
             }
@@ -4008,38 +4822,52 @@
             "name": "OrderedStage_4 -> Sky Meadow",
             "connected_region": "Sky Meadow",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "state_method",
-                        "method": "count",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Progressive Stage"
+                      "rule": "Compare",
+                      "options": [],
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "options": [],
+                          "args": {
+                            "item_name": "Progressive Stage"
                           }
-                        ]
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "Constant",
+                          "options": [],
+                          "args": {
+                            "value": 4
+                          },
+                          "_converted_from_cc": true
+                        },
+                        "_original_ast_type": "compare"
                       },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 4
-                      }
+                      "_converted_from_cc": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Stage 4"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Stage 4"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sky Meadow"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Sky Meadow"
+                  }
                 }
               ]
             }
@@ -4054,15 +4882,22 @@
             "name": "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole",
             "connected_region": "Hidden Realm: A Moment, Whole",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Beads of Fealty"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Beads of Fealty"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Hidden Realm: A Moment, Whole"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Hidden Realm: A Moment, Whole"
+                  }
                 }
               ]
             }
@@ -4077,16 +4912,18 @@
             "name": "Hidden Realm: A Moment, Whole -> Victory",
             "connected_region": "Victory",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hidden Realm: A Moment, Whole -> Petrichor V",
             "connected_region": "Petrichor V",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4105,8 +4942,9 @@
             "name": "Victory",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -4135,15 +4973,22 @@
             "name": "Hidden Realm: Bazaar Between Time -> Void Fields",
             "connected_region": "Void Fields",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Hidden Realm: Bazaar Between Time"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Hidden Realm: Bazaar Between Time"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Void Fields"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Void Fields"
+                  }
                 }
               ]
             }
@@ -4871,26 +5716,26 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "altars_per_stage": 1,
         "boss_item": 4,
         "chests_per_stage": 10,
         "combat_trap": 20,
         "common_item": 64,
-        "death_link": 0,
-        "dlc_sotv": 0,
-        "enable_lunar": 1,
-        "enable_trap": 0,
+        "death_link": "false",
+        "dlc_sotv": "false",
+        "enable_lunar": "true",
+        "enable_trap": "false",
         "equipment": 32,
         "exclude_locations": [],
         "experience": 40,
-        "final_stage_death": 0,
-        "goal": 1,
+        "final_stage_death": "false",
+        "goal": "explore",
         "green_scrap": 16,
         "item_links": [],
         "item_pickup_step": 1,
-        "item_pool_presets": 0,
-        "item_weights": 0,
+        "item_pool_presets": "false",
+        "item_weights": "default",
         "legendary_item": 8,
         "local_items": [],
         "lunar_coin": 20,
@@ -4901,9 +5746,9 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "progressive_stages": 1,
+        "progressive_stages": "true",
         "red_scrap": 4,
-        "require_stages": 1,
+        "require_stages": "true",
         "scanner_per_stage": 1,
         "scavengers_per_stage": 0,
         "shrine_use_step": 0,
@@ -4911,13 +5756,13 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "start_with_revive": 1,
+        "start_with_revive": "true",
         "teleport_trap": 20,
         "time_warp_trap": 20,
         "total_locations": 40,
         "total_revivals": 4,
         "uncommon_item": 32,
-        "victory": 0,
+        "victory": "any",
         "void_item": 16,
         "white_scrap": 32,
         "yellow_scrap": 1

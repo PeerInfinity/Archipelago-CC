@@ -19,8 +19,9 @@
             "name": "Menu -> ERA_ANCIENT",
             "connected_region": "ERA_ANCIENT",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,38 +34,33 @@
             "name": "ERA_ANCIENT -> ERA_CLASSICAL",
             "connected_region": "ERA_CLASSICAL",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Animal Husbandry",
-                        "Foreign Trade",
-                        "Irrigation",
-                        "Mining",
-                        "Sailing",
-                        "State Workforce"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Animal Husbandry",
+                      "Foreign Trade",
+                      "Irrigation",
+                      "Mining",
+                      "Sailing",
+                      "State Workforce"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 1,
-                        "Progressive Encampment": 1,
-                        "Progressive Holy Site": 1
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 1,
+                      "Progressive Encampment": 1,
+                      "Progressive Holy Site": 1
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -75,8 +71,9 @@
             "name": "TECH_AP_ANCIENT_00",
             "id": 5041000,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Theater",
@@ -90,8 +87,9 @@
             "name": "TECH_AP_ANCIENT_01",
             "id": 5041001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "State Workforce",
@@ -105,8 +103,9 @@
             "name": "TECH_AP_ANCIENT_02",
             "id": 5041002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mining",
@@ -120,8 +119,9 @@
             "name": "TECH_AP_ANCIENT_03",
             "id": 5041003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sailing",
@@ -135,8 +135,9 @@
             "name": "TECH_AP_ANCIENT_04",
             "id": 5041004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shipbuilding",
@@ -150,8 +151,9 @@
             "name": "TECH_AP_ANCIENT_05",
             "id": 5041005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Animal Husbandry",
@@ -165,8 +167,9 @@
             "name": "TECH_AP_ANCIENT_06",
             "id": 5041006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Irrigation",
@@ -180,8 +183,9 @@
             "name": "TECH_AP_ANCIENT_07",
             "id": 5041007,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Holy Site",
@@ -195,8 +199,9 @@
             "name": "TECH_AP_ANCIENT_08",
             "id": 5041008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Campus",
@@ -210,8 +215,9 @@
             "name": "TECH_AP_ANCIENT_09",
             "id": 5041009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sanitation",
@@ -225,8 +231,9 @@
             "name": "TECH_AP_ANCIENT_10",
             "id": 5041010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Military Tactics",
@@ -240,8 +247,9 @@
             "name": "CIVIC_AP_ANCIENT_00",
             "id": 5041077,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Stirrups",
@@ -255,8 +263,9 @@
             "name": "CIVIC_AP_ANCIENT_01",
             "id": 5041078,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Neighborhood",
@@ -270,8 +279,9 @@
             "name": "CIVIC_AP_ANCIENT_02",
             "id": 5041079,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Recorded History",
@@ -285,8 +295,9 @@
             "name": "CIVIC_AP_ANCIENT_03",
             "id": 5041080,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Political Philosophy",
@@ -300,8 +311,9 @@
             "name": "CIVIC_AP_ANCIENT_04",
             "id": 5041081,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Encampment",
@@ -315,8 +327,9 @@
             "name": "CIVIC_AP_ANCIENT_05",
             "id": 5041082,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Diplomatic Quarter",
@@ -330,8 +343,9 @@
             "name": "CIVIC_AP_ANCIENT_06",
             "id": 5041083,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Foreign Trade",
@@ -345,8 +359,9 @@
             "name": "GOODY_HUT_1",
             "id": 5041146,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Faith: Large",
@@ -361,8 +376,9 @@
             "name": "GOODY_HUT_2",
             "id": 5041147,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gold: Small",
@@ -377,8 +393,9 @@
             "name": "GOODY_HUT_3",
             "id": 5041148,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Faith: Small",
@@ -393,8 +410,9 @@
             "name": "GOODY_HUT_4",
             "id": 5041149,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gold: Medium",
@@ -409,8 +427,9 @@
             "name": "GOODY_HUT_5",
             "id": 5041150,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gold: Medium",
@@ -425,8 +444,9 @@
             "name": "GOODY_HUT_6",
             "id": 5041151,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Additional Population",
@@ -441,8 +461,9 @@
             "name": "GOODY_HUT_7",
             "id": 5041152,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Faith: Medium",
@@ -457,8 +478,9 @@
             "name": "GOODY_HUT_8",
             "id": 5041153,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Faith: Medium",
@@ -473,8 +495,9 @@
             "name": "GOODY_HUT_9",
             "id": 5041154,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Governor Title",
@@ -489,8 +512,9 @@
             "name": "GOODY_HUT_10",
             "id": 5041155,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gold: Medium",
@@ -510,39 +534,34 @@
             "name": "ERA_CLASSICAL -> ERA_MEDIEVAL",
             "connected_region": "ERA_MEDIEVAL",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Political Philosophy",
-                        "Shipbuilding"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Political Philosophy",
+                      "Shipbuilding"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 1,
-                        "Progressive Commercial Hub": 1,
-                        "Progressive Diplomatic Quarter": 1,
-                        "Progressive Encampment": 1,
-                        "Progressive Entertainment Complex": 1,
-                        "Progressive Harbor": 1,
-                        "Progressive Holy Site": 2,
-                        "Progressive Theater": 1
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 1,
+                      "Progressive Commercial Hub": 1,
+                      "Progressive Diplomatic Quarter": 1,
+                      "Progressive Encampment": 1,
+                      "Progressive Entertainment Complex": 1,
+                      "Progressive Harbor": 1,
+                      "Progressive Holy Site": 2,
+                      "Progressive Theater": 1
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -553,8 +572,9 @@
             "name": "TECH_AP_CLASSICAL_11",
             "id": 5041011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ballistics",
@@ -568,8 +588,9 @@
             "name": "TECH_AP_CLASSICAL_12",
             "id": 5041012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Early Empire",
@@ -583,8 +604,9 @@
             "name": "TECH_AP_CLASSICAL_13",
             "id": 5041013,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Commercial Hub",
@@ -598,8 +620,9 @@
             "name": "TECH_AP_CLASSICAL_14",
             "id": 5041014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Commercial Hub",
@@ -613,8 +636,9 @@
             "name": "TECH_AP_CLASSICAL_15",
             "id": 5041015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gunpowder",
@@ -628,8 +652,9 @@
             "name": "TECH_AP_CLASSICAL_16",
             "id": 5041016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Harbor",
@@ -643,8 +668,9 @@
             "name": "TECH_AP_CLASSICAL_17",
             "id": 5041017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Computers",
@@ -658,8 +684,9 @@
             "name": "TECH_AP_CLASSICAL_18",
             "id": 5041018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Steel",
@@ -673,8 +700,9 @@
             "name": "CIVIC_AP_CLASSICAL_07",
             "id": 5041084,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Information Warfare",
@@ -688,8 +716,9 @@
             "name": "CIVIC_AP_CLASSICAL_08",
             "id": 5041085,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Entertainment Complex",
@@ -703,8 +732,9 @@
             "name": "CIVIC_AP_CLASSICAL_09",
             "id": 5041086,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Predictive Systems",
@@ -718,8 +748,9 @@
             "name": "CIVIC_AP_CLASSICAL_10",
             "id": 5041087,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Rapid Deployment",
@@ -733,8 +764,9 @@
             "name": "CIVIC_AP_CLASSICAL_11",
             "id": 5041088,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Holy Site",
@@ -748,8 +780,9 @@
             "name": "CIVIC_AP_CLASSICAL_12",
             "id": 5041089,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Campus",
@@ -763,8 +796,9 @@
             "name": "CIVIC_AP_CLASSICAL_13",
             "id": 5041090,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Totalitarianism",
@@ -783,39 +817,34 @@
             "name": "ERA_MEDIEVAL -> ERA_RENAISSANCE",
             "connected_region": "ERA_RENAISSANCE",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Divine Right"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Divine Right"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 2,
-                        "Progressive Commercial Hub": 1,
-                        "Progressive Diplomatic Quarter": 1,
-                        "Progressive Encampment": 2,
-                        "Progressive Entertainment Complex": 1,
-                        "Progressive Harbor": 1,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 1,
-                        "Progressive Theater": 1
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 2,
+                      "Progressive Commercial Hub": 1,
+                      "Progressive Diplomatic Quarter": 1,
+                      "Progressive Encampment": 2,
+                      "Progressive Entertainment Complex": 1,
+                      "Progressive Harbor": 1,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 1,
+                      "Progressive Theater": 1
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -826,8 +855,9 @@
             "name": "TECH_AP_MEDIEVAL_19",
             "id": 5041019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Divine Right",
@@ -841,8 +871,9 @@
             "name": "TECH_AP_MEDIEVAL_20",
             "id": 5041020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Rifling",
@@ -856,8 +887,9 @@
             "name": "TECH_AP_MEDIEVAL_21",
             "id": 5041021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Machinery",
@@ -871,8 +903,9 @@
             "name": "TECH_AP_MEDIEVAL_22",
             "id": 5041022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Combined Arms",
@@ -886,8 +919,9 @@
             "name": "TECH_AP_MEDIEVAL_23",
             "id": 5041023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cybernetics",
@@ -901,8 +935,9 @@
             "name": "TECH_AP_MEDIEVAL_24",
             "id": 5041024,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Composites",
@@ -916,8 +951,9 @@
             "name": "TECH_AP_MEDIEVAL_25",
             "id": 5041025,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Commercial Hub",
@@ -931,8 +967,9 @@
             "name": "TECH_AP_MEDIEVAL_67",
             "id": 5041067,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Exploration",
@@ -946,8 +983,9 @@
             "name": "CIVIC_AP_MEDIEVAL_14",
             "id": 5041091,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Encampment",
@@ -961,8 +999,9 @@
             "name": "CIVIC_AP_MEDIEVAL_15",
             "id": 5041092,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Social Media",
@@ -976,8 +1015,9 @@
             "name": "CIVIC_AP_MEDIEVAL_16",
             "id": 5041093,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Printing",
@@ -991,8 +1031,9 @@
             "name": "CIVIC_AP_MEDIEVAL_17",
             "id": 5041094,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Industrial Zone",
@@ -1006,8 +1047,9 @@
             "name": "CIVIC_AP_MEDIEVAL_18",
             "id": 5041095,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Engineering",
@@ -1021,8 +1063,9 @@
             "name": "CIVIC_AP_MEDIEVAL_19",
             "id": 5041096,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Guidance Systems",
@@ -1036,8 +1079,9 @@
             "name": "CIVIC_AP_MEDIEVAL_20",
             "id": 5041097,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Refining",
@@ -1056,41 +1100,36 @@
             "name": "ERA_RENAISSANCE -> ERA_INDUSTRIAL",
             "connected_region": "ERA_INDUSTRIAL",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cartography",
-                        "Exploration",
-                        "Reformed Church"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Cartography",
+                      "Exploration",
+                      "Reformed Church"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 2,
-                        "Progressive Commercial Hub": 2,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 2,
-                        "Progressive Entertainment Complex": 1,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 1,
-                        "Progressive Theater": 2
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 2,
+                      "Progressive Commercial Hub": 2,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 2,
+                      "Progressive Entertainment Complex": 1,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 1,
+                      "Progressive Theater": 2
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -1101,8 +1140,9 @@
             "name": "TECH_AP_RENAISSANCE_26",
             "id": 5041026,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Colonialism",
@@ -1116,8 +1156,9 @@
             "name": "TECH_AP_RENAISSANCE_27",
             "id": 5041027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Exodus Imperative",
@@ -1131,8 +1172,9 @@
             "name": "TECH_AP_RENAISSANCE_28",
             "id": 5041028,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Diplomatic Quarter",
@@ -1146,8 +1188,9 @@
             "name": "TECH_AP_RENAISSANCE_29",
             "id": 5041029,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Advanced Ballistics",
@@ -1161,8 +1204,9 @@
             "name": "TECH_AP_RENAISSANCE_30",
             "id": 5041030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Neighborhood",
@@ -1176,8 +1220,9 @@
             "name": "TECH_AP_RENAISSANCE_31",
             "id": 5041031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Harbor",
@@ -1191,8 +1236,9 @@
             "name": "TECH_AP_RENAISSANCE_32",
             "id": 5041032,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cartography",
@@ -1206,8 +1252,9 @@
             "name": "TECH_AP_RENAISSANCE_33",
             "id": 5041033,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Reformed Church",
@@ -1221,8 +1268,9 @@
             "name": "TECH_AP_RENAISSANCE_34",
             "id": 5041034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Digital Democracy",
@@ -1236,8 +1284,9 @@
             "name": "CIVIC_AP_RENAISSANCE_21",
             "id": 5041098,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Suffrage",
@@ -1251,8 +1300,9 @@
             "name": "CIVIC_AP_RENAISSANCE_22",
             "id": 5041099,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Square Rigging",
@@ -1266,8 +1316,9 @@
             "name": "CIVIC_AP_RENAISSANCE_23",
             "id": 5041100,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Theater",
@@ -1281,8 +1332,9 @@
             "name": "CIVIC_AP_RENAISSANCE_24",
             "id": 5041101,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Civil Service",
@@ -1296,8 +1348,9 @@
             "name": "CIVIC_AP_RENAISSANCE_25",
             "id": 5041102,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Guilds",
@@ -1311,8 +1364,9 @@
             "name": "CIVIC_AP_RENAISSANCE_26",
             "id": 5041103,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Wheel",
@@ -1331,39 +1385,34 @@
             "name": "ERA_INDUSTRIAL -> ERA_MODERN",
             "connected_region": "ERA_MODERN",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Nationalism"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Nationalism"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 2,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 2,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 2,
-                        "Progressive Theater": 2
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 2,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 2,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 2,
+                      "Progressive Theater": 2
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -1374,8 +1423,9 @@
             "name": "TECH_AP_INDUSTRIAL_35",
             "id": 5041035,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Defensive Tactics",
@@ -1389,8 +1439,9 @@
             "name": "TECH_AP_INDUSTRIAL_36",
             "id": 5041036,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nationalism",
@@ -1404,8 +1455,9 @@
             "name": "TECH_AP_INDUSTRIAL_37",
             "id": 5041037,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuclear Fusion",
@@ -1419,8 +1471,9 @@
             "name": "TECH_AP_INDUSTRIAL_38",
             "id": 5041038,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Industrial Zone",
@@ -1434,8 +1487,9 @@
             "name": "TECH_AP_INDUSTRIAL_39",
             "id": 5041039,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Naval Tradition",
@@ -1449,8 +1503,9 @@
             "name": "TECH_AP_INDUSTRIAL_40",
             "id": 5041040,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Global Warming Mitigation",
@@ -1464,8 +1519,9 @@
             "name": "TECH_AP_INDUSTRIAL_41",
             "id": 5041041,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Entertainment Complex",
@@ -1479,8 +1535,9 @@
             "name": "TECH_AP_INDUSTRIAL_42",
             "id": 5041042,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Advanced AI",
@@ -1494,8 +1551,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_27",
             "id": 5041104,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Globalization",
@@ -1509,8 +1567,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_28",
             "id": 5041105,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lasers",
@@ -1524,8 +1583,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_29",
             "id": 5041106,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Neighborhood",
@@ -1539,8 +1599,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_30",
             "id": 5041107,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Enlightenment",
@@ -1554,8 +1615,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_31",
             "id": 5041108,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Preserve",
@@ -1569,8 +1631,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_32",
             "id": 5041109,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Encampment",
@@ -1584,8 +1647,9 @@
             "name": "CIVIC_AP_INDUSTRIAL_33",
             "id": 5041110,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Civil Engineering",
@@ -1604,43 +1668,38 @@
             "name": "ERA_MODERN -> ERA_ATOMIC",
             "connected_region": "ERA_ATOMIC",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Class Struggle",
-                        "Refining",
-                        "Suffrage",
-                        "Totalitarianism"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Class Struggle",
+                      "Refining",
+                      "Suffrage",
+                      "Totalitarianism"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Aerodrome": 1,
-                        "Progressive Campus": 3,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 2,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 3,
-                        "Progressive Theater": 3
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Aerodrome": 1,
+                      "Progressive Campus": 3,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 2,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 3,
+                      "Progressive Theater": 3
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -1651,8 +1710,9 @@
             "name": "TECH_AP_MODERN_43",
             "id": 5041043,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Opera and Ballet",
@@ -1666,8 +1726,9 @@
             "name": "TECH_AP_MODERN_44",
             "id": 5041044,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Castles",
@@ -1681,8 +1742,9 @@
             "name": "TECH_AP_MODERN_45",
             "id": 5041045,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Class Struggle",
@@ -1696,8 +1758,9 @@
             "name": "TECH_AP_MODERN_46",
             "id": 5041046,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Entertainment Complex",
@@ -1711,8 +1774,9 @@
             "name": "TECH_AP_MODERN_47",
             "id": 5041047,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Theater",
@@ -1726,8 +1790,9 @@
             "name": "TECH_AP_MODERN_48",
             "id": 5041048,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Campus",
@@ -1741,8 +1806,9 @@
             "name": "TECH_AP_MODERN_49",
             "id": 5041049,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Aerodrome",
@@ -1756,8 +1822,9 @@
             "name": "TECH_AP_MODERN_68",
             "id": 5041068,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Future Tech",
@@ -1771,8 +1838,9 @@
             "name": "CIVIC_AP_MODERN_34",
             "id": 5041111,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Industrial Zone",
@@ -1786,8 +1854,9 @@
             "name": "CIVIC_AP_MODERN_35",
             "id": 5041112,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Industrial Zone",
@@ -1801,8 +1870,9 @@
             "name": "CIVIC_AP_MODERN_36",
             "id": 5041113,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobilization",
@@ -1816,8 +1886,9 @@
             "name": "CIVIC_AP_MODERN_37",
             "id": 5041114,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mercantilism",
@@ -1831,8 +1902,9 @@
             "name": "CIVIC_AP_MODERN_38",
             "id": 5041115,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Military Tradition",
@@ -1846,8 +1918,9 @@
             "name": "CIVIC_AP_MODERN_39",
             "id": 5041116,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Plastics",
@@ -1861,8 +1934,9 @@
             "name": "CIVIC_AP_MODERN_40",
             "id": 5041117,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mass Media",
@@ -1876,8 +1950,9 @@
             "name": "CIVIC_AP_MODERN_41",
             "id": 5041118,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Robotics",
@@ -1891,8 +1966,9 @@
             "name": "CIVIC_AP_MODERN_42",
             "id": 5041119,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Stealth Technology",
@@ -1911,42 +1987,37 @@
             "name": "ERA_ATOMIC -> ERA_INFORMATION",
             "connected_region": "ERA_INFORMATION",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Combined Arms",
-                        "Plastics"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Combined Arms",
+                      "Plastics"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Aerodrome": 2,
-                        "Progressive Campus": 3,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 3,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 4,
-                        "Progressive Space Port": 1,
-                        "Progressive Theater": 3
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Aerodrome": 2,
+                      "Progressive Campus": 3,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 3,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 4,
+                      "Progressive Space Port": 1,
+                      "Progressive Theater": 3
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -1957,8 +2028,9 @@
             "name": "TECH_AP_ATOMIC_50",
             "id": 5041050,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Aerodrome",
@@ -1972,8 +2044,9 @@
             "name": "TECH_AP_ATOMIC_51",
             "id": 5041051,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ideology",
@@ -1987,8 +2060,9 @@
             "name": "TECH_AP_ATOMIC_52",
             "id": 5041052,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Space Port",
@@ -2002,8 +2076,9 @@
             "name": "TECH_AP_ATOMIC_53",
             "id": 5041053,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Preserve",
@@ -2017,8 +2092,9 @@
             "name": "TECH_AP_ATOMIC_54",
             "id": 5041054,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Space Port",
@@ -2032,8 +2108,9 @@
             "name": "TECH_AP_ATOMIC_55",
             "id": 5041055,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Smart Power Doctrine",
@@ -2047,8 +2124,9 @@
             "name": "TECH_AP_ATOMIC_56",
             "id": 5041056,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Near Future Governance",
@@ -2062,8 +2140,9 @@
             "name": "TECH_AP_ATOMIC_57",
             "id": 5041057,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuclear Program",
@@ -2077,8 +2156,9 @@
             "name": "CIVIC_AP_ATOMIC_43",
             "id": 5041120,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Pottery",
@@ -2092,8 +2172,9 @@
             "name": "CIVIC_AP_ATOMIC_44",
             "id": 5041121,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Craftsmanship",
@@ -2107,8 +2188,9 @@
             "name": "CIVIC_AP_ATOMIC_45",
             "id": 5041122,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Buttress",
@@ -2122,8 +2204,9 @@
             "name": "CIVIC_AP_ATOMIC_46",
             "id": 5041123,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Casting",
@@ -2137,8 +2220,9 @@
             "name": "CIVIC_AP_ATOMIC_47",
             "id": 5041124,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mercenaries",
@@ -2157,43 +2241,38 @@
             "name": "ERA_INFORMATION -> ERA_FUTURE",
             "connected_region": "ERA_FUTURE",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Corporate Libertarianism",
-                        "Digital Democracy",
-                        "Synthetic Technocracy"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Corporate Libertarianism",
+                      "Digital Democracy",
+                      "Synthetic Technocracy"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Aerodrome": 2,
-                        "Progressive Campus": 3,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 3,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 4,
-                        "Progressive Space Port": 4,
-                        "Progressive Theater": 3
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Aerodrome": 2,
+                      "Progressive Campus": 3,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 3,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 4,
+                      "Progressive Space Port": 4,
+                      "Progressive Theater": 3
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -2204,8 +2283,9 @@
             "name": "TECH_AP_INFORMATION_58",
             "id": 5041058,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Future Civic",
@@ -2219,8 +2299,9 @@
             "name": "TECH_AP_INFORMATION_59",
             "id": 5041059,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Astronomy",
@@ -2234,8 +2315,9 @@
             "name": "TECH_AP_INFORMATION_60",
             "id": 5041060,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Military Training",
@@ -2249,8 +2331,9 @@
             "name": "TECH_AP_INFORMATION_61",
             "id": 5041061,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Synthetic Materials",
@@ -2264,8 +2347,9 @@
             "name": "TECH_AP_INFORMATION_62",
             "id": 5041062,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cultural Hegemony",
@@ -2279,8 +2363,9 @@
             "name": "TECH_AP_INFORMATION_63",
             "id": 5041063,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Medieval Faires",
@@ -2294,8 +2379,9 @@
             "name": "TECH_AP_INFORMATION_64",
             "id": 5041064,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Space Port",
@@ -2309,8 +2395,9 @@
             "name": "TECH_AP_INFORMATION_65",
             "id": 5041065,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cold War",
@@ -2324,8 +2411,9 @@
             "name": "TECH_AP_INFORMATION_66",
             "id": 5041066,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Corporate Libertarianism",
@@ -2339,8 +2427,9 @@
             "name": "CIVIC_AP_INFORMATION_48",
             "id": 5041125,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Advanced Power Cells",
@@ -2354,8 +2443,9 @@
             "name": "CIVIC_AP_INFORMATION_49",
             "id": 5041126,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Space Port",
@@ -2369,8 +2459,9 @@
             "name": "CIVIC_AP_INFORMATION_51",
             "id": 5041128,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Steam Power",
@@ -2384,8 +2475,9 @@
             "name": "CIVIC_AP_INFORMATION_52",
             "id": 5041129,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Synthetic Technocracy",
@@ -2399,8 +2491,9 @@
             "name": "CIVIC_AP_INFORMATION_53",
             "id": 5041130,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Siege Tactics",
@@ -2414,8 +2507,9 @@
             "name": "CIVIC_AP_INFORMATION_54",
             "id": 5041131,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Masonry",
@@ -2429,8 +2523,9 @@
             "name": "CIVIC_AP_INFORMATION_55",
             "id": 5041132,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Code of Laws",
@@ -2450,8 +2545,9 @@
             "name": "TECH_AP_FUTURE_69",
             "id": 5041069,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Scientific Theory",
@@ -2465,8 +2561,9 @@
             "name": "TECH_AP_FUTURE_70",
             "id": 5041070,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Space Race",
@@ -2480,8 +2577,9 @@
             "name": "TECH_AP_FUTURE_71",
             "id": 5041071,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Construction",
@@ -2495,8 +2593,9 @@
             "name": "TECH_AP_FUTURE_72",
             "id": 5041072,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iron Working",
@@ -2510,8 +2609,9 @@
             "name": "TECH_AP_FUTURE_73",
             "id": 5041073,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Feudalism",
@@ -2525,8 +2625,9 @@
             "name": "TECH_AP_FUTURE_74",
             "id": 5041074,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Environmentalism",
@@ -2540,8 +2641,9 @@
             "name": "TECH_AP_FUTURE_75",
             "id": 5041075,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Horseback Riding",
@@ -2555,8 +2657,9 @@
             "name": "TECH_AP_FUTURE_76",
             "id": 5041076,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Combustion",
@@ -2570,8 +2673,9 @@
             "name": "CIVIC_AP_FUTURE_50",
             "id": 5041127,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Scorched Earth",
@@ -2585,8 +2689,9 @@
             "name": "CIVIC_AP_FUTURE_56",
             "id": 5041133,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cultural Heritage",
@@ -2600,8 +2705,9 @@
             "name": "CIVIC_AP_FUTURE_57",
             "id": 5041134,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Space Port",
@@ -2615,8 +2721,9 @@
             "name": "CIVIC_AP_FUTURE_58",
             "id": 5041135,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Archery",
@@ -2630,8 +2737,9 @@
             "name": "CIVIC_AP_FUTURE_59",
             "id": 5041136,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seasteads",
@@ -2645,8 +2753,9 @@
             "name": "CIVIC_AP_FUTURE_60",
             "id": 5041137,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Telecommunications",
@@ -2660,14 +2769,11 @@
             "name": "Complete a victory type",
             "id": null,
             "access_rule": {
-              "type": "state_method",
-              "method": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "ERA_FUTURE"
-                }
-              ]
+              "rule": "CanReachRegion",
+              "options": [],
+              "args": {
+                "region_name": "ERA_FUTURE"
+              }
             },
             "item": {
               "name": "Victory",
@@ -4687,16 +4793,16 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "advisor_show_progression_items": 1,
-        "boostsanity": 0,
-        "death_link": 0,
+        "accessibility": "full",
+        "advisor_show_progression_items": "true",
+        "boostsanity": "false",
+        "death_link": "false",
         "death_link_effect": [
           "Unit Killed"
         ],
         "death_link_effect_percent": 20,
         "exclude_locations": [],
-        "hide_item_names": 0,
+        "hide_item_names": "false",
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
@@ -4704,9 +4810,9 @@
         "pre_hint_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "progression_style": 0,
+        "progression_style": "districts_only",
         "research_cost_multiplier": 100,
-        "shuffle_goody_hut_rewards": 1,
+        "shuffle_goody_hut_rewards": "true",
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},

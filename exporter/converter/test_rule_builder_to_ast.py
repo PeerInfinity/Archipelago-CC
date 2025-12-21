@@ -421,7 +421,7 @@ class TestUnknownRules(unittest.TestCase):
         self.assertEqual(len(result.warnings), 1)
         self.assertIn("Unknown rule type", result.warnings[0])
 
-    def test_already_cc_format(self):
+    def test_already_ast_format(self):
         """Test that rules already in AST format are passed through."""
         rule = {"type": "item_check", "item": "Sword"}
         result = self.converter.convert(rule)

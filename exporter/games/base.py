@@ -698,7 +698,7 @@ class BaseGameExportHandler:
         }
 
         # Check if the world defines accumulator rules (for state counter patterns like coins)
-        # This allows generated worlds from CC format to export accumulator rules
+        # This allows generated worlds from AST format to export accumulator rules
         if hasattr(world, 'accumulator_rules') and world.accumulator_rules:
             game_info['accumulator_rules'] = world.accumulator_rules
 

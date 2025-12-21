@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAll, HasAny
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _megaman2worldgen_can_defeat_enough_rbms(state: "CollectionState", player: int, required, boss_requirements) -> bool:
+def _megaman2worldgen_can_defeat_enough_rbms(state: "CollectionState", player: int, required = None, boss_requirements = None) -> bool:
     can_defeat = 0
     for boss, reqs in boss_requirements.items():
         if (boss in {0: 'Heat Man Defeated', 1: 'Air Man Defeated', 2: 'Wood Man Defeated', 3: 'Bubble Man Defeated', 4: 'Quick Man Defeated', 5: 'Flash Man Defeated', 6: 'Metal Man Defeated', 7: 'Crash Man Defeated'}):
@@ -27,6 +27,103 @@ def _megaman2worldgen_can_defeat_enough_rbms(state: "CollectionState", player: i
     return False
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'can_defeat_enough_rbms': {   'body': {   'statements': [   {   'name': 'can_defeat',
+                                                                    'type': 'assign',
+                                                                    'value': {'type': 'constant', 'value': 0}},
+                                                                {   'body': [   {   'body': [   {   'body': [   {   'name': 'can_defeat',
+                                                                                                                    'op': '+=',
+                                                                                                                    'type': 'assign',
+                                                                                                                    'value': {   'type': 'constant',
+                                                                                                                                 'value': 1}},
+                                                                                                                {   'body': [   {   'type': 'return',
+                                                                                                                                    'value': {   'type': 'constant',
+                                                                                                                                                 'value': True}}],
+                                                                                                                    'test': {   'left': {   'name': 'can_defeat',
+                                                                                                                                            'type': 'name'},
+                                                                                                                                'op': '>=',
+                                                                                                                                'right': {   'name': 'required',
+                                                                                                                                             'type': 'name'},
+                                                                                                                                'type': 'compare'},
+                                                                                                                    'type': 'if_statement'}],
+                                                                                                    'test': {   'args': [   {   'function': {   'body': {   'index': {   'name': 'x',
+                                                                                                                                                                         'type': 'name'},
+                                                                                                                                                            'type': 'subscript',
+                                                                                                                                                            'value': {   'type': 'constant',
+                                                                                                                                                                         'value': {   '1': 'Atomic '
+                                                                                                                                                                                           'Fire',
+                                                                                                                                                                                      '2': 'Air '
+                                                                                                                                                                                           'Shooter',
+                                                                                                                                                                                      '3': 'Leaf '
+                                                                                                                                                                                           'Shield',
+                                                                                                                                                                                      '4': 'Bubble '
+                                                                                                                                                                                           'Lead',
+                                                                                                                                                                                      '5': 'Quick '
+                                                                                                                                                                                           'Boomerang',
+                                                                                                                                                                                      '6': 'Crash '
+                                                                                                                                                                                           'Bomber',
+                                                                                                                                                                                      '7': 'Metal '
+                                                                                                                                                                                           'Blade',
+                                                                                                                                                                                      '8': 'Time '
+                                                                                                                                                                                           'Stopper'}}},
+                                                                                                                                                'params': [   'x'],
+                                                                                                                                                'type': 'lambda'},
+                                                                                                                                'iterable': {   'name': 'reqs',
+                                                                                                                                                'type': 'name'},
+                                                                                                                                'type': 'map'}],
+                                                                                                                'method': 'has_all',
+                                                                                                                'type': 'state_method'},
+                                                                                                    'type': 'if_statement'}],
+                                                                                    'test': {   'left': {   'name': 'boss',
+                                                                                                            'type': 'name'},
+                                                                                                'op': 'in',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': {   '0': 'Heat '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '1': 'Air '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '2': 'Wood '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '3': 'Bubble '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '4': 'Quick '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '5': 'Flash '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '6': 'Metal '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated',
+                                                                                                                          '7': 'Crash '
+                                                                                                                               'Man '
+                                                                                                                               'Defeated'}},
+                                                                                                'type': 'compare'},
+                                                                                    'type': 'if_statement'}],
+                                                                    'iterable': {   'args': [],
+                                                                                    'function': {   'attr': 'items',
+                                                                                                    'object': {   'name': 'boss_requirements',
+                                                                                                                  'type': 'name'},
+                                                                                                    'type': 'attribute'},
+                                                                                    'type': 'function_call'},
+                                                                    'type': 'for_iter',
+                                                                    'vars': ['boss', 'reqs']},
+                                                                {   'type': 'return',
+                                                                    'value': {'type': 'constant', 'value': False}}],
+                                              'type': 'block'},
+                                  'params': ['required', 'boss_requirements']}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -35,122 +132,307 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Heat Man Stage", player),
-        (HasAll('Heat Man Access Codes')) & (Has("Item 2 - Rocket"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Air Man Stage", player),
-        HasAll('Air Man Access Codes')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wood Man Stage", player),
-        HasAll('Wood Man Access Codes')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bubble Man Stage", player),
-        HasAll('Bubble Man Access Codes')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Quick Man Stage", player),
-        (HasAll('Quick Man Access Codes')) & (Has("Time Stopper"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Flash Man Stage", player),
-        HasAll('Flash Man Access Codes')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Metal Man Stage", player),
-        HasAll('Metal Man Access Codes')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Crash Man Stage", player),
-        HasAll('Crash Man Access Codes')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 1", player),
-        HasAll('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 2", player),
-        HasAll('Wily Stage 1 - Completed')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 3", player),
-        HasAll('Wily Stage 2 - Completed')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 4", player),
-        HasAll('Wily Stage 3 - Completed')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 5", player),
-        HasAll('Wily Stage 4 - Completed')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 6", player),
-        HasAll('Wily Stage 5 - Completed')
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Heat Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Atomic Fire - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Item 1 - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Heat Man Stage - 1-Up", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Air Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Air Shooter - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Item 2 - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wood Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Leaf Shield - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bubble Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bubble Lead - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quick Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quick Boomerang - Received", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Quick Man Stage - 1-Up 1", player),
-        HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quick Man Stage - E-Tank", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quick Man Stage - 1-Up 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quick Man Stage - 1-Up 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flash Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Time Stopper - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Item 3 - Received", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Flash Man Stage - 1-Up", player),
-        HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flash Man Stage - E-Tank", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Metal Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Metal Blade - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Metal Man Stage - E-Tank 1", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Metal Man Stage - 1-Up", player),
-        HasAny('Item 1 - Propeller', 'Item 2 - Rocket')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Metal Man Stage - E-Tank 2", player),
-        HasAny('Item 1 - Propeller', 'Item 2 - Rocket')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Crash Man - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Crash Bomber - Received", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Crash Man Stage - E-Tank", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Crash Man Stage - 1-Up", player),
-        HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mecha Dragon - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 1 - Completed", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 1 - 1-Up", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Picopico-kun - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 2 - Completed", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 2 - E-Tank 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 2 - 1-Up 1", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 2 - 1-Up 2", player),
-        Has("Crash Bomber")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 2 - E-Tank 2", player),
-        Has("Crash Bomber")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Guts Tank - Defeated", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 3 - Completed", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 3 - E-Tank", player),
-        Has("Crash Bomber")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Boobeam Trap - Defeated", player),
-        (HasAny('Crash Bomber')) & (Has("Crash Bomber"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 4 - Completed", player),
-        (HasAny('Crash Bomber')) & (Has("Crash Bomber"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 4 - 1-Up 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wily Stage 4 - E-Tank 1", player),
+        True_()
     )
 
     world.set_rule(
@@ -165,5 +447,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),
-        HasAny('Bubble Lead')
+        True_()
     )

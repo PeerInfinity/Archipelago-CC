@@ -28,19 +28,9 @@ class Logicdifficulty(Range):
     range_end = 100
     default = -1
 
-class Nopaintingskips(Toggle):
-    """Option for Nopaintingskips."""
-    display_name = "Nopaintingskips"
-    default = False
-
 class Shufflesubconpaintings(Toggle):
     """Option for Shufflesubconpaintings."""
     display_name = "Shufflesubconpaintings"
-    default = False
-
-class Umbrellalogic(Toggle):
-    """Option for Umbrellalogic."""
-    display_name = "Umbrellalogic"
     default = False
 
 
@@ -50,6 +40,4 @@ class AHatinTimeWorldGenOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
     HatItems: Hatitems
     LogicDifficulty: Logicdifficulty
-    NoPaintingSkips: Nopaintingskips
     ShuffleSubconPaintings: Shufflesubconpaintings
-    UmbrellaLogic: Umbrellalogic

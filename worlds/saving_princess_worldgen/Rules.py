@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HelperCall
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -40,6 +40,94 @@ def _savingprincessworldgen_super_nice_check(state: "CollectionState", player: i
     return (state.has('Life Extension', player, 2)) and (state.has('Clip Extension', player, 2)) and (state.has('Faster Reload', player, 4)) and (state.has('Powered Blaster', player)) and (state.has_any(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player))
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'all_weapons': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Flamethrower'},
+                                                       {'type': 'constant', 'value': 'Ice Spreadshot'},
+                                                       {'type': 'constant', 'value': 'Volt Laser'}],
+                                       'type': 'set'}],
+                       'method': 'has_all',
+                       'type': 'state_method'},
+    'can_hover': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                           'item': 'Faster Reload',
+                                           'type': 'item_check'},
+                                       {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                               'value': 'Flamethrower'},
+                                                                           {   'type': 'constant',
+                                                                               'value': 'Ice Spreadshot'},
+                                                                           {'type': 'constant', 'value': 'Volt Laser'}],
+                                                           'type': 'set'}],
+                                           'method': 'has_any',
+                                           'type': 'state_method'}],
+                     'type': 'and'},
+    'is_gate_unlocked': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Arctic Key'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Cave Key'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Swamp Key'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Volcanic Key'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'},
+                                              {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                        'item': 'Life Extension',
+                                                                        'type': 'item_check'},
+                                                                    {   'count': {'type': 'constant', 'value': 2},
+                                                                        'item': 'Clip Extension',
+                                                                        'type': 'item_check'},
+                                                                    {   'count': {'type': 'constant', 'value': 4},
+                                                                        'item': 'Faster Reload',
+                                                                        'type': 'item_check'},
+                                                                    {'item': 'Powered Blaster', 'type': 'item_check'},
+                                                                    {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                            'value': 'Flamethrower'},
+                                                                                                        {   'type': 'constant',
+                                                                                                            'value': 'Ice '
+                                                                                                                     'Spreadshot'},
+                                                                                                        {   'type': 'constant',
+                                                                                                            'value': 'Volt '
+                                                                                                                     'Laser'}],
+                                                                                        'type': 'set'}],
+                                                                        'method': 'has_any',
+                                                                        'type': 'state_method'}],
+                                                  'type': 'and'}],
+                            'type': 'and'},
+    'is_power_on': {'item': 'System Power', 'type': 'item_check'},
+    'nice_check': {   'conditions': [   {'item': 'Life Extension', 'type': 'item_check'},
+                                        {'item': 'Clip Extension', 'type': 'item_check'},
+                                        {   'count': {'type': 'constant', 'value': 2},
+                                            'item': 'Faster Reload',
+                                            'type': 'item_check'}],
+                      'type': 'and'},
+    'super_nice_check': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                  'item': 'Life Extension',
+                                                  'type': 'item_check'},
+                                              {   'count': {'type': 'constant', 'value': 2},
+                                                  'item': 'Clip Extension',
+                                                  'type': 'item_check'},
+                                              {   'count': {'type': 'constant', 'value': 4},
+                                                  'item': 'Faster Reload',
+                                                  'type': 'item_check'},
+                                              {'item': 'Powered Blaster', 'type': 'item_check'},
+                                              {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Flamethrower'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Ice Spreadshot'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Volt Laser'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_any',
+                                                  'type': 'state_method'}],
+                            'type': 'and'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -47,111 +135,221 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Hub entrance", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cave entrance", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Volcanic entrance", player),
-        Has("Powered Blaster")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Arctic entrance", player),
-        Has("Powered Blaster")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp entrance", player),
-        Has("Powered Blaster")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Electrical entrance", player),
-        HelperCall(helper_func=_savingprincessworldgen_is_gate_unlocked, helper_name="is_gate_unlocked", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arctic Key'}, {'type': 'constant', 'value': 'Cave Key'}, {'type': 'constant', 'value': 'Swamp Key'}, {'type': 'constant', 'value': 'Volcanic Key'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Clip Extension', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 4}}, {'type': 'item_check', 'item': 'Powered Blaster'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Electrical (Power On) entrance", player),
-        HelperCall(helper_func=_savingprincessworldgen_is_power_on, helper_name="is_power_on", body_data={'type': 'item_check', 'item': 'System Power'})
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Cave: After Wallboss", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cave: Balcony", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cave: Spike pit", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Cave: Powered Blaster chest", player),
-        Has("Clip Extension")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cave: Wallboss (Boss)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Cave: Guard (Boss)", player),
-        Has("Clip Extension")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Hot coals", player),
-        (HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 4}}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]}]})) | (Has("Ice Spreadshot"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Volcanic: Under bridge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Volcanic: Behind wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Flamethrower chest", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Cliff (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Arctic: Before pipes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Arctic: After Guard", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Arctic: Under snow", player),
-        Has("Flamethrower")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Arctic: Ice Spreadshot chest", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Arctic: Jacket chest", player),
-        Has("Flamethrower")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Arctic: Ace (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hub: Hidden near Arctic", player),
-        Has("Powered Blaster")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hub: Hidden near Cave", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hub: Hidden near Swamp", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hub: Console login", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hub: Ninja scare (Boss?)", player),
-        Has("Cave Key")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Bramble room", player),
-        HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 4}}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Swamp: Down the chimney", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Swamp: Wall maze", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Special Extension chest", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Snake (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Life Extension'}, {'type': 'item_check', 'item': 'Clip Extension'}, {'type': 'item_check', 'item': 'Faster Reload', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Elevator: Ninja (Boss)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Electrical: Volt Laser chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Electrical: Generator (Boss)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Electrical: Tesla orb", player),
-        Has("Volt Laser")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Electrical: Near generator", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Electrical: Behind wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Electrical: Before Malakhov", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Electrical: Malakhov (Boss)", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Electrical: BRAINOS (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mission objective", player),
-        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Flamethrower'}, {'type': 'constant', 'value': 'Ice Spreadshot'}, {'type': 'constant', 'value': 'Volt Laser'}]}]})
+        True_()
     )

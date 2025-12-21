@@ -40,7 +40,7 @@ export class TestSpoilerRuleEvaluator {
 
     // Detect Rule Builder format: has 'rule' key but no 'type' key
     // Rule Builder format: {"rule": "HasFromList", "options": [], "args": {...}}
-    // CC format: {"type": "item_check", "item": "Sword"}
+    // AST format: {"type": "item_check", "item": "Sword"}
     const isRuleBuilderFormat = rule.rule && !rule.type;
     const ruleType = isRuleBuilderFormat ? rule.rule : rule.type;
     let result;

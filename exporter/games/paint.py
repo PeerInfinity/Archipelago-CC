@@ -18,6 +18,10 @@ class PaintGameExportHandler(GenericGameExportHandler):
         paint_percent_available(state, world, player) >= threshold
 
     Where threshold is calculated from the location's address: (address % 198600) / 4
+
+    NOTE: This handler is also used for Paint WorldGen worlds (due to _worldgen suffix stripping
+    in get_game_export_handler). For worldgen worlds, we skip the rule overrides since they
+    have their own rules that shouldn't be overwritten.
     """
 
     # Enable auto-export for discovered helpers.
@@ -32,6 +36,17 @@ class PaintGameExportHandler(GenericGameExportHandler):
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'paint_percent_available'
     }
+
+    def __init__(self, world=None):
+        """Initialize handler and detect if this is a worldgen world."""
+        super().__init__(world=world)
+        # Check if this is a worldgen world by examining the module path
+        self._is_worldgen = False
+        if world:
+            module_path = type(world).__module__
+            if 'paint_worldgen' in module_path:
+                self._is_worldgen = True
+                logger.debug("Paint: Handler initialized for Paint WorldGen - skipping rule overrides")
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Paint-specific settings including canvas_size_increment and logic_percent."""
@@ -72,6 +87,10 @@ class PaintGameExportHandler(GenericGameExportHandler):
         Returns:
             A rule dict that compares calculate_paint_percent_available to the threshold
         """
+        # Skip for worldgen worlds - they have their own rules
+        if self._is_worldgen:
+            return None
+
         # Check if this is a Paint location access rule
         if rule_target_name and rule_target_name.startswith("Similarity: "):
             # Extract the percentage from the location name
@@ -117,7 +136,15 @@ class PaintGameExportHandler(GenericGameExportHandler):
         on the PaintLocation class), which causes the exporter's rule analysis cache to
         reuse the same cached result for all locations. By setting unique lambda functions
         on each location, we ensure each location gets its own cache key and proper analysis.
+
+        NOTE: This is skipped for Paint WorldGen worlds (_worldgen suffix) since they
+        have their own rules that shouldn't be overwritten.
         """
+        # Skip for worldgen worlds - they have their own rules that shouldn't be overwritten
+        if self._is_worldgen:
+            logger.debug("Paint: Skipping postprocess_regions for Paint WorldGen")
+            return
+
         logger.info("Paint: Post-processing regions to set unique access rules on locations")
 
         # Import the calculate_paint_percent_available function (not the caching wrapper)

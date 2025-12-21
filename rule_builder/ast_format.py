@@ -358,10 +358,10 @@ def _parse_conditional(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"
     """
     Parse a conditional rule (typically from option filters).
 
-    CC Format:
+    AST Format:
         {"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}
 
-    This is complex because option filters in Rule Builder become conditionals in CC format.
+    This is complex because option filters in Rule Builder become conditionals in AST format.
     We use the Conditional class to preserve all branches for explain support.
     """
     from rule_builder.rules import True_, Conditional
@@ -395,7 +395,7 @@ def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
     """
     Parse a helper rule (game-specific or custom rules).
 
-    CC Format:
+    AST Format:
         {"type": "helper", "name": "CustomRule", "args": [...]}
 
     Helper rules may have been converted from Rule Builder custom rules,
@@ -451,7 +451,7 @@ def _parse_compare(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -
     """
     Parse a compare rule (comparison expression).
 
-    CC Format:
+    AST Format:
         {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
 
     Common patterns:
@@ -590,7 +590,7 @@ def _parse_binary_op(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"])
     """
     Parse a binary_op rule (arithmetic expression).
 
-    CC Format:
+    AST Format:
         {"type": "binary_op", "left": {...}, "op": "*", "right": {...}}
 
     Converts to Arithmetic rule for use in Compare expressions.

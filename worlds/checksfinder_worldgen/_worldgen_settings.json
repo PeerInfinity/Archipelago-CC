@@ -3,7 +3,7 @@
   "assume_bidirectional_exits": false,
   "use_resolved_items": false,
   "options": {
-    "accessibility": 0,
+    "accessibility": "full",
     "exclude_locations": [],
     "item_links": [],
     "local_items": [],

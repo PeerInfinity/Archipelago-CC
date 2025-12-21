@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachRegion, Has
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,11 +16,50 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _has_trinket_range(state: "CollectionState", player: int, start) -> bool:
+def _has_trinket_range(state: "CollectionState", player: int, start = None, end = None) -> bool:
     for i in range(start):
         if not (state.has(('Trinket ' + str((i + 1)).zfill(2)), player)):
             return False
     return True
+
+
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   '_has_trinket_range': {   'body': {   'statements': [   {   'body': [   {   'body': [   {   'type': 'return',
+                                                                                                'value': {   'type': 'constant',
+                                                                                                             'value': False}}],
+                                                                                'test': {   'condition': {   'item': {   'left': {   'type': 'constant',
+                                                                                                                                     'value': 'Trinket '},
+                                                                                                                         'op': '+',
+                                                                                                                         'right': {   'args': [   {   'type': 'constant',
+                                                                                                                                                      'value': 2}],
+                                                                                                                                      'function': {   'attr': 'zfill',
+                                                                                                                                                      'object': {   'args': [   {   'left': {   'name': 'i',
+                                                                                                                                                                                                'type': 'name'},
+                                                                                                                                                                                    'op': '+',
+                                                                                                                                                                                    'right': {   'type': 'constant',
+                                                                                                                                                                                                 'value': 1},
+                                                                                                                                                                                    'type': 'binary_op'}],
+                                                                                                                                                                    'name': 'str',
+                                                                                                                                                                    'type': 'helper'},
+                                                                                                                                                      'type': 'attribute'},
+                                                                                                                                      'type': 'function_call'},
+                                                                                                                         'type': 'binary_op'},
+                                                                                                             'type': 'item_check'},
+                                                                                            'type': 'not'},
+                                                                                'type': 'if_statement'}],
+                                                                'count': {'name': 'start', 'type': 'name'},
+                                                                'type': 'for_range',
+                                                                'var': 'i'},
+                                                            {   'type': 'return',
+                                                                'value': {'type': 'constant', 'value': True}}],
+                                          'type': 'block'},
+                              'params': ['start', 'end']}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -31,30 +70,120 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Laboratory", player),
-        (Has("Trinket 01")) & (Has("Trinket 02")) & (Has("Trinket 03"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> The Tower", player),
-        (Has("Trinket 04")) & (Has("Trinket 05")) & (Has("Trinket 06"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Space Station 2", player),
-        (Has("Trinket 07")) & (Has("Trinket 08")) & (Has("Trinket 09"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Warp Zone", player),
-        (Has("Trinket 10")) & (Has("Trinket 11")) & (Has("Trinket 12"))
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Overworld (Pipe-shaped Segment)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Overworld (Left of Ship)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Overworld (Square Room)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Overworld (Sad Elephant)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("It's a Secret to Nobody", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench Warfare", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("NPC Trinket", player),
-        ((CanReachRegion("Space Station 2")) & (CanReachRegion("The Tower")) & (CanReachRegion("Warp Zone"))) | (CanReachRegion("Laboratory"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("V", player),
-        (CanReachRegion("Laboratory")) & (CanReachRegion("Space Station 2")) & (CanReachRegion("The Tower")) & (CanReachRegion("Warp Zone"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Young Man, It's Worth the Challenge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Overworld (Outside Entanglement Generator)", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Tantalizing Trinket", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Purest Unobtainium", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Tower 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Tower 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("One Way Room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("You Just Keep Coming Back", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Clarion Call", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Prize for the Reckless", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Doing things the hard way", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Edge Games", player),
+        True_()
     )

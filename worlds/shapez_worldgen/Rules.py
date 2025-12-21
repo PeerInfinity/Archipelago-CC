@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAny, HelperCall
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _shapezworldgen_can_build_mam(state: "CollectionState", player: int, floating) -> bool:
+def _shapezworldgen_can_build_mam(state: "CollectionState", player: int, floating = None) -> bool:
     return (_shapezworldgen_can_make_stitched_shape(state, player, floating)) and (_shapezworldgen_can_paint(state, player)) and (_shapezworldgen_can_mix_colors(state, player)) and (_shapezworldgen_has_balancer(state, player)) and (_shapezworldgen_has_tunnel(state, player)) and ((state.has('Belt Reader', player)) and (state.has('Item Filter', player)) and (state.has('Logic Gates', player)) and (state.has('Storage', player)) and (state.has('Virtual Processing', player)) and (state.has('Wires', player)))
 
 
@@ -36,7 +36,7 @@ def _shapezworldgen_can_make_half_shape(state: "CollectionState", player: int) -
     return (_shapezworldgen_can_cut_half(state, player)) or (state.has_all(('Quad Cutter', 'Stacker'), player))
 
 
-def _shapezworldgen_can_make_stitched_shape(state: "CollectionState", player: int, floating) -> bool:
+def _shapezworldgen_can_make_stitched_shape(state: "CollectionState", player: int, floating = None) -> bool:
     return (_shapezworldgen_can_stack(state, player)) and (((state.has('Quad Cutter', player)) and (not (floating))) or ((_shapezworldgen_can_cut_half(state, player)) and (_shapezworldgen_can_rotate_90(state, player))))
 
 
@@ -68,7 +68,7 @@ def _shapezworldgen_has_balancer(state: "CollectionState", player: int) -> bool:
     return (state.has('Balancer', player)) or (state.has_all(('Compact Merger', 'Compact Splitter'), player))
 
 
-def _shapezworldgen_has_logic_list_building(state: "CollectionState", player: int, buildings, index, includeuseful, floating) -> bool:
+def _shapezworldgen_has_logic_list_building(state: "CollectionState", player: int, buildings = None, index = None, includeuseful = None, floating = None) -> bool:
     return (False if (includeuseful) and (not ((state.has('Trash', player)) and (_shapezworldgen_has_balancer(state, player)) and (_shapezworldgen_has_tunnel(state, player)))) else ((state.has_any(('Cutter', 'Quad Cutter'), player) if ((buildings.index('Stacker') < index)) and (not (floating)) else _shapezworldgen_can_cut_half(state, player)) if (buildings[index] == 'Cutter') else (_shapezworldgen_can_rotate_90(state, player) if (buildings[index] == 'Rotator') else (_shapezworldgen_can_stack(state, player) if (buildings[index] == 'Stacker') else (_shapezworldgen_can_paint(state, player) if (buildings[index] == 'Painter') else (_shapezworldgen_can_mix_colors(state, player) if (buildings[index] == 'Color Mixer') else None))))))
 
 
@@ -76,7 +76,7 @@ def _shapezworldgen_has_tunnel(state: "CollectionState", player: int) -> bool:
     return state.has_any(('Tunnel', 'Tunnel Tier II'), player)
 
 
-def _shapezworldgen_has_x_belt_multiplier(state: "CollectionState", player: int, needed) -> bool:
+def _shapezworldgen_has_x_belt_multiplier(state: "CollectionState", player: int, needed = None) -> bool:
     multiplier = 1.0
     for _ in range(state.count('Rising Belt Upgrade', player)):
         multiplier *= 2
@@ -84,6 +84,340 @@ def _shapezworldgen_has_x_belt_multiplier(state: "CollectionState", player: int,
     multiplier += state.count('Big Belt Upgrade', player)
     multiplier += (state.count('Small Belt Upgrade', player) * 0.1)
     return (multiplier >= needed)
+
+
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'can_build_mam': {   'body': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                 'name': 'can_stack',
+                                                                                 'type': 'helper'},
+                                                                             {   'conditions': [   {   'conditions': [   {   'item': 'Quad '
+                                                                                                                                     'Cutter',
+                                                                                                                             'type': 'item_check'},
+                                                                                                                         {   'condition': {   'name': 'floating',
+                                                                                                                                              'type': 'name'},
+                                                                                                                             'type': 'not'}],
+                                                                                                       'type': 'and'},
+                                                                                                   {   'conditions': [   {   'args': [   ],
+                                                                                                                             'name': 'can_cut_half',
+                                                                                                                             'type': 'helper'},
+                                                                                                                         {   'args': [   ],
+                                                                                                                             'name': 'can_rotate_90',
+                                                                                                                             'type': 'helper'}],
+                                                                                                       'type': 'and'}],
+                                                                                 'type': 'or'}],
+                                                           'type': 'and'},
+                                                       {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                 'value': [   'Double '
+                                                                                                              'Painter',
+                                                                                                              'Painter']}],
+                                                                                 'method': 'has_any',
+                                                                                 'type': 'state_method'},
+                                                                             {   'args': [],
+                                                                                 'name': 'can_use_quad_painter',
+                                                                                 'type': 'helper'}],
+                                                           'type': 'or'},
+                                                       {'item': 'Color Mixer', 'type': 'item_check'},
+                                                       {   'conditions': [   {'item': 'Balancer', 'type': 'item_check'},
+                                                                             {   'args': [   {   'type': 'constant',
+                                                                                                 'value': [   'Compact '
+                                                                                                              'Merger',
+                                                                                                              'Compact '
+                                                                                                              'Splitter']}],
+                                                                                 'method': 'has_all',
+                                                                                 'type': 'state_method'}],
+                                                           'type': 'or'},
+                                                       {   'args': [   {   'type': 'constant',
+                                                                           'value': ['Tunnel', 'Tunnel Tier II']}],
+                                                           'method': 'has_any',
+                                                           'type': 'state_method'},
+                                                       {   'conditions': [   {   'item': 'Belt Reader',
+                                                                                 'type': 'item_check'},
+                                                                             {   'item': 'Item Filter',
+                                                                                 'type': 'item_check'},
+                                                                             {   'item': 'Logic Gates',
+                                                                                 'type': 'item_check'},
+                                                                             {'item': 'Storage', 'type': 'item_check'},
+                                                                             {   'item': 'Virtual Processing',
+                                                                                 'type': 'item_check'},
+                                                                             {'item': 'Wires', 'type': 'item_check'}],
+                                                           'type': 'and'}],
+                                     'type': 'and'},
+                         'params': ['floating']},
+    'can_cut_half': {'item': 'Cutter', 'type': 'item_check'},
+    'can_make_east_windmill': {   'conditions': [   {'item': 'Stacker', 'type': 'item_check'},
+                                                    {   'conditions': [   {'item': 'Quad Cutter', 'type': 'item_check'},
+                                                                          {   'conditions': [   {   'item': 'Cutter',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'args': [   {   'type': 'constant',
+                                                                                                                    'value': [   'Rotator',
+                                                                                                                                 'Rotator '
+                                                                                                                                 '(180°)',
+                                                                                                                                 'Rotator '
+                                                                                                                                 '(CCW)']}],
+                                                                                                    'method': 'has_any',
+                                                                                                    'type': 'state_method'}],
+                                                                              'type': 'and'}],
+                                                        'type': 'or'}],
+                                  'type': 'and'},
+    'can_make_half_half_shape': {   'conditions': [   {'item': 'Stacker', 'type': 'item_check'},
+                                                      {   'args': [   {   'type': 'constant',
+                                                                          'value': ['Cutter', 'Quad Cutter']}],
+                                                          'method': 'has_any',
+                                                          'type': 'state_method'}],
+                                    'type': 'and'},
+    'can_make_half_shape': {   'conditions': [   {'item': 'Cutter', 'type': 'item_check'},
+                                                 {   'args': [   {   'type': 'constant',
+                                                                     'value': ['Quad Cutter', 'Stacker']}],
+                                                     'method': 'has_all',
+                                                     'type': 'state_method'}],
+                               'type': 'or'},
+    'can_make_stitched_shape': {   'body': {   'conditions': [   {'item': 'Stacker', 'type': 'item_check'},
+                                                                 {   'conditions': [   {   'conditions': [   {   'item': 'Quad '
+                                                                                                                         'Cutter',
+                                                                                                                 'type': 'item_check'},
+                                                                                                             {   'condition': {   'name': 'floating',
+                                                                                                                                  'type': 'name'},
+                                                                                                                 'type': 'not'}],
+                                                                                           'type': 'and'},
+                                                                                       {   'conditions': [   {   'item': 'Cutter',
+                                                                                                                 'type': 'item_check'},
+                                                                                                             {   'args': [   {   'type': 'constant',
+                                                                                                                                 'value': [   'Rotator',
+                                                                                                                                              'Rotator '
+                                                                                                                                              '(CCW)']}],
+                                                                                                                 'method': 'has_any',
+                                                                                                                 'type': 'state_method'}],
+                                                                                           'type': 'and'}],
+                                                                     'type': 'or'}],
+                                               'type': 'and'},
+                                   'params': ['floating']},
+    'can_mix_colors': {'item': 'Color Mixer', 'type': 'item_check'},
+    'can_paint': {   'conditions': [   {   'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}],
+                                           'method': 'has_any',
+                                           'type': 'state_method'},
+                                       {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                 'value': ['Quad Painter', 'Wires']}],
+                                                                 'method': 'has_all',
+                                                                 'type': 'state_method'},
+                                                             {   'args': [   {   'type': 'constant',
+                                                                                 'value': [   'Constant Signal',
+                                                                                              'Switch']}],
+                                                                 'method': 'has_any',
+                                                                 'type': 'state_method'}],
+                                           'type': 'and'}],
+                     'type': 'or'},
+    'can_rotate_180': {   'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (180°)', 'Rotator (CCW)']}],
+                          'method': 'has_any',
+                          'type': 'state_method'},
+    'can_rotate_90': {   'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}],
+                         'method': 'has_any',
+                         'type': 'state_method'},
+    'can_stack': {'item': 'Stacker', 'type': 'item_check'},
+    'can_use_quad_painter': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                      'value': ['Quad Painter', 'Wires']}],
+                                                      'method': 'has_all',
+                                                      'type': 'state_method'},
+                                                  {   'args': [   {   'type': 'constant',
+                                                                      'value': ['Constant Signal', 'Switch']}],
+                                                      'method': 'has_any',
+                                                      'type': 'state_method'}],
+                                'type': 'and'},
+    'has_balancer': {   'conditions': [   {'item': 'Balancer', 'type': 'item_check'},
+                                          {   'args': [   {   'type': 'constant',
+                                                              'value': ['Compact Merger', 'Compact Splitter']}],
+                                              'method': 'has_all',
+                                              'type': 'state_method'}],
+                        'type': 'or'},
+    'has_logic_list_building': {   'body': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                                                               'if_true': {   'item': 'Color '
+                                                                                                                                                      'Mixer',
+                                                                                                                                              'type': 'item_check'},
+                                                                                                                               'test': {   'left': {   'index': {   'name': 'index',
+                                                                                                                                                                    'type': 'name'},
+                                                                                                                                                       'type': 'subscript',
+                                                                                                                                                       'value': {   'name': 'buildings',
+                                                                                                                                                                    'type': 'name'}},
+                                                                                                                                           'op': '==',
+                                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                                        'value': 'Color '
+                                                                                                                                                                 'Mixer'},
+                                                                                                                                           'type': 'compare'},
+                                                                                                                               'type': 'conditional'},
+                                                                                                               'if_true': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                                    'value': [   'Double '
+                                                                                                                                                                                 'Painter',
+                                                                                                                                                                                 'Painter']}],
+                                                                                                                                                    'method': 'has_any',
+                                                                                                                                                    'type': 'state_method'},
+                                                                                                                                                {   'args': [   ],
+                                                                                                                                                    'name': 'can_use_quad_painter',
+                                                                                                                                                    'type': 'helper'}],
+                                                                                                                              'type': 'or'},
+                                                                                                               'test': {   'left': {   'index': {   'name': 'index',
+                                                                                                                                                    'type': 'name'},
+                                                                                                                                       'type': 'subscript',
+                                                                                                                                       'value': {   'name': 'buildings',
+                                                                                                                                                    'type': 'name'}},
+                                                                                                                           'op': '==',
+                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                        'value': 'Painter'},
+                                                                                                                           'type': 'compare'},
+                                                                                                               'type': 'conditional'},
+                                                                                               'if_true': {   'item': 'Stacker',
+                                                                                                              'type': 'item_check'},
+                                                                                               'test': {   'left': {   'index': {   'name': 'index',
+                                                                                                                                    'type': 'name'},
+                                                                                                                       'type': 'subscript',
+                                                                                                                       'value': {   'name': 'buildings',
+                                                                                                                                    'type': 'name'}},
+                                                                                                           'op': '==',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 'Stacker'},
+                                                                                                           'type': 'compare'},
+                                                                                               'type': 'conditional'},
+                                                                               'if_true': {   'args': [   {   'type': 'constant',
+                                                                                                              'value': [   'Rotator',
+                                                                                                                           'Rotator '
+                                                                                                                           '(CCW)']}],
+                                                                                              'method': 'has_any',
+                                                                                              'type': 'state_method'},
+                                                                               'test': {   'left': {   'index': {   'name': 'index',
+                                                                                                                    'type': 'name'},
+                                                                                                       'type': 'subscript',
+                                                                                                       'value': {   'name': 'buildings',
+                                                                                                                    'type': 'name'}},
+                                                                                           'op': '==',
+                                                                                           'right': {   'type': 'constant',
+                                                                                                        'value': 'Rotator'},
+                                                                                           'type': 'compare'},
+                                                                               'type': 'conditional'},
+                                                               'if_true': {   'if_false': {   'item': 'Cutter',
+                                                                                              'type': 'item_check'},
+                                                                              'if_true': {   'args': [   {   'type': 'constant',
+                                                                                                             'value': [   'Cutter',
+                                                                                                                          'Quad '
+                                                                                                                          'Cutter']}],
+                                                                                             'method': 'has_any',
+                                                                                             'type': 'state_method'},
+                                                                              'test': {   'conditions': [   {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                                                            'value': 'Stacker'}],
+                                                                                                                            'function': {   'attr': 'index',
+                                                                                                                                            'object': {   'name': 'buildings',
+                                                                                                                                                          'type': 'name'},
+                                                                                                                                            'type': 'attribute'},
+                                                                                                                            'type': 'function_call'},
+                                                                                                                'op': '<',
+                                                                                                                'right': {   'name': 'index',
+                                                                                                                             'type': 'name'},
+                                                                                                                'type': 'compare'},
+                                                                                                            {   'condition': {   'name': 'floating',
+                                                                                                                                 'type': 'name'},
+                                                                                                                'type': 'not'}],
+                                                                                          'type': 'and'},
+                                                                              'type': 'conditional'},
+                                                               'test': {   'left': {   'index': {   'name': 'index',
+                                                                                                    'type': 'name'},
+                                                                                       'type': 'subscript',
+                                                                                       'value': {   'name': 'buildings',
+                                                                                                    'type': 'name'}},
+                                                                           'op': '==',
+                                                                           'right': {   'type': 'constant',
+                                                                                        'value': 'Cutter'},
+                                                                           'type': 'compare'},
+                                                               'type': 'conditional'},
+                                               'if_true': {'type': 'constant', 'value': False},
+                                               'test': {   'conditions': [   {'name': 'includeuseful', 'type': 'name'},
+                                                                             {   'condition': {   'conditions': [   {   'item': 'Trash',
+                                                                                                                        'type': 'item_check'},
+                                                                                                                    {   'conditions': [   {   'item': 'Balancer',
+                                                                                                                                              'type': 'item_check'},
+                                                                                                                                          {   'args': [   {   'type': 'constant',
+                                                                                                                                                              'value': [   'Compact '
+                                                                                                                                                                           'Merger',
+                                                                                                                                                                           'Compact '
+                                                                                                                                                                           'Splitter']}],
+                                                                                                                                              'method': 'has_all',
+                                                                                                                                              'type': 'state_method'}],
+                                                                                                                        'type': 'or'},
+                                                                                                                    {   'args': [   {   'type': 'constant',
+                                                                                                                                        'value': [   'Tunnel',
+                                                                                                                                                     'Tunnel '
+                                                                                                                                                     'Tier '
+                                                                                                                                                     'II']}],
+                                                                                                                        'method': 'has_any',
+                                                                                                                        'type': 'state_method'}],
+                                                                                                  'type': 'and'},
+                                                                                 'type': 'not'}],
+                                                           'type': 'and'},
+                                               'type': 'conditional'},
+                                   'params': ['buildings', 'index', 'includeuseful', 'floating']},
+    'has_tunnel': {   'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}],
+                      'method': 'has_any',
+                      'type': 'state_method'},
+    'has_x_belt_multiplier': {   'body': {   'statements': [   {   'name': 'multiplier',
+                                                                   'type': 'assign',
+                                                                   'value': {'type': 'constant', 'value': 1.0}},
+                                                               {   'body': [   {   'name': 'multiplier',
+                                                                                   'op': '*=',
+                                                                                   'type': 'assign',
+                                                                                   'value': {   'type': 'constant',
+                                                                                                'value': 2}}],
+                                                                   'count': {   'args': [   {   'type': 'constant',
+                                                                                                'value': 'Rising Belt '
+                                                                                                         'Upgrade'}],
+                                                                                'method': 'count',
+                                                                                'type': 'state_method'},
+                                                                   'type': 'for_range',
+                                                                   'var': '_'},
+                                                               {   'name': 'multiplier',
+                                                                   'op': '+=',
+                                                                   'type': 'assign',
+                                                                   'value': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                            'value': 'Gigantic '
+                                                                                                                     'Belt '
+                                                                                                                     'Upgrade'}],
+                                                                                            'method': 'count',
+                                                                                            'type': 'state_method'},
+                                                                                'op': '*',
+                                                                                'right': {   'type': 'constant',
+                                                                                             'value': 10},
+                                                                                'type': 'binary_op'}},
+                                                               {   'name': 'multiplier',
+                                                                   'op': '+=',
+                                                                   'type': 'assign',
+                                                                   'value': {   'args': [   {   'type': 'constant',
+                                                                                                'value': 'Big Belt '
+                                                                                                         'Upgrade'}],
+                                                                                'method': 'count',
+                                                                                'type': 'state_method'}},
+                                                               {   'name': 'multiplier',
+                                                                   'op': '+=',
+                                                                   'type': 'assign',
+                                                                   'value': {   'left': {   'args': [   {   'type': 'constant',
+                                                                                                            'value': 'Small '
+                                                                                                                     'Belt '
+                                                                                                                     'Upgrade'}],
+                                                                                            'method': 'count',
+                                                                                            'type': 'state_method'},
+                                                                                'op': '*',
+                                                                                'right': {   'type': 'constant',
+                                                                                             'value': 0.1},
+                                                                                'type': 'binary_op'}},
+                                                               {   'type': 'return',
+                                                                   'value': {   'left': {   'name': 'multiplier',
+                                                                                            'type': 'name'},
+                                                                                'op': '>=',
+                                                                                'right': {   'name': 'needed',
+                                                                                             'type': 'name'},
+                                                                                'type': 'compare'}}],
+                                             'type': 'block'},
+                                 'params': ['needed']}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -94,270 +428,975 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Placing belts", player),
-        Has("Belt")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Extracting shapes from patches", player),
-        HasAny('Chaining Extractor', 'Extractor')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using the wires layer", player),
-        Has("Wires")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Placing any building", player),
-        HasAny('Balancer', 'Belt', 'Belt Reader', 'Chaining Extractor', 'Color Mixer', 'Compact Merger', 'Compact Splitter', 'Cutter', 'Display', 'Double Painter', 'Extractor', 'Item Filter', 'Painter', 'Quad Cutter', 'Quad Painter', 'Rotator', 'Rotator (180°)', 'Rotator (CCW)', 'Stacker', 'Storage', 'Switch', 'Trash', 'Tunnel', 'Tunnel Tier II', 'Wires')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Transporting shapes over the canvas", player),
-        HasAny('Belt', 'Compact Merger', 'Compact Splitter')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting with half cutter", player),
-        HelperCall(helper_func=_shapezworldgen_can_cut_half, helper_name="can_cut_half", body_data={'type': 'item_check', 'item': 'Cutter'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rotating clockwise", player),
-        Has("Rotator")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Stacking shapes", player),
-        HelperCall(helper_func=_shapezworldgen_can_stack, helper_name="can_stack", body_data={'type': 'item_check', 'item': 'Stacker'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Storing shapes", player),
-        Has("Storage")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Trashing shapes", player),
-        Has("Trash")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting with (double) painter", player),
-        HasAny('Double Painter', 'Painter')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Copying and placing blueprints", player),
-        (HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}})) & (HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})) & (HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})) & (Has("Blueprints"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Building a MAM", player),
-        HelperCall(helper_func=_shapezworldgen_can_build_mam, helper_name="can_build_mam", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, {'type': 'item_check', 'item': 'Color Mixer'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Belt Reader'}, {'type': 'item_check', 'item': 'Item Filter'}, {'type': 'item_check', 'item': 'Logic Gates'}, {'type': 'item_check', 'item': 'Storage'}, {'type': 'item_check', 'item': 'Virtual Processing'}, {'type': 'item_check', 'item': 'Wires'}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using all main buildings", player),
-        (HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}})) & (HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})) & (HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using first level building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 0, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using first upgrade building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 0, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Delivering unprocessed", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting in single half", player),
-        HelperCall(helper_func=_shapezworldgen_can_make_half_shape, helper_name="can_make_half_shape", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Cutter', 'Stacker']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting in single piece", player),
-        ((HelperCall(helper_func=_shapezworldgen_can_cut_half, helper_name="can_cut_half", body_data={'type': 'item_check', 'item': 'Cutter'})) & (HelperCall(helper_func=_shapezworldgen_can_rotate_90, helper_name="can_rotate_90", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}))) | (Has("Quad Cutter"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting and stacking into two halves", player),
-        HelperCall(helper_func=_shapezworldgen_can_make_half_half_shape, helper_name="can_make_half_half_shape", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Stitching complex shapes", player),
-        HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rotating and stitching a single windmill half", player),
-        HelperCall(helper_func=_shapezworldgen_can_make_east_windmill, helper_name="can_make_east_windmill", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (180°)', 'Rotator (CCW)']}]}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting with a quad painter or stitching", player),
-        (HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}})) | (HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Why windmill, why?", player),
-        ((HelperCall(helper_func=_shapezworldgen_can_make_east_windmill, helper_name="can_make_east_windmill", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (180°)', 'Rotator (CCW)']}]}]}]}]})) & (HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}))) | (HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Quad painting a half-half shape", player),
-        ((HelperCall(helper_func=_shapezworldgen_can_make_half_half_shape, helper_name="can_make_half_half_shape", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}]})) & (HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}))) | (HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Quad painting a half shape", player),
-        ((HelperCall(helper_func=_shapezworldgen_can_make_half_shape, helper_name="can_make_half_shape", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Cutter', 'Stacker']}]}]})) & (HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}))) | (HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(False,), body_data={'params': ['floating'], 'body': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Stacker'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Quad Cutter'}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Cutter'}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}]}]}]}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using second level building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 1, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using third level building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 2, True, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fourth level building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 3, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fifth level building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 4, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using second upgrade building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 1, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using third upgrade building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 2, True, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fourth upgrade building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 3, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fifth upgrade building", player),
-        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 4, False, False,), body_data={'params': ['buildings', 'index', 'includeuseful', 'floating'], 'body': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'name', 'name': 'includeuseful'}, {'type': 'not', 'condition': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Trash'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Balancer'}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Compact Merger', 'Compact Splitter']}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Tunnel', 'Tunnel Tier II']}]}]}}]}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Cutter'}}, 'if_true': {'type': 'conditional', 'test': {'type': 'and', 'conditions': [{'type': 'compare', 'left': {'type': 'function_call', 'function': {'type': 'attribute', 'object': {'type': 'name', 'name': 'buildings'}, 'attr': 'index'}, 'args': [{'type': 'constant', 'value': 'Stacker'}]}, 'op': '<', 'right': {'type': 'name', 'name': 'index'}}, {'type': 'not', 'condition': {'type': 'name', 'name': 'floating'}}]}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Cutter', 'Quad Cutter']}]}, 'if_false': {'type': 'item_check', 'item': 'Cutter'}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Rotator'}}, 'if_true': {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Rotator', 'Rotator (CCW)']}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Stacker'}}, 'if_true': {'type': 'item_check', 'item': 'Stacker'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Painter'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'subscript', 'value': {'type': 'name', 'name': 'buildings'}, 'index': {'type': 'name', 'name': 'index'}}, 'op': '==', 'right': {'type': 'constant', 'value': 'Color Mixer'}}, 'if_true': {'type': 'item_check', 'item': 'Color Mixer'}, 'if_false': None}}}}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Delivering per second with 1.6x belt speed", player),
-        HelperCall(helper_func=_shapezworldgen_has_x_belt_multiplier, helper_name="has_x_belt_multiplier", args=(1.6,), body_data={'params': ['needed'], 'body': {'type': 'block', 'statements': [{'type': 'assign', 'name': 'multiplier', 'value': {'type': 'constant', 'value': 1.0}}, {'type': 'for_range', 'count': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Rising Belt Upgrade'}]}, 'body': [{'type': 'assign', 'name': 'multiplier', 'op': '*=', 'value': {'type': 'constant', 'value': 2}}], 'var': '_'}, {'type': 'assign', 'name': 'multiplier', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Gigantic Belt Upgrade'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 10}}}, {'type': 'assign', 'name': 'multiplier', 'op': '+=', 'value': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Big Belt Upgrade'}]}}, {'type': 'assign', 'name': 'multiplier', 'op': '+=', 'value': {'type': 'binary_op', 'left': {'type': 'state_method', 'method': 'count', 'args': [{'type': 'constant', 'value': 'Small Belt Upgrade'}]}, 'op': '*', 'right': {'type': 'constant', 'value': 0.1}}}, {'type': 'return', 'value': {'type': 'compare', 'left': {'type': 'name', 'name': 'multiplier'}, 'op': '>=', 'right': {'type': 'name', 'name': 'needed'}}}]}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a full shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a full shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a piece shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a piece shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a stitched shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a stitched shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a east windmill shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a east windmill shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a half-half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a half-half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful east windmill shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful east windmill shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful half-half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful half-half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful full shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful full shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double Painter', 'Painter']}]}, {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Quad Painter', 'Wires']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Constant Signal', 'Switch']}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful half shape", player),
-        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors", body_data={'type': 'item_check', 'item': 'Color Mixer'})
+        True_()
+    )
+    # Location rules
+    world.set_rule(
+        multiworld.get_location("My eyes no longer hurt", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Getting into it", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("GPS", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("I need trains", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 1 Additional", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier II", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier II", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier II", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier II", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("It's a mess", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oops", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 9", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 10", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 11", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 12", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 13", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 14", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 15", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 16", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 17", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 18", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 19", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 20 Additional", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 20 Additional 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 20", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 21", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 22", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 23", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 24", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 25", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wires", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Goal", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier III", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier III", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier III", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier III", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier IV", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier IV", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier IV", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier IV", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier V", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier V", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier V", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier V", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Faster", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier VI", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier VI", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier VI", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier VI", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier VII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier VII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier VII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier VII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Belt Upgrade Tier VIII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Miner Upgrade Tier VIII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Processors Upgrade Tier VIII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painting Upgrade Tier VIII", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Even faster", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Painter", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cutter", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rotater", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Wait, they stack?", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Stack overflow", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Get rid of them", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Now it's easy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Copy-Pasta", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Computer Guy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The next dimension", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Perfectionist", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The logo!", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("To the moon", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("It's piling up", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("I'll use it later", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("I've seen that before ...", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Memories from the past", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Preparing to launch", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("SpaceY", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Efficiency 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Branding specialist 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Efficiency 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Branding specialist 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 22", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 25", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 10", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 17", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 20", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 13", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 14", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 24", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 9", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 18", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 36", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 11", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 12", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 19", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 21", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 23", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 29", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 31", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 32", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 15", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 27", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 30", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 33", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 34", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 35", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 38", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 40", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 41", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 42", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 43", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 44", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 45", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 46", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 47", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 48", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 16", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 37", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 49", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 50", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 26", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 28", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shapesanity 39", player),
+        True_()
     )

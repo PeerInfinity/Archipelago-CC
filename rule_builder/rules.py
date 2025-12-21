@@ -2857,7 +2857,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
     This class supports three tiers of helper integration:
     1. body_rule set: Full Rule Builder evaluation and explain (best)
-    2. helper_func + body_data set: Python evaluation, CC format explain
+    2. helper_func + body_data set: Python evaluation, AST format explain
     3. helper_func only: Python evaluation, helper name display
 
     Usage:
