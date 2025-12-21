@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, Has, HasAll, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -78,1351 +78,141 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Start stage", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Warp 1", player),
-        True_()
+        Has('Special1')
     )
 
     world.set_rule(
         multiworld.get_entrance("Warp 2", player),
-        True_()
+        Has('Special1', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warp 3", player),
-        True_()
+        Has('Special1', 3)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warp 4", player),
-        True_()
+        Has('Special1', 4)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warp 5", player),
-        True_()
+        Has('Special1', 5)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warp 6", player),
-        True_()
+        Has('Special1', 6)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warp 7", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Descending bridge gate", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Werewolf gate", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dracula's drawbridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Central portcullis", player),
-        True_()
+        Has('Special1', 7)
     )
 
     world.set_rule(
         multiworld.get_entrance("Left Tower door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("End portcullis", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Front dog gates", player),
-        True_()
+        Has('Left Tower Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Storeroom door", player),
-        True_()
+        Or(True_(), Or(True_(), Or(True_(), Has('Storeroom Key'))))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Archives door", player),
-        True_()
+        Or(True_(), Or(True_(), Has('Archives Key')))
     )
 
     world.set_rule(
         multiworld.get_entrance("To maze gate", player),
-        True_()
+        Has('Garden Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Storeroom door", player),
-        True_()
+        Has('Storeroom Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("From maze gate", player),
-        True_()
+        Has('Garden Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Copper door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Servants' door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("From bridge door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Villa Reinhardt (daytime) exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Villa Carrie (nighttime) exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Gondola ride", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("End Tunnel door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Final waterfall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("End Waterway door", player),
-        True_()
+        Has('Copper Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Torture Chamber door", player),
-        True_()
+        Or(True_(), Or(True_(), Or(True_(), Or(True_(), Has('Chamber Key')))))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lower sealed cracked wall", player),
-        True_()
+        And(Has('Magical Nitro', 2), Has('Mandragora', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("Upper cracked wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Activate crystal and ride elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Castle Center Reinhardt (Medusa Head) exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Castle Center Carrie (Ghost) exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Duel Tower start passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Duel Tower end passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Execution start passage", player),
-        True_()
+        HasAll(['Magical Nitro', 'Mandragora'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Execution gate", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Execution end staircase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Science start passage", player),
-        True_()
+        Has('Execution Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Science Door 1", player),
-        True_()
+        Or(True_(), Has('Science Key1'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Science Door 2", player),
-        True_()
+        Has('Science Key2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Science Door 2", player),
-        True_()
+        Has('Science Key2')
     )
 
     world.set_rule(
         multiworld.get_entrance("Science Door 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Science end passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Sorcery start passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Sorcery end passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Defeat boss gate", player),
-        True_()
+        Or(True_(), Or(True_(), Has('Science Key3')))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Clocktower Door 1", player),
-        True_()
+        Has('Clocktower Key1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Clocktower Door 1", player),
-        True_()
+        Has('Clocktower Key1')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Clocktower Door 2", player),
-        True_()
+        Has('Clocktower Key2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Clocktower Door 2", player),
-        True_()
+        Has('Clocktower Key2')
     )
 
     world.set_rule(
         multiworld.get_entrance("Clocktower Door 3", player),
-        True_()
+        Has('Clocktower Key3')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dracula's door", player),
-        True_()
-    )
-    # Location rules
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Grab practice pillars - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Grab practice pillars - Top", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: King Skeleton's bridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Moon gazebo inside", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Moon gazebo roof", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Sun gazebo inside", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Sun gazebo roof", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Were-tiger switch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Dirge maiden gate", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Dirge maiden crypt - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Dirge maiden pedestal plaque", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Tri-corpse save junction", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Descending bridge wall side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Descending bridge switch side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Tri-corpse gate - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Three-crypt plaza main path crypt - Upper-front", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Three-crypt plaza back-facing crypt - Upper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Invisible bridge platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Werewolf crypt - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Werewolf statue plaque", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Werewolf path near tree", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forest of Silence: Three-crypt plaza switch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Above bottom right tower door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: White Dragons switch door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Central rampart near right tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Central rampart near left tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Sandbag shelf - Visible", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Sandbag shelf - Invisible", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Ground gatehouse - Middle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Above bottom left tower door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Left tower child ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Wall: Dracula cutscene switch door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Outer front gate - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Outer front gate - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Outer front gate platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Inner front gate dog food", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front yard cross grave near gates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front yard cross grave near porch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front yard visitor's tombstone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Midnight fountain - Front-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Midnight fountain - Front-right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Midnight fountain - Middle-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Midnight fountain - Middle-right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Midnight fountain - Rear-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Midnight fountain - Rear-right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer lower level - Front-right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer lower level - Front-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer lower level - Middle-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer lower level - Rear-right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer lower level - Rear-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer upper-right pot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer upper-left pot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Foyer sofa", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rose garden staircase bottom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Bedroom near chairs", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Bedroom near bed", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Vincent", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Mary's room table", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Dining room rose vase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Living room - Right pot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Living room - Left pot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Living room clawed painting", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Living room ceiling light", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Living room lion head", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Maze garden exit knight", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Storeroom - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Storeroom - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Storeroom statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Archives table", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Archives rear corner", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front maze garden - Malus start torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front maze garden - Malus's hiding bush", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front maze garden - Frankie's left dead-end", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Front maze garden - Frankie's right dead-end urn", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rear maze garden - Iron Thorn Fenced area - Front", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rear maze garden - Iron Thorn Fenced area - Rear", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rear maze garden - Viewing platform dead-end", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Rear maze garden - Past-exit dead-end", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Servants' path small alcove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Servants' entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt bridge upstream", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt - Left from entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt - Right from entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt - Left wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt - Right wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villa: Crypt - Right of coffin", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Landing point", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Landing point rock crusher", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Stepping stone alcove - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Twin arrow signs", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Near lonesome bucket", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Lonesome bucket poison pit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Lonesome bucket-Albert junction", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Albert's campsite", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Albert's poison pit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Gondola rock crusher sun door - Middle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Gondola rock crusher sun door - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Gondola rock crusher", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Red gondola station", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Gondola transfer point", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Corpse bucket poison pit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Corpse bucket moon door - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel poison pit start", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Exit door poison pit start", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel poison pit end", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Exit door poison pit end", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel zone save junction", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel zone moon door - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel zone sun door - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tunnel: Shovel zone sun door - Middle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Near entrance corridor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Across from entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Across poison parkour ledges", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Waterfall alcove ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Brick platforms save corridor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Above skeleton crusher ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Entrance hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Basement hallway junction", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Torture chamber hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Left far-front torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Left mid-front torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Left mid-rear torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Left far-rear torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Right far-front torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Right mid-front torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Right mid-rear torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behemoth arena - Right far-rear torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Near elevator room machine", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Atop elevator room machine", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Elevator pipe device", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Elevator room staircase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Red carpet hall knight", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Gear room side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Gear room center", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Gear room corner", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Lizard locker knight", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Lizard locker room near pit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Lizard locker room corner", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Broken staircase floor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Broken staircase knight", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Above broken staircase savepoint", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Stained Glass Knight room - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Stained Glass Knight room - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Butler bros. room near door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Butler bros. room inner", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Past butler room flamethrowers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Inside cracked wall hallway flamethrower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Past upper cracked wall flamethrowers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Heinrich Meyer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Nitro room crates", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Magical Nitro shelf - Heinrich side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Hell Knight landing corner knight", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Maid sisters room vase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Maid sisters room outer table", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Maid sisters room inner table", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Invention room maid sisters door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Invention room spike crusher door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Invention room giant Famicart", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Invention room zeppelin", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Invention room round machine", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Inside nitro hallway flamethrower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Past nitro room flamethrowers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Magical Nitro shelf - Invention side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Mandragora shelf - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Mandragora shelf - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Torture chamber instrument rack", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Torture chamber rafters", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Inside upper cracked wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Library bookshelf", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Center: Behind the seal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Duel Tower: Invisible bridge balcony - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Duel Tower: Invisible bridge balcony - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Duel Tower: Stepping stone path start", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Duel Tower: Above Were-bull arena", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Execution: Past mid-savepoint spikes - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Execution: Past mid-savepoint spikes - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Execution: Electric grate ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Execution: Invisible bridge ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Execution: Guillotine tower top level", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Execution: Key gate alcove - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Elevator hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Plain sight side room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Staircase side room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Pick-a-door hallway locked middle room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Invisible bridge platform torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Spiky conveyor side room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Exit hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Locked Key3 room - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Science: Locked Key3 room - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Stained glass tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Mid-savepoint platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Trick shot from mid-savepoint platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Above yellow bubble", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Above tiny blue platforms start", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Lone red platform side island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Sorcery: Invisible bridge platform", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Room of Clocks: Left from entrance hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Room of Clocks: Right from entrance hallway", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Room of Clocks: Right of Contract", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Tower: Gear climb room side", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Tower: Gear climb room corner", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Tower: Bone Pillar chasm room - Front-left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Tower: Bone Pillar chasm room - Front-right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Tower: Bone Pillar chasm room key alcove", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clock Tower: Final room key ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Keep: Left Dracula door flame", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Keep: Right Dracula door flame", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Keep: Behind Dracula's chamber", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Castle Keep: Dracula's floating cube", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dracula", player),
         True_()
     )

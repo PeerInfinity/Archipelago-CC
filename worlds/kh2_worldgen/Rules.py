@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachLocation, Has, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -37,7 +37,7 @@ def _kingdomhearts2worldgen_dc_unlocked(state: "CollectionState", player: int, A
 
 
 def _kingdomhearts2worldgen_final_form_region_access(state: "CollectionState", player: int) -> bool:
-    return (state.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('(TT3) Underground Concourse Mythril Gem', player).can_reach(state)) or (state.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('Roxas Event Location', player).can_reach(state)) or (state.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1', player).can_reach(state))
+    return (state.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('(TT3) Underground Concourse Mythril Gem', player).can_reach(state)) or (state.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('Roxas Event Location', player).can_reach(state)) or (state.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1', player).can_reach(state))
 
 
 def _kingdomhearts2worldgen_get_ansem_riku_rules(state: "CollectionState", player: int) -> bool:
@@ -456,9 +456,10 @@ _HELPER_DEFINITIONS = {   'ag_unlocked': {   'body': {'count': {'name': 'Amount'
     'final_form_region_access': {   'conditions': [   {   'args': [],
                                                           'function': {   'attr': 'can_reach',
                                                                           'object': {   'args': [   {   'type': 'constant',
-                                                                                                        'value': '(LoD2) '
-                                                                                                                 'Storm '
-                                                                                                                 'Rider '
+                                                                                                        'value': '(PR2) '
+                                                                                                                 'Grim '
+                                                                                                                 'Reaper '
+                                                                                                                 '2 '
                                                                                                                  'Bonus: '
                                                                                                                  'Sora '
                                                                                                                  'Slot '
@@ -525,10 +526,9 @@ _HELPER_DEFINITIONS = {   'ag_unlocked': {   'body': {'count': {'name': 'Amount'
                                                       {   'args': [],
                                                           'function': {   'attr': 'can_reach',
                                                                           'object': {   'args': [   {   'type': 'constant',
-                                                                                                        'value': '(PR2) '
-                                                                                                                 'Grim '
-                                                                                                                 'Reaper '
-                                                                                                                 '2 '
+                                                                                                        'value': '(LoD2) '
+                                                                                                                 'Storm '
+                                                                                                                 'Rider '
                                                                                                                  'Bonus: '
                                                                                                                  'Sora '
                                                                                                                  'Slot '
@@ -12415,11 +12415,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Menu -> Garden Of Assemblage", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Space Paranoids", player),
         True_()
     )
@@ -12446,11 +12441,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Land of Dragons", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> The World That Never Was (Pre Roxas)", player),
         True_()
     )
 
@@ -12485,53 +12475,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Pooh's House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Weapon Slots", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Levels Region (1 Visit Locking Item)", player),
         True_()
     )
 
     world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Valor Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Wisdom Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Limit Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Master Form", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Final Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Summons", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Garden Of Assemblage -> Atlantica First Song", player),
-        True_()
+        Or(CanReachLocation({'type': 'constant', 'value': '(BC2) Xaldin Bonus: Sora Slot 1'}), CanReachLocation({'type': 'constant', 'value': '(LoD2) Storm Rider Bonus: Sora Slot 1'}), CanReachLocation({'type': 'constant', 'value': '(PR2) Grim Reaper 2 Bonus: Sora Slot 1'}), CanReachLocation({'type': 'constant', 'value': '(TT3) Underground Concourse Mythril Gem'}), CanReachLocation({'type': 'constant', 'value': 'Roxas Event Location'}))
     )
 
     world.set_rule(
@@ -12561,12 +12511,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Agrabah -> Twin Lords", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Twin Lords -> Agrabah 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -12585,18 +12535,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Timeless River -> Old Pete", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Old Pete -> Future Pete", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Future Pete -> Terra", player),
-        True_()
+        And(True_(), Has('Proof of Connection'))
     )
 
     world.set_rule(
@@ -12636,11 +12581,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Barbosa -> Port Royal 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Port Royal 2 -> Grim Reaper 1", player),
         True_()
     )
 
@@ -12715,11 +12655,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Thresholder -> Beast", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Beast -> Dark Thorn", player),
         True_()
     )
@@ -12765,11 +12700,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Prison Keeper -> Oogie Boogie", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Oogie Boogie -> Holloween Town 2", player),
         True_()
     )
@@ -12790,11 +12720,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Hollow Bastion 2 -> Cavern of Rememberance", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Hollow Bastion 2 -> Hollow Bastion Demyx", player),
         True_()
     )
@@ -12806,7 +12731,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Thousand Heartless -> Mushroom 13", player),
-        True_()
+        Has('Proof of Peace')
     )
 
     world.set_rule(
@@ -12821,7 +12746,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Cavern of Rememberance -> Cavern of Rememberance:Fight 1", player),
-        True_()
+        And(True_(), Or(True_(), True_()))
     )
 
     world.set_rule(
@@ -12855,21 +12780,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Simulated Twilight Town -> Twilight Thorn", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Twilight Thorn -> Axel 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Axel 1 -> Axel 2", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Axel 2 -> Data Roxas", player),
         True_()
     )
@@ -12891,7 +12801,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The World That Never Was (Pre Roxas) -> Roxas", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -12936,11 +12846,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Armored Xemnas 2 -> Final Xemnas", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Atlantica First Song -> Atlantica Second Song", player),
         True_()
     )
 
@@ -13000,2091 +12905,6 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Garden of Assemblage Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("GoA Lost Illusion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Proof of Nonexistence Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Bamboo Grove Dark Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Bamboo Grove Ether", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Bamboo Grove Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Bamboo Grove Encampment Area Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Mission 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Checkpoint Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Checkpoint Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Mountain Trail Lightning Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Mountain Trail Recovery Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Mountain Trail Ether", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Mountain Trail Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Village Cave Area Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Village Cave AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Village Cave Dark Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Village Cave Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Ridge Frost Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Ridge AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Shan-Yu Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Shan-Yu Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Hidden Dragon", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD) Shan-Yu Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shan Yu Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room Torn Pages", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room Palace Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room Queen Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room AP Boost 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room Ogre Shield", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Throne Room Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ansem Riku Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Storm Rider Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(LoD2) Storm Rider Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storm Rider Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post LoD2: Summit) Data Xigbar", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Xigbar Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Dark Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Mythril Shard 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Agrabah Serenity Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Bazaar Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Bazaar Power Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Bazaar Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Bazaar AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Bazaar Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Palace Walls Skill Ring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Palace Walls Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Cave Entrance Power Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Cave Entrance Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Valley of Stone Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Valley of Stone AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Valley of Stone Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Valley of Stone Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Abu Escort Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Chasm of Challenges Cave of Wonders Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Chasm of Challenges AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Treasure Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Treasure Room AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Treasure Room Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Treasure Room Heartless Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Abu Escort Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Elemental Lords Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG) Lamp Charm", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Twin Lords Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG2) Ruined Chamber Torn Pages", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG2) Ruined Chamber Ruins Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG2) Genie Jafar", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AG2) Wishing Lamp", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Genie Jafar Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post AG2: Peddler's Shop) Lexaeus Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post AG2: Peddler's Shop) AS Lexaeus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post AG2: Peddler's Shop) Data Lexaeus", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Lexaeus Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard Star Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard Blazing Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard Blazing Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Courtyard Mythril Shard 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Library Torn Pages", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Disney Castle Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Minnie Escort Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(DC) Minnie Escort Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Cornerstone Hill Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Cornerstone Hill Frost Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Pier Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Pier Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Waterway Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Waterway AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Waterway Frost Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Window of Time Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Boat Pete Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Boat Pete Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Boat Pete Bonus: Donald Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Old Pete Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Future Pete Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Future Pete Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Monochrome", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Wisdom Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TR) Future Pete Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Future Pete Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TR:Hall of the Cornerstone) Marluxia Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TR:Hall of the Cornerstone) AS Marluxia", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TR:Hall of the Cornerstone) Data Marluxia", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Marluxia Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TR:Hall of the Cornerstone) Lingering Will Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TR:Hall of the Cornerstone) Lingering Will Proof of Connection", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TR:Hall of the Cornerstone) Lingering Will Manifest Illusion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Terra Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Pooh's House 100 Acre Wood Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Pooh's House AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Pooh's House Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Piglet's House Defense Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Piglet's House AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Piglet's House Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Rabbit's House Draw Ring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Rabbit's House Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Rabbit's House AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Kanga's House Magic Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Kanga's House AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Kanga's House Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave Guard Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave AP Boost 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Sweet Memories", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Spooky Cave Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Starry Hill Cosmic Ring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Starry Hill Style Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Starry Hill Cure Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(100Acre) Starry Hill Orichalcum+", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Rampart Naval Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Rampart Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Rampart Dark Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Town Dark Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Town AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Town Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Town Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Cave Mouth Bright Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Cave Mouth Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Isla de Muerta Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Boat Fight Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Interceptor Barrels Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Powder Store AP Boost 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Powder Store AP Boost 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Moonlight Nook Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Moonlight Nook Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Moonlight Nook Power Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Boat Fight Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Interceptor Barrels Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Barbossa Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Barbossa Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Follow the Wind", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Barbossa Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR) Barbossa Bonus: Goofy Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Barbosa Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Grim Reaper 1 Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Interceptor's Hold Feather Charm", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Keep AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Keep Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Keep Meteor Staff", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Row Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Row King Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Row Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Row Cursed Medallion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Seadrift Row Ship Graveyard Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Grim Reaper 1 Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Grim Reaper 1 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Grim Reaper 2 Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Grim Reaper 2 Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PR2) Secret Ansem Report 6 (Grim Reaper 2)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Grim Reaper 2 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post PR2: Treasure Heap) Data Luxord", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Luxord Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Passage Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Passage Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Passage Ether", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Passage AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Passage Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Inner Chamber Underworld Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Inner Chamber Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Cerberus Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Coliseum Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Urns Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Underworld Entrance Power Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Caverns Entrance Lucid Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Caverns Entrance AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Caverns Entrance Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lost Road Bright Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lost Road Ether", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lost Road Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lost Road Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Atrium Lucid Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Atrium AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Demyx Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Secret Ansem Report 5 (Demyx)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Olympus Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lock Caverns Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lock Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) The Lock AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cerberus Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Pete OC Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Demyx Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Pete Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Olympus Pete Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Hydra Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Hydra Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC) Hero's Crest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hydra Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC2) Auron's Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC2) Hades Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC2) Hades Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(OC2) Guardian Soul", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Protect Belt Pain and Panic Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Serenity Gem Pain and Panic Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pain and Panic Cup Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rising Dragon Cerberus Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Serenity Crystal Cerberus Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cerberus Cup Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Genji Shield Titan Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Skillful Ring Titan Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Titan Cup Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fatal Crest Goddess of Fate Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Orichalcum+ Goddess of Fate Cup", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Goddess of Fate Cup Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades Cup Trophy Paradox Cups", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Olympus Coliseum Hade's Paradox Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post OC2: Cave of the Dead Inner Chamber) AS Zexion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post OC2: Cave of the Dead Inner Chamber) Data Zexion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Zexion Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Courtyard AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Courtyard Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Courtyard Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Belle's Room Castle Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Belle's Room Mega-Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The East Wing Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The East Wing Tent", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Hall Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Hall Power Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Hall Mythril Shard 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Hall Bright Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Hall Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Thresholder Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Dungeon Basement Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Dungeon AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Secret Passage Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Secret Passage Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Secret Passage Lucid Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Hall AP Boost Post Dungeon", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Wing Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The West Wing Tent", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Thresholder Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Thresholder Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Beast Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) The Beast's Room Blazing Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Beast Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beast Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Dark Thorn Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Dark Thorn Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC) Dark Thorn Cure Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dark Thorn Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC2) Rumbling Rose", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC2) Castle Walls Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC2) Xaldin Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC2) Xaldin Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC2) Xaldin Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(BC2) Secret Ansem Report 4 (Xaldin)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Xaldin Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post BC2: Ballroom) Data Xaldin", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Xaldin Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Pit Cell Area Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Pit Cell Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Canyon Dark Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Canyon Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Canyon Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Canyon Frost Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Screens Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Hallway Power Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Hallway AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Communications Room I/O Tower Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Communications Room Gaia Belt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Screens Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Hostile Program Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Hostile Program Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Photon Debugger", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP) Hostile Program Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hostile Program Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) Solar Sailer", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) Central Computer Core AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) Central Computer Core Orichalcum+", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) Central Computer Core Cosmic Arts", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) Central Computer Core Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) Solar Sailer Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) MCP Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(SP2) MCP Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Master Control Program Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post SP2: Central Computer Core) Larxene Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post SP2: Central Computer Core) AS Larxene", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post SP2: Central Computer Core) Data Larxene", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Larxene Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Graveyard Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Graveyard Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Finklestein's Lab Halloween Town Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Town Square Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Town Square Energy Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Hinterlands Lightning Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Hinterlands Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Hinterlands AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Candy Cane Lane Mega-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Candy Cane Lane Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Candy Cane Lane Lightning Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Candy Cane Lane Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Santa's House Christmas Town Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Santa's House AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Prison Keeper Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Prison Keeper Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prison Keeper Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Oogie Boogie Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Oogie Boogie Magnet Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT) Oogie Boogie Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oogie Boogie Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Lock, Shock and Barrel Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Present", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Decoy Presents", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Lock, Shock and Barrel Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Experiment Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Decisive Pumpkin", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HT2) Experiment Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Experiment Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post HT2: Yuletide Hill) Vexen Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post HT2: Yuletide Hill) AS Vexen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post HT2: Yuletide Hill) Data Vexen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Vexen Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Marketplace Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Borough Drive Recovery", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Borough AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Borough Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Borough Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Borough Dark Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Merlin's House Membership Card", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Merlin's House Blizzard Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Bailey Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Bailey Secret Ansem Report 7", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB) Baseball Charm", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Postern Castle Perimeter Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Postern Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Postern AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Corridors Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Corridors Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Corridors Dark Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Corridors AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Ansem's Study Master Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Ansem's Study Sleeping Lion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Ansem's Study Skill Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Ansem's Study Ukulele Charm", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Restoration Site Moon Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Restoration Site AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Demyx Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Demyx Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Demyx Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) FF Fights Cure Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Crystal Fissure Torn Pages", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Crystal Fissure The Great Maw Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Crystal Fissure Energy Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Crystal Fissure AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hollow Bastion Demyx Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) 1000 Heartless", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) 1000 Heartless Secret Ansem Report 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) 1000 Heartless Ice Cream", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) 1000 Heartless Picture", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Postern Gull Wing", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Heartless Manufactory Cosmic Chain", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Thousand Heartless Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post HB2: Restoration Site) Data Demyx", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Demyx Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Winner's Proof", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(HB2) Proof of Peace", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mushroom 13 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sephiroth Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sephiroth Fenrir", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sephiroth Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Depths AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Depths Power Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Depths Frost Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Depths Manifest Illusion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Depths AP Boost 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mineshaft Lower Level Depths of Remembrance Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mineshaft Lower Level AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Depths Upper Level Remembrance Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mining Area Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mining Area AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mining Area Serenity Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mining Area Manifest Illusion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mining Area Serenity Gem 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mining Area Dark Remembrance Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cavern of Rememberance:Fight 1 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mineshaft Mid Level Power Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Engine Chamber Serenity Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Engine Chamber Remembrance Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Engine Chamber AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Engine Chamber Manifest Illusion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mineshaft Upper Level Magic Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cavern of Rememberance:Fight 2 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(CoR) Mineshaft Upper Level AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Transport to Remembrance", player),
         True_()
     )
@@ -15095,1431 +12915,381 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("(PL) Gorge Savannah Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Gorge Dark Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Gorge Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Elephant Graveyard Frost Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Elephant Graveyard Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Elephant Graveyard Bright Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Elephant Graveyard AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Elephant Graveyard Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Pride Rock Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Pride Rock Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Pride Rock Serenity Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wildebeest Valley Energy Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wildebeest Valley AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wildebeest Valley Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wildebeest Valley Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wildebeest Valley Lucid Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wastelands Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wastelands Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Wastelands Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Jungle Serenity Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Jungle Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Jungle Serenity Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Oasis Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Oasis Torn Pages", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Oasis AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Circle of Life", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Hyenas 1 Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Hyenas 1 Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Scar Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Scar Fire Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL) Scar Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scar Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL2) Hyenas 2 Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL2) Hyenas 2 Bonus: Goofy Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL2) Groundshaker Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(PL2) Groundshaker Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Groundshaker Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post PL2: Peak) Data Saix", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Saix Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Twilight Town Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Munny Pouch Olette", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Station Dusks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Station of Serenity Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Station of Calling Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Twilight Thorn", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Twilight Thorn Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Axel 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Junk Champion Belt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Junk Medal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) The Struggle Trophy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Central Station Potion 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Central Station Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Central Station Potion 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Sunset Terrace Ability Ring", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Sunset Terrace Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Sunset Terrace Potion 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Sunset Terrace Potion 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Foyer Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Foyer Potion 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Foyer Potion 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Dining Room Elven Bandanna", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Dining Room Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Namine's Sketches", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Library Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Axel 1 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Axel 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(STT) Mansion Basement Corridor Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Axel 2 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post STT: Mansion Pod Room) Data Roxas", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Roxas Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Old Mansion Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Old Mansion Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) The Woods Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) The Woods Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) The Woods Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common Tent", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common Mythril Shard 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common Potion 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common Mythril Shard 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tram Common Potion 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Station Plaza Secret Ansem Report 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Munny Pouch Mickey", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Crystal Orb", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Central Station Tent", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Central Station Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Central Station Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) The Tower Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) The Tower Hi-Potion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) The Tower Ether", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tower Entryway Ether", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tower Entryway Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Sorcerer's Loft Tower Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Tower Wardrobe Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Star Seeker", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT) Valor Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT2) Seifer's Trophy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT2) Oathkeeper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT2) Limit Form", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Underground Concourse Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Underground Concourse AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Underground Concourse Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Underground Concourse Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Tunnelway Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Tunnelway Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Sunset Terrace Orichalcum+", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Sunset Terrace Mythril Shard", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Sunset Terrace Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Sunset Terrace AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Nobodies Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Foyer Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Foyer Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Foyer Serenity Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Dining Room Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Dining Room Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Library Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Beam Secret Ansem Report 10", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Basement Corridor Ultimate Recipe", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Betwixt and Between", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Betwixt and Between Bond of Flame", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TT3) Mansion Nobodies Bonus: Donald Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TT3: Betwixt and Between) Data Axel", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Axel Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW) Fragment Crossing Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW) Fragment Crossing Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW) Fragment Crossing AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW) Fragment Crossing Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Roxas Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Roxas Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Roxas Secret Ansem Report 8", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Two Become One", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Memory's Skyscaper Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Memory's Skyscaper AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Memory's Skyscaper Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) The Brink of Despair Dark City Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) The Brink of Despair Orichalcum+", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Nothing's Call Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Nothing's Call Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Twilight's View Cosmic Belt", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Roxas Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Xigbar Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Xigbar Secret Ansem Report 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Naught's Skyway Mythril Gem", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Naught's Skyway Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Naught's Skyway Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Oblivion", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Castle That Never Was Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Xigbar Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Luxord Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Luxord Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Luxord Secret Ansem Report 9", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Luxord Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Saix Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW2) Saix Secret Ansem Report 12", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Saix Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Secret Ansem Report 11 (Pre-Xemnas 1)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Ruin and Creation's Passage Mythril Stone", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Ruin and Creation's Passage AP Boost", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Ruin and Creation's Passage Mythril Crystal", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Ruin and Creation's Passage Orichalcum", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Xemnas 1 Bonus: Sora Slot 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Xemnas 1 Bonus: Sora Slot 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(TWTNW3) Xemnas 1 Secret Ansem Report 13", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Xemnas Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Armored Xemnas Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Armored Xemnas 2 Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Final Xemnas Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(Post TWTNW3: The Altar of Naught) Data Xemnas", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Data Xemnas Event Location", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AT) Undersea Kingdom Map", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AT) Mysterious Abyss", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AT) Musical Blizzard Element", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("(AT) Musical Orichalcum+", player),
-        True_()
+        Has('Lucky Emblem', 35)
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 6", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 7", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 6", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 7", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 6", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 7", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 6", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 7", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 2", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 3", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 4", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 5", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 6", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 7", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("FAKE Slot", player),
-        True_()
+        Has('Valor Form')
     )
 
     world.set_rule(
         multiworld.get_location("Detection Saber Slot", player),
-        True_()
+        Has('Master Form')
     )
 
     world.set_rule(
         multiworld.get_location("Edge of Ultima Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kingdom Key Slot", player),
-        True_()
+        Has('Final Form')
     )
 
     world.set_rule(
         multiworld.get_location("Oathkeeper Slot", player),
-        True_()
+        Has('Oathkeeper')
     )
 
     world.set_rule(
         multiworld.get_location("Oblivion Slot", player),
-        True_()
+        Has('Oblivion')
     )
 
     world.set_rule(
         multiworld.get_location("Star Seeker Slot", player),
-        True_()
+        Has('Star Seeker')
     )
 
     world.set_rule(
         multiworld.get_location("Hidden Dragon Slot", player),
-        True_()
+        Has('Hidden Dragon')
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Crest Slot", player),
-        True_()
+        Has("Hero's Crest")
     )
 
     world.set_rule(
         multiworld.get_location("Monochrome Slot", player),
-        True_()
+        Has('Monochrome')
     )
 
     world.set_rule(
         multiworld.get_location("Follow the Wind Slot", player),
-        True_()
+        Has('Follow the Wind')
     )
 
     world.set_rule(
         multiworld.get_location("Circle of Life Slot", player),
-        True_()
+        Has('Circle of Life')
     )
 
     world.set_rule(
         multiworld.get_location("Photon Debugger Slot", player),
-        True_()
+        Has('Photon Debugger')
     )
 
     world.set_rule(
         multiworld.get_location("Gull Wing Slot", player),
-        True_()
+        Has('Gull Wing')
     )
 
     world.set_rule(
         multiworld.get_location("Rumbling Rose Slot", player),
-        True_()
+        Has('Rumbling Rose')
     )
 
     world.set_rule(
         multiworld.get_location("Guardian Soul Slot", player),
-        True_()
+        Has('Guardian Soul')
     )
 
     world.set_rule(
         multiworld.get_location("Wishing Lamp Slot", player),
-        True_()
+        Has('Wishing Lamp')
     )
 
     world.set_rule(
         multiworld.get_location("Decisive Pumpkin Slot", player),
-        True_()
+        Has('Decisive Pumpkin')
     )
 
     world.set_rule(
         multiworld.get_location("Sweet Memories Slot", player),
-        True_()
+        Has('Sweet Memories')
     )
 
     world.set_rule(
         multiworld.get_location("Mysterious Abyss Slot", player),
-        True_()
+        Has('Mysterious Abyss')
     )
 
     world.set_rule(
         multiworld.get_location("Sleeping Lion Slot", player),
-        True_()
+        Has('Sleeping Lion')
     )
 
     world.set_rule(
         multiworld.get_location("Bond of Flame Slot", player),
-        True_()
+        Has('Bond of Flame')
     )
 
     world.set_rule(
         multiworld.get_location("Two Become One Slot", player),
-        True_()
+        Has('Two Become One')
     )
 
     world.set_rule(
         multiworld.get_location("Fatal Crest Slot", player),
-        True_()
+        Has('Fatal Crest')
     )
 
     world.set_rule(
         multiworld.get_location("Fenrir Slot", player),
-        True_()
+        Has('Fenrir')
     )
 
     world.set_rule(
         multiworld.get_location("Ultima Weapon Slot", player),
-        True_()
+        Has('Ultima Weapon')
     )
 
     world.set_rule(
         multiworld.get_location("Winner's Proof Slot", player),
-        True_()
+        Has("Winner's Proof")
     )
 
     world.set_rule(
         multiworld.get_location("Pureblood Slot", player),
-        True_()
+        Has('Pureblood')
     )
 
     world.set_rule(
         multiworld.get_location("Centurion+ Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Comet Staff Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hammer Staff Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lord's Broom Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mages Staff Slot", player),
-        True_()
+        Has('Centurion+')
     )
 
     world.set_rule(
         multiworld.get_location("Meteor Staff Slot", player),
-        True_()
+        Has('Meteor Staff')
     )
 
     world.set_rule(
         multiworld.get_location("Nobody Lance Slot", player),
-        True_()
+        Has('Nobody Lance')
     )
 
     world.set_rule(
         multiworld.get_location("Precious Mushroom Slot", player),
-        True_()
+        Has('Precious Mushroom')
     )
 
     world.set_rule(
         multiworld.get_location("Precious Mushroom+ Slot", player),
-        True_()
+        Has('Precious Mushroom+')
     )
 
     world.set_rule(
         multiworld.get_location("Premium Mushroom Slot", player),
-        True_()
+        Has('Premium Mushroom')
     )
 
     world.set_rule(
         multiworld.get_location("Rising Dragon Slot", player),
-        True_()
+        Has('Rising Dragon')
     )
 
     world.set_rule(
         multiworld.get_location("Save The Queen+ Slot", player),
-        True_()
+        Has('Save The Queen+')
     )
 
     world.set_rule(
         multiworld.get_location("Shaman's Relic Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Victory Bell Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wisdom Wand Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Adamant Shield Slot", player),
-        True_()
+        Has("Shaman's Relic")
     )
 
     world.set_rule(
         multiworld.get_location("Akashic Record Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chain Gear Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dream Cloud Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Falling Star Slot", player),
-        True_()
+        Has('Akashic Record')
     )
 
     world.set_rule(
         multiworld.get_location("Frozen Pride+ Slot", player),
-        True_()
+        Has('Frozen Pride+')
     )
 
     world.set_rule(
         multiworld.get_location("Genji Shield Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Knight Defender Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Knight's Shield Slot", player),
-        True_()
+        Has('Genji Shield')
     )
 
     world.set_rule(
         multiworld.get_location("Majestic Mushroom Slot", player),
-        True_()
+        Has('Majestic Mushroom')
     )
 
     world.set_rule(
         multiworld.get_location("Majestic Mushroom+ Slot", player),
-        True_()
+        Has('Majestic Mushroom+')
     )
 
     world.set_rule(
         multiworld.get_location("Nobody Guard Slot", player),
-        True_()
+        Has('Nobody Guard')
     )
 
     world.set_rule(
         multiworld.get_location("Ogre Shield Slot", player),
-        True_()
+        Has('Ogre Shield')
     )
 
     world.set_rule(
         multiworld.get_location("Save The King+ Slot", player),
-        True_()
+        Has('Save The King+')
     )
 
     world.set_rule(
         multiworld.get_location("Ultimate Mushroom Slot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 02", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 04", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 07", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 09", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 12", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 14", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 15", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 17", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 20", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 23", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 25", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 28", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 30", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 32", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 34", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 36", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 39", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 41", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 44", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 46", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 48", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 50", player),
-        True_()
+        Has('Ultimate Mushroom')
     )

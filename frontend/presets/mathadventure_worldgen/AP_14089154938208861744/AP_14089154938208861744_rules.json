@@ -52,9 +52,14 @@
             "name": "ToOperations",
             "connected_region": "ArithmeticOperations",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "df-2",
+                  "df-3"
+                ]
+              }
             }
           }
         ],
@@ -180,9 +185,14 @@
             "name": "ToProofCompletion",
             "connected_region": "ProofCompletion",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "addassi",
+                  "oveq2i"
+                ]
+              }
             }
           }
         ],
@@ -191,9 +201,12 @@
             "name": "Equality Substitution Right",
             "id": 200000006,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "df-2",
+                "count": 1
+              }
             },
             "item": {
               "name": "oveq2i",
@@ -207,9 +220,12 @@
             "name": "Equality Substitution Left",
             "id": 200000007,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "df-3",
+                "count": 1
+              }
             },
             "item": {
               "name": "oveq1i",
@@ -223,9 +239,14 @@
             "name": "Addition Associativity",
             "id": 200000008,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "2cn",
+                  "ax-1cn"
+                ]
+              }
             },
             "item": {
               "name": "addassi",
@@ -245,9 +266,15 @@
             "name": "Triple Equality Transitivity",
             "id": 200000009,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "addassi",
+                  "df-4",
+                  "oveq1i"
+                ]
+              }
             },
             "item": {
               "name": "3eqtri",
@@ -261,9 +288,14 @@
             "name": "Final Equality",
             "id": 200000010,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "3eqtri",
+                  "oveq2i"
+                ]
+              }
             },
             "item": {
               "name": "eqtr4i",
@@ -277,9 +309,12 @@
             "name": "Theorem: 2+2=4",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "eqtr4i",
+                "count": 1
+              }
             },
             "item": {
               "name": "Victory",

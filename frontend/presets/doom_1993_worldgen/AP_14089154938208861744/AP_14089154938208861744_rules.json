@@ -34,243 +34,558 @@
             "name": "Hub -> Hangar (E1M1) Main",
             "connected_region": "Hangar (E1M1) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Hangar (E1M1)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Nuclear Plant (E1M2) Main",
             "connected_region": "Nuclear Plant (E1M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Nuclear Plant (E1M2)",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Toxin Refinery (E1M3) Start",
             "connected_region": "Toxin Refinery (E1M3) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Toxin Refinery (E1M3)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Command Control (E1M4) Start",
             "connected_region": "Command Control (E1M4) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Command Control (E1M4)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Phobos Lab (E1M5) Main",
             "connected_region": "Phobos Lab (E1M5) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Phobos Lab (E1M5)",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Central Processing (E1M6) Main",
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Central Processing (E1M6)",
+                  "Chaingun",
+                  "Rocket launcher",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Computer Station (E1M7) Start",
             "connected_region": "Computer Station (E1M7) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Phobos Anomaly (E1M8) Start",
             "connected_region": "Phobos Anomaly (E1M8) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Phobos Anomaly (E1M8)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Military Base (E1M9) Main",
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Military Base (E1M9)",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Deimos Anomaly (E2M1) Main",
             "connected_region": "Deimos Anomaly (E2M1) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Anomaly (E2M1)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Containment Area (E2M2) Main",
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Containment Area (E2M2)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Refinery (E2M3) Main",
             "connected_region": "Refinery (E2M3) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Refinery (E2M3)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Deimos Lab (E2M4) Start",
             "connected_region": "Deimos Lab (E2M4) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Lab (E2M4)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Command Center (E2M5) Main",
             "connected_region": "Command Center (E2M5) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Command Center (E2M5)",
+                  "Plasma gun",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Halls of the Damned (E2M6) Main",
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Halls of the Damned (E2M6)",
+                  "Plasma gun",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Spawning Vats (E2M7)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Tower of Babel (E2M8) Start",
             "connected_region": "Tower of Babel (E2M8) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tower of Babel (E2M8)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Fortress of Mystery (E2M9) Main",
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Fortress of Mystery (E2M9)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Hell Keep (E3M1) Main",
             "connected_region": "Hell Keep (E3M1) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Hell Keep (E3M1)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Slough of Despair (E3M2) Main",
             "connected_region": "Slough of Despair (E3M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Slough of Despair (E3M2)",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Pandemonium (E3M3) Main",
             "connected_region": "Pandemonium (E3M3) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Pandemonium (E3M3)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> House of Pain (E3M4) Main",
             "connected_region": "House of Pain (E3M4) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "House of Pain (E3M4)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Unholy Cathedral (E3M5) Start",
             "connected_region": "Unholy Cathedral (E3M5) Start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Unholy Cathedral (E3M5)",
+                "count": 1
+              }
             }
           },
           {
             "name": "Hub -> Mt. Erebus (E3M6) Main",
             "connected_region": "Mt. Erebus (E3M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Mt. Erebus (E3M6)",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Limbo (E3M7) Main",
             "connected_region": "Limbo (E3M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Limbo (E3M7)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Dis (E3M8) Main",
             "connected_region": "Dis (E3M8) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Dis (E3M8)",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Hub -> Warrens (E3M9) Main",
             "connected_region": "Warrens (E3M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun",
+                      "Shotgun",
+                      "Warrens (E3M9)"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -353,9 +668,12 @@
             "name": "Nuclear Plant (E1M2) Main -> Nuclear Plant (E1M2) Red",
             "connected_region": "Nuclear Plant (E1M2) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Nuclear Plant (E1M2) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -481,9 +799,12 @@
             "name": "Nuclear Plant (E1M2) Red -> Nuclear Plant (E1M2) Main",
             "connected_region": "Nuclear Plant (E1M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Nuclear Plant (E1M2) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -577,9 +898,12 @@
             "name": "Toxin Refinery (E1M3) Main -> Toxin Refinery (E1M3) Blue",
             "connected_region": "Toxin Refinery (E1M3) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Toxin Refinery (E1M3) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -746,18 +1070,24 @@
             "name": "Toxin Refinery (E1M3) Blue -> Toxin Refinery (E1M3) Yellow",
             "connected_region": "Toxin Refinery (E1M3) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Toxin Refinery (E1M3) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Toxin Refinery (E1M3) Blue -> Toxin Refinery (E1M3) Main",
             "connected_region": "Toxin Refinery (E1M3) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Toxin Refinery (E1M3) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -819,9 +1149,12 @@
             "name": "Toxin Refinery (E1M3) Yellow -> Toxin Refinery (E1M3) Blue",
             "connected_region": "Toxin Refinery (E1M3) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Toxin Refinery (E1M3) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -883,9 +1216,14 @@
             "name": "Toxin Refinery (E1M3) Start -> Toxin Refinery (E1M3) Main",
             "connected_region": "Toxin Refinery (E1M3) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -915,18 +1253,28 @@
             "name": "Command Control (E1M4) Main -> Command Control (E1M4) Blue",
             "connected_region": "Command Control (E1M4) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Command Control (E1M4) - Blue keycard",
+                  "Command Control (E1M4) - Yellow keycard"
+                ]
+              }
             }
           },
           {
             "name": "Command Control (E1M4) Main -> Command Control (E1M4) Yellow",
             "connected_region": "Command Control (E1M4) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Command Control (E1M4) - Blue keycard",
+                  "Command Control (E1M4) - Yellow keycard"
+                ]
+              }
             }
           },
           {
@@ -1056,9 +1404,14 @@
             "name": "Command Control (E1M4) Blue -> Command Control (E1M4) Main",
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Command Control (E1M4) - Blue keycard",
+                  "Command Control (E1M4) - Yellow keycard"
+                ]
+              }
             }
           }
         ],
@@ -1169,9 +1522,14 @@
             "name": "Command Control (E1M4) Start -> Command Control (E1M4) Main",
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -1201,9 +1559,12 @@
             "name": "Phobos Lab (E1M5) Main -> Phobos Lab (E1M5) Yellow",
             "connected_region": "Phobos Lab (E1M5) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Phobos Lab (E1M5) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1338,9 +1699,12 @@
             "name": "Phobos Lab (E1M5) Yellow -> Phobos Lab (E1M5) Blue",
             "connected_region": "Phobos Lab (E1M5) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Phobos Lab (E1M5) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -1427,9 +1791,12 @@
             "name": "Phobos Lab (E1M5) Blue -> Phobos Lab (E1M5) Green",
             "connected_region": "Phobos Lab (E1M5) Green",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Phobos Lab (E1M5) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -1477,9 +1844,12 @@
             "name": "Phobos Lab (E1M5) Green -> Phobos Lab (E1M5) Blue",
             "connected_region": "Phobos Lab (E1M5) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Phobos Lab (E1M5) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1573,36 +1943,48 @@
             "name": "Central Processing (E1M6) Main -> Central Processing (E1M6) Yellow",
             "connected_region": "Central Processing (E1M6) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Central Processing (E1M6) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Central Processing (E1M6) Main -> Central Processing (E1M6) Red",
             "connected_region": "Central Processing (E1M6) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Central Processing (E1M6) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Central Processing (E1M6) Main -> Central Processing (E1M6) Blue",
             "connected_region": "Central Processing (E1M6) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Central Processing (E1M6) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Central Processing (E1M6) Main -> Central Processing (E1M6) Nukage",
             "connected_region": "Central Processing (E1M6) Nukage",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Central Processing (E1M6) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -1904,9 +2286,12 @@
             "name": "Central Processing (E1M6) Yellow -> Central Processing (E1M6) Main",
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Central Processing (E1M6) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2000,18 +2385,24 @@
             "name": "Computer Station (E1M7) Main -> Computer Station (E1M7) Red",
             "connected_region": "Computer Station (E1M7) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Computer Station (E1M7) Main -> Computer Station (E1M7) Yellow",
             "connected_region": "Computer Station (E1M7) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -2066,9 +2457,12 @@
             "name": "Computer Station (E1M7) Blue -> Computer Station (E1M7) Yellow",
             "connected_region": "Computer Station (E1M7) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2114,9 +2508,12 @@
             "name": "Computer Station (E1M7) Red -> Computer Station (E1M7) Main",
             "connected_region": "Computer Station (E1M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2146,18 +2543,26 @@
             "name": "Computer Station (E1M7) Yellow -> Computer Station (E1M7) Blue",
             "connected_region": "Computer Station (E1M7) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Computer Station (E1M7) Yellow -> Computer Station (E1M7) Courtyard",
             "connected_region": "Computer Station (E1M7) Courtyard",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Computer Station (E1M7) - Red keycard",
+                  "Computer Station (E1M7) - Yellow keycard"
+                ]
+              }
             }
           },
           {
@@ -2324,9 +2729,12 @@
             "name": "Computer Station (E1M7) Courtyard -> Computer Station (E1M7) Yellow",
             "connected_region": "Computer Station (E1M7) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Computer Station (E1M7) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2356,9 +2764,15 @@
             "name": "Computer Station (E1M7) Start -> Computer Station (E1M7) Main",
             "connected_region": "Computer Station (E1M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Rocket launcher",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -2537,27 +2951,36 @@
             "name": "Military Base (E1M9) Main -> Military Base (E1M9) Blue",
             "connected_region": "Military Base (E1M9) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Military Base (E1M9) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Military Base (E1M9) Main -> Military Base (E1M9) Yellow",
             "connected_region": "Military Base (E1M9) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Military Base (E1M9) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Military Base (E1M9) Main -> Military Base (E1M9) Red",
             "connected_region": "Military Base (E1M9) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Military Base (E1M9) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2635,9 +3058,12 @@
             "name": "Military Base (E1M9) Blue -> Military Base (E1M9) Main",
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Military Base (E1M9) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2747,9 +3173,12 @@
             "name": "Military Base (E1M9) Yellow -> Military Base (E1M9) Main",
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Military Base (E1M9) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2779,18 +3208,24 @@
             "name": "Deimos Anomaly (E2M1) Main -> Deimos Anomaly (E2M1) Red",
             "connected_region": "Deimos Anomaly (E2M1) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Anomaly (E2M1) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Deimos Anomaly (E2M1) Main -> Deimos Anomaly (E2M1) Blue",
             "connected_region": "Deimos Anomaly (E2M1) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Anomaly (E2M1) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2900,9 +3335,12 @@
             "name": "Deimos Anomaly (E2M1) Blue -> Deimos Anomaly (E2M1) Main",
             "connected_region": "Deimos Anomaly (E2M1) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Anomaly (E2M1) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2932,9 +3370,12 @@
             "name": "Deimos Anomaly (E2M1) Red -> Deimos Anomaly (E2M1) Main",
             "connected_region": "Deimos Anomaly (E2M1) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Anomaly (E2M1) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -2980,27 +3421,36 @@
             "name": "Containment Area (E2M2) Main -> Containment Area (E2M2) Yellow",
             "connected_region": "Containment Area (E2M2) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Containment Area (E2M2) - Yellow keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Containment Area (E2M2) Main -> Containment Area (E2M2) Blue",
             "connected_region": "Containment Area (E2M2) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Containment Area (E2M2) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Containment Area (E2M2) Main -> Containment Area (E2M2) Red",
             "connected_region": "Containment Area (E2M2) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Containment Area (E2M2) - Red keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3256,9 +3706,12 @@
             "name": "Containment Area (E2M2) Blue -> Containment Area (E2M2) Main",
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Containment Area (E2M2) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3288,9 +3741,12 @@
             "name": "Containment Area (E2M2) Red -> Containment Area (E2M2) Main",
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Containment Area (E2M2) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -3398,9 +3854,12 @@
             "name": "Refinery (E2M3) Main -> Refinery (E2M3) Blue",
             "connected_region": "Refinery (E2M3) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Refinery (E2M3) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3558,9 +4017,12 @@
             "name": "Refinery (E2M3) Blue -> Refinery (E2M3) Main",
             "connected_region": "Refinery (E2M3) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Refinery (E2M3) - Blue keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3622,9 +4084,12 @@
             "name": "Deimos Lab (E2M4) Main -> Deimos Lab (E2M4) Blue",
             "connected_region": "Deimos Lab (E2M4) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Lab (E2M4) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -3832,9 +4297,12 @@
             "name": "Deimos Lab (E2M4) Blue -> Deimos Lab (E2M4) Yellow",
             "connected_region": "Deimos Lab (E2M4) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deimos Lab (E2M4) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -3944,9 +4412,15 @@
             "name": "Deimos Lab (E2M4) Start -> Deimos Lab (E2M4) Main",
             "connected_region": "Deimos Lab (E2M4) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Plasma gun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -4158,27 +4632,39 @@
             "name": "Halls of the Damned (E2M6) Main -> Halls of the Damned (E2M6) Blue Yellow Red",
             "connected_region": "Halls of the Damned (E2M6) Blue Yellow Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Halls of the Damned (E2M6) - Blue skull key",
+                  "Halls of the Damned (E2M6) - Red skull key",
+                  "Halls of the Damned (E2M6) - Yellow skull key"
+                ]
+              }
             }
           },
           {
             "name": "Halls of the Damned (E2M6) Main -> Halls of the Damned (E2M6) Yellow",
             "connected_region": "Halls of the Damned (E2M6) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Halls of the Damned (E2M6) Main -> Halls of the Damned (E2M6) One way Yellow",
             "connected_region": "Halls of the Damned (E2M6) One way Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4448,9 +4934,15 @@
             "name": "Halls of the Damned (E2M6) Blue Yellow Red -> Halls of the Damned (E2M6) Main",
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Halls of the Damned (E2M6) - Blue skull key",
+                  "Halls of the Damned (E2M6) - Red skull key",
+                  "Halls of the Damned (E2M6) - Yellow skull key"
+                ]
+              }
             }
           }
         ],
@@ -4480,9 +4972,12 @@
             "name": "Halls of the Damned (E2M6) One way Yellow -> Halls of the Damned (E2M6) Main",
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -4528,36 +5023,50 @@
             "name": "Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Blue",
             "connected_region": "Spawning Vats (E2M7) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Spawning Vats (E2M7) - Blue keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Entrance Secret",
             "connected_region": "Spawning Vats (E2M7) Entrance Secret",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Spawning Vats (E2M7) - Blue keycard",
+                  "Spawning Vats (E2M7) - Red keycard"
+                ]
+              }
             }
           },
           {
             "name": "Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Red",
             "connected_region": "Spawning Vats (E2M7) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Spawning Vats (E2M7) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
             "name": "Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Yellow",
             "connected_region": "Spawning Vats (E2M7) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Spawning Vats (E2M7) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -4811,9 +5320,12 @@
             "name": "Spawning Vats (E2M7) Yellow -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Spawning Vats (E2M7) - Yellow keycard",
+                "count": 1
+              }
             }
           }
         ],
@@ -4843,9 +5355,12 @@
             "name": "Spawning Vats (E2M7) Red -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Spawning Vats (E2M7) - Red keycard",
+                "count": 1
+              }
             }
           },
           {
@@ -4884,9 +5399,14 @@
             "name": "Spawning Vats (E2M7) Entrance Secret -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Spawning Vats (E2M7) - Blue keycard",
+                  "Spawning Vats (E2M7) - Red keycard"
+                ]
+              }
             }
           }
         ],
@@ -5001,9 +5521,31 @@
             "name": "Tower of Babel (E2M8) Start -> Tower of Babel (E2M8) Main",
             "connected_region": "Tower of Babel (E2M8) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -5033,27 +5575,36 @@
             "name": "Fortress of Mystery (E2M9) Main -> Fortress of Mystery (E2M9) Blue",
             "connected_region": "Fortress of Mystery (E2M9) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fortress of Mystery (E2M9) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Fortress of Mystery (E2M9) Main -> Fortress of Mystery (E2M9) Red",
             "connected_region": "Fortress of Mystery (E2M9) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fortress of Mystery (E2M9) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Fortress of Mystery (E2M9) Main -> Fortress of Mystery (E2M9) Yellow",
             "connected_region": "Fortress of Mystery (E2M9) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fortress of Mystery (E2M9) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5227,9 +5778,12 @@
             "name": "Fortress of Mystery (E2M9) Blue -> Fortress of Mystery (E2M9) Main",
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fortress of Mystery (E2M9) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5259,9 +5813,12 @@
             "name": "Fortress of Mystery (E2M9) Red -> Fortress of Mystery (E2M9) Main",
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fortress of Mystery (E2M9) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5291,9 +5848,12 @@
             "name": "Fortress of Mystery (E2M9) Yellow -> Fortress of Mystery (E2M9) Main",
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fortress of Mystery (E2M9) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5323,9 +5883,14 @@
             "name": "Hell Keep (E3M1) Main -> Hell Keep (E3M1) Narrow",
             "connected_region": "Hell Keep (E3M1) Narrow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -5403,9 +5968,12 @@
             "name": "Slough of Despair (E3M2) Main -> Slough of Despair (E3M2) Blue",
             "connected_region": "Slough of Despair (E3M2) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Slough of Despair (E3M2) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5563,9 +6131,12 @@
             "name": "Slough of Despair (E3M2) Blue -> Slough of Despair (E3M2) Main",
             "connected_region": "Slough of Despair (E3M2) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Slough of Despair (E3M2) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5595,9 +6166,12 @@
             "name": "Pandemonium (E3M3) Main -> Pandemonium (E3M3) Blue",
             "connected_region": "Pandemonium (E3M3) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Pandemonium (E3M3) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5836,9 +6410,12 @@
             "name": "Pandemonium (E3M3) Blue -> Pandemonium (E3M3) Main",
             "connected_region": "Pandemonium (E3M3) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Pandemonium (E3M3) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -5868,9 +6445,12 @@
             "name": "House of Pain (E3M4) Main -> House of Pain (E3M4) Blue",
             "connected_region": "House of Pain (E3M4) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "House of Pain (E3M4) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6030,27 +6610,36 @@
             "name": "House of Pain (E3M4) Blue -> House of Pain (E3M4) Main",
             "connected_region": "House of Pain (E3M4) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "House of Pain (E3M4) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "House of Pain (E3M4) Blue -> House of Pain (E3M4) Yellow",
             "connected_region": "House of Pain (E3M4) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "House of Pain (E3M4) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "House of Pain (E3M4) Blue -> House of Pain (E3M4) Red",
             "connected_region": "House of Pain (E3M4) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "House of Pain (E3M4) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6160,9 +6749,12 @@
             "name": "House of Pain (E3M4) Red -> House of Pain (E3M4) Blue",
             "connected_region": "House of Pain (E3M4) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "House of Pain (E3M4) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6224,9 +6816,12 @@
             "name": "House of Pain (E3M4) Yellow -> House of Pain (E3M4) Blue",
             "connected_region": "House of Pain (E3M4) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "House of Pain (E3M4) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6256,18 +6851,24 @@
             "name": "Unholy Cathedral (E3M5) Main -> Unholy Cathedral (E3M5) Yellow",
             "connected_region": "Unholy Cathedral (E3M5) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Unholy Cathedral (E3M5) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Unholy Cathedral (E3M5) Main -> Unholy Cathedral (E3M5) Blue",
             "connected_region": "Unholy Cathedral (E3M5) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Unholy Cathedral (E3M5) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
@@ -6450,9 +7051,12 @@
             "name": "Unholy Cathedral (E3M5) Blue -> Unholy Cathedral (E3M5) Main",
             "connected_region": "Unholy Cathedral (E3M5) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Unholy Cathedral (E3M5) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6499,9 +7103,12 @@
             "name": "Unholy Cathedral (E3M5) Yellow -> Unholy Cathedral (E3M5) Main",
             "connected_region": "Unholy Cathedral (E3M5) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Unholy Cathedral (E3M5) - Yellow skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6547,9 +7154,31 @@
             "name": "Unholy Cathedral (E3M5) Start -> Unholy Cathedral (E3M5) Main",
             "connected_region": "Unholy Cathedral (E3M5) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6579,9 +7208,12 @@
             "name": "Mt. Erebus (E3M6) Main -> Mt. Erebus (E3M6) Blue",
             "connected_region": "Mt. Erebus (E3M6) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mt. Erebus (E3M6) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6868,9 +7500,12 @@
             "name": "Mt. Erebus (E3M6) Blue -> Mt. Erebus (E3M6) Main",
             "connected_region": "Mt. Erebus (E3M6) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mt. Erebus (E3M6) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6900,27 +7535,36 @@
             "name": "Limbo (E3M7) Main -> Limbo (E3M7) Red",
             "connected_region": "Limbo (E3M7) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Limbo (E3M7) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Limbo (E3M7) Main -> Limbo (E3M7) Blue",
             "connected_region": "Limbo (E3M7) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Limbo (E3M7) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Limbo (E3M7) Main -> Limbo (E3M7) Pink",
             "connected_region": "Limbo (E3M7) Pink",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Limbo (E3M7) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7087,9 +7731,12 @@
             "name": "Limbo (E3M7) Red -> Limbo (E3M7) Yellow",
             "connected_region": "Limbo (E3M7) Yellow",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Limbo (E3M7) - Yellow skull key",
+                "count": 1
+              }
             }
           },
           {
@@ -7160,9 +7807,12 @@
             "name": "Limbo (E3M7) Pink -> Limbo (E3M7) Green",
             "connected_region": "Limbo (E3M7) Green",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Limbo (E3M7) - Red skull key",
+                "count": 1
+              }
             }
           },
           {
@@ -7311,18 +7961,24 @@
             "name": "Warrens (E3M9) Main -> Warrens (E3M9) Blue",
             "connected_region": "Warrens (E3M9) Blue",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Warrens (E3M9) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Warrens (E3M9) Main -> Warrens (E3M9) Blue trigger",
             "connected_region": "Warrens (E3M9) Blue trigger",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Warrens (E3M9) - Blue skull key",
+                "count": 1
+              }
             }
           }
         ],
@@ -7374,18 +8030,24 @@
             "name": "Warrens (E3M9) Blue -> Warrens (E3M9) Main",
             "connected_region": "Warrens (E3M9) Main",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Warrens (E3M9) - Blue skull key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Warrens (E3M9) Blue -> Warrens (E3M9) Red",
             "connected_region": "Warrens (E3M9) Red",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Warrens (E3M9) - Red skull key",
+                "count": 1
+              }
             }
           }
         ],

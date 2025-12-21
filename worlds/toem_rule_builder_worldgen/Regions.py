@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Homelanda", "Oaklaville", "Stanhamn", "Logcity", "Kiiruberg", "Mountain Top"]
+    region_names = ["Homelanda", "Oaklaville", "Stanhamn", "Logcity", "Kiiruberg", "Mountain Top"]
 
     regions = {}
     for region_name in region_names:
@@ -43,7 +43,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Homelanda"], "MenuToStart")
     _create_entrance(regions["Homelanda"], regions["Oaklaville"], "Homelanda -> Oaklaville")
     _create_entrance(regions["Oaklaville"], regions["Stanhamn"], "Oaklaville -> Stanhamn")
     _create_entrance(regions["Stanhamn"], regions["Logcity"], "Stanhamn -> Logcity")

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, False_, Has, HasAll, HasAny, HasGroup, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -1298,23 +1298,18 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Evacuation (Terran)", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Smash and Grab (Terran)", player),
         True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Piercing the Shroud", player),
-        True_()
+        HasAll(['Beat Evacuation (Terran)'])
     )
 
     world.set_rule(
         multiworld.get_entrance("Liberation Day", player),
-        True_()
+        HasAll(['Beat Evacuation (Terran)'])
     )
 
     world.set_rule(
@@ -1374,7 +1369,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Great Train Robbery (Terran)", player),
-        True_()
+        HasAll(["Beat Haven's Fall (Terran)"])
     )
 
     world.set_rule(
@@ -1419,7 +1414,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Engine of Destruction (Terran)", player),
-        True_()
+        HasAll(['Beat Zero Hour (Terran)'])
     )
     # Location rules
     world.set_rule(
@@ -1458,158 +1453,78 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Liberation Day: Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: First Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Second Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Third Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Fourth Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Fifth Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Sixth Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Special Delivery", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Liberation Day: Transport", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beat Liberation Day", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Evacuation (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): North Chrysalis", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): West Chrysalis", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): East Chrysalis", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): Reach Hanson", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): Secret Resource Stash", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Flawless", player),
-        True_()
+        And(True_(), True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Western Zerg Base", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Eastern Zerg Base", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Evacuation (Terran)", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Holding Cell Relic", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Brutalisk Relic", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: First Escape Relic", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Second Escape Relic", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Brutalisk", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Fusion Reactor", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Entrance Holding Pen", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Cargo Bay Warbot", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Escape Warbot", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Piercing the Shroud", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
@@ -1679,302 +1594,232 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Landing Zone Cleared", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Expansion Prisoners", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): South Close Prisoners", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): South Far Prisoners", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): North Prisoners", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Mothership", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Expansion Rip Field Generator", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Middle Rip Field Generator", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southeast Rip Field Generator", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Stargate Rip Field Generator", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Northwest Rip Field Generator", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): West Rip Field Generator", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southwest Rip Field Generator", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Maw of the Void (Terran)", player),
-        True_()
+        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): West Relic", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): North Relic", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): South Relic", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): East Relic", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): Landing Zone Cleared", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Middle Base", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Southeast Base", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Supernova (Terran)", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): 1st Data Core", player),
-        True_()
+        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 2nd Data Core", player),
-        True_()
+        Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): South Rescue", player),
-        True_()
+        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Wall Rescue", player),
-        True_()
+        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Mid Rescue", player),
-        True_()
+        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Nydus Roof Rescue", player),
-        True_()
+        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Alive Inside Rescue", player),
-        True_()
+        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Brutalisk", player),
-        True_()
+        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 3rd Data Core", player),
-        True_()
+        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Moebius Factor (Terran)", player),
-        True_()
+        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Victory", player),
-        True_()
+        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Left Relic", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Ground Relic", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Cliff Relic", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Moebius Base", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Outer Layer", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Thermal Barrier", player),
-        True_()
+        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Cutting Through the Core", player),
-        True_()
+        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Structure Access Imminent", player),
-        True_()
+        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northwestern Protoss Base", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northeastern Protoss Base", player),
-        True_()
+        And(True_(), True_(), True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Eastern Protoss Base", player),
-        True_()
+        And(True_(), True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Dig (Terran)", player),
-        True_()
+        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): North Defiler", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Mid Defiler", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): South Defiler", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Close Diamondback", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Northwest Diamondback", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): North Diamondback", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Northeast Diamondback", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Southwest Diamondback", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Southeast Diamondback", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): Kill Team", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): Flawless", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -1984,182 +1829,167 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): 4 Trains Destroyed", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): 6 Trains Destroyed", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Great Train Robbery (Terran)", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Victory", player),
-        True_()
+        And(True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Mira Han", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): North Relic", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): Mid Relic", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Southwest Relic", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): North Command Center", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): South Command Center", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): West Command Center", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Beat Cutthroat (Terran)", player),
-        True_()
+        And(True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): First Relic", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Second Relic", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Third Relic", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Fourth Relic", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): First Forcefield Area Busted", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Second Forcefield Area Busted", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Defeat Kerrigan", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Smash and Grab (Terran)", player),
-        True_()
+        And(True_(), Or(And(False_(), True_()), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Victory", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Rebel Base", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): North Resource Pickups", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Bunker", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Outlaws (Terran): Close Resource Pickups", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Outlaws (Terran)", player),
-        True_()
+        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Victory", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Left Infestor", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Right Infestor", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Infested Command Center", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Infested Command Center", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Northwest Bar", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Bar", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Bar", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Outbreak (Terran)", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
@@ -2169,7 +1999,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Haven's Fall (Terran): North Hive", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2204,11 +2034,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Haven's Fall (Terran): Southwest Colony Base", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Southwest Gas Pickups", player),
         True_()
     )
 
@@ -2279,42 +2104,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): Victory", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): North Nexus", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): East Nexus", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): South Nexus", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): First Terror Fleet", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): Second Terror Fleet", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): Third Terror Fleet", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Safe Haven (Terran)", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2324,7 +2149,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Engine of Destruction (Terran): Odin", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
@@ -2334,7 +2159,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Engine of Destruction (Terran): Lab Devourer", player),
-        True_()
+        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
     )
 
     world.set_rule(
@@ -2378,11 +2203,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Close Relic", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): West Relic", player),
         True_()
     )
@@ -2399,27 +2219,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Protoss Cleared", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): No Terrazine Nodes Sealed", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed", player),
-        True_()
+        And(True_(), True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Up to 2 Terrazine Nodes Sealed", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Up to 3 Terrazine Nodes Sealed", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2459,7 +2279,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Media Blitz (Terran): Science Facility", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
@@ -2474,16 +2294,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Media Blitz (Terran): All Starports", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Media Blitz (Terran): Odin Not Trashed", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Surprise Attack Ends", player),
         True_()
     )
 
@@ -2494,97 +2309,77 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: First Charge", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Second Charge", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Third Charge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: First Group Rescued", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: Second Group Rescued", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Third Group Rescued", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Belly of the Beast", player),
-        True_()
+        Or(False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Victory", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Terrazine Tank", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Jorium Stockpile", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: First Island Spectres", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Second Island Spectres", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Third Island Spectres", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Ghost of a Chance", player),
-        True_()
+        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): First Group Rescued", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Second Group Rescued", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Third Group Rescued", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
@@ -2609,100 +2404,55 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Ride's on its Way", player),
-        True_()
+        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Hold Just a Little Longer", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Cavalry's on the Way", player),
-        True_()
+        And(True_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Zero Hour (Terran)", player),
-        True_()
+        And(True_(), True_(), Or(False_(), True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Tosh's Miners", player),
-        True_()
+        Or(And(True_(), Or(True_(), Has('Reaper'))), False_())
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Brutalisk", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): North Reapers", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Middle Reapers", player),
-        True_()
+        Or(False_(), True_(), Has('Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Southwest Reapers", player),
-        True_()
+        Or(False_(), True_(), Has('Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Southeast Reapers", player),
-        True_()
+        Or(And(True_(), Or(True_(), Has('Reaper'))), False_())
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): East Reapers", player),
-        True_()
+        And(True_(), Or(False_(), True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Zerg Cleared", player),
-        True_()
+        And(True_(), Or(True_(), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Devil's Playground (Terran)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Breakout: Victory", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Breakout: Diamondback Prison", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Breakout: Siege Tank Prison", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Breakout: First Checkpoint", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Breakout: Second Checkpoint", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beat Breakout", player),
-        True_()
+        Or(And(True_(), Or(True_(), Has('Reaper'))), False_())
     )

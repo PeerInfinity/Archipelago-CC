@@ -17,7 +17,6 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Key Pieces:                      5
 
 
 Starting Items:
@@ -88,27 +87,19 @@ Playthrough:
   Ruins Key
 }
 1: {
-  Candy 4: Snowdin Key
-  Cider Sale: Punch Card
-}
-2: {
+  Alphys Date: Alphys Date
+  Astro 2: Mettaton Plush
+  Bratty Catty 2: Core Key
   Bunny 2: Waterfall Key
   Bunny 4: Punch Card
-  Papyrus Date: Papyrus Date
-}
-3: {
-  Astro 2: Mettaton Plush
-  Tutu Hidden: Hotland Key
-  Undyne Date: Undyne Date
-}
-4: {
-  Alphys Date: Alphys Date
-  Bratty Catty 2: Core Key
   Burgerpants 3: Punch Card
   Burgerpants 4: Right Home Key
-}
-5: {
+  Candy 4: Snowdin Key
+  Cider Sale: Punch Card
   Mettaton Plot: 1000G
+  Papyrus Date: Papyrus Date
   Present Locket: Left Home Key
   Trash Burger: 1000G
+  Tutu Hidden: Hotland Key
+  Undyne Date: Undyne Date
 }

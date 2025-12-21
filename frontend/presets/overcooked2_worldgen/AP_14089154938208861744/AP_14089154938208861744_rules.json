@@ -43,45 +43,64 @@
             "name": "Overworld -> 1-2",
             "connected_region": "1-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "1-1 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 1-3",
             "connected_region": "1-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "1-2 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 1-4",
             "connected_region": "1-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "1-3 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 1-5",
             "connected_region": "1-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "1-4 Level Complete",
+                  "Yellow Ramp"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 1-6",
             "connected_region": "1-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "1-5 Level Complete",
+                  "Yellow Ramp"
+                ]
+              }
             }
           },
           {
@@ -97,99 +116,200 @@
             "name": "Overworld -> 2-2",
             "connected_region": "2-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Green Ramp",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "2-1 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-3",
             "connected_region": "2-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Green Ramp",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "2-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-4",
             "connected_region": "2-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "2-3 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 2-5",
             "connected_region": "2-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "2-4 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 2-6",
             "connected_region": "2-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "2-5 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 3-1",
             "connected_region": "3-1",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Blue Ramp",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 3-2",
             "connected_region": "3-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "3-1 Level Complete",
+                  "Blue Ramp"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 3-3",
             "connected_region": "3-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "3-2 Level Complete",
+                  "Blue Ramp"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 3-4",
             "connected_region": "3-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "3-3 Level Complete",
+                  "Blue Ramp"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 3-5",
             "connected_region": "3-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "3-4 Level Complete",
+                  "Blue Ramp"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 3-6",
             "connected_region": "3-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "3-5 Level Complete",
+                "count": 1
+              }
             }
           },
           {
@@ -205,45 +325,60 @@
             "name": "Overworld -> 4-2",
             "connected_region": "4-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "4-1 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 4-3",
             "connected_region": "4-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "4-2 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 4-4",
             "connected_region": "4-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "4-3 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 4-5",
             "connected_region": "4-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "4-4 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 4-6",
             "connected_region": "4-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "4-5 Level Complete",
+                "count": 1
+              }
             }
           },
           {
@@ -259,171 +394,323 @@
             "name": "Overworld -> 5-2",
             "connected_region": "5-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Green Ramp",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "5-1 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-3",
             "connected_region": "5-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "5-2 Level Complete",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 5-4",
             "connected_region": "5-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "5-3 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 5-5",
             "connected_region": "5-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "5-4 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 5-6",
             "connected_region": "5-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "5-5 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 6-1",
             "connected_region": "6-1",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Pink Ramp",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> 6-2",
             "connected_region": "6-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "6-1 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 6-3",
             "connected_region": "6-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "6-2 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 6-4",
             "connected_region": "6-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Green Ramp",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "6-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-5",
             "connected_region": "6-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "6-1 Level Complete",
+                  "Red Ramp",
+                  "6-4 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> 6-6",
             "connected_region": "6-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "6-1 Level Complete",
+                  "Red Ramp",
+                  "6-5 Level Complete"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-1",
             "connected_region": "Kevin-1",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Dark Green Ramp",
+                  "Kevin-1"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-2",
             "connected_region": "Kevin-2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Kevin-2",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-3",
             "connected_region": "Kevin-3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Kevin-3",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-4",
             "connected_region": "Kevin-4",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Kevin-4",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-5",
             "connected_region": "Kevin-5",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Kevin-5",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-6",
             "connected_region": "Kevin-6",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Kevin-6",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-7",
             "connected_region": "Kevin-7",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "Kevin-7"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-8",
             "connected_region": "Kevin-8",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "6-1 Level Complete",
+                  "Red Ramp",
+                  "Kevin-8"
+                ]
+              }
             }
           }
         ],

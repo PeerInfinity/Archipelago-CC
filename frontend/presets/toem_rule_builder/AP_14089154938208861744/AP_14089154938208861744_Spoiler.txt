@@ -27,160 +27,160 @@ Locations:
 
 Casette - Launchable Socks - Squirrel Photography: Logcity stamp
 Casette - Jamal Green - Photo of Home: Fjällbjörn hat
-Compendium - Butterfly: Seagull photo
-Compendium - Pet rock: Owl photo
-Compendium - Snow bird: Sero photo
-Compendium - Jellyfish: Oaklaville stamp
-Compendium - Forest bird: Oaklaville stamp
-Compendium - Bubble fly: Nariko photo
-Compendium - Happy carp: Hedgehog photo
-Compendium - Mountain goat: Sunday swan photo
-Compendium - Tato scuba: Fishing hat
-Compendium - Teddy: Launchable Socks - Squirrel Photography
-Compendium - Nariko: Ski goggles
-Compendium - Portillo: Kiiruberg stamp
-Compendium - Beehive: Oaklaville stamp
-Compendium - Seagull: Kiiruberg stamp
-Compendium - Ant: Dragonfly photo
-Compendium - Ladybug: Oaklaville stamp
-Compendium - Crab: Logcity stamp
-Compendium - Punky parrot: Kiiruberg stamp
-Compendium - Tato swim: Happy carp photo
-Compendium - Seahorse: Stanhamn stamp
-Compendium - Sunday swan: Oaklaville stamp
 Compendium - Oskar: Squirrel photo
-Compendium - Tato ski: Stanhamn stamp
-Compendium - Cosmo deer: Cow photo
-Compendium - Tato fly: Kiiruberg stamp
-Compendium - Pigeon: Tato scuba photo
-Compendium - Mikée: Tato swim photo
-Compendium - Toad: Stanhamn stamp
-Compendium - Home bird: Oaklaville stamp
-Compendium - Fluff ball: Ghost glasses
-Compendium - Snail: Tato alien photo
-Compendium - Turtle: Cinnamon bun
-Compendium - Tato: Tato ski photo
-Compendium - Meteopal: Business pigeon photo
-Compendium - King fish: Punky parrot photo
-Compendium - Nestworm: Logcity stamp
-Compendium - Tom: Paper hat
-Compendium - Stag beetle: Kiiruberg stamp
-Compendium - Dragonfly: Oaklaville stamp
-Compendium - Owl: Cosmo deer photo
-Compendium - Flies: Tato photo
-Compendium - Tato skateboard: Beehive photo
-Compendium - Willemijn: Honk attachment
 Compendium - Tato alien: Stanhamn stamp
-Compendium - Tato tourist: Tripod
-Compendium - Squirrel: Oaklaville stamp
-Compendium - Cow: Oaklaville stamp
-Compendium - Tato bug: Nestworm photo
-Compendium - Fia: Pirate hat
 Compendium - Fräs: Snail photo
-Compendium - Mouse: Kiiruberg stamp
-Compendium - Hedgehog: Logcity stamp
+Compendium - Tato swim: Happy carp photo
+Compendium - Punky parrot: Kiiruberg stamp
+Compendium - Tato ski: Stanhamn stamp
 Compendium - Sero: Supreme deluxe sandwich
+Compendium - King fish: Punky parrot photo
+Compendium - Snow bird: Sero photo
+Compendium - Happy carp: Hedgehog photo
+Compendium - Turtle: Cinnamon bun
+Compendium - Mouse: Kiiruberg stamp
+Compendium - Mikée: Tato swim photo
+Compendium - Fluff ball: Ghost glasses
+Compendium - Dragonfly: Oaklaville stamp
+Compendium - Sunday swan: Oaklaville stamp
+Compendium - Toad: Stanhamn stamp
+Compendium - Tato: Tato ski photo
+Compendium - Mountain goat: Sunday swan photo
+Compendium - Pet rock: Owl photo
+Compendium - Bubble fly: Nariko photo
+Compendium - Tato fly: Kiiruberg stamp
+Compendium - Beehive: Oaklaville stamp
+Compendium - Tato bug: Nestworm photo
+Compendium - Pigeon: Tato scuba photo
+Compendium - Ant: Dragonfly photo
+Compendium - Hedgehog: Logcity stamp
+Compendium - Seagull: Kiiruberg stamp
+Compendium - Cow: Oaklaville stamp
+Compendium - Ladybug: Oaklaville stamp
+Compendium - Tato tourist: Tripod
+Compendium - Stag beetle: Kiiruberg stamp
+Compendium - Meteopal: Business pigeon photo
+Compendium - Butterfly: Seagull photo
+Compendium - Owl: Cosmo deer photo
+Compendium - Willemijn: Honk attachment
+Compendium - Tato skateboard: Beehive photo
+Compendium - Squirrel: Oaklaville stamp
+Compendium - Jellyfish: Oaklaville stamp
+Compendium - Nariko: Ski goggles
+Compendium - Cosmo deer: Cow photo
+Compendium - Nestworm: Logcity stamp
+Compendium - Flies: Tato photo
+Compendium - Home bird: Oaklaville stamp
+Compendium - Crab: Logcity stamp
 Compendium - Business pigeon: Forest bird photo
-Item - Rubber boots: Frisbee
-Item - Fisherman's whisle: Hotbean hat
-Item - Space helmet: Stanhamn stamp
-Item - Cinnamon bun: Pet rock photo
-Item - Old key: Logcity stamp
-Item - Pirate hat: Oaklaville stamp
-Item - Scarf: Kiiruberg stamp
-Item - Monster mask: Stanhamn stamp
-Item - Clogs: Homelanda stamp
-Item - Camera: Logcity stamp
-Item - Tripod: Kiiruberg stamp
-Item - Umbrella: Muddy camera
+Compendium - Teddy: Launchable Socks - Squirrel Photography
+Compendium - Tato scuba: Fishing hat
+Compendium - Tom: Paper hat
+Compendium - Forest bird: Oaklaville stamp
+Compendium - Seahorse: Stanhamn stamp
+Compendium - Fia: Pirate hat
+Compendium - Portillo: Kiiruberg stamp
+Compendium - Snail: Tato alien photo
 Item - Muddy camera: Bubble fly photo
-Item - Honk attachment: Cowboy hat
-Item - Fjällbjörn hat: Tato tourist photo
-Item - Puffer hat: Fluff ball photo
+Item - Camera: Logcity stamp
+Item - Climbing boots: Oaklaville stamp
+Item - Hard hat: King fish photo
+Item - Ghost glasses: Kiiruberg stamp
+Item - Sneakers: Reporter hat
+Item - Hotbean hat: Stanhamn stamp
+Item - Backpack: Tom photo
+Item - Fisherman's whisle: Hotbean hat
+Item - Old key: Logcity stamp
+Item - Scarf: Kiiruberg stamp
+Item - Diving helmet: Hard hat
 Item - Lost sock: Oaklaville stamp
-Item - Fishing hat: Jellyfish photo
+Item - Tripod: Kiiruberg stamp
+Item - Cinnamon bun: Pet rock photo
 Item - Reporter hat: Butterfly photo
 Item - Frisbee: Tato skateboard photo
-Item - Backpack: Tom photo
-Item - Supreme deluxe sandwich: Stanhamn stamp
-Item - Sneakers: Reporter hat
-Item - Photo challenger flag: Stanhamn stamp
-Item - Soaked sock: Mountain goat photo
-Item - Hard hat: King fish photo
-Item - Diving helmet: Hard hat
-Item - Ski goggles: Logcity stamp
+Item - Fjällbjörn hat: Tato tourist photo
 Item - Paper hat: Sneakers
+Item - Space helmet: Stanhamn stamp
+Item - Monster mask: Stanhamn stamp
+Item - Honk attachment: Cowboy hat
 Item - Cowboy hat: Puffer hat
-Item - Climbing boots: Oaklaville stamp
-Item - Frames & filters: Kiiruberg stamp
-Item - Hotbean hat: Stanhamn stamp
-Item - Ghost glasses: Kiiruberg stamp
+Item - Pirate hat: Oaklaville stamp
 Item - Foam finger: Oskar photo
-Quest - Art exhibition: Logcity stamp
-Quest - Missing socks: Rubber boots
-Quest - Log blocking a path: Logcity stamp
-Quest - Photo challenge #1: Scarf
-Quest - Play astronaut: Crab photo
-Quest - Military suspicions: Old key
-Quest - Ghost helper!: Diving helmet
-Quest - Capture the hotel's beauty: Mouse photo
-Quest - Suspicious activity - city: Foam finger
-Quest - Hide-and-seek: Oaklaville stamp
-Quest - A whistling dilemma: Seahorse photo
-Quest - Solve the chaos: Willemijn photo
-Quest - Frames & filters!: Turtle photo
-Quest - Become a scout: Fräs photo
-Quest - A courageous stallion: Fia photo
-Quest - Experience TOEM: Clogs
+Item - Frames & filters: Kiiruberg stamp
+Item - Umbrella: Muddy camera
+Item - Clogs: Homelanda stamp
+Item - Photo challenger flag: Stanhamn stamp
+Item - Supreme deluxe sandwich: Stanhamn stamp
+Item - Fishing hat: Jellyfish photo
+Item - Soaked sock: Mountain goat photo
+Item - Ski goggles: Logcity stamp
+Item - Puffer hat: Fluff ball photo
+Item - Rubber boots: Frisbee
+Quest - Super Hotbean Bros.: Lost sock
 Quest - A ghostly date: Photo challenger flag
-Quest - Photo challenge #6: Home bird photo
-Quest - Cup champion: Monster mask
-Quest - A hidden gift: Snow bird photo
-Quest - Become a paparazzi: Logcity stamp
-Quest - A layered melody: Logcity stamp
-Quest - Photo challenge #4: Logcity stamp
-Quest - A good spot with no sun: Homelanda stamp
-Quest - Ratskullz crew: Flies photo
-Quest - Sewer stumble!: Logcity stamp
-Quest - Ocean garbage: Fisherman's whisle
-Quest - A design problem: Space helmet
-Quest - Cleaning away the stress: Stanhamn stamp
-Quest - Yeti cuteness: Ladybug photo
-Quest - Listen to the goat choir: Pigeon photo
-Quest - Take a photo of Nana!: Stanhamn stamp
-Quest - Spooky scary city: Umbrella
-Quest - Hang in there, buddy: Backpack
-Quest - Supreme deluxe sandwich?!: Jamal Green - Photo of Home
-Quest - A mouse bakery: Tato fly photo
-Quest - Punk rocker bread crumbs: Teddy photo
-Quest - Ancient paintings: Logcity stamp
-Quest - Assemble a snowman: Logcity stamp
-Quest - Ice wizard's research: Oaklaville stamp
-Quest - Suspicious activity - harbor: Logcity stamp
-Quest - Snowball memories: Oaklaville stamp
-Quest - Power shortage?!: Homelanda stamp
-Quest - Photo challenge #7: Stanhamn stamp
-Quest - Photo challenge #8: Stag beetle photo
-Quest - Monster spotting: Ant photo
-Quest - Become a flower: Stanhamn stamp
-Quest - Locating an asteroid: Mikée photo
-Quest - Photo challenge #5: Frames & filters
-Quest - Become a yeti: Toad photo
-Quest - Press-ing news: Kiiruberg stamp
-Quest - Birthday in distress: Stanhamn stamp
-Quest - Always tumbled granny: Logcity stamp
-Quest - Hotel chef: Kiiruberg stamp
-Quest - Photo challenge #3: Camera
-Quest - The king of fishes: Logcity stamp
-Quest - A thieving crow: Portillo photo
-Quest - Queen of paper hats: Stanhamn stamp
 Quest - A lost dog: Soaked sock
-Quest - Photo challenge #2: Kiiruberg stamp
+Quest - Hang in there, buddy: Backpack
+Quest - A design problem: Space helmet
+Quest - Take a photo of Nana!: Stanhamn stamp
 Quest - Scorching flame?: Meteopal photo
+Quest - Photo challenge #3: Camera
+Quest - Suspicious activity - city: Foam finger
+Quest - Frames & filters!: Turtle photo
+Quest - Always tumbled granny: Logcity stamp
+Quest - Photo challenge #8: Stag beetle photo
+Quest - Ratskullz crew: Flies photo
+Quest - Log blocking a path: Logcity stamp
+Quest - Ghost helper!: Diving helmet
+Quest - Press-ing news: Kiiruberg stamp
+Quest - Spooky scary city: Umbrella
+Quest - Hotel chef: Kiiruberg stamp
+Quest - Birthday in distress: Stanhamn stamp
+Quest - Hide-and-seek: Oaklaville stamp
+Quest - A layered melody: Logcity stamp
+Quest - A courageous stallion: Fia photo
+Quest - Suspicious activity - forest: Climbing boots
+Quest - Punk rocker bread crumbs: Teddy photo
+Quest - Art exhibition: Logcity stamp
+Quest - Photo challenge #1: Scarf
+Quest - Power shortage?!: Homelanda stamp
+Quest - Snowball memories: Oaklaville stamp
+Quest - Monster spotting: Ant photo
+Quest - Ocean garbage: Fisherman's whisle
+Quest - Become a paparazzi: Logcity stamp
+Quest - A mouse bakery: Tato fly photo
+Quest - A hidden gift: Snow bird photo
+Quest - Listen to the goat choir: Pigeon photo
+Quest - Locating an asteroid: Mikée photo
+Quest - Suspicious activity - harbor: Logcity stamp
+Quest - Supreme deluxe sandwich?!: Jamal Green - Photo of Home
+Quest - Assemble a snowman: Logcity stamp
+Quest - Photo challenge #4: Logcity stamp
+Quest - Ice wizard's research: Oaklaville stamp
+Quest - Sewer stumble!: Logcity stamp
+Quest - A whistling dilemma: Seahorse photo
+Quest - Queen of paper hats: Stanhamn stamp
+Quest - The king of fishes: Logcity stamp
+Quest - Capture the hotel's beauty: Mouse photo
+Quest - Photo challenge #2: Kiiruberg stamp
+Quest - Yeti cuteness: Ladybug photo
+Quest - Photo challenge #5: Frames & filters
+Quest - Become a scout: Fräs photo
+Quest - Become a flower: Stanhamn stamp
+Quest - Photo challenge #7: Stanhamn stamp
+Quest - Missing socks: Rubber boots
+Quest - Photo challenge #6: Home bird photo
+Quest - A good spot with no sun: Homelanda stamp
+Quest - Become a yeti: Toad photo
+Quest - Cup champion: Monster mask
+Quest - A thieving crow: Portillo photo
+Quest - Military suspicions: Old key
+Quest - Experience TOEM: Clogs
 Quest - Make someone take a bath: Tato bug photo
 Quest - Young and inspiring!: Stanhamn stamp
-Quest - Suspicious activity - forest: Climbing boots
-Quest - Super Hotbean Bros.: Lost sock
+Quest - Cleaning away the stress: Stanhamn stamp
+Quest - Ancient paintings: Logcity stamp
+Quest - Play astronaut: Crab photo
+Quest - Solve the chaos: Willemijn photo
 TOEM Experienced: TOEM Experienced
 
 Playthrough:

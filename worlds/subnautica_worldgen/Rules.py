@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachLocation, Has
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -1612,7 +1612,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Neptune Launch", player),
-        True_()
+        And(True_(), True_(), True_(), Has('Ion Battery'), Has('Ion Power Cell'), Has('Neptune Boosters'), Has('Neptune Cockpit'), Has('Neptune Fuel Reserve'), Has('Neptune Gantry'), Has('Neptune Launch Platform'))
     )
 
     world.set_rule(
@@ -1627,5 +1627,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Repair Aurora Drive", player),
-        True_()
+        CanReachLocation('Aurora Drive Room - Upgrade Console')
     )

@@ -38,9 +38,12 @@
             "name": "Barn Door",
             "connected_region": "Barn",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Barn Key",
+                "count": 1
+              }
             }
           },
           {
@@ -56,9 +59,12 @@
             "name": "Tutorial House Door",
             "connected_region": "Tutorial House",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Candice's Key",
+                "count": 1
+              }
             }
           },
           {
@@ -1437,9 +1443,12 @@
             "name": "Swamp Lizbeth Murkwater Mission End",
             "id": 66601060,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Dead Fish",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1635,9 +1644,12 @@
             "name": "Junkyard Area Chest Ancient Tablet",
             "id": 66601072,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1651,9 +1663,12 @@
             "name": "Junkyard Area Daryl Mission End",
             "id": 66601073,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Ancient Tablet",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1865,9 +1880,12 @@
             "name": "South House Chest Scraps 1",
             "id": 66601086,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1881,9 +1899,12 @@
             "name": "South House Chest Scraps 2",
             "id": 66601087,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1897,9 +1918,12 @@
             "name": "South House Chest Scraps 3",
             "id": 66601088,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1913,9 +1937,12 @@
             "name": "South House Chest Scraps 4",
             "id": 66601089,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1929,9 +1956,12 @@
             "name": "South House Chest Scraps 5",
             "id": 66601090,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -1945,9 +1975,12 @@
             "name": "South House Chest Scraps 6",
             "id": 66601091,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Journal",
@@ -2346,9 +2379,12 @@
             "name": "South Mine Gate",
             "connected_region": "South Mine Inside",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "South Mine Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2635,9 +2671,12 @@
             "name": "South Mine Inside Green Paint Can",
             "id": 66601132,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -2993,9 +3032,12 @@
             "name": "Middle Station Theodore Mission End",
             "id": 66601154,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Blue Box",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -3469,9 +3511,12 @@
             "name": "Watchtower Pink Paint Can",
             "id": 66601183,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -3913,9 +3958,12 @@
             "name": "Haunted House Sasha Mission End",
             "id": 66601210,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Page Drawing",
+                "count": 8
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4533,9 +4581,12 @@
             "name": "Port Santiago Mission End",
             "id": 66601248,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Journal",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4843,9 +4894,12 @@
             "name": "Trench House Chest Scraps 1",
             "id": 66601267,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4859,9 +4913,12 @@
             "name": "Trench House Chest Scraps 2",
             "id": 66601268,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4875,9 +4932,12 @@
             "name": "Trench House Chest Scraps 3",
             "id": 66601269,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4891,9 +4951,12 @@
             "name": "Trench House Chest Scraps 4",
             "id": 66601270,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4907,9 +4970,12 @@
             "name": "Trench House Chest Scraps 5",
             "id": 66601271,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -4923,9 +4989,12 @@
             "name": "Trench House Chest Scraps 6",
             "id": 66601272,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -5373,9 +5442,12 @@
             "name": "East House Chest Scraps 1",
             "id": 66601299,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -5389,9 +5461,12 @@
             "name": "East House Chest Scraps 2",
             "id": 66601300,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -5405,9 +5480,12 @@
             "name": "East House Chest Scraps 3",
             "id": 66601301,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -5421,9 +5499,12 @@
             "name": "East House Chest Scraps 4",
             "id": 66601302,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -5437,9 +5518,12 @@
             "name": "East House Chest Scraps 5",
             "id": 66601303,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -5458,9 +5542,12 @@
             "name": "Stuck Bunker Door",
             "connected_region": "Rockets Testing Bunker",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Timed Dynamite",
+                "count": 1
+              }
             }
           }
         ],
@@ -5801,9 +5888,12 @@
             "name": "Workshop John Smith Mission End",
             "id": 66601324,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Box of Rockets",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -6293,9 +6383,12 @@
             "name": "Lighthouse Claire Mission End",
             "id": 66601354,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Breaker",
+                "count": 4
+              }
             },
             "item": {
               "name": "Scraps",
@@ -6314,9 +6407,12 @@
             "name": "North Mine Gate",
             "connected_region": "North Mine Inside",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "North Mine Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -6795,9 +6891,12 @@
             "name": "North Mine Inside Blue Paint Can",
             "id": 66601384,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -7239,9 +7338,12 @@
             "name": "Museum Paul Mission End",
             "id": 66601411,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Remote Explosive x8",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lockpicks",
@@ -7363,9 +7465,12 @@
             "name": "West Beach Chest Scraps 1",
             "id": 66601418,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -7379,9 +7484,12 @@
             "name": "West Beach Chest Scraps 2",
             "id": 66601419,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -7395,9 +7503,12 @@
             "name": "West Beach Chest Scraps 3",
             "id": 66601420,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -7411,9 +7522,12 @@
             "name": "West Beach Chest Scraps 4",
             "id": 66601421,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -7427,9 +7541,12 @@
             "name": "West Beach Chest Scraps 5",
             "id": 66601422,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -7443,9 +7560,12 @@
             "name": "West Beach Chest Scraps 6",
             "id": 66601423,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8053,9 +8173,12 @@
             "name": "Caravan Chest Scraps 1",
             "id": 66601460,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8069,9 +8192,12 @@
             "name": "Caravan Chest Scraps 2",
             "id": 66601461,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8085,9 +8211,12 @@
             "name": "Caravan Chest Scraps 3",
             "id": 66601462,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8101,9 +8230,12 @@
             "name": "Caravan Chest Scraps 4",
             "id": 66601463,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8117,9 +8249,12 @@
             "name": "Caravan Chest Scraps 5",
             "id": 66601464,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bob",
@@ -8705,9 +8840,12 @@
             "name": "Towers Ronny Mission End",
             "id": 66601500,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Employment Contracts",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8727,9 +8865,12 @@
             "name": "North Beach Chest Scraps 1",
             "id": 66601501,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8743,9 +8884,12 @@
             "name": "North Beach Chest Scraps 2",
             "id": 66601502,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8759,9 +8903,12 @@
             "name": "North Beach Chest Scraps 3",
             "id": 66601503,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -8775,9 +8922,12 @@
             "name": "North Beach Chest Scraps 4",
             "id": 66601504,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9053,9 +9203,12 @@
             "name": "Mine Shaft Chest Scraps 1",
             "id": 66601521,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9069,9 +9222,12 @@
             "name": "Mine Shaft Chest Scraps 2",
             "id": 66601522,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9085,9 +9241,12 @@
             "name": "Mine Shaft Chest Scraps 3",
             "id": 66601523,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9101,9 +9260,12 @@
             "name": "Mine Shaft Chest Scraps 4",
             "id": 66601524,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Red Egg",
@@ -9117,9 +9279,12 @@
             "name": "Mine Shaft Chest Scraps 5",
             "id": 66601525,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Page Drawing",
@@ -9133,9 +9298,12 @@
             "name": "Mine Shaft Chest Scraps 6",
             "id": 66601526,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9149,9 +9317,12 @@
             "name": "Mine Shaft Chest Scraps 7",
             "id": 66601527,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9394,9 +9565,12 @@
             "name": "Mob Camp Locked Door",
             "connected_region": "Mob Camp Locked Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mob Camp Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -9715,9 +9889,12 @@
             "name": "Mob Camp Locked Room Stolen Bob",
             "id": 66601561,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Broken Bob",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -9886,9 +10063,12 @@
             "name": "Mountain Ruin Gate",
             "connected_region": "Mountain Ruin Inside",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mountain Ruin Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -10463,9 +10643,12 @@
             "name": "Mountain Ruin Inside Red Paint Can",
             "id": 66601606,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -10485,9 +10668,12 @@
             "name": "Prism Temple Chest Scraps 1",
             "id": 66601654,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -10501,9 +10687,12 @@
             "name": "Prism Temple Chest Scraps 2",
             "id": 66601655,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -10517,9 +10706,12 @@
             "name": "Prism Temple Chest Scraps 3",
             "id": 66601656,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11077,9 +11269,16 @@
             "name": "Final Boss",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Blue Egg",
+                  "Green Egg",
+                  "Red Egg",
+                  "Temple Key"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -11483,9 +11682,12 @@
             "name": "Pickle Val Jar of Pickles",
             "id": 66601631,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11499,9 +11701,12 @@
             "name": "Pickle Val Pickle Lady Mission End",
             "id": 66601632,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Jar of Pickles",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11575,9 +11780,12 @@
             "name": "Morse Bunker Chest Scraps 1",
             "id": 66601636,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11591,9 +11799,12 @@
             "name": "Morse Bunker Chest Scraps 2",
             "id": 66601637,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11607,9 +11818,12 @@
             "name": "Morse Bunker Chest Scraps 3",
             "id": 66601638,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11623,9 +11837,12 @@
             "name": "Morse Bunker Chest Scraps 4",
             "id": 66601639,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",
@@ -11639,9 +11856,12 @@
             "name": "Morse Bunker Chest Scraps 5",
             "id": 66601640,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lockpicks",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scraps",

@@ -198,9 +198,14 @@
             "name": "ToCombining",
             "connected_region": "Combining",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Creamed Mixture",
+                  "Flour Mixture"
+                ]
+              }
             }
           }
         ],
@@ -209,9 +214,15 @@
             "name": "Cream Butter and Sugars",
             "id": 300000007,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Electric Mixer",
+                  "Mixing Bowls",
+                  "Softened Butter"
+                ]
+              }
             },
             "item": {
               "name": "Butter Sugar Base",
@@ -225,9 +236,12 @@
             "name": "Add Eggs",
             "id": 300000008,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Butter Sugar Base",
+                "count": 1
+              }
             },
             "item": {
               "name": "Egg Mixture",
@@ -241,9 +255,12 @@
             "name": "Add Vanilla",
             "id": 300000009,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Egg Mixture",
+                "count": 1
+              }
             },
             "item": {
               "name": "Creamed Mixture",
@@ -273,9 +290,12 @@
             "name": "Measure Flour",
             "id": 300000010,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Measuring Tools",
+                "count": 1
+              }
             },
             "item": {
               "name": "Measured Flour",
@@ -289,9 +309,12 @@
             "name": "Add Baking Soda and Salt",
             "id": 300000011,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Measured Flour",
+                "count": 1
+              }
             },
             "item": {
               "name": "Flour Mixture",
@@ -319,9 +342,12 @@
             "name": "ToFinishing",
             "connected_region": "Finishing",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Cookie Dough",
+                "count": 1
+              }
             }
           }
         ],
@@ -346,9 +372,12 @@
             "name": "Fold in Chocolate Chips",
             "id": 300000013,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Basic Dough",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cookie Dough",
@@ -376,9 +405,12 @@
             "name": "ToBaking",
             "connected_region": "Baking",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Shaped Cookies",
+                "count": 1
+              }
             }
           }
         ],
@@ -387,9 +419,14 @@
             "name": "Scoop Dough onto Sheets",
             "id": 300000014,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Cookie Dough",
+                  "Prepared Sheets"
+                ]
+              }
             },
             "item": {
               "name": "Shaped Cookies",
@@ -419,9 +456,14 @@
             "name": "Bake for 9-11 Minutes",
             "id": 300000015,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Preheated Oven",
+                  "Shaped Cookies"
+                ]
+              }
             },
             "item": {
               "name": "Baked Cookies",
@@ -435,9 +477,12 @@
             "name": "Cool on Wire Rack",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Baked Cookies",
+                "count": 1
+              }
             },
             "item": {
               "name": "Victory",

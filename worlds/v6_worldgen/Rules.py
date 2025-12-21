@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachRegion, Has, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -70,120 +70,30 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Laboratory", player),
-        True_()
+        And(Has('Trinket 01'), Has('Trinket 02'), Has('Trinket 03'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> The Tower", player),
-        True_()
+        And(Has('Trinket 04'), Has('Trinket 05'), Has('Trinket 06'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Space Station 2", player),
-        True_()
+        And(Has('Trinket 07'), Has('Trinket 08'), Has('Trinket 09'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Warp Zone", player),
-        True_()
+        And(Has('Trinket 10'), Has('Trinket 11'), Has('Trinket 12'))
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Overworld (Pipe-shaped Segment)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Overworld (Left of Ship)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Overworld (Square Room)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Overworld (Sad Elephant)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("It's a Secret to Nobody", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench Warfare", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("NPC Trinket", player),
-        True_()
+        Or(And(CanReachRegion('Space Station 2'), CanReachRegion('The Tower'), CanReachRegion('Warp Zone')), CanReachRegion('Laboratory'))
     )
 
     world.set_rule(
         multiworld.get_location("V", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Young Man, It's Worth the Challenge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Overworld (Outside Entanglement Generator)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Tantalizing Trinket", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Purest Unobtainium", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Tower 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Tower 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("One Way Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("You Just Keep Coming Back", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clarion Call", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prize for the Reckless", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Doing things the hard way", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Edge Games", player),
-        True_()
+        And(CanReachRegion('Laboratory'), CanReachRegion('Space Station 2'), CanReachRegion('The Tower'), CanReachRegion('Warp Zone'))
     )

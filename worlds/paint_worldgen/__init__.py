@@ -85,6 +85,7 @@ class PaintWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = PaintWorldGenOptions
     options: PaintWorldGenOptions
 
+    origin_region_name: str = "Canvas"
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 

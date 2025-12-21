@@ -34,9 +34,12 @@
             "name": "Moving",
             "connected_region": "Movement Pack",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Movement Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -130,18 +133,24 @@
             "name": "Tree",
             "connected_region": "Behind Tree",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Time is Money Pack",
+                "count": 1
+              }
             }
           },
           {
             "name": "Cloud",
             "connected_region": "Psychological Warfare",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Psychological Warfare Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -198,9 +207,12 @@
             "name": "Shepherd Sheep",
             "id": 120049,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Time is Money Pack",
+                "count": 1
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -235,18 +247,24 @@
             "name": "Behind Tree Double Jump",
             "connected_region": "Double Jump Behind Tree",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Double Jump Pack",
+                "count": 1
+              }
             }
           },
           {
             "name": "Forest Entrance",
             "connected_region": "The Forest",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Map Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -340,9 +358,12 @@
             "name": "Cloud Double Jump",
             "connected_region": "Double Jump Total Left",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Double Jump Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -351,9 +372,12 @@
             "name": "West Cave Sheep",
             "id": 120053,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Time is Money Pack",
+                "count": 1
+              }
             },
             "item": {
               "name": "Double Jump Pack",
@@ -388,18 +412,24 @@
             "name": "Cave Tree",
             "connected_region": "Double Jump Total Left Cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Time is Money Pack",
+                "count": 1
+              }
             }
           },
           {
             "name": "Cave Roof",
             "connected_region": "Double Jump Total Left Roof",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Double Jump Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -440,9 +470,12 @@
             "name": "North West Alcove Sheep",
             "id": 120052,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Time is Money Pack",
+                "count": 1
+              }
             },
             "item": {
               "name": "Audio Pack",
@@ -516,9 +549,12 @@
             "name": "North West Ceiling Sheep",
             "id": 120051,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Time is Money Pack",
+                "count": 1
+              }
             },
             "item": {
               "name": "Pet Pack",
@@ -687,18 +723,24 @@
             "name": "Behind Ogre",
             "connected_region": "The Final Boss Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Gun Pack",
+                "count": 1
+              }
             }
           },
           {
             "name": "Forest Double Jump",
             "connected_region": "The Forest with double Jump",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Double Jump Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -760,9 +802,12 @@
             "name": "Forest True Double Jump",
             "connected_region": "The Forest with double Jump Part 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Double Jump Pack",
+                "count": 1
+              }
             }
           }
         ],
@@ -879,9 +924,14 @@
             "name": "Winning Basic",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Armor for your Horse Pack",
+                  "Finish the Fight Pack"
+                ]
+              }
             },
             "item": {
               "name": "Victory Basic",
