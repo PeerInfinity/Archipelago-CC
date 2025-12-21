@@ -12,21 +12,6 @@
   },
   "regions": {
     "1": {
-      "Menu": {
-        "name": "Menu",
-        "exits": [
-          {
-            "name": "MenuToStart",
-            "connected_region": "Overworld",
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            }
-          }
-        ],
-        "locations": []
-      },
       "Overworld": {
         "name": "Overworld",
         "exits": [
@@ -34,9 +19,12 @@
             "name": "Overworld to Bottom Right Room",
             "connected_region": "Bottom Right Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Sword",
+                "count": 1
+              }
             }
           },
           {
@@ -52,9 +40,12 @@
             "name": "Overworld to Top Left Room",
             "connected_region": "Top Left Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -176,9 +167,12 @@
             "name": "Right Room to Final Boss Room",
             "connected_region": "Final Boss Room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Top Left Room Button Pressed",
+                "count": 1
+              }
             }
           }
         ],
@@ -187,9 +181,12 @@
             "name": "Right Room Enemy Drop",
             "id": 10,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Sword",
+                "count": 1
+              }
             },
             "item": {
               "name": "Key",
@@ -209,9 +206,14 @@
             "name": "Final Boss Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Shield",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -228,7 +230,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "Overworld"
       ],
       "available": []
     }
