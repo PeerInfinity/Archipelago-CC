@@ -499,6 +499,11 @@ class RuleCodeGenerator:
             else:
                 return repr(rule)
 
+        # Check for new CC format rules (using "rule" key instead of "type")
+        rule_name = rule.get('rule')
+        if rule_name:
+            return self._convert_cc_format_rule(rule)
+
         rule_type = rule.get('type', '')
 
         # Dispatch based on rule type
@@ -533,6 +538,102 @@ class RuleCodeGenerator:
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
+        return 'True_()'
+
+    def _convert_cc_format_rule(self, rule: Dict[str, Any]) -> str:
+        """Convert new CC format rules (using 'rule' key instead of 'type').
+
+        CC format rules look like:
+        {"rule": "Has", "options": [], "args": {"item_name": "Sword", "count": 1}}
+        {"rule": "HasAll", "options": [], "args": {"items": ["Shield", "Sword"]}}
+        {"rule": "True_", "options": [], "args": {}}
+        """
+        rule_name = rule.get('rule', '')
+        args = rule.get('args', {})
+
+        if rule_name == 'True_':
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if rule_name == 'False_':
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if rule_name == 'Has':
+            self.required_imports.add('Has')
+            item_name = args.get('item_name', '')
+            count = args.get('count', 1)
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            if count == 1:
+                return f'Has("{item_escaped}")'
+            return f'Has("{item_escaped}", {count})'
+
+        if rule_name == 'HasAll':
+            self.required_imports.add('HasAll')
+            items = args.get('items', [])
+            if not items:
+                self.required_imports.add('True_')
+                return 'True_()'
+            items_repr = ', '.join(repr(item) for item in items)
+            return f'HasAll({items_repr})'
+
+        if rule_name == 'HasAny':
+            self.required_imports.add('HasAny')
+            items = args.get('items', [])
+            if not items:
+                self.required_imports.add('True_')
+                return 'True_()'
+            items_repr = ', '.join(repr(item) for item in items)
+            return f'HasAny({items_repr})'
+
+        if rule_name == 'HasGroup':
+            self.required_imports.add('HasGroup')
+            group = args.get('group', '')
+            count = args.get('count', 1)
+            group_escaped = group.replace('\\', '\\\\').replace('"', '\\"')
+            if count == 1:
+                return f'HasGroup("{group_escaped}")'
+            return f'HasGroup("{group_escaped}", {count})'
+
+        if rule_name == 'CanReachRegion':
+            self.required_imports.add('CanReachRegion')
+            region = args.get('region', '')
+            region_escaped = region.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CanReachRegion("{region_escaped}")'
+
+        if rule_name == 'CanReachLocation':
+            self.required_imports.add('CanReachLocation')
+            location = args.get('location', '')
+            location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CanReachLocation("{location_escaped}")'
+
+        if rule_name == 'And':
+            conditions = args.get('conditions', [])
+            if not conditions:
+                self.required_imports.add('True_')
+                return 'True_()'
+            if len(conditions) == 1:
+                return self._convert_rule(conditions[0])
+            parts = [self._convert_rule(c) for c in conditions]
+            return '(' + ' & '.join(parts) + ')'
+
+        if rule_name == 'Or':
+            conditions = args.get('conditions', [])
+            if not conditions:
+                self.required_imports.add('False_')
+                return 'False_()'
+            if len(conditions) == 1:
+                return self._convert_rule(conditions[0])
+            parts = [self._convert_rule(c) for c in conditions]
+            return '(' + ' | '.join(parts) + ')'
+
+        if rule_name == 'Not':
+            condition = args.get('condition', {})
+            inner = self._convert_rule(condition)
+            return f'~({inner})'
+
+        # Unknown CC format rule - return True_() as placeholder
+        self.required_imports.add('True_')
         return 'True_()'
 
     def _convert_name(self, rule: Dict[str, Any]) -> str:
