@@ -1166,9 +1166,6 @@ python scripts/test/test-all-templates.py --multiworld --multiworld-bisect-failu
 
 
 def main():
-    # Load default exclude list
-    default_exclude_list = load_template_exclude_list()
-
     parser = argparse.ArgumentParser(description='Run prompt.py for all failing template tests')
     parser.add_argument('--start-from', help='Template file to start from')
     parser.add_argument('--template-dir', default='Players/Templates',
@@ -1184,8 +1181,8 @@ def main():
     parser.add_argument('--skip-list',
                        type=str,
                        nargs='*',
-                       default=default_exclude_list,
-                       help=f'List of template files to skip (default: {" ".join(default_exclude_list)})')
+                       default=None,
+                       help='List of template files to skip (default: auto-detected based on mode)')
     parser.add_argument('-s', '--seed', type=int, default=1,
                        help='Seed number to use for generation (default: 1)')
     parser.add_argument('--max-loops', type=int, default=1,
@@ -1328,6 +1325,16 @@ def main():
 
     # Determine project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+    # Load appropriate exclude list based on mode if not explicitly provided
+    if args.skip_list is None:
+        # Determine the appropriate test_type based on mode
+        if args.worldgen_gen_failures or args.worldgen_spoiler_failures or args.only_worldgen or args.include_pattern == "WorldGen":
+            exclude_test_type = 'worldgen'
+        else:
+            # For spoiler/multiclient/multiworld tests, use 'main' (permanent + main test exclusions)
+            exclude_test_type = 'main'
+        args.skip_list = load_template_exclude_list(project_root, test_type=exclude_test_type)
 
     # Handle --all-promptfiles mode: run all prompt-generating modes with separate output files
     if args.all_promptfiles:
