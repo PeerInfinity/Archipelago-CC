@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-21 03:25:28
+**Generated:** 2025-12-21 23:49:32
 
-**Source Data Created:** 2025-12-21T02:52:03.095502
+**Source Data Created:** 2025-12-21T23:49:31.198033
 
-**Source Data Last Updated:** 2025-12-21T02:52:03.095509
+**Source Data Last Updated:** 2025-12-21T23:49:31.198039
 
 ## Summary
 
@@ -74,7 +74,7 @@
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 7.2KB | ✅ |
+| Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 8.4KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | 3.2KB | ✅ |
