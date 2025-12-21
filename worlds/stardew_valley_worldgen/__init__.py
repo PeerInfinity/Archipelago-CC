@@ -367,84 +367,9 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-    # Seasons - required to access seasonal content
     "Spring": 1,
-    "Summer": 1,
-    "Fall": 1,
-    "Winter": 1,
     "Pet Bowl": 1,
-    # Skill levels to bootstrap progression (Level 5+ locations require prior skill levels)
-    "Farming Level": 4,
-    "Fishing Level": 4,
-    "Foraging Level": 4,
-    "Mining Level": 4,
-    "Combat Level": 4,
-    # Tool upgrades required by various locations
-    "Progressive Hoe": 3,
-    "Progressive Watering Can": 3,
-    "Progressive Pickaxe": 3,
-    "Progressive Axe": 3,
-    "Progressive Fishing Rod": 4,
-    # Mine elevator for accessing mine floors
-    "Progressive Mine Elevator": 24,  # 24 floors = 120
-    # Shipping Bin needed for selling/progression
-    "Shipping Bin": 1,
-    # Traveling Merchant access
-    "Traveling Merchant: Sunday": 1,
-    "Traveling Merchant: Monday": 1,
-    "Traveling Merchant: Tuesday": 1,
-    "Traveling Merchant: Wednesday": 1,
-    "Traveling Merchant: Thursday": 1,
-    "Traveling Merchant: Friday": 1,
-    "Traveling Merchant: Saturday": 1,
-    # Progression percent for gated content
-    "Received Progression Percent": 20,
-    # Boat repair for Island access
-    "Boat Repair": 1,
-    # Progressive weapons for combat progression
-    "Progressive Sword": 3,
-    "Progressive Club": 2,
-    "Progressive Dagger": 2,
-    # Raccoon shop for new content
-    "Progressive Raccoon": 8,
-    # House upgrades
-    "Progressive House": 3,
-    # Fruit tree saplings for harvest locations
-    "Apricot Sapling": 1,
-    "Cherry Sapling": 1,
-    "Orange Sapling": 1,
-    "Peach Sapling": 1,
-    "Apple Sapling": 1,
-    "Pomegranate Sapling": 1,
-    "Banana Sapling": 1,
-    "Mango Sapling": 1,
-    # Key seeds for bundles
-    "Parsnip Seeds": 1,
-    "Cauliflower Seeds": 1,
-    "Potato Seeds": 1,
-    "Melon Seeds": 1,
-    "Tomato Seeds": 1,
-    "Pumpkin Seeds": 1,
-    "Corn Seeds": 1,
-    "Sunflower Seeds": 1,
-    "Radish Seeds": 1,
-    # Items for bundle completion
-    "Rarecrow #1": 1,
-    "Rarecrow #2": 1,
-    "Rarecrow #3": 1,
-    "Rarecrow #4": 1,
-    "Rarecrow #5": 1,
-    "Rarecrow #6": 1,
-    "Rarecrow #7": 1,
-    "Rarecrow #8": 1,
-    # Museum donations
-    "Rusty Key": 1,
-    "Dwarvish Translation Guide": 1,
-    # Island progression
-    "Island North Turtle": 1,
-    "Island West Turtle": 1,
-    # Galaxy sword requirements
-    "Prismatic Shard": 1,
+    "QI GEMS": 30,
 }
 
 
@@ -485,7 +410,6 @@ class StardewValleyWorldGenWorld(RuleWorldMixin, World):
 
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
-
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None

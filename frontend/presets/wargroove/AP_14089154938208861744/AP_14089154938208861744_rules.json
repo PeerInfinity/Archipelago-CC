@@ -19,8 +19,9 @@
             "name": "Humble Beginnings",
             "connected_region": "Humble Beginnings",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,32 +34,36 @@
             "name": "Best Friendssss",
             "connected_region": "Best Friendssss",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "A Knight's Folly",
             "connected_region": "A Knight's Folly",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Denrunaway",
             "connected_region": "Denrunaway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Wargroove Finale",
             "connected_region": "Wargroove Finale",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -67,8 +72,9 @@
             "name": "Humble Beginnings: Caesar",
             "id": 53001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ballista",
@@ -82,8 +88,9 @@
             "name": "Humble Beginnings: Chest 1",
             "id": 53002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Final Bridges",
@@ -97,8 +104,9 @@
             "name": "Humble Beginnings: Chest 2",
             "id": 53003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Commander Defense Boost",
@@ -112,8 +120,9 @@
             "name": "Humble Beginnings: Victory",
             "id": 53004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Commander Defense Boost",
@@ -132,24 +141,27 @@
             "name": "Dragon Freeway",
             "connected_region": "Dragon Freeway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Deep Thicket",
             "connected_region": "Deep Thicket",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Corrupted Inlet",
             "connected_region": "Corrupted Inlet",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -158,8 +170,9 @@
             "name": "Best Friendssss: Find Sedge",
             "id": 53005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Commander Defense Boost",
@@ -173,8 +186,9 @@
             "name": "Best Friendssss: Victory",
             "id": 53006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Dragon",
@@ -193,24 +207,27 @@
             "name": "Mage Mayhem",
             "connected_region": "Mage Mayhem",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Endless Knight",
             "connected_region": "Endless Knight",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Ambushed in the Middle",
             "connected_region": "Ambushed in the Middle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -219,8 +236,9 @@
             "name": "A Knight's Folly: Caesar",
             "id": 53007,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Merfolk",
@@ -234,8 +252,9 @@
             "name": "A Knight's Folly: Victory",
             "id": 53008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Warship",
@@ -254,24 +273,27 @@
             "name": "The Churning Sea",
             "connected_region": "The Churning Sea",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Frigid Archery",
             "connected_region": "Frigid Archery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Archery Lessons",
             "connected_region": "Archery Lessons",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -280,8 +302,9 @@
             "name": "Denrunaway: Chest",
             "id": 53009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Income Boost",
@@ -295,8 +318,9 @@
             "name": "Denrunaway: Victory",
             "id": 53010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Witch",
@@ -315,8 +339,11 @@
             "name": "Surrounded",
             "connected_region": "Surrounded",
             "access_rule": {
-              "type": "item_check",
-              "item": "Mage"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Mage"
+              }
             }
           }
         ],
@@ -325,8 +352,11 @@
             "name": "Dragon Freeway: Victory",
             "id": 53011,
             "access_rule": {
-              "type": "item_check",
-              "item": "Mage"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Mage"
+              }
             },
             "item": {
               "name": "Barge",
@@ -345,8 +375,11 @@
             "name": "Darkest Knight",
             "connected_region": "Darkest Knight",
             "access_rule": {
-              "type": "item_check",
-              "item": "Mage"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Mage"
+              }
             }
           }
         ],
@@ -355,8 +388,11 @@
             "name": "Deep Thicket: Find Sedge",
             "id": 53012,
             "access_rule": {
-              "type": "item_check",
-              "item": "Mage"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Mage"
+              }
             },
             "item": {
               "name": "Turtle",
@@ -370,8 +406,11 @@
             "name": "Deep Thicket: Victory",
             "id": 53013,
             "access_rule": {
-              "type": "item_check",
-              "item": "Mage"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Mage"
+              }
             },
             "item": {
               "name": "Income Boost",
@@ -390,19 +429,29 @@
             "name": "Robbed",
             "connected_region": "Robbed",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Barge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Barge"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Merfolk"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Merfolk"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Warship"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Warship"
+                  }
                 }
               ]
             }
@@ -413,19 +462,29 @@
             "name": "Corrupted Inlet: Victory",
             "id": 53014,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Barge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Barge"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Merfolk"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Merfolk"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Warship"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Warship"
+                  }
                 }
               ]
             },
@@ -446,15 +505,22 @@
             "name": "Open Season",
             "connected_region": "Open Season",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Dragon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dragon"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Harpy"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Harpy"
+                  }
                 }
               ]
             }
@@ -463,15 +529,22 @@
             "name": "Foolish Canal: Mage Mayhem Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Dragon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dragon"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Harpy"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Harpy"
+                  }
                 }
               ]
             }
@@ -482,15 +555,22 @@
             "name": "Mage Mayhem: Caesar",
             "id": 53015,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Dragon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dragon"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Harpy"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Harpy"
+                  }
                 }
               ]
             },
@@ -506,15 +586,22 @@
             "name": "Mage Mayhem: Victory",
             "id": 53016,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Dragon"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dragon"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Harpy"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Harpy"
+                  }
                 }
               ]
             },
@@ -535,28 +622,42 @@
             "name": "Doggo Mountain",
             "connected_region": "Doggo Mountain",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Dragon"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Dragon"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Harpy"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Harpy"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Spearman"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Spearman"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eastern Bridges"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eastern Bridges"
+                  }
                 }
               ]
             }
@@ -565,28 +666,42 @@
             "name": "Foolish Canal: Endless Knight Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Dragon"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Dragon"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Harpy"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Harpy"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Spearman"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Spearman"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eastern Bridges"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eastern Bridges"
+                  }
                 }
               ]
             }
@@ -597,28 +712,42 @@
             "name": "Endless Knight: Victory",
             "id": 53017,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Dragon"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Dragon"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Harpy"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Harpy"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Spearman"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Spearman"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Eastern Bridges"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Eastern Bridges"
+                  }
                 }
               ]
             },
@@ -639,15 +768,22 @@
             "name": "Tenri's Fall",
             "connected_region": "Tenri's Fall",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Spearman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Spearman"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Spearman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Spearman"
+                  }
                 }
               ]
             }
@@ -658,8 +794,11 @@
             "name": "Ambushed in the Middle: Victory (Blue)",
             "id": 53018,
             "access_rule": {
-              "type": "item_check",
-              "item": "Spearman"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Spearman"
+              }
             },
             "item": {
               "name": "Commander Defense Boost",
@@ -673,8 +812,11 @@
             "name": "Ambushed in the Middle: Victory (Green)",
             "id": 53019,
             "access_rule": {
-              "type": "item_check",
-              "item": "Spearman"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Spearman"
+              }
             },
             "item": {
               "name": "Income Boost",
@@ -693,24 +835,35 @@
             "name": "Rebel Village",
             "connected_region": "Rebel Village",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Merfolk"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Merfolk"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Turtle"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Turtle"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Harpoon Ship"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Harpoon Ship"
+                  }
                 }
               ]
             }
@@ -721,24 +874,35 @@
             "name": "The Churning Sea: Victory",
             "id": 53020,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Merfolk"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Merfolk"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Turtle"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Turtle"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Harpoon Ship"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Harpoon Ship"
+                  }
                 }
               ]
             },
@@ -759,8 +923,11 @@
             "name": "A Ballista's Revenge",
             "connected_region": "A Ballista's Revenge",
             "access_rule": {
-              "type": "item_check",
-              "item": "Archer"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Archer"
+              }
             }
           }
         ],
@@ -769,15 +936,22 @@
             "name": "Frigid Archery: Light the Torch",
             "id": 53021,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Archer"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Archer"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Southern Walls"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Southern Walls"
+                  }
                 }
               ]
             },
@@ -793,8 +967,11 @@
             "name": "Frigid Archery: Victory",
             "id": 53022,
             "access_rule": {
-              "type": "item_check",
-              "item": "Archer"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Archer"
+              }
             },
             "item": {
               "name": "Rifleman",
@@ -813,15 +990,22 @@
             "name": "Master of the Lake",
             "connected_region": "Master of the Lake",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Southern Walls"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Southern Walls"
+                  }
                 }
               ]
             }
@@ -832,15 +1016,22 @@
             "name": "Archery Lessons: Chest",
             "id": 53023,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Southern Walls"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Southern Walls"
+                  }
                 }
               ]
             },
@@ -856,15 +1047,22 @@
             "name": "Archery Lessons: Victory",
             "id": 53024,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Southern Walls"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Southern Walls"
+                  }
                 }
               ]
             },
@@ -886,15 +1084,22 @@
             "name": "Surrounded: Caesar",
             "id": 53025,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Surrounded"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Surrounded"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 }
               ]
             },
@@ -910,15 +1115,22 @@
             "name": "Surrounded: Victory",
             "id": 53026,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Surrounded"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Surrounded"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 }
               ]
             },
@@ -940,15 +1152,22 @@
             "name": "Darkest Knight: Victory",
             "id": 53027,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Darkest Knight"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Darkest Knight"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Spearman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Spearman"
+                  }
                 }
               ]
             },
@@ -970,24 +1189,35 @@
             "name": "Robbed: Victory",
             "id": 53028,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "can_reach",
-                      "region": "Robbed"
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Robbed"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Thief"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Thief"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Rifleman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Rifleman"
+                  }
                 }
               ]
             },
@@ -1009,24 +1239,35 @@
             "name": "Open Season: Caesar",
             "id": 53029,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "can_reach",
-                      "region": "Open Season"
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Open Season"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Mage"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Mage"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 }
               ]
             },
@@ -1042,24 +1283,35 @@
             "name": "Open Season: Victory",
             "id": 53030,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "can_reach",
-                      "region": "Open Season"
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Open Season"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Mage"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Mage"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 }
               ]
             },
@@ -1081,15 +1333,22 @@
             "name": "Doggo Mountain: Find all the Dogs",
             "id": 53031,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Doggo Mountain"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Doggo Mountain"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 }
               ]
             },
@@ -1105,15 +1364,22 @@
             "name": "Doggo Mountain: Victory",
             "id": 53032,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Doggo Mountain"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Doggo Mountain"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Knight"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Knight"
+                  }
                 }
               ]
             },
@@ -1135,24 +1401,35 @@
             "name": "Tenri's Fall: Victory",
             "id": 53033,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "can_reach",
-                      "region": "Tenri's Fall"
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Tenri's Fall"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Mage"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Mage"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Thief"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Thief"
+                  }
                 }
               ]
             },
@@ -1174,24 +1451,35 @@
             "name": "Foolish Canal: Victory",
             "id": 53038,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "can_reach",
-                      "region": "Foolish Canal"
+                      "rule": "CanReachRegion",
+                      "options": [],
+                      "args": {
+                        "region_name": "Foolish Canal"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Mage"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Mage"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Spearman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Spearman"
+                  }
                 }
               ]
             },
@@ -1213,15 +1501,22 @@
             "name": "Master of the Lake: Victory",
             "id": 53034,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Master of the Lake"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Master of the Lake"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Warship"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Warship"
+                  }
                 }
               ]
             },
@@ -1243,15 +1538,22 @@
             "name": "A Ballista's Revenge: Victory",
             "id": 53035,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "A Ballista's Revenge"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "A Ballista's Revenge"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Ballista"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Ballista"
+                  }
                 }
               ]
             },
@@ -1273,15 +1575,22 @@
             "name": "Rebel Village: Victory (Pink)",
             "id": 53036,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Rebel Village"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Rebel Village"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Spearman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Spearman"
+                  }
                 }
               ]
             },
@@ -1297,15 +1606,22 @@
             "name": "Rebel Village: Victory (Red)",
             "id": 53037,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "can_reach",
-                  "region": "Rebel Village"
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Rebel Village"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Spearman"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Spearman"
+                  }
                 }
               ]
             },
@@ -1327,19 +1643,29 @@
             "name": "Wargroove Finale: Victory",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Final Bridges"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Final Bridges"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Final Sickle"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Final Sickle"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Final Walls"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Final Walls"
+                  }
                 }
               ]
             },
@@ -1769,12 +2095,12 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "ai_sacrifice_limit": 0,
         "ai_summon_limit": 0,
-        "commander_choice": 0,
+        "commander_choice": "locked_random",
         "commander_defense_boost": 2,
-        "death_link": 0,
+        "death_link": "false",
         "exclude_locations": [],
         "income_boost": 25,
         "item_links": [],

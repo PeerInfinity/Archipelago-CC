@@ -19,115 +19,81 @@
             "name": "To Heat Man Stage",
             "connected_region": "Heat Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Heat Man Access Codes",
-                  "Item 2 - Rocket"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "To Air Man Stage",
             "connected_region": "Air Man Stage",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Air Man Access Codes",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Wood Man Stage",
             "connected_region": "Wood Man Stage",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wood Man Access Codes",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Bubble Man Stage",
             "connected_region": "Bubble Man Stage",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Bubble Man Access Codes",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Quick Man Stage",
             "connected_region": "Quick Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Quick Man Access Codes",
-                  "Time Stopper"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "To Flash Man Stage",
             "connected_region": "Flash Man Stage",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Flash Man Access Codes",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Metal Man Stage",
             "connected_region": "Metal Man Stage",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Metal Man Access Codes",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Crash Man Stage",
             "connected_region": "Crash Man Stage",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Crash Man Access Codes",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Wily Stage 1",
             "connected_region": "Wily Stage 1",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Item 1 - Propeller",
-                  "Item 2 - Rocket",
-                  "Item 3 - Bouncy"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -141,8 +107,9 @@
             "name": "Heat Man - Defeated",
             "id": 8912897,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -156,8 +123,9 @@
             "name": "Atomic Fire - Received",
             "id": 8913153,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wood Man Access Codes",
@@ -171,8 +139,9 @@
             "name": "Item 1 - Received",
             "id": 8913169,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up",
@@ -186,8 +155,9 @@
             "name": "Heat Man Stage - 1-Up",
             "id": 8913409,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Flash Man Access Codes",
@@ -207,8 +177,9 @@
             "name": "Air Man - Defeated",
             "id": 8912898,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal Man Access Codes",
@@ -222,8 +193,9 @@
             "name": "Air Shooter - Received",
             "id": 8913154,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -237,8 +209,9 @@
             "name": "Item 2 - Received",
             "id": 8913170,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Item 3 - Bouncy",
@@ -258,8 +231,9 @@
             "name": "Wood Man - Defeated",
             "id": 8912899,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atomic Fire",
@@ -273,8 +247,9 @@
             "name": "Leaf Shield - Received",
             "id": 8913155,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -294,8 +269,9 @@
             "name": "Bubble Man - Defeated",
             "id": 8912900,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Item 2 - Rocket",
@@ -309,8 +285,9 @@
             "name": "Bubble Lead - Received",
             "id": 8913156,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -330,8 +307,9 @@
             "name": "Quick Man - Defeated",
             "id": 8912901,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up",
@@ -345,8 +323,9 @@
             "name": "Quick Boomerang - Received",
             "id": 8913157,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -360,15 +339,9 @@
             "name": "Quick Man Stage - 1-Up 1",
             "id": 8913410,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Item 1 - Propeller",
-                  "Item 2 - Rocket",
-                  "Item 3 - Bouncy"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -382,8 +355,9 @@
             "name": "Quick Man Stage - E-Tank",
             "id": 8913411,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -397,8 +371,9 @@
             "name": "Quick Man Stage - 1-Up 2",
             "id": 8913412,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Health Energy (L)",
@@ -412,8 +387,9 @@
             "name": "Quick Man Stage - 1-Up 3",
             "id": 8913416,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up",
@@ -433,8 +409,9 @@
             "name": "Flash Man - Defeated",
             "id": 8912902,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "E-Tank",
@@ -448,8 +425,9 @@
             "name": "Time Stopper - Received",
             "id": 8913158,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bubble Lead",
@@ -463,8 +441,9 @@
             "name": "Item 3 - Received",
             "id": 8913171,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -478,15 +457,9 @@
             "name": "Flash Man Stage - 1-Up",
             "id": 8913419,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Item 1 - Propeller",
-                  "Item 2 - Rocket",
-                  "Item 3 - Bouncy"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Metal Blade",
@@ -500,8 +473,9 @@
             "name": "Flash Man Stage - E-Tank",
             "id": 8913423,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crash Bomber",
@@ -521,8 +495,9 @@
             "name": "Metal Man - Defeated",
             "id": 8912903,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Health Energy (L)",
@@ -536,8 +511,9 @@
             "name": "Metal Blade - Received",
             "id": 8913159,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Item 1 - Propeller",
@@ -551,8 +527,9 @@
             "name": "Metal Man Stage - E-Tank 1",
             "id": 8913424,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -566,14 +543,9 @@
             "name": "Metal Man Stage - 1-Up",
             "id": 8913425,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Item 1 - Propeller",
-                  "Item 2 - Rocket"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "1-Up",
@@ -587,14 +559,9 @@
             "name": "Metal Man Stage - E-Tank 2",
             "id": 8913426,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Item 1 - Propeller",
-                  "Item 2 - Rocket"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Bubble Man Access Codes",
@@ -614,8 +581,9 @@
             "name": "Crash Man - Defeated",
             "id": 8912904,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -629,8 +597,9 @@
             "name": "Crash Bomber - Received",
             "id": 8913160,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -644,8 +613,9 @@
             "name": "Crash Man Stage - E-Tank",
             "id": 8913428,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Quick Boomerang",
@@ -659,15 +629,9 @@
             "name": "Crash Man Stage - 1-Up",
             "id": 8913429,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Item 1 - Propeller",
-                  "Item 2 - Rocket",
-                  "Item 3 - Bouncy"
-                ]
-              }
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -686,12 +650,9 @@
             "name": "To Wily Stage 2",
             "connected_region": "Wily Stage 2",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wily Stage 1 - Completed",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -700,8 +661,9 @@
             "name": "Mecha Dragon - Defeated",
             "id": 8912905,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crash Man Access Codes",
@@ -715,8 +677,9 @@
             "name": "Wily Stage 1 - Completed",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wily Stage 1 - Completed",
@@ -730,8 +693,9 @@
             "name": "Wily Stage 1 - 1-Up",
             "id": 8913430,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heat Man Access Codes",
@@ -750,12 +714,9 @@
             "name": "To Wily Stage 3",
             "connected_region": "Wily Stage 3",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wily Stage 2 - Completed",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -764,8 +725,9 @@
             "name": "Picopico-kun - Defeated",
             "id": 8912906,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Quick Man Access Codes",
@@ -779,8 +741,9 @@
             "name": "Wily Stage 2 - Completed",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wily Stage 2 - Completed",
@@ -794,8 +757,9 @@
             "name": "Wily Stage 2 - E-Tank 1",
             "id": 8913434,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Air Shooter",
@@ -809,8 +773,9 @@
             "name": "Wily Stage 2 - 1-Up 1",
             "id": 8913435,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Time Stopper",
@@ -824,12 +789,9 @@
             "name": "Wily Stage 2 - 1-Up 2",
             "id": 8913436,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Crash Bomber",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -843,12 +805,9 @@
             "name": "Wily Stage 2 - E-Tank 2",
             "id": 8913437,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Crash Bomber",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Leaf Shield",
@@ -867,12 +826,9 @@
             "name": "To Wily Stage 4",
             "connected_region": "Wily Stage 4",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wily Stage 3 - Completed",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -881,8 +837,9 @@
             "name": "Guts Tank - Defeated",
             "id": 8912907,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up",
@@ -896,8 +853,9 @@
             "name": "Wily Stage 3 - Completed",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wily Stage 3 - Completed",
@@ -911,12 +869,9 @@
             "name": "Wily Stage 3 - E-Tank",
             "id": 8913440,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Crash Bomber",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Weapon Energy (L)",
@@ -935,12 +890,9 @@
             "name": "To Wily Stage 5",
             "connected_region": "Wily Stage 5",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wily Stage 4 - Completed",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -949,12 +901,9 @@
             "name": "Boobeam Trap - Defeated",
             "id": 8912908,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Crash Bomber",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "E-Tank",
@@ -968,12 +917,9 @@
             "name": "Wily Stage 4 - Completed",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Crash Bomber",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Wily Stage 4 - Completed",
@@ -987,8 +933,9 @@
             "name": "Wily Stage 4 - 1-Up 1",
             "id": 8913445,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Health Energy (L)",
@@ -1002,8 +949,9 @@
             "name": "Wily Stage 4 - E-Tank 1",
             "id": 8913446,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "E-Tank",
@@ -1022,12 +970,9 @@
             "name": "To Wily Stage 6",
             "connected_region": "Wily Stage 6",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Wily Stage 5 - Completed",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -1074,12 +1019,9 @@
             "name": "Dr. Wily (Alien) - Defeated",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Bubble Lead",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -1563,7 +1505,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1571,7 +1513,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -1761,5 +1703,158 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_defeat_enough_rbms": {
+        "body": {
+          "statements": [
+            {
+              "name": "can_defeat",
+              "type": "assign",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "body": [
+                {
+                  "body": [
+                    {
+                      "body": [
+                        {
+                          "name": "can_defeat",
+                          "op": "+=",
+                          "type": "assign",
+                          "value": {
+                            "type": "constant",
+                            "value": 1
+                          }
+                        },
+                        {
+                          "body": [
+                            {
+                              "type": "return",
+                              "value": {
+                                "type": "constant",
+                                "value": true
+                              }
+                            }
+                          ],
+                          "test": {
+                            "left": {
+                              "name": "can_defeat",
+                              "type": "name"
+                            },
+                            "op": ">=",
+                            "right": {
+                              "name": "required",
+                              "type": "name"
+                            },
+                            "type": "compare"
+                          },
+                          "type": "if_statement"
+                        }
+                      ],
+                      "test": {
+                        "args": [
+                          {
+                            "function": {
+                              "body": {
+                                "index": {
+                                  "name": "x",
+                                  "type": "name"
+                                },
+                                "type": "subscript",
+                                "value": {
+                                  "type": "constant",
+                                  "value": {
+                                    "1": "Atomic Fire",
+                                    "2": "Air Shooter",
+                                    "3": "Leaf Shield",
+                                    "4": "Bubble Lead",
+                                    "5": "Quick Boomerang",
+                                    "6": "Crash Bomber",
+                                    "7": "Metal Blade",
+                                    "8": "Time Stopper"
+                                  }
+                                }
+                              },
+                              "params": [
+                                "x"
+                              ],
+                              "type": "lambda"
+                            },
+                            "iterable": {
+                              "name": "reqs",
+                              "type": "name"
+                            },
+                            "type": "map"
+                          }
+                        ],
+                        "method": "has_all",
+                        "type": "state_method"
+                      },
+                      "type": "if_statement"
+                    }
+                  ],
+                  "test": {
+                    "left": {
+                      "name": "boss",
+                      "type": "name"
+                    },
+                    "op": "in",
+                    "right": {
+                      "type": "constant",
+                      "value": {
+                        "0": "Heat Man Defeated",
+                        "1": "Air Man Defeated",
+                        "2": "Wood Man Defeated",
+                        "3": "Bubble Man Defeated",
+                        "4": "Quick Man Defeated",
+                        "5": "Flash Man Defeated",
+                        "6": "Metal Man Defeated",
+                        "7": "Crash Man Defeated"
+                      }
+                    },
+                    "type": "compare"
+                  },
+                  "type": "if_statement"
+                }
+              ],
+              "iterable": {
+                "args": [],
+                "function": {
+                  "attr": "items",
+                  "object": {
+                    "name": "boss_requirements",
+                    "type": "name"
+                  },
+                  "type": "attribute"
+                },
+                "type": "function_call"
+              },
+              "type": "for_iter",
+              "vars": [
+                "boss",
+                "reqs"
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "constant",
+                "value": false
+              }
+            }
+          ],
+          "type": "block"
+        },
+        "params": [
+          "required",
+          "boss_requirements"
+        ]
+      }
+    }
+  }
 }

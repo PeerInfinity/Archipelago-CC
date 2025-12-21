@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, False_, Has, HasAny, HelperCall
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -64,6 +64,39 @@ def _castlevaniacircleofthemoonworldgen_can_open_ceremonial_door(state: "Collect
     return state.has('Last Key', player)
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'broke_iron_maidens': {'item': {'type': 'constant', 'value': 'Maiden Detonator'}, 'type': 'item_check'},
+    'can_open_ceremonial_door': {   'count': {'type': 'constant', 'value': 1},
+                                    'item': {'type': 'constant', 'value': 'Last Key'},
+                                    'type': 'item_check'},
+    'can_touch_water': {'item': {'type': 'constant', 'value': 'Cleansing'}, 'type': 'item_check'},
+    'has_ice_or_stone': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                  'value': ['Serpent Card', 'Cockatrice Card']}],
+                                                  'method': 'has_any',
+                                                  'type': 'state_method'},
+                                              {   'args': [   {   'type': 'constant',
+                                                                  'value': ['Mercury Card', 'Mars Card']}],
+                                                  'method': 'has_any',
+                                                  'type': 'state_method'}],
+                            'type': 'and'},
+    'has_jump_level_1': {   'args': [{'type': 'constant', 'value': ['Double', 'Roc Wing']}],
+                            'method': 'has_any',
+                            'type': 'state_method'},
+    'has_jump_level_2': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
+    'has_jump_level_3': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
+    'has_jump_level_4': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
+    'has_jump_level_5': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
+    'has_kick': {'item': {'type': 'constant', 'value': 'Kick Boots'}, 'type': 'item_check'},
+    'has_push': {'item': {'type': 'constant', 'value': 'Heavy Ring'}, 'type': 'item_check'},
+    'has_tackle': {'item': {'type': 'constant', 'value': 'Tackle'}, 'type': 'item_check'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -72,330 +105,745 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Catacomb to Stairway", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_1, helper_name="has_jump_level_1", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double', 'Roc Wing']}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Stairway to Audience", player),
-        HasAny('Double', 'Roc Wing')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Bottom", player),
-        Has("Tackle")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Top", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Chapel", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Gallery", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_broke_iron_maidens, helper_name="broke_iron_maidens", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Maiden Detonator'}})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_push, helper_name="has_push", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Heavy Ring'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Warehouse", player),
-        Has("Heavy Ring")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Waterway", player),
-        (False_()) | (Has("Maiden Detonator"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Observation", player),
-        Has("Roc Wing")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ceremonial Door", player),
-        Has("Last Key")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Machine Bottom to Top", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Corridor to Gallery", player),
-        (False_()) | (Has("Maiden Detonator"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Escape the Gallery Pit", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Into the Corridor Pit", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dip Into Waterway End", player),
-        Has("Roc Wing")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Climb to Chapel Top", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Arena Passage", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_push, helper_name="has_push", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Heavy Ring'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Gallery to Corridor", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Gallery Upper to Lower", player),
-        Has("Tackle")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Gallery Lower to Upper", player),
-        Has("Tackle")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Into Warehouse Main", player),
-        Has("Tackle")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Into Waterway Main", player),
-        (False_()) | (Has("Cleansing"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Onward to Waterway End", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Start Game", player),
+        True_()
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Sealed Room: Main shaft left fake wall", player),
-        Has("Roc Wing")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Push crate treasure room", player),
-        Has("Heavy Ring")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Lower", player),
-        HasAny('Double', 'Roc Wing')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Upper", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_1, helper_name="has_jump_level_1", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double', 'Roc Wing']}]}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Earth Demon dash room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Tackle block treasure room", player),
-        Has("Tackle")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Earth Demon bone pit - Lower", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Earth Demon bone pit - Upper", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Below right column save room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Right column fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Right column Spirit room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Muddy Mudman platforms room - Lower", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Muddy Mudman platforms room - Upper", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_1, helper_name="has_jump_level_1", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Double', 'Roc Wing']}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Slide space zone", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Pre-Cerberus lone Skeleton room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Pre-Cerberus Hopper treasure room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Catacomb: Behind Cerberus", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Mummies' fake wall", player),
-        HasAny('Double', 'Roc Wing')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyss Staircase: Lower fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyss Staircase: Loopback drop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Abyss Staircase: Roc ledge", player),
-        Has("Roc Wing")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyss Staircase: Upper fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Skeleton foyer fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Main gallery fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Below coyote jump", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Push crate gallery", player),
-        Has("Heavy Ring")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Past coyote jump", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Tackle block gallery", player),
-        Has("Tackle")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Wicked roc chamber - Lower", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Wicked roc chamber - Upper", player),
-        Has("Roc Wing")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Upper Devil Tower hallway", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Right exterior - Lower", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Right exterior - Upper", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Right exterior fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: 100 meter skelly dash hallway", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Lower Devil Tower hallway fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Audience Room: Behind Necromancer", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower roc ledge", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_5, helper_name="has_jump_level_5", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_tackle, helper_name="has_tackle", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Tackle'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower push crate room", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_push, helper_name="has_push", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Heavy Ring'}})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_tackle, helper_name="has_tackle", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Tackle'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Left", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Right", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Left roc ledge", player),
-        Has("Roc Wing")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Right-brained ledge", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_5, helper_name="has_jump_level_5", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Outer Wall: Fake Nightmare floor", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Triumph Hallway: Skeleton slopes fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Triumph Hallway: Entrance Flame Armor climb", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Foxy platforms ledge", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Knight fox meeting room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Boneheaded argument wall kicks room", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Foxy fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Skelly-rang wall kicks room", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Fake Lilim wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Thunderous zone fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Thunderous zone lone Stone Armor room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Top lone Stone Armor room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Stone fox hallway", player),
-        Has("Tackle")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Pre-Iron Golem fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Behind Iron Golem", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eternal Corridor: Midway fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eternal Corridor: Skelly-rang wall kicks room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eternal Corridor: Skelly-rang fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Flame Armor climb room", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Lower chapel push crate room", player),
-        Has("Heavy Ring")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Lower chapel fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Beastly wall kicks room - Brain side", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Beastly wall kicks room - Brawn side", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Middle chapel fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Middle chapel push crate room", player),
-        Has("Heavy Ring")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Sharp mind climb room", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Upper chapel fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Upper chapel Marionette wall kicks", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Upper belfry fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Iron maiden switch", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Behind Adramelech iron maiden", player),
-        (False_()) | (Has("Maiden Detonator"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Upper", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Lower", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Gallery: Conveyor platform ride", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Conveyor upper push crate room", player),
-        Has("Heavy Ring")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Conveyor lower push crate room", player),
-        Has("Heavy Ring")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Lower", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Upper", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy mantis tackle hallway", player),
-        Has("Tackle")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Gallery: Handy bee hallway", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Gallery: Myconid fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Gallery: Crumble bridge fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Gallery: Behind Dragon Zombies", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Entrance push crate room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Forever pushing room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Crate-nudge fox room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Crate-nudge fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Succubus shaft roc ledge", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_5, helper_name="has_jump_level_5", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Fake Lilith wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Optional puzzle ceiling fake wall", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Holy fox hideout - Left", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Holy fox hideout - Right roc ledge", player),
-        ((HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) & (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Forest Armor's domain fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Behind Death", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Behind Death fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Warehouse: Dryad expulsion chamber", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Entrance fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Before illusory wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Beyond illusory wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Ice Armor's domain fake wall", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Brain freeze room", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Serpent Card', 'Cockatrice Card']}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Mercury Card', 'Mars Card']}]}]})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Middle lone Ice Armor room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc fake ceiling", player),
-        Has("Roc Wing")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Wicked Fishhead moat - Bottom", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Wicked Fishhead moat - Top", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Waterway: Lizard-man turf - Bottom", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Lizard-man turf - Top", player),
-        (False_()) | (Has("Cleansing"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc exit shaft", player),
-        Has("Roc Wing")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Behind Camilla", player),
-        (False_()) | (Has("Cleansing"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc exit shaft fake wall", player),
-        Has("Roc Wing")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Wind Armor rampart", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Legion plaza fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Legion plaza Minotaur hallway", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Siren balcony fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Evil Pillar pit fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Alraune garden", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Dark Armor's domain fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Catoblepeas hallway", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Near warp room fake wall", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Observation Tower: Behind Hugh", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ceremonial Room: Fake floor", player),
-        (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Roc Wing'}})) | (HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick", body_data={'type': 'item_check', 'item': {'type': 'constant', 'value': 'Kick Boots'}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dracula", player),
-        Has("Roc Wing")
+        True_()
     )

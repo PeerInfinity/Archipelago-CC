@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HasAll, HasAny, HelperCall
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -224,6 +224,1942 @@ def _yoshisislandworldgen_melon_item(state: "CollectionState", player: int) -> b
     return (False if not (True) else (_yoshisislandworldgen_item_bonus(state, player) if ('Easy' == 'Easy') else (state.has('Bandit Watermelons', player)) or (_yoshisislandworldgen_item_bonus(state, player))))
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'conditions': [   {   'count': {'type': 'constant', 'value': 5},
+                                                                         'item': 'Egg Capacity Upgrade',
+                                                                         'type': 'item_check'},
+                                                                     {'item': 'Egg Plant', 'type': 'item_check'}],
+                                                   'type': 'or'},
+                                   'if_true': {'item': 'Egg Plant', 'type': 'item_check'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'item': 'Egg Plant', 'type': 'item_check'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_14CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 0},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_14Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Key'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Spring Ball'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Spring Ball'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                   {'type': 'constant', 'value': 'Spring Ball'}],
+                                                   'type': 'set'}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_17Game': {   'if_false': {   'if_false': {'item': 'Key', 'type': 'item_check'},
+                                   'if_true': {'item': 'Key', 'type': 'item_check'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'item': 'Key', 'type': 'item_check'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_18Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'type': 'constant', 'value': True},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_18CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 1},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_18Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Arrow Wheel'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Key'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': 'Arrow Wheel'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Key'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Arrow Wheel'},
+                                                                   {'type': 'constant', 'value': 'Key'}],
+                                                   'type': 'set'}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_24Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'type': 'constant', 'value': True},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_24CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 2},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_24Clear': {   'if_false': {   'if_false': {'item': '! Switch', 'type': 'item_check'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': '! Switch'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Dashed Stairs'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': '! Switch'},
+                                                                   {'type': 'constant', 'value': 'Dashed Stairs'},
+                                                                   {'type': 'constant', 'value': 'Key'}],
+                                                   'type': 'set'}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_26Game': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Large Spring Ball'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                   'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Large Spring Ball'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                  {'type': 'constant', 'value': 'Large Spring Ball'}],
+                                                  'type': 'set'}],
+                                  'method': 'has_all',
+                                  'type': 'state_method'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_27Game': {   'if_false': {   'if_false': {'item': 'Key', 'type': 'item_check'},
+                                   'if_true': {'item': 'Key', 'type': 'item_check'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'item': 'Key', 'type': 'item_check'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_28Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'type': 'constant', 'value': True},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_28CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 3},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_28Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Arrow Wheel'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Key'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': 'Arrow Wheel'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Key'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                             'value': 'Arrow Wheel'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Key'}],
+                                                                         'type': 'set'}],
+                                                         'method': 'has_all',
+                                                         'type': 'state_method'},
+                                                     {   'count': {'type': 'constant', 'value': 1},
+                                                         'item': 'Egg Capacity Upgrade',
+                                                         'type': 'item_check'}],
+                                   'type': 'and'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_34Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'item': 'Giant Eggs', 'type': 'item_check'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_34CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 4},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_34Clear': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                    'if_true': {   'conditions': [   {'item': 'Dashed Platform', 'type': 'item_check'},
+                                                                     {   'conditions': [   {   'type': 'constant',
+                                                                                               'value': True},
+                                                                                           {   'item': 'Middle Ring',
+                                                                                               'type': 'item_check'}],
+                                                                         'type': 'or'}],
+                                                   'type': 'or'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {'item': 'Dashed Platform', 'type': 'item_check'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_38Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'type': 'constant', 'value': True},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_38CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 5},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_38Clear': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                    'if_true': {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                                         'item': 'Egg Capacity Upgrade',
+                                                                         'type': 'item_check'},
+                                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                               'name': 'bandit_bonus',
+                                                                                                                               'type': 'helper'},
+                                                                                                                           {   'args': [   ],
+                                                                                                                               'name': 'item_bonus',
+                                                                                                                               'type': 'helper'}],
+                                                                                                         'type': 'or'},
+                                                                                         'if_true': {   'args': [],
+                                                                                                        'name': 'item_bonus',
+                                                                                                        'type': 'helper'},
+                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                 'value': 'Easy'},
+                                                                                                     'op': '==',
+                                                                                                     'right': {   'type': 'constant',
+                                                                                                                  'value': 'Easy'},
+                                                                                                     'type': 'compare'},
+                                                                                         'type': 'conditional'},
+                                                                         'if_true': {   'type': 'constant',
+                                                                                        'value': False},
+                                                                         'test': {   'condition': {   'type': 'constant',
+                                                                                                      'value': True},
+                                                                                     'type': 'not'},
+                                                                         'type': 'conditional'}],
+                                                   'type': 'or'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
+                                                         'item': 'Egg Capacity Upgrade',
+                                                         'type': 'item_check'},
+                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                               'name': 'bandit_bonus',
+                                                                                                               'type': 'helper'},
+                                                                                                           {   'args': [   ],
+                                                                                                               'name': 'item_bonus',
+                                                                                                               'type': 'helper'}],
+                                                                                         'type': 'or'},
+                                                                         'if_true': {   'args': [],
+                                                                                        'name': 'item_bonus',
+                                                                                        'type': 'helper'},
+                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                 'value': 'Easy'},
+                                                                                     'op': '==',
+                                                                                     'right': {   'type': 'constant',
+                                                                                                  'value': 'Easy'},
+                                                                                     'type': 'compare'},
+                                                                         'type': 'conditional'},
+                                                         'if_true': {'type': 'constant', 'value': False},
+                                                         'test': {   'condition': {'type': 'constant', 'value': True},
+                                                                     'type': 'not'},
+                                                         'type': 'conditional'}],
+                                   'type': 'or'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_44Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'type': 'constant', 'value': True},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_44CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 6},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_44Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Arrow Wheel'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Bucket'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Dashed Stairs'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Key'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Vanishing Arrow '
+                                                                                                 'Wheel'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': 'Arrow Wheel'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Bucket'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Dashed Stairs'},
+                                                                                   {'type': 'constant', 'value': 'Key'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Vanishing Arrow '
+                                                                                                'Wheel'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                             'value': 'Arrow Wheel'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Bucket'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Dashed Stairs'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Key'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Vanishing Arrow '
+                                                                                                      'Wheel'}],
+                                                                         'type': 'set'}],
+                                                         'method': 'has_all',
+                                                         'type': 'state_method'},
+                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                            'value': 1},
+                                                                               'item': 'Egg Capacity Upgrade',
+                                                                               'type': 'item_check'},
+                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                     'name': 'bandit_bonus',
+                                                                                                                                     'type': 'helper'},
+                                                                                                                                 {   'args': [   ],
+                                                                                                                                     'name': 'item_bonus',
+                                                                                                                                     'type': 'helper'}],
+                                                                                                               'type': 'or'},
+                                                                                               'if_true': {   'args': [   ],
+                                                                                                              'name': 'item_bonus',
+                                                                                                              'type': 'helper'},
+                                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                                       'value': 'Easy'},
+                                                                                                           'op': '==',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 'Easy'},
+                                                                                                           'type': 'compare'},
+                                                                                               'type': 'conditional'},
+                                                                               'if_true': {   'type': 'constant',
+                                                                                              'value': False},
+                                                                               'test': {   'condition': {   'type': 'constant',
+                                                                                                            'value': True},
+                                                                                           'type': 'not'},
+                                                                               'type': 'conditional'}],
+                                                         'type': 'or'}],
+                                   'type': 'and'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_47Game': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Large Spring Ball'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                   'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Large Spring Ball'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Key'},
+                                                                  {'type': 'constant', 'value': 'Large Spring Ball'}],
+                                                  'type': 'set'}],
+                                  'method': 'has_all',
+                                  'type': 'state_method'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_48Boss': {   'if_false': {   'if_false': {   'count': {'type': 'constant', 'value': 1},
+                                                   'item': 'Egg Capacity Upgrade',
+                                                   'type': 'item_check'},
+                                   'if_true': {   'count': {'type': 'constant', 'value': 2},
+                                                  'item': 'Egg Capacity Upgrade',
+                                                  'type': 'item_check'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {   'count': {'type': 'constant', 'value': 3},
+                                  'item': 'Egg Capacity Upgrade',
+                                  'type': 'item_check'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_48CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 7},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_48Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Key'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Large Spring Ball'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': 'Dashed Stairs'},
+                                                                                   {'type': 'constant', 'value': 'Key'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Large Spring Ball'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Vanishing Arrow '
+                                                                                                'Wheel'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Dashed Stairs'},
+                                                                   {'type': 'constant', 'value': 'Key'},
+                                                                   {'type': 'constant', 'value': 'Large Spring Ball'},
+                                                                   {   'type': 'constant',
+                                                                       'value': 'Vanishing Arrow Wheel'}],
+                                                   'type': 'set'}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_54Boss': {   'if_false': {   'if_false': {   'conditions': [   {'item': 'Egg Plant', 'type': 'item_check'},
+                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                            'value': 3},
+                                                                                               'item': 'Egg Capacity '
+                                                                                                       'Upgrade',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'conditions': [   {   'type': 'constant',
+                                                                                                                     'value': True},
+                                                                                                                 {   'item': 'Middle '
+                                                                                                                             'Ring',
+                                                                                                                     'type': 'item_check'}],
+                                                                                               'type': 'or'}],
+                                                                         'type': 'and'}],
+                                                   'type': 'or'},
+                                   'if_true': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                           'value': 1},
+                                                                                              'item': 'Egg Capacity '
+                                                                                                      'Upgrade',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'item': 'Egg Plant',
+                                                                                              'type': 'item_check'}],
+                                                                        'type': 'and'},
+                                                                    {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                           'value': 5},
+                                                                                              'item': 'Egg Capacity '
+                                                                                                      'Upgrade',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'conditions': [   {   'type': 'constant',
+                                                                                                                    'value': True},
+                                                                                                                {   'item': 'Middle '
+                                                                                                                            'Ring',
+                                                                                                                    'type': 'item_check'}],
+                                                                                              'type': 'or'}],
+                                                                        'type': 'and'}],
+                                                  'type': 'or'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                        'item': 'Egg Capacity Upgrade',
+                                                        'type': 'item_check'},
+                                                    {'item': 'Egg Plant', 'type': 'item_check'}],
+                                  'type': 'and'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_54CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 8},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_54Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Dashed Stairs'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Platform Ghost'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': 'Dashed Platform'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Dashed Stairs'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Platform Ghost'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Dashed Platform'},
+                                                                   {'type': 'constant', 'value': 'Dashed Stairs'},
+                                                                   {'type': 'constant', 'value': 'Platform Ghost'}],
+                                                   'type': 'set'}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_58Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'type': 'constant', 'value': True},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'type': 'constant', 'value': True},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_58CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 9},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_58Clear': {   'if_false': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Arrow Wheel'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Large Spring Ball'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                    'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                       'value': 'Arrow Wheel'},
+                                                                                   {   'type': 'constant',
+                                                                                       'value': 'Large Spring Ball'}],
+                                                                   'type': 'set'}],
+                                                   'method': 'has_all',
+                                                   'type': 'state_method'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Arrow Wheel'},
+                                                                   {'type': 'constant', 'value': 'Large Spring Ball'}],
+                                                   'type': 'set'}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_64Boss': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                   'if_true': {'item': 'Egg Plant', 'type': 'item_check'},
+                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                               'op': '==',
+                                               'right': {'type': 'constant', 'value': 'Normal'},
+                                               'type': 'compare'},
+                                   'type': 'conditional'},
+                   'if_true': {'item': 'Egg Plant', 'type': 'item_check'},
+                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                               'op': '==',
+                               'right': {'type': 'constant', 'value': 'Easy'},
+                               'type': 'compare'},
+                   'type': 'conditional'},
+    '_64CanFightBoss': {   'if_false': None,
+                           'if_true': {'type': 'constant', 'value': True},
+                           'test': {   'args': [   {   'index': {'type': 'constant', 'value': 10},
+                                                       'type': 'subscript',
+                                                       'value': {   'type': 'constant',
+                                                                    'value': [   "Burt The Bashful's Boss Room",
+                                                                                 "Salvo The Slime's Boss Room",
+                                                                                 "Bigger Boo's Boss Room",
+                                                                                 "Roger The Ghost's Boss Room",
+                                                                                 "Prince Froggy's Boss Room",
+                                                                                 "Naval Piranha's Boss Room",
+                                                                                 "Marching Milde's Boss Room",
+                                                                                 "Hookbill The Koopa's Boss Room",
+                                                                                 "Sluggy The Unshaven's Boss Room",
+                                                                                 "Raphael The Raven's Boss Room",
+                                                                                 "Tap-Tap The Red Nose's Boss Room"]}},
+                                                   {'type': 'constant', 'value': 'Location'}],
+                                       'method': 'can_reach',
+                                       'type': 'state_method'},
+                           'type': 'conditional'},
+    '_64Clear': {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                              'value': 'Egg '
+                                                                                                                       'Plant'},
+                                                                                                          {   'type': 'constant',
+                                                                                                              'value': 'Key'}],
+                                                                                          'type': 'set'}],
+                                                                          'method': 'has_all',
+                                                                          'type': 'state_method'},
+                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                             'value': 1},
+                                                                                                'item': 'Egg Capacity '
+                                                                                                        'Upgrade',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                      'name': 'bandit_bonus',
+                                                                                                                                                      'type': 'helper'},
+                                                                                                                                                  {   'args': [   ],
+                                                                                                                                                      'name': 'item_bonus',
+                                                                                                                                                      'type': 'helper'}],
+                                                                                                                                'type': 'or'},
+                                                                                                                'if_true': {   'args': [   ],
+                                                                                                                               'name': 'item_bonus',
+                                                                                                                               'type': 'helper'},
+                                                                                                                'test': {   'left': {   'type': 'constant',
+                                                                                                                                        'value': 'Easy'},
+                                                                                                                            'op': '==',
+                                                                                                                            'right': {   'type': 'constant',
+                                                                                                                                         'value': 'Easy'},
+                                                                                                                            'type': 'compare'},
+                                                                                                                'type': 'conditional'},
+                                                                                                'if_true': {   'type': 'constant',
+                                                                                                               'value': False},
+                                                                                                'test': {   'condition': {   'type': 'constant',
+                                                                                                                             'value': True},
+                                                                                                            'type': 'not'},
+                                                                                                'type': 'conditional'}],
+                                                                          'type': 'or'}],
+                                                    'type': 'and'},
+                                    'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                             'value': 'Egg '
+                                                                                                                      'Plant'},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': 'Key'},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': 'Large '
+                                                                                                                      'Spring '
+                                                                                                                      'Ball'}],
+                                                                                         'type': 'set'}],
+                                                                         'method': 'has_all',
+                                                                         'type': 'state_method'},
+                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                            'value': 2},
+                                                                                               'item': 'Egg Capacity '
+                                                                                                       'Upgrade',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                     'name': 'bandit_bonus',
+                                                                                                                                                     'type': 'helper'},
+                                                                                                                                                 {   'args': [   ],
+                                                                                                                                                     'name': 'item_bonus',
+                                                                                                                                                     'type': 'helper'}],
+                                                                                                                               'type': 'or'},
+                                                                                                               'if_true': {   'args': [   ],
+                                                                                                                              'name': 'item_bonus',
+                                                                                                                              'type': 'helper'},
+                                                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                                                       'value': 'Easy'},
+                                                                                                                           'op': '==',
+                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                        'value': 'Easy'},
+                                                                                                                           'type': 'compare'},
+                                                                                                               'type': 'conditional'},
+                                                                                               'if_true': {   'type': 'constant',
+                                                                                                              'value': False},
+                                                                                               'test': {   'condition': {   'type': 'constant',
+                                                                                                                            'value': True},
+                                                                                                           'type': 'not'},
+                                                                                               'type': 'conditional'}],
+                                                                         'type': 'or'}],
+                                                   'type': 'and'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                             'value': 'Egg Plant'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Key'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Large Spring '
+                                                                                                      'Ball'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Spring Ball'}],
+                                                                         'type': 'set'}],
+                                                         'method': 'has_all',
+                                                         'type': 'state_method'},
+                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                            'value': 3},
+                                                                               'item': 'Egg Capacity Upgrade',
+                                                                               'type': 'item_check'},
+                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                     'name': 'bandit_bonus',
+                                                                                                                                     'type': 'helper'},
+                                                                                                                                 {   'args': [   ],
+                                                                                                                                     'name': 'item_bonus',
+                                                                                                                                     'type': 'helper'}],
+                                                                                                               'type': 'or'},
+                                                                                               'if_true': {   'args': [   ],
+                                                                                                              'name': 'item_bonus',
+                                                                                                              'type': 'helper'},
+                                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                                       'value': 'Easy'},
+                                                                                                           'op': '==',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 'Easy'},
+                                                                                                           'type': 'compare'},
+                                                                                               'type': 'conditional'},
+                                                                               'if_true': {   'type': 'constant',
+                                                                                              'value': False},
+                                                                               'test': {   'condition': {   'type': 'constant',
+                                                                                                            'value': True},
+                                                                                           'type': 'not'},
+                                                                               'type': 'conditional'}],
+                                                         'type': 'or'}],
+                                   'type': 'and'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_68Clear': {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                              'value': 'Giant '
+                                                                                                                       'Eggs'},
+                                                                                                          {   'type': 'constant',
+                                                                                                              'value': 'Helicopter '
+                                                                                                                       'Morph'}],
+                                                                                          'type': 'set'}],
+                                                                          'method': 'has_all',
+                                                                          'type': 'state_method'},
+                                                                      {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                                                                                          'if_true': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                                                               'name': 'bowserdoor_1',
+                                                                                                                                                                                               'type': 'helper'},
+                                                                                                                                                                                           {   'args': [   ],
+                                                                                                                                                                                               'name': 'bowserdoor_2',
+                                                                                                                                                                                               'type': 'helper'},
+                                                                                                                                                                                           {   'args': [   ],
+                                                                                                                                                                                               'name': 'bowserdoor_3',
+                                                                                                                                                                                               'type': 'helper'}],
+                                                                                                                                                                         'type': 'and'},
+                                                                                                                                                          'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                                  'value': 0},
+                                                                                                                                                                      'op': '==',
+                                                                                                                                                                      'right': {   'type': 'constant',
+                                                                                                                                                                                   'value': 5},
+                                                                                                                                                                      'type': 'compare'},
+                                                                                                                                                          'type': 'conditional'},
+                                                                                                                                          'if_true': {   'type': 'constant',
+                                                                                                                                                         'value': True},
+                                                                                                                                          'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                  'value': 0},
+                                                                                                                                                      'op': '==',
+                                                                                                                                                      'right': {   'type': 'constant',
+                                                                                                                                                                   'value': 4},
+                                                                                                                                                      'type': 'compare'},
+                                                                                                                                          'type': 'conditional'},
+                                                                                                                          'if_true': {   'type': 'constant',
+                                                                                                                                         'value': True},
+                                                                                                                          'test': {   'left': {   'type': 'constant',
+                                                                                                                                                  'value': 0},
+                                                                                                                                      'op': '==',
+                                                                                                                                      'right': {   'type': 'constant',
+                                                                                                                                                   'value': 3},
+                                                                                                                                      'type': 'compare'},
+                                                                                                                          'type': 'conditional'},
+                                                                                                          'if_true': {   'args': [   ],
+                                                                                                                         'name': 'bowserdoor_2',
+                                                                                                                         'type': 'helper'},
+                                                                                                          'test': {   'left': {   'type': 'constant',
+                                                                                                                                  'value': 0},
+                                                                                                                      'op': '==',
+                                                                                                                      'right': {   'type': 'constant',
+                                                                                                                                   'value': 2},
+                                                                                                                      'type': 'compare'},
+                                                                                                          'type': 'conditional'},
+                                                                                          'if_true': {   'args': [],
+                                                                                                         'name': 'bowserdoor_1',
+                                                                                                         'type': 'helper'},
+                                                                                          'test': {   'left': {   'type': 'constant',
+                                                                                                                  'value': 0},
+                                                                                                      'op': '==',
+                                                                                                      'right': {   'type': 'constant',
+                                                                                                                   'value': 1},
+                                                                                                      'type': 'compare'},
+                                                                                          'type': 'conditional'},
+                                                                          'if_true': {   'type': 'constant',
+                                                                                         'value': True},
+                                                                          'test': {   'left': {   'type': 'constant',
+                                                                                                  'value': 0},
+                                                                                      'op': '==',
+                                                                                      'right': {   'type': 'constant',
+                                                                                                   'value': 0},
+                                                                                      'type': 'compare'},
+                                                                          'type': 'conditional'}],
+                                                    'type': 'and'},
+                                    'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                             'value': 'Egg '
+                                                                                                                      'Plant'},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': 'Giant '
+                                                                                                                      'Eggs'},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': 'Helicopter '
+                                                                                                                      'Morph'}],
+                                                                                         'type': 'set'}],
+                                                                         'method': 'has_all',
+                                                                         'type': 'state_method'},
+                                                                     {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                                                                                         'if_true': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                                                              'name': 'bowserdoor_1',
+                                                                                                                                                                                              'type': 'helper'},
+                                                                                                                                                                                          {   'args': [   ],
+                                                                                                                                                                                              'name': 'bowserdoor_2',
+                                                                                                                                                                                              'type': 'helper'},
+                                                                                                                                                                                          {   'args': [   ],
+                                                                                                                                                                                              'name': 'bowserdoor_3',
+                                                                                                                                                                                              'type': 'helper'}],
+                                                                                                                                                                        'type': 'and'},
+                                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                                 'value': 0},
+                                                                                                                                                                     'op': '==',
+                                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                                  'value': 5},
+                                                                                                                                                                     'type': 'compare'},
+                                                                                                                                                         'type': 'conditional'},
+                                                                                                                                         'if_true': {   'type': 'constant',
+                                                                                                                                                        'value': True},
+                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                 'value': 0},
+                                                                                                                                                     'op': '==',
+                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                  'value': 4},
+                                                                                                                                                     'type': 'compare'},
+                                                                                                                                         'type': 'conditional'},
+                                                                                                                         'if_true': {   'type': 'constant',
+                                                                                                                                        'value': True},
+                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                 'value': 0},
+                                                                                                                                     'op': '==',
+                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                  'value': 3},
+                                                                                                                                     'type': 'compare'},
+                                                                                                                         'type': 'conditional'},
+                                                                                                         'if_true': {   'args': [   ],
+                                                                                                                        'name': 'bowserdoor_2',
+                                                                                                                        'type': 'helper'},
+                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                 'value': 0},
+                                                                                                                     'op': '==',
+                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                  'value': 2},
+                                                                                                                     'type': 'compare'},
+                                                                                                         'type': 'conditional'},
+                                                                                         'if_true': {   'args': [],
+                                                                                                        'name': 'bowserdoor_1',
+                                                                                                        'type': 'helper'},
+                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                 'value': 0},
+                                                                                                     'op': '==',
+                                                                                                     'right': {   'type': 'constant',
+                                                                                                                  'value': 1},
+                                                                                                     'type': 'compare'},
+                                                                                         'type': 'conditional'},
+                                                                         'if_true': {'type': 'constant', 'value': True},
+                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                 'value': 0},
+                                                                                     'op': '==',
+                                                                                     'right': {   'type': 'constant',
+                                                                                                  'value': 0},
+                                                                                     'type': 'compare'},
+                                                                         'type': 'conditional'}],
+                                                   'type': 'and'},
+                                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 'Normal'},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                             'value': 'Egg Plant'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Giant Eggs'},
+                                                                                         {   'type': 'constant',
+                                                                                             'value': 'Helicopter '
+                                                                                                      'Morph'}],
+                                                                         'type': 'set'}],
+                                                         'method': 'has_all',
+                                                         'type': 'state_method'},
+                                                     {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                                                                         'if_true': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                                              'name': 'bowserdoor_1',
+                                                                                                                                                                              'type': 'helper'},
+                                                                                                                                                                          {   'args': [   ],
+                                                                                                                                                                              'name': 'bowserdoor_2',
+                                                                                                                                                                              'type': 'helper'},
+                                                                                                                                                                          {   'args': [   ],
+                                                                                                                                                                              'name': 'bowserdoor_3',
+                                                                                                                                                                              'type': 'helper'}],
+                                                                                                                                                        'type': 'and'},
+                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                 'value': 0},
+                                                                                                                                                     'op': '==',
+                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                  'value': 5},
+                                                                                                                                                     'type': 'compare'},
+                                                                                                                                         'type': 'conditional'},
+                                                                                                                         'if_true': {   'type': 'constant',
+                                                                                                                                        'value': True},
+                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                 'value': 0},
+                                                                                                                                     'op': '==',
+                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                  'value': 4},
+                                                                                                                                     'type': 'compare'},
+                                                                                                                         'type': 'conditional'},
+                                                                                                         'if_true': {   'type': 'constant',
+                                                                                                                        'value': True},
+                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                 'value': 0},
+                                                                                                                     'op': '==',
+                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                  'value': 3},
+                                                                                                                     'type': 'compare'},
+                                                                                                         'type': 'conditional'},
+                                                                                         'if_true': {   'args': [],
+                                                                                                        'name': 'bowserdoor_2',
+                                                                                                        'type': 'helper'},
+                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                 'value': 0},
+                                                                                                     'op': '==',
+                                                                                                     'right': {   'type': 'constant',
+                                                                                                                  'value': 2},
+                                                                                                     'type': 'compare'},
+                                                                                         'type': 'conditional'},
+                                                                         'if_true': {   'args': [],
+                                                                                        'name': 'bowserdoor_1',
+                                                                                        'type': 'helper'},
+                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                 'value': 0},
+                                                                                     'op': '==',
+                                                                                     'right': {   'type': 'constant',
+                                                                                                  'value': 1},
+                                                                                     'type': 'compare'},
+                                                                         'type': 'conditional'},
+                                                         'if_true': {'type': 'constant', 'value': True},
+                                                         'test': {   'left': {'type': 'constant', 'value': 0},
+                                                                     'op': '==',
+                                                                     'right': {'type': 'constant', 'value': 0},
+                                                                     'type': 'compare'},
+                                                         'type': 'conditional'}],
+                                   'type': 'and'},
+                    'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 'Easy'},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    '_68CollectibleRoute': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                                               'if_true': {   'if_false': {   'if_false': {   'item': 'Egg '
+                                                                                                                                                                      'Plant',
+                                                                                                                                                              'type': 'item_check'},
+                                                                                                                                              'if_true': {   'conditions': [   {   'item': 'Egg '
+                                                                                                                                                                                           'Plant',
+                                                                                                                                                                                   'type': 'item_check'},
+                                                                                                                                                                               {   'count': {   'type': 'constant',
+                                                                                                                                                                                                'value': 1},
+                                                                                                                                                                                   'item': 'Egg '
+                                                                                                                                                                                           'Capacity '
+                                                                                                                                                                                           'Upgrade',
+                                                                                                                                                                                   'type': 'item_check'}],
+                                                                                                                                                             'type': 'and'},
+                                                                                                                                              'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                      'value': 'Easy'},
+                                                                                                                                                          'op': '==',
+                                                                                                                                                          'right': {   'type': 'constant',
+                                                                                                                                                                       'value': 'Normal'},
+                                                                                                                                                          'type': 'compare'},
+                                                                                                                                              'type': 'conditional'},
+                                                                                                                              'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                                                                                                       'value': '! '
+                                                                                                                                                                                                                'Switch'},
+                                                                                                                                                                                                   {   'type': 'constant',
+                                                                                                                                                                                                       'value': 'Egg '
+                                                                                                                                                                                                                'Plant'}],
+                                                                                                                                                                                   'type': 'set'}],
+                                                                                                                                                                   'method': 'has_all',
+                                                                                                                                                                   'type': 'state_method'},
+                                                                                                                                                               {   'count': {   'type': 'constant',
+                                                                                                                                                                                'value': 2},
+                                                                                                                                                                   'item': 'Egg '
+                                                                                                                                                                           'Capacity '
+                                                                                                                                                                           'Upgrade',
+                                                                                                                                                                   'type': 'item_check'}],
+                                                                                                                                             'type': 'and'},
+                                                                                                                              'test': {   'left': {   'type': 'constant',
+                                                                                                                                                      'value': 'Easy'},
+                                                                                                                                          'op': '==',
+                                                                                                                                          'right': {   'type': 'constant',
+                                                                                                                                                       'value': 'Easy'},
+                                                                                                                                          'type': 'compare'},
+                                                                                                                              'type': 'conditional'},
+                                                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                                                       'value': 0},
+                                                                                                                           'op': '==',
+                                                                                                                           'right': {   'type': 'constant',
+                                                                                                                                        'value': 5},
+                                                                                                                           'type': 'compare'},
+                                                                                                               'type': 'conditional'},
+                                                                                               'if_true': {   'type': 'constant',
+                                                                                                              'value': True},
+                                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                                       'value': 0},
+                                                                                                           'op': '==',
+                                                                                                           'right': {   'type': 'constant',
+                                                                                                                        'value': 4},
+                                                                                                           'type': 'compare'},
+                                                                                               'type': 'conditional'},
+                                                                               'if_true': {   'type': 'constant',
+                                                                                              'value': True},
+                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                       'value': 0},
+                                                                                           'op': '==',
+                                                                                           'right': {   'type': 'constant',
+                                                                                                        'value': 3},
+                                                                                           'type': 'compare'},
+                                                                               'type': 'conditional'},
+                                                               'if_true': {   'if_false': {   'if_false': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                             'value': 1},
+                                                                                                                                                                                'item': 'Egg '
+                                                                                                                                                                                        'Capacity '
+                                                                                                                                                                                        'Upgrade',
+                                                                                                                                                                                'type': 'item_check'},
+                                                                                                                                                                            {   'item': 'Egg '
+                                                                                                                                                                                        'Plant',
+                                                                                                                                                                                'type': 'item_check'}],
+                                                                                                                                                          'type': 'and'},
+                                                                                                                                                      {   'args': [   ],
+                                                                                                                                                          'name': 'combat_item',
+                                                                                                                                                          'type': 'helper'}],
+                                                                                                                                    'type': 'or'},
+                                                                                                                                {   'item': 'Key',
+                                                                                                                                    'type': 'item_check'}],
+                                                                                                              'type': 'and'},
+                                                                                              'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                            'value': 2},
+                                                                                                                                                                               'item': 'Egg '
+                                                                                                                                                                                       'Capacity '
+                                                                                                                                                                                       'Upgrade',
+                                                                                                                                                                               'type': 'item_check'},
+                                                                                                                                                                           {   'item': 'Egg '
+                                                                                                                                                                                       'Plant',
+                                                                                                                                                                               'type': 'item_check'}],
+                                                                                                                                                         'type': 'and'},
+                                                                                                                                                     {   'args': [   ],
+                                                                                                                                                         'name': 'combat_item',
+                                                                                                                                                         'type': 'helper'}],
+                                                                                                                                   'type': 'or'},
+                                                                                                                               {   'item': 'Key',
+                                                                                                                                   'type': 'item_check'}],
+                                                                                                             'type': 'and'},
+                                                                                              'test': {   'left': {   'type': 'constant',
+                                                                                                                      'value': 'Easy'},
+                                                                                                          'op': '==',
+                                                                                                          'right': {   'type': 'constant',
+                                                                                                                       'value': 'Normal'},
+                                                                                                          'type': 'compare'},
+                                                                                              'type': 'conditional'},
+                                                                              'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                            'value': 3},
+                                                                                                                                                               'item': 'Egg '
+                                                                                                                                                                       'Capacity '
+                                                                                                                                                                       'Upgrade',
+                                                                                                                                                               'type': 'item_check'},
+                                                                                                                                                           {   'item': 'Egg '
+                                                                                                                                                                       'Plant',
+                                                                                                                                                               'type': 'item_check'}],
+                                                                                                                                         'type': 'and'},
+                                                                                                                                     {   'args': [   ],
+                                                                                                                                         'name': 'combat_item',
+                                                                                                                                         'type': 'helper'}],
+                                                                                                                   'type': 'or'},
+                                                                                                               {   'item': 'Key',
+                                                                                                                   'type': 'item_check'}],
+                                                                                             'type': 'and'},
+                                                                              'test': {   'left': {   'type': 'constant',
+                                                                                                      'value': 'Easy'},
+                                                                                          'op': '==',
+                                                                                          'right': {   'type': 'constant',
+                                                                                                       'value': 'Easy'},
+                                                                                          'type': 'compare'},
+                                                                              'type': 'conditional'},
+                                                               'test': {   'left': {'type': 'constant', 'value': 0},
+                                                                           'op': '==',
+                                                                           'right': {'type': 'constant', 'value': 2},
+                                                                           'type': 'compare'},
+                                                               'type': 'conditional'},
+                                               'if_true': {   'if_false': {   'if_false': {   'item': 'Egg Plant',
+                                                                                              'type': 'item_check'},
+                                                                              'if_true': {   'conditions': [   {   'item': 'Egg '
+                                                                                                                           'Plant',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'count': {   'type': 'constant',
+                                                                                                                                'value': 1},
+                                                                                                                   'item': 'Egg '
+                                                                                                                           'Capacity '
+                                                                                                                           'Upgrade',
+                                                                                                                   'type': 'item_check'}],
+                                                                                             'type': 'and'},
+                                                                              'test': {   'left': {   'type': 'constant',
+                                                                                                      'value': 'Easy'},
+                                                                                          'op': '==',
+                                                                                          'right': {   'type': 'constant',
+                                                                                                       'value': 'Normal'},
+                                                                                          'type': 'compare'},
+                                                                              'type': 'conditional'},
+                                                              'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                                       'value': '! '
+                                                                                                                                                'Switch'},
+                                                                                                                                   {   'type': 'constant',
+                                                                                                                                       'value': 'Egg '
+                                                                                                                                                'Plant'}],
+                                                                                                                   'type': 'set'}],
+                                                                                                   'method': 'has_all',
+                                                                                                   'type': 'state_method'},
+                                                                                               {   'count': {   'type': 'constant',
+                                                                                                                'value': 2},
+                                                                                                   'item': 'Egg '
+                                                                                                           'Capacity '
+                                                                                                           'Upgrade',
+                                                                                                   'type': 'item_check'}],
+                                                                             'type': 'and'},
+                                                              'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                                          'op': '==',
+                                                                          'right': {   'type': 'constant',
+                                                                                       'value': 'Easy'},
+                                                                          'type': 'compare'},
+                                                              'type': 'conditional'},
+                                               'test': {   'left': {'type': 'constant', 'value': 0},
+                                                           'op': '==',
+                                                           'right': {'type': 'constant', 'value': 1},
+                                                           'type': 'compare'},
+                                               'type': 'conditional'},
+                               'if_true': {'type': 'constant', 'value': True},
+                               'test': {   'left': {'type': 'constant', 'value': 0},
+                                           'op': '==',
+                                           'right': {'type': 'constant', 'value': 0},
+                                           'type': 'compare'},
+                               'type': 'conditional'},
+    '_68Route': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
+                                                                                                    'if_true': {   'conditions': [   {   'if_false': {   'if_false': {   'item': 'Egg '
+                                                                                                                                                                                 'Plant',
+                                                                                                                                                                         'type': 'item_check'},
+                                                                                                                                                         'if_true': {   'conditions': [   {   'item': 'Egg '
+                                                                                                                                                                                                      'Plant',
+                                                                                                                                                                                              'type': 'item_check'},
+                                                                                                                                                                                          {   'count': {   'type': 'constant',
+                                                                                                                                                                                                           'value': 1},
+                                                                                                                                                                                              'item': 'Egg '
+                                                                                                                                                                                                      'Capacity '
+                                                                                                                                                                                                      'Upgrade',
+                                                                                                                                                                                              'type': 'item_check'}],
+                                                                                                                                                                        'type': 'and'},
+                                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                                 'value': 'Easy'},
+                                                                                                                                                                     'op': '==',
+                                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                                  'value': 'Normal'},
+                                                                                                                                                                     'type': 'compare'},
+                                                                                                                                                         'type': 'conditional'},
+                                                                                                                                         'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                                                                                                                  'value': '! '
+                                                                                                                                                                                                                           'Switch'},
+                                                                                                                                                                                                              {   'type': 'constant',
+                                                                                                                                                                                                                  'value': 'Egg '
+                                                                                                                                                                                                                           'Plant'}],
+                                                                                                                                                                                              'type': 'set'}],
+                                                                                                                                                                              'method': 'has_all',
+                                                                                                                                                                              'type': 'state_method'},
+                                                                                                                                                                          {   'count': {   'type': 'constant',
+                                                                                                                                                                                           'value': 2},
+                                                                                                                                                                              'item': 'Egg '
+                                                                                                                                                                                      'Capacity '
+                                                                                                                                                                                      'Upgrade',
+                                                                                                                                                                              'type': 'item_check'}],
+                                                                                                                                                        'type': 'and'},
+                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                 'value': 'Easy'},
+                                                                                                                                                     'op': '==',
+                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                  'value': 'Easy'},
+                                                                                                                                                     'type': 'compare'},
+                                                                                                                                         'type': 'conditional'},
+                                                                                                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                                                                                        'value': 1},
+                                                                                                                                                                                                                                           'item': 'Egg '
+                                                                                                                                                                                                                                                   'Capacity '
+                                                                                                                                                                                                                                                   'Upgrade',
+                                                                                                                                                                                                                                           'type': 'item_check'},
+                                                                                                                                                                                                                                       {   'item': 'Egg '
+                                                                                                                                                                                                                                                   'Plant',
+                                                                                                                                                                                                                                           'type': 'item_check'}],
+                                                                                                                                                                                                                     'type': 'and'},
+                                                                                                                                                                                                                 {   'args': [   ],
+                                                                                                                                                                                                                     'name': 'combat_item',
+                                                                                                                                                                                                                     'type': 'helper'}],
+                                                                                                                                                                                               'type': 'or'},
+                                                                                                                                                                                           {   'item': 'Key',
+                                                                                                                                                                                               'type': 'item_check'}],
+                                                                                                                                                                         'type': 'and'},
+                                                                                                                                                         'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                                                                                       'value': 2},
+                                                                                                                                                                                                                                          'item': 'Egg '
+                                                                                                                                                                                                                                                  'Capacity '
+                                                                                                                                                                                                                                                  'Upgrade',
+                                                                                                                                                                                                                                          'type': 'item_check'},
+                                                                                                                                                                                                                                      {   'item': 'Egg '
+                                                                                                                                                                                                                                                  'Plant',
+                                                                                                                                                                                                                                          'type': 'item_check'}],
+                                                                                                                                                                                                                    'type': 'and'},
+                                                                                                                                                                                                                {   'args': [   ],
+                                                                                                                                                                                                                    'name': 'combat_item',
+                                                                                                                                                                                                                    'type': 'helper'}],
+                                                                                                                                                                                              'type': 'or'},
+                                                                                                                                                                                          {   'item': 'Key',
+                                                                                                                                                                                              'type': 'item_check'}],
+                                                                                                                                                                        'type': 'and'},
+                                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                                 'value': 'Easy'},
+                                                                                                                                                                     'op': '==',
+                                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                                  'value': 'Normal'},
+                                                                                                                                                                     'type': 'compare'},
+                                                                                                                                                         'type': 'conditional'},
+                                                                                                                                         'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                                                                       'value': 3},
+                                                                                                                                                                                                                          'item': 'Egg '
+                                                                                                                                                                                                                                  'Capacity '
+                                                                                                                                                                                                                                  'Upgrade',
+                                                                                                                                                                                                                          'type': 'item_check'},
+                                                                                                                                                                                                                      {   'item': 'Egg '
+                                                                                                                                                                                                                                  'Plant',
+                                                                                                                                                                                                                          'type': 'item_check'}],
+                                                                                                                                                                                                    'type': 'and'},
+                                                                                                                                                                                                {   'args': [   ],
+                                                                                                                                                                                                    'name': 'combat_item',
+                                                                                                                                                                                                    'type': 'helper'}],
+                                                                                                                                                                              'type': 'or'},
+                                                                                                                                                                          {   'item': 'Key',
+                                                                                                                                                                              'type': 'item_check'}],
+                                                                                                                                                        'type': 'and'},
+                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                 'value': 'Easy'},
+                                                                                                                                                     'op': '==',
+                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                  'value': 'Easy'},
+                                                                                                                                                     'type': 'compare'},
+                                                                                                                                         'type': 'conditional'},
+                                                                                                                                     {   'if_false': {   'if_false': {   'type': 'constant',
+                                                                                                                                                                         'value': True},
+                                                                                                                                                         'if_true': {   'type': 'constant',
+                                                                                                                                                                        'value': True},
+                                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                                 'value': 'Easy'},
+                                                                                                                                                                     'op': '==',
+                                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                                  'value': 'Normal'},
+                                                                                                                                                                     'type': 'compare'},
+                                                                                                                                                         'type': 'conditional'},
+                                                                                                                                         'if_true': {   'type': 'constant',
+                                                                                                                                                        'value': True},
+                                                                                                                                         'test': {   'left': {   'type': 'constant',
+                                                                                                                                                                 'value': 'Easy'},
+                                                                                                                                                     'op': '==',
+                                                                                                                                                     'right': {   'type': 'constant',
+                                                                                                                                                                  'value': 'Easy'},
+                                                                                                                                                     'type': 'compare'},
+                                                                                                                                         'type': 'conditional'}],
+                                                                                                                   'type': 'and'},
+                                                                                                    'test': {   'left': {   'type': 'constant',
+                                                                                                                            'value': 0},
+                                                                                                                'op': '==',
+                                                                                                                'right': {   'type': 'constant',
+                                                                                                                             'value': 5},
+                                                                                                                'type': 'compare'},
+                                                                                                    'type': 'conditional'},
+                                                                                    'if_true': {   'type': 'constant',
+                                                                                                   'value': True},
+                                                                                    'test': {   'left': {   'type': 'constant',
+                                                                                                            'value': 0},
+                                                                                                'op': '==',
+                                                                                                'right': {   'type': 'constant',
+                                                                                                             'value': 4},
+                                                                                                'type': 'compare'},
+                                                                                    'type': 'conditional'},
+                                                                    'if_true': {'type': 'constant', 'value': True},
+                                                                    'test': {   'left': {   'type': 'constant',
+                                                                                            'value': 0},
+                                                                                'op': '==',
+                                                                                'right': {   'type': 'constant',
+                                                                                             'value': 3},
+                                                                                'type': 'compare'},
+                                                                    'type': 'conditional'},
+                                                    'if_true': {   'if_false': {   'if_false': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                  'value': 1},
+                                                                                                                                                                     'item': 'Egg '
+                                                                                                                                                                             'Capacity '
+                                                                                                                                                                             'Upgrade',
+                                                                                                                                                                     'type': 'item_check'},
+                                                                                                                                                                 {   'item': 'Egg '
+                                                                                                                                                                             'Plant',
+                                                                                                                                                                     'type': 'item_check'}],
+                                                                                                                                               'type': 'and'},
+                                                                                                                                           {   'args': [   ],
+                                                                                                                                               'name': 'combat_item',
+                                                                                                                                               'type': 'helper'}],
+                                                                                                                         'type': 'or'},
+                                                                                                                     {   'item': 'Key',
+                                                                                                                         'type': 'item_check'}],
+                                                                                                   'type': 'and'},
+                                                                                   'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                                 'value': 2},
+                                                                                                                                                                    'item': 'Egg '
+                                                                                                                                                                            'Capacity '
+                                                                                                                                                                            'Upgrade',
+                                                                                                                                                                    'type': 'item_check'},
+                                                                                                                                                                {   'item': 'Egg '
+                                                                                                                                                                            'Plant',
+                                                                                                                                                                    'type': 'item_check'}],
+                                                                                                                                              'type': 'and'},
+                                                                                                                                          {   'args': [   ],
+                                                                                                                                              'name': 'combat_item',
+                                                                                                                                              'type': 'helper'}],
+                                                                                                                        'type': 'or'},
+                                                                                                                    {   'item': 'Key',
+                                                                                                                        'type': 'item_check'}],
+                                                                                                  'type': 'and'},
+                                                                                   'test': {   'left': {   'type': 'constant',
+                                                                                                           'value': 'Easy'},
+                                                                                               'op': '==',
+                                                                                               'right': {   'type': 'constant',
+                                                                                                            'value': 'Normal'},
+                                                                                               'type': 'compare'},
+                                                                                   'type': 'conditional'},
+                                                                   'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                                 'value': 3},
+                                                                                                                                                    'item': 'Egg '
+                                                                                                                                                            'Capacity '
+                                                                                                                                                            'Upgrade',
+                                                                                                                                                    'type': 'item_check'},
+                                                                                                                                                {   'item': 'Egg '
+                                                                                                                                                            'Plant',
+                                                                                                                                                    'type': 'item_check'}],
+                                                                                                                              'type': 'and'},
+                                                                                                                          {   'args': [   ],
+                                                                                                                              'name': 'combat_item',
+                                                                                                                              'type': 'helper'}],
+                                                                                                        'type': 'or'},
+                                                                                                    {   'item': 'Key',
+                                                                                                        'type': 'item_check'}],
+                                                                                  'type': 'and'},
+                                                                   'test': {   'left': {   'type': 'constant',
+                                                                                           'value': 'Easy'},
+                                                                               'op': '==',
+                                                                               'right': {   'type': 'constant',
+                                                                                            'value': 'Easy'},
+                                                                               'type': 'compare'},
+                                                                   'type': 'conditional'},
+                                                    'test': {   'left': {'type': 'constant', 'value': 0},
+                                                                'op': '==',
+                                                                'right': {'type': 'constant', 'value': 2},
+                                                                'type': 'compare'},
+                                                    'type': 'conditional'},
+                                    'if_true': {   'if_false': {   'if_false': {   'item': 'Egg Plant',
+                                                                                   'type': 'item_check'},
+                                                                   'if_true': {   'conditions': [   {   'item': 'Egg '
+                                                                                                                'Plant',
+                                                                                                        'type': 'item_check'},
+                                                                                                    {   'count': {   'type': 'constant',
+                                                                                                                     'value': 1},
+                                                                                                        'item': 'Egg '
+                                                                                                                'Capacity '
+                                                                                                                'Upgrade',
+                                                                                                        'type': 'item_check'}],
+                                                                                  'type': 'and'},
+                                                                   'test': {   'left': {   'type': 'constant',
+                                                                                           'value': 'Easy'},
+                                                                               'op': '==',
+                                                                               'right': {   'type': 'constant',
+                                                                                            'value': 'Normal'},
+                                                                               'type': 'compare'},
+                                                                   'type': 'conditional'},
+                                                   'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                            'value': '! '
+                                                                                                                                     'Switch'},
+                                                                                                                        {   'type': 'constant',
+                                                                                                                            'value': 'Egg '
+                                                                                                                                     'Plant'}],
+                                                                                                        'type': 'set'}],
+                                                                                        'method': 'has_all',
+                                                                                        'type': 'state_method'},
+                                                                                    {   'count': {   'type': 'constant',
+                                                                                                     'value': 2},
+                                                                                        'item': 'Egg Capacity Upgrade',
+                                                                                        'type': 'item_check'}],
+                                                                  'type': 'and'},
+                                                   'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                               'op': '==',
+                                                               'right': {'type': 'constant', 'value': 'Easy'},
+                                                               'type': 'compare'},
+                                                   'type': 'conditional'},
+                                    'test': {   'left': {'type': 'constant', 'value': 0},
+                                                'op': '==',
+                                                'right': {'type': 'constant', 'value': 1},
+                                                'type': 'compare'},
+                                    'type': 'conditional'},
+                    'if_true': {'type': 'constant', 'value': True},
+                    'test': {   'left': {'type': 'constant', 'value': 0},
+                                'op': '==',
+                                'right': {'type': 'constant', 'value': 0},
+                                'type': 'compare'},
+                    'type': 'conditional'},
+    'bandit_bonus': {   'conditions': [   {'item': 'Bandit Consumables', 'type': 'item_check'},
+                                          {'item': 'Bandit Watermelons', 'type': 'item_check'}],
+                        'type': 'or'},
+    'bowserdoor_1': {   'if_false': {   'if_false': {'item': 'Egg Plant', 'type': 'item_check'},
+                                        'if_true': {   'conditions': [   {'item': 'Egg Plant', 'type': 'item_check'},
+                                                                         {   'count': {'type': 'constant', 'value': 1},
+                                                                             'item': 'Egg Capacity Upgrade',
+                                                                             'type': 'item_check'}],
+                                                       'type': 'and'},
+                                        'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                    'op': '==',
+                                                    'right': {'type': 'constant', 'value': 'Normal'},
+                                                    'type': 'compare'},
+                                        'type': 'conditional'},
+                        'if_true': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                 'value': '! Switch'},
+                                                                                             {   'type': 'constant',
+                                                                                                 'value': 'Egg Plant'}],
+                                                                             'type': 'set'}],
+                                                             'method': 'has_all',
+                                                             'type': 'state_method'},
+                                                         {   'count': {'type': 'constant', 'value': 2},
+                                                             'item': 'Egg Capacity Upgrade',
+                                                             'type': 'item_check'}],
+                                       'type': 'and'},
+                        'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                    'op': '==',
+                                    'right': {'type': 'constant', 'value': 'Easy'},
+                                    'type': 'compare'},
+                        'type': 'conditional'},
+    'bowserdoor_2': {   'if_false': {   'if_false': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 1},
+                                                                                                                          'item': 'Egg '
+                                                                                                                                  'Capacity '
+                                                                                                                                  'Upgrade',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Egg '
+                                                                                                                                  'Plant',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                          'name': 'bandit_bonus',
+                                                                                                                                                          'type': 'helper'},
+                                                                                                                                                      {   'args': [   ],
+                                                                                                                                                          'name': 'item_bonus',
+                                                                                                                                                          'type': 'helper'}],
+                                                                                                                                    'type': 'or'},
+                                                                                                                    'if_true': {   'args': [   ],
+                                                                                                                                   'name': 'item_bonus',
+                                                                                                                                   'type': 'helper'},
+                                                                                                                    'test': {   'left': {   'type': 'constant',
+                                                                                                                                            'value': 'Easy'},
+                                                                                                                                'op': '==',
+                                                                                                                                'right': {   'type': 'constant',
+                                                                                                                                             'value': 'Easy'},
+                                                                                                                                'type': 'compare'},
+                                                                                                                    'type': 'conditional'},
+                                                                                                    'if_true': {   'type': 'constant',
+                                                                                                                   'value': False},
+                                                                                                    'test': {   'condition': {   'type': 'constant',
+                                                                                                                                 'value': True},
+                                                                                                                'type': 'not'},
+                                                                                                    'type': 'conditional'}],
+                                                                              'type': 'or'},
+                                                                          {'item': 'Key', 'type': 'item_check'}],
+                                                        'type': 'and'},
+                                        'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                      'value': 2},
+                                                                                                                         'item': 'Egg '
+                                                                                                                                 'Capacity '
+                                                                                                                                 'Upgrade',
+                                                                                                                         'type': 'item_check'},
+                                                                                                                     {   'item': 'Egg '
+                                                                                                                                 'Plant',
+                                                                                                                         'type': 'item_check'}],
+                                                                                                   'type': 'and'},
+                                                                                               {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                                         'name': 'bandit_bonus',
+                                                                                                                                                         'type': 'helper'},
+                                                                                                                                                     {   'args': [   ],
+                                                                                                                                                         'name': 'item_bonus',
+                                                                                                                                                         'type': 'helper'}],
+                                                                                                                                   'type': 'or'},
+                                                                                                                   'if_true': {   'args': [   ],
+                                                                                                                                  'name': 'item_bonus',
+                                                                                                                                  'type': 'helper'},
+                                                                                                                   'test': {   'left': {   'type': 'constant',
+                                                                                                                                           'value': 'Easy'},
+                                                                                                                               'op': '==',
+                                                                                                                               'right': {   'type': 'constant',
+                                                                                                                                            'value': 'Easy'},
+                                                                                                                               'type': 'compare'},
+                                                                                                                   'type': 'conditional'},
+                                                                                                   'if_true': {   'type': 'constant',
+                                                                                                                  'value': False},
+                                                                                                   'test': {   'condition': {   'type': 'constant',
+                                                                                                                                'value': True},
+                                                                                                               'type': 'not'},
+                                                                                                   'type': 'conditional'}],
+                                                                             'type': 'or'},
+                                                                         {'item': 'Key', 'type': 'item_check'}],
+                                                       'type': 'and'},
+                                        'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                    'op': '==',
+                                                    'right': {'type': 'constant', 'value': 'Normal'},
+                                                    'type': 'compare'},
+                                        'type': 'conditional'},
+                        'if_true': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                      'value': 3},
+                                                                                                         'item': 'Egg '
+                                                                                                                 'Capacity '
+                                                                                                                 'Upgrade',
+                                                                                                         'type': 'item_check'},
+                                                                                                     {   'item': 'Egg '
+                                                                                                                 'Plant',
+                                                                                                         'type': 'item_check'}],
+                                                                                   'type': 'and'},
+                                                                               {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                                         'name': 'bandit_bonus',
+                                                                                                                                         'type': 'helper'},
+                                                                                                                                     {   'args': [   ],
+                                                                                                                                         'name': 'item_bonus',
+                                                                                                                                         'type': 'helper'}],
+                                                                                                                   'type': 'or'},
+                                                                                                   'if_true': {   'args': [   ],
+                                                                                                                  'name': 'item_bonus',
+                                                                                                                  'type': 'helper'},
+                                                                                                   'test': {   'left': {   'type': 'constant',
+                                                                                                                           'value': 'Easy'},
+                                                                                                               'op': '==',
+                                                                                                               'right': {   'type': 'constant',
+                                                                                                                            'value': 'Easy'},
+                                                                                                               'type': 'compare'},
+                                                                                                   'type': 'conditional'},
+                                                                                   'if_true': {   'type': 'constant',
+                                                                                                  'value': False},
+                                                                                   'test': {   'condition': {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                               'type': 'not'},
+                                                                                   'type': 'conditional'}],
+                                                             'type': 'or'},
+                                                         {'item': 'Key', 'type': 'item_check'}],
+                                       'type': 'and'},
+                        'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                    'op': '==',
+                                    'right': {'type': 'constant', 'value': 'Easy'},
+                                    'type': 'compare'},
+                        'type': 'conditional'},
+    'bowserdoor_3': {   'if_false': {   'if_false': {'type': 'constant', 'value': True},
+                                        'if_true': {'type': 'constant', 'value': True},
+                                        'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                    'op': '==',
+                                                    'right': {'type': 'constant', 'value': 'Normal'},
+                                                    'type': 'compare'},
+                                        'type': 'conditional'},
+                        'if_true': {'type': 'constant', 'value': True},
+                        'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                    'op': '==',
+                                    'right': {'type': 'constant', 'value': 'Easy'},
+                                    'type': 'compare'},
+                        'type': 'conditional'},
+    'cansee_clouds': {   'if_false': {   'conditions': [   {'type': 'constant', 'value': False},
+                                                           {'item': 'Secret Lens', 'type': 'item_check'},
+                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
+                                                                                                                     'name': 'bandit_bonus',
+                                                                                                                     'type': 'helper'},
+                                                                                                                 {   'args': [   ],
+                                                                                                                     'name': 'item_bonus',
+                                                                                                                     'type': 'helper'}],
+                                                                                               'type': 'or'},
+                                                                               'if_true': {   'args': [],
+                                                                                              'name': 'item_bonus',
+                                                                                              'type': 'helper'},
+                                                                               'test': {   'left': {   'type': 'constant',
+                                                                                                       'value': 'Easy'},
+                                                                                           'op': '==',
+                                                                                           'right': {   'type': 'constant',
+                                                                                                        'value': 'Easy'},
+                                                                                           'type': 'compare'},
+                                                                               'type': 'conditional'},
+                                                               'if_true': {'type': 'constant', 'value': False},
+                                                               'test': {   'condition': {   'type': 'constant',
+                                                                                            'value': True},
+                                                                           'type': 'not'},
+                                                               'type': 'conditional'}],
+                                         'type': 'or'},
+                         'if_true': {'type': 'constant', 'value': True},
+                         'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                     'op': '!=',
+                                     'right': {'type': 'constant', 'value': 'Easy'},
+                                     'type': 'compare'},
+                         'type': 'conditional'},
+    'castle_access': {'count': {'type': 'constant', 'value': 5}, 'item': 'Boss Clear', 'type': 'item_check'},
+    'castle_clear': {'count': {'type': 'constant', 'value': 0}, 'item': 'Boss Clear', 'type': 'item_check'},
+    'combat_item': {   'if_false': {   'if_false': {   'conditions': [   {   'conditions': [   {   'item': 'Bandit '
+                                                                                                           'Consumables',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'item': 'Bandit '
+                                                                                                           'Watermelons',
+                                                                                                   'type': 'item_check'}],
+                                                                             'type': 'or'},
+                                                                         {   'item': 'Bonus Consumables',
+                                                                             'type': 'item_check'}],
+                                                       'type': 'or'},
+                                       'if_true': {'item': 'Bonus Consumables', 'type': 'item_check'},
+                                       'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                   'op': '==',
+                                                   'right': {'type': 'constant', 'value': 'Easy'},
+                                                   'type': 'compare'},
+                                       'type': 'conditional'},
+                       'if_true': {'type': 'constant', 'value': False},
+                       'test': {'condition': {'type': 'constant', 'value': True}, 'type': 'not'},
+                       'type': 'conditional'},
+    'default_vis': {'type': 'constant', 'value': False},
+    'has_midring': {   'conditions': [   {'type': 'constant', 'value': True},
+                                         {'item': 'Middle Ring', 'type': 'item_check'}],
+                       'type': 'or'},
+    'item_bonus': {'item': 'Bonus Consumables', 'type': 'item_check'},
+    'melon_item': {   'if_false': {   'if_false': {   'conditions': [   {   'item': 'Bandit Watermelons',
+                                                                            'type': 'item_check'},
+                                                                        {   'item': 'Bonus Consumables',
+                                                                            'type': 'item_check'}],
+                                                      'type': 'or'},
+                                      'if_true': {'item': 'Bonus Consumables', 'type': 'item_check'},
+                                      'test': {   'left': {'type': 'constant', 'value': 'Easy'},
+                                                  'op': '==',
+                                                  'right': {'type': 'constant', 'value': 'Easy'},
+                                                  'type': 'compare'},
+                                      'type': 'conditional'},
+                      'if_true': {'type': 'constant', 'value': False},
+                      'test': {'condition': {'type': 'constant', 'value': True}, 'type': 'not'},
+                      'type': 'conditional'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -231,981 +2167,1376 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Start Game", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Overworld -> World 1", player),
-        Has("World 1 Gate")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 2", player),
-        Has("World 2 Gate")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 3", player),
-        Has("World 3 Gate")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 4", player),
-        Has("World 4 Gate")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 5", player),
-        Has("World 5 Gate")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 6", player),
-        Has("World 6 Gate")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 1 -> 1-8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 2 -> 2-8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 3 -> 3-8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 4 -> 4-8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-7", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 5 -> 5-8", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-1", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-2", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-3", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-4", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-5", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-6", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-7", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("World 6 -> 6-8", player),
-        HelperCall(helper_func=_yoshisislandworldgen_castle_access, helper_name="castle_access", body_data={'type': 'item_check', 'item': 'Boss Clear', 'count': {'type': 'constant', 'value': 5}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("1-4 -> Burt The Bashful's Boss Room", player),
-        HelperCall(helper_func=_14Clear, helper_name="_14Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Spring Ball'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Spring Ball'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Spring Ball'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("1-8 -> Salvo The Slime's Boss Room", player),
-        HelperCall(helper_func=_18Clear, helper_name="_18Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Key'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Key'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Key'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("2-4 -> Bigger Boo's Boss Room", player),
-        HelperCall(helper_func=_24Clear, helper_name="_24Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Key'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Dashed Stairs'}]}]}, 'if_false': {'type': 'item_check', 'item': '! Switch'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("2-8 -> Roger The Ghost's Boss Room", player),
-        HelperCall(helper_func=_28Clear, helper_name="_28Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Key'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Key'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Key'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("3-4 -> Prince Froggy's Boss Room", player),
-        HelperCall(helper_func=_34Clear, helper_name="_34Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Dashed Platform'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Dashed Platform'}, {'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}]}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("3-8 -> Naval Piranha's Boss Room", player),
-        HelperCall(helper_func=_38Clear, helper_name="_38Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("4-4 -> Marching Milde's Boss Room", player),
-        HelperCall(helper_func=_44Clear, helper_name="_44Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Bucket'}, {'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Vanishing Arrow Wheel'}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Bucket'}, {'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Vanishing Arrow Wheel'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Bucket'}, {'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Vanishing Arrow Wheel'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("4-8 -> Hookbill The Koopa's Boss Room", player),
-        HelperCall(helper_func=_48Clear, helper_name="_48Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}, {'type': 'constant', 'value': 'Vanishing Arrow Wheel'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}, {'type': 'constant', 'value': 'Vanishing Arrow Wheel'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("5-4 -> Sluggy The Unshaven's Boss Room", player),
-        HelperCall(helper_func=_54Clear, helper_name="_54Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Dashed Platform'}, {'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Platform Ghost'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Dashed Platform'}, {'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Platform Ghost'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Dashed Stairs'}, {'type': 'constant', 'value': 'Platform Ghost'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("5-8 -> Raphael The Raven's Boss Room", player),
-        HelperCall(helper_func=_58Clear, helper_name="_58Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Arrow Wheel'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("6-4 -> Tap-Tap The Red Nose's Boss Room", player),
-        HelperCall(helper_func=_64Clear, helper_name="_64Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Egg Plant'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}, {'type': 'constant', 'value': 'Spring Ball'}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Egg Plant'}, {'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Egg Plant'}, {'type': 'constant', 'value': 'Key'}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("6-8 -> Bowser's Room", player),
-        HelperCall(helper_func=_yoshisislandworldgen_castle_clear, helper_name="castle_clear", body_data={'type': 'item_check', 'item': 'Boss Clear', 'count': {'type': 'constant', 'value': 0}})
+        True_()
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Red Coins", player),
-        HasAll('Beanstalk', 'Dashed Stairs')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Flowers", player),
-        HasAll('Beanstalk', 'Dashed Stairs')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Stars", player),
-        HasAll('Beanstalk', 'Dashed Stairs', 'Tulip')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Level Clear", player),
-        Has("Beanstalk")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Red Coins", player),
-        HasAll('Helicopter Morph', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Flowers", player),
-        HasAll('Helicopter Morph', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Large Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Level Clear", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Chomp Rock: Red Coins", player),
-        Has("Chomp Rock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Chomp Rock: Flowers", player),
-        Has("Chomp Rock")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Cave Of Chomp Rock: Stars", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Cave Of Chomp Rock: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Red Coins", player),
-        Has("Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Key', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (Has("Key"))) & (Has("Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Level Clear", player),
-        HelperCall(helper_func=_14CanFightBoss, helper_name="_14CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 0}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Boss Room", player),
-        HelperCall(helper_func=_14Boss, helper_name="_14Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Egg Plant'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'item_check', 'item': 'Egg Plant'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 5}}, {'type': 'item_check', 'item': 'Egg Plant'}]}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hop! Hop! Donut Lifts: Red Coins", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hop! Hop! Donut Lifts: Flowers", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hop! Hop! Donut Lifts: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hop! Hop! Donut Lifts: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Red Coins", player),
-        HasAll('! Switch', 'Flashing Eggs', 'Large Spring Ball', 'Mole Tank Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Flowers", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Stars", player),
-        (((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Beanstalk"))) | ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip")))) & (Has("Large Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Level Clear", player),
-        HasAll('Beanstalk', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Red Coins", player),
-        HasAll('Beanstalk', 'Chomp Rock', 'Flashing Eggs', 'Spring Ball')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Touch Fuzzy Get Dizzy: Flowers", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (HasAll('Beanstalk', 'Chomp Rock', 'Spring Ball'))) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Touch Fuzzy Get Dizzy: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Gather Coins", player),
-        HelperCall(helper_func=_17Game, helper_name="_17Game", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Key'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'item_check', 'item': 'Key'}, 'if_false': {'type': 'item_check', 'item': 'Key'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Red Coins", player),
-        Has("Platform Ghost")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Flowers", player),
-        Has("Platform Ghost")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & ((HasAll('Arrow Wheel', 'Key')) | (Has("Platform Ghost")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Level Clear", player),
-        HelperCall(helper_func=_18CanFightBoss, helper_name="_18CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Boss Room", player),
-        HelperCall(helper_func=_18Boss, helper_name="_18Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Red Coins", player),
-        HasAll('Large Spring Ball', 'Poochy', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Flowers", player),
-        HasAll('Large Spring Ball', 'Super Star')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Large Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Level Clear", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Red Coins", player),
-        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Mole Tank Morph', 'Super Star')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Flowers", player),
-        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Spring Ball', 'Super Star')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip"))) & (HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Level Clear", player),
-        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Red Coins", player),
-        Has("! Switch")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Flowers", player),
-        HasAny('Large Spring Ball', 'Super Star')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("What's Gusty Taste Like?: Stars", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Level Clear", player),
-        HasAny('Large Spring Ball', 'Super Star')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Red Coins", player),
-        HasAll('! Switch', 'Dashed Stairs', 'Key')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Flowers", player),
-        HasAll('! Switch', 'Dashed Stairs', 'Key')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('! Switch', 'Dashed Stairs', 'Key'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Level Clear", player),
-        HelperCall(helper_func=_24CanFightBoss, helper_name="_24CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 2}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Boss Room", player),
-        HelperCall(helper_func=_24Boss, helper_name="_24Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Red Coins", player),
-        Has("Chomp Rock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Flowers", player),
-        HasAll('Chomp Rock', 'Key', 'Train Morph')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Watch Out For Lakitu: Stars", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Level Clear", player),
-        Has("Chomp Rock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Red Coins", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Flowers", player),
-        HasAll('Egg Launcher', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Large Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Level Clear", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of the Mystery Maze: Seed Spitting Contest", player),
-        HelperCall(helper_func=_26Game, helper_name="_26Game", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (HasAny('Dashed Platform', 'Giant Eggs'))) & (Has("Large Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Giant Eggs"))) & (HasAll('! Switch', 'Large Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Giant Eggs"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Level Clear", player),
-        HasAll('Car Morph', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Gather Coins", player),
-        HelperCall(helper_func=_27Game, helper_name="_27Game", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Key'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'item_check', 'item': 'Key'}, 'if_false': {'type': 'item_check', 'item': 'Key'}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Red Coins", player),
-        (HasAll('Arrow Wheel', 'Key')) & (Has("Egg Capacity Upgrade"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Flowers", player),
-        (HasAll('Arrow Wheel', 'Key', 'Train Morph')) & (Has("Egg Capacity Upgrade"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Arrow Wheel', 'Key')) & (Has("Egg Capacity Upgrade"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Level Clear", player),
-        HelperCall(helper_func=_28CanFightBoss, helper_name="_28CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 3}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Roger The Ghost's Boss Room", player),
-        HelperCall(helper_func=_28Boss, helper_name="_28Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome To Monkey World!: Red Coins", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome To Monkey World!: Flowers", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Welcome To Monkey World!: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome To Monkey World!: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Red Coins", player),
-        HasAll('Dashed Stairs', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Flowers", player),
-        HasAll('Dashed Stairs', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Level Clear", player),
-        HasAll('Dashed Stairs', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Red Coins", player),
-        HasAll('Helicopter Morph', 'Submarine Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Flowers", player),
-        HasAll('Helicopter Morph', 'Submarine Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (HasAll('Helicopter Morph', 'Submarine Morph'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Level Clear", player),
-        HasAll('Helicopter Morph', 'Submarine Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Red Coins", player),
-        Has("Submarine Morph")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 5))) & (Has("Dashed Platform"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Level Clear", player),
-        HelperCall(helper_func=_34CanFightBoss, helper_name="_34CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Boss Room", player),
-        HelperCall(helper_func=_34Boss, helper_name="_34Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Giant Eggs'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Jammin' Through The Trees: Red Coins", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jammin' Through The Trees: Flowers", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Watermelon"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jammin' Through The Trees: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (Has("Tulip")))) | ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Jammin' Through The Trees: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Red Coins", player),
-        HasAll('Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Flowers", player),
-        HasAll('! Switch', 'Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Level Clear", player),
-        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Red Coins", player),
-        HasAll('! Switch', 'Beanstalk', 'Large Spring Ball', 'Submarine Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Flowers", player),
-        HasAll('Beanstalk', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Stars", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Level Clear", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Red Coins", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Flowers", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Level Clear", player),
-        HelperCall(helper_func=_38CanFightBoss, helper_name="_38CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 5}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Boss Room", player),
-        HelperCall(helper_func=_38Boss, helper_name="_38Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Red Coins", player),
-        Has("Super Star")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Flowers", player),
-        Has("Super Star")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (Has("Tulip"))) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Level Clear", player),
-        Has("Super Star")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Red Coins", player),
-        HasAll('! Switch', 'Egg Launcher', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Flowers", player),
-        HasAll('Egg Launcher', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Stars", player),
-        HasAll('Large Spring Ball', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Level Clear", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Red Coins", player),
-        HasAll('! Switch', 'Helicopter Morph', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Flowers", player),
-        HasAll('! Switch', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Tulip"))) & (Has("! Switch"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Level Clear", player),
-        Has("! Switch")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))) & (HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))) & (HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (Has("Vanishing Arrow Wheel"))) & (Has("Dashed Stairs"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Level Clear", player),
-        HelperCall(helper_func=_44CanFightBoss, helper_name="_44CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 6}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Boss Room", player),
-        HelperCall(helper_func=_44Boss, helper_name="_44Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Red Coins", player),
-        HasAll('Chomp Rock', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Flowers", player),
-        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Stars", player),
-        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chomp Rock Zone: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))) & (HasAny('Large Spring Ball', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))) & (HasAny('Large Spring Ball', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Stars", player),
-        (((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (Has("Tulip"))) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}))) & ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Level Clear", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Plant"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Red Coins", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Flowers", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Helicopter Morph"))) & (Has("Large Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Level Clear", player),
-        Has("Large Spring Ball")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Gather Coins", player),
-        HelperCall(helper_func=_47Game, helper_name="_47Game", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}, 'if_false': {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Key'}, {'type': 'constant', 'value': 'Large Spring Ball'}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Red Coins", player),
-        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Flowers", player),
-        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAny('Dashed Stairs', 'Vanishing Arrow Wheel'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Level Clear", player),
-        HelperCall(helper_func=_48CanFightBoss, helper_name="_48CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 7}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Boss Room", player),
-        HelperCall(helper_func=_48Boss, helper_name="_48Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, 'if_false': {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Red Coins", player),
-        HasAll('Dashed Stairs', 'Helicopter Morph')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("BLIZZARD!!!: Flowers", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) | (((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Dashed Stairs"))) | (Has("Tulip")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("BLIZZARD!!!: Level Clear", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ride The Ski Lifts: Red Coins", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ride The Ski Lifts: Flowers", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ride The Ski Lifts: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (Has("Super Star"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ride The Ski Lifts: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon"))) & (HasAll('Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon"))) & (HasAll('Dashed Platform', 'Skis', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & ((HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Watermelons'}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Fire Melon")))) & (Has("Spring Ball"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Level Clear", player),
-        HasAll('Dashed Platform', 'Skis', 'Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Red Coins", player),
-        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Flowers", player),
-        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) & (Has("Dashed Platform")) & (Has("Dashed Stairs"))) | ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Dashed Stairs', 'Platform Ghost')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Level Clear", player),
-        HelperCall(helper_func=_54CanFightBoss, helper_name="_54CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 8}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Boss Room", player),
-        HelperCall(helper_func=_54Boss, helper_name="_54Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 5}}, {'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}]}]}, 'if_false': {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}]}]}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Red Coins", player),
-        HasAll('! Switch', 'Helicopter Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Flowers", player),
-        HasAll('! Switch', 'Helicopter Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Level Clear", player),
-        HasAll('! Switch', 'Helicopter Morph')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome To Cloud World: Red Coins", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome To Cloud World: Flowers", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Welcome To Cloud World: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) | (Has("Tulip"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome To Cloud World: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Red Coins", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Flowers", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shifting Platforms Ahead: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Red Coins", player),
-        HasAll('Arrow Wheel', 'Train Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Flowers", player),
-        HasAll('Arrow Wheel', 'Train Morph')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Arrow Wheel"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Level Clear", player),
-        HelperCall(helper_func=_58CanFightBoss, helper_name="_58CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 9}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Boss Room", player),
-        HelperCall(helper_func=_58Boss, helper_name="_58Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Red Coins", player),
-        HasAll('Dashed Platform', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Flowers", player),
-        HasAll('Dashed Platform', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (Has("Dashed Platform"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Level Clear", player),
-        HasAll('Dashed Platform', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Red Coins", player),
-        Has("Super Star")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Flowers", player),
-        Has("Super Star")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '!=', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'or', 'conditions': [{'type': 'conditional', 'test': {'type': 'constant', 'value': False}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Secret Lens'}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}})) | (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Level Clear", player),
-        Has("Super Star")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beware The Spinning Logs: Red Coins", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beware The Spinning Logs: Flowers", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beware The Spinning Logs: Stars", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beware The Spinning Logs: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Level Clear", player),
-        HelperCall(helper_func=_64CanFightBoss, helper_name="_64CanFightBoss", body_data={'type': 'conditional', 'test': {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'subscript', 'value': {'type': 'constant', 'value': ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]}, 'index': {'type': 'constant', 'value': 10}}, {'type': 'constant', 'value': 'Location'}]}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': None})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Boss Room", player),
-        HelperCall(helper_func=_64Boss, helper_name="_64Boss", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Egg Plant'}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'item_check', 'item': 'Egg Plant'}, 'if_false': {'type': 'constant', 'value': True}}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Red Coins", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (Has("Chomp Rock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Flowers", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (Has("Chomp Rock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Stars", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & ((HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade", 3))) & (Has("Chomp Rock"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Very Loooooong Cave: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Red Coins", player),
-        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Flowers", player),
-        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Stars", player),
-        ((HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})) & (HasAll('Chomp Rock', 'Key', 'Large Spring Ball'))) | (HasAll('Chomp Rock', 'Key', 'Tulip'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Level Clear", player),
-        HasAll('Chomp Rock', 'Dashed Platform', 'Key', 'Large Spring Ball')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Red Coins", player),
-        (HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item", body_data={'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}})) | (Has("Egg Capacity Upgrade"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Flowers", player),
-        Has("Egg Plant")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring", body_data={'type': 'or', 'conditions': [{'type': 'constant', 'value': True}, {'type': 'item_check', 'item': 'Middle Ring'}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("KEEP MOVING!!!!: Level Clear", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Red Coins", player),
-        (HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': None}}}}}})) & (HasAll('Egg Plant', 'Helicopter Morph'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Flowers", player),
-        (HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': None}}}}}})) & (HasAll('Egg Plant', 'Helicopter Morph'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Stars", player),
-        (HelperCall(helper_func=_68Route, helper_name="_68Route", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}}]}, 'if_false': None}}}}}})) & (HasAll('Egg Plant', 'Helicopter Morph'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Level Clear", player),
-        HelperCall(helper_func=_68Clear, helper_name="_68Clear", body_data={'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Egg Plant'}, {'type': 'constant', 'value': 'Giant Eggs'}, {'type': 'constant', 'value': 'Helicopter Morph'}]}]}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}}]}, 'if_false': None}}}}}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Egg Plant'}, {'type': 'constant', 'value': 'Giant Eggs'}, {'type': 'constant', 'value': 'Helicopter Morph'}]}]}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}}]}, 'if_false': None}}}}}}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Giant Eggs'}, {'type': 'constant', 'value': 'Helicopter Morph'}]}]}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 0}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 1}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 2}}, 'if_true': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 3}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 4}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 0}, 'op': '==', 'right': {'type': 'constant', 'value': 5}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': '! Switch'}, {'type': 'constant', 'value': 'Egg Plant'}]}]}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Plant'}, {'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}]}, 'if_false': {'type': 'item_check', 'item': 'Egg Plant'}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}, 'if_false': {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Egg Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Egg Plant'}]}, {'type': 'conditional', 'test': {'type': 'not', 'condition': {'type': 'constant', 'value': True}}, 'if_true': {'type': 'constant', 'value': False}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'item_check', 'item': 'Bonus Consumables'}, 'if_false': {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bandit Consumables'}, {'type': 'item_check', 'item': 'Bandit Watermelons'}]}, {'type': 'item_check', 'item': 'Bonus Consumables'}]}}}]}, {'type': 'item_check', 'item': 'Key'}]}}}, {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Easy'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'conditional', 'test': {'type': 'compare', 'left': {'type': 'constant', 'value': 'Easy'}, 'op': '==', 'right': {'type': 'constant', 'value': 'Normal'}}, 'if_true': {'type': 'constant', 'value': True}, 'if_false': {'type': 'constant', 'value': True}}}]}, 'if_false': None}}}}}}]}}})
+        True_()
     )

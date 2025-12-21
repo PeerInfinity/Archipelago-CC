@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -25,7 +25,7 @@ def _shiversworldgen_ash_capturable(state: "CollectionState", player: int) -> bo
 
 
 def _shiversworldgen_beths_body_available(state: "CollectionState", player: int) -> bool:
-    return (_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (1)
+    return (_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (True)
 
 
 def _shiversworldgen_cloth_capturable(state: "CollectionState", player: int) -> bool:
@@ -41,7 +41,7 @@ def _shiversworldgen_first_nine_ixupi_capturable(state: "CollectionState", playe
 
 
 def _shiversworldgen_lightning_capturable(state: "CollectionState", player: int) -> bool:
-    return ((_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (0)) and ((state.has_all(('Lightning Pot Bottom', 'Lightning Pot Bottom DUPE', 'Lightning Pot Top', 'Lightning Pot Top DUPE'), player)) or (state.has_all(('Lightning Pot Complete', 'Lightning Pot Complete DUPE'), player)))
+    return ((_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (False)) and ((state.has_all(('Lightning Pot Bottom', 'Lightning Pot Bottom DUPE', 'Lightning Pot Top', 'Lightning Pot Top DUPE'), player)) or (state.has_all(('Lightning Pot Complete', 'Lightning Pot Complete DUPE'), player)))
 
 
 def _shiversworldgen_metal_capturable(state: "CollectionState", player: int) -> bool:
@@ -68,6 +68,606 @@ def _shiversworldgen_wood_capturable(state: "CollectionState", player: int) -> b
     return (state.has_all(('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE'), player)) or (state.has_all(('Wood Pot Complete', 'Wood Pot Complete DUPE'), player))
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'all_skull_dials_set': {   'args': [   {   'type': 'constant',
+                                               'value': [   'Set Skull Dial: Burial',
+                                                            'Set Skull Dial: Egypt',
+                                                            'Set Skull Dial: Gods Room',
+                                                            'Set Skull Dial: Prehistoric',
+                                                            'Set Skull Dial: Tar River',
+                                                            'Set Skull Dial: Werewolf']}],
+                               'method': 'has_all',
+                               'type': 'state_method'},
+    'ash_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Ash Pot Bottom'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Ash Pot Bottom DUPE'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Ash Pot Top'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Ash Pot Top DUPE'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'},
+                                            {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Ash Pot Complete'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Ash Pot Complete DUPE'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'}],
+                          'type': 'or'},
+    'beths_body_available': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                            'name': 'water_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'wax_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'ash_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'oil_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'cloth_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'wood_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'crystal_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'sand_capturable',
+                                                                            'type': 'helper'},
+                                                                        {   'args': [],
+                                                                            'name': 'metal_capturable',
+                                                                            'type': 'helper'}],
+                                                      'type': 'and'},
+                                                  {'type': 'constant', 'value': True}],
+                                'type': 'or'},
+    'cloth_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Cloth Pot Bottom'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Cloth Pot Bottom DUPE'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Cloth Pot Top'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Cloth Pot Top DUPE'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'},
+                                              {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Cloth Pot Complete'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Cloth Pot Complete '
+                                                                                               'DUPE'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'}],
+                            'type': 'or'},
+    'crystal_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Crystal Pot Bottom'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Crystal Pot Bottom '
+                                                                                                 'DUPE'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Crystal Pot Top'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Crystal Pot Top '
+                                                                                                 'DUPE'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+                                                {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                        'value': 'Crystal Pot '
+                                                                                                 'Complete'},
+                                                                                    {   'type': 'constant',
+                                                                                        'value': 'Crystal Pot Complete '
+                                                                                                 'DUPE'}],
+                                                                    'type': 'set'}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'}],
+                              'type': 'or'},
+    'first_nine_ixupi_capturable': {   'conditions': [   {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Water '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Water '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Water '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Water '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Water '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Water '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Wax '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wax '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wax '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wax '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Wax '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wax '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Ash '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Ash '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Ash '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Ash '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Ash '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Ash '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Oil '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Oil '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Oil '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Oil '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Oil '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Oil '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Cloth '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Cloth '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Cloth '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Cloth '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Cloth '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Cloth '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Wood '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wood '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wood '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wood '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Wood '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Wood '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Crystal '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Crystal '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Crystal '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Crystal '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Crystal '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Crystal '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Sand '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Sand '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Sand '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Sand '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Sand '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Sand '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'},
+                                                         {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Metal '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Metal '
+                                                                                                                                'Pot '
+                                                                                                                                'Bottom '
+                                                                                                                                'DUPE'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Metal '
+                                                                                                                                'Pot '
+                                                                                                                                'Top'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Metal '
+                                                                                                                                'Pot '
+                                                                                                                                'Top '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'},
+                                                                               {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                       'value': 'Metal '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': 'Metal '
+                                                                                                                                'Pot '
+                                                                                                                                'Complete '
+                                                                                                                                'DUPE'}],
+                                                                                                   'type': 'set'}],
+                                                                                   'method': 'has_all',
+                                                                                   'type': 'state_method'}],
+                                                             'type': 'or'}],
+                                       'type': 'and'},
+    'lightning_capturable': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                  'name': 'water_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'wax_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'ash_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'oil_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'cloth_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'wood_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'crystal_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'sand_capturable',
+                                                                                                  'type': 'helper'},
+                                                                                              {   'args': [],
+                                                                                                  'name': 'metal_capturable',
+                                                                                                  'type': 'helper'}],
+                                                                            'type': 'and'},
+                                                                        {'type': 'constant', 'value': False}],
+                                                      'type': 'or'},
+                                                  {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                'value': 'Lightning '
+                                                                                                                         'Pot '
+                                                                                                                         'Bottom'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': 'Lightning '
+                                                                                                                         'Pot '
+                                                                                                                         'Bottom '
+                                                                                                                         'DUPE'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': 'Lightning '
+                                                                                                                         'Pot '
+                                                                                                                         'Top'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': 'Lightning '
+                                                                                                                         'Pot '
+                                                                                                                         'Top '
+                                                                                                                         'DUPE'}],
+                                                                                            'type': 'set'}],
+                                                                            'method': 'has_all',
+                                                                            'type': 'state_method'},
+                                                                        {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                                                'value': 'Lightning '
+                                                                                                                         'Pot '
+                                                                                                                         'Complete'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': 'Lightning '
+                                                                                                                         'Pot '
+                                                                                                                         'Complete '
+                                                                                                                         'DUPE'}],
+                                                                                            'type': 'set'}],
+                                                                            'method': 'has_all',
+                                                                            'type': 'state_method'}],
+                                                      'type': 'or'}],
+                                'type': 'and'},
+    'metal_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Metal Pot Bottom'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Metal Pot Bottom DUPE'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Metal Pot Top'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Metal Pot Top DUPE'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'},
+                                              {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Metal Pot Complete'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Metal Pot Complete '
+                                                                                               'DUPE'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'}],
+                            'type': 'or'},
+    'oil_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Oil Pot Bottom'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Oil Pot Bottom DUPE'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Oil Pot Top'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Oil Pot Top DUPE'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'},
+                                            {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Oil Pot Complete'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Oil Pot Complete DUPE'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'}],
+                          'type': 'or'},
+    'sand_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                     'value': 'Sand Pot Bottom'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Sand Pot Bottom DUPE'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Sand Pot Top'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Sand Pot Top DUPE'}],
+                                                                 'type': 'set'}],
+                                                 'method': 'has_all',
+                                                 'type': 'state_method'},
+                                             {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                     'value': 'Sand Pot Complete'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Sand Pot Complete '
+                                                                                              'DUPE'}],
+                                                                 'type': 'set'}],
+                                                 'method': 'has_all',
+                                                 'type': 'state_method'}],
+                           'type': 'or'},
+    'water_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Water Pot Bottom'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Water Pot Bottom DUPE'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Water Pot Top'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Water Pot Top DUPE'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'},
+                                              {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                      'value': 'Water Pot Complete'},
+                                                                                  {   'type': 'constant',
+                                                                                      'value': 'Water Pot Complete '
+                                                                                               'DUPE'}],
+                                                                  'type': 'set'}],
+                                                  'method': 'has_all',
+                                                  'type': 'state_method'}],
+                            'type': 'or'},
+    'wax_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Wax Pot Bottom'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Wax Pot Bottom DUPE'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Wax Pot Top'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Wax Pot Top DUPE'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'},
+                                            {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Wax Pot Complete'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Wax Pot Complete DUPE'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'}],
+                          'type': 'or'},
+    'wood_capturable': {   'conditions': [   {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                     'value': 'Wood Pot Bottom'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Wood Pot Bottom DUPE'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Wood Pot Top'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Wood Pot Top DUPE'}],
+                                                                 'type': 'set'}],
+                                                 'method': 'has_all',
+                                                 'type': 'state_method'},
+                                             {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                     'value': 'Wood Pot Complete'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Wood Pot Complete '
+                                                                                              'DUPE'}],
+                                                                 'type': 'set'}],
+                                                 'method': 'has_all',
+                                                 'type': 'state_method'}],
+                           'type': 'or'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -75,431 +675,1236 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("To Registry", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Outside From Registry", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Tunnels From Outside", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("To Lobby From Outside", player),
-        Has("Key for Front Door")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Underground Lake From Underground Tunnels", player),
-        Has("Key for Underground Lake")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Outside From Underground", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Underground Tunnels From Underground Lake", player),
-        Has("Key for Underground Lake")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Windlenot's Body From Underground Lake", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Blue Tunnels From Underground Lake", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Lake From Windlenot's Body", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Lake From Underground Blue Tunnels", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office Elevator From Underground Blue Tunnels", player),
-        Has("Key for Office Elevator")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Blue Tunnels From Office Elevator", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Office From Office Elevator", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office Elevator From Office", player),
-        Has("Key for Office Elevator")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Workshop", player),
-        Has("Key for Workshop")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Office", player),
-        Has("Key for Office")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Ash Capture From Office", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Office From Workshop", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wood Capture From Workshop", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Bedroom Elevator", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom", player),
-        Has("Key for Bedroom")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Bedroom Elevator From Bedroom", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Metal Capture From Bedroom", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Lobby", player),
-        Has("Key for Office")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Library From Lobby", player),
-        Has("Key for Library")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Theater From Lobby", player),
-        Has("Viewed Egyptian Hieroglyphics Explained")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Prehistoric From Lobby", player),
-        Has("Key for Prehistoric Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Egypt From Lobby", player),
-        Has("Key for Egypt Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Tar River From Lobby", player),
-        (HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})) & (CanReachRegion("Tar River")) & (Has("Crawling"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Outside From Lobby", player),
-        Has("Key for Front Door")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Water Capture From Lobby", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Crystal Capture From Lobby", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Victory", player),
-        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]}), "+", HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]})), "+", HelperCall(helper_func=_shiversworldgen_lightning_capturable, helper_name="lightning_capturable", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]}]}, {'type': 'constant', 'value': 0}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Lightning Pot Bottom'}, {'type': 'constant', 'value': 'Lightning Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Lightning Pot Top'}, {'type': 'constant', 'value': 'Lightning Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Lightning Pot Complete'}, {'type': 'constant', 'value': 'Lightning Pot Complete DUPE'}]}]}]}]})), ">=", True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Library", player),
-        Has("Key for Library")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maintenance Tunnels From Library", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wax Capture From Library", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Library From Maintenance Tunnels", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Maintenance Tunnels", player),
-        Has("Key for Three Floor Elevator")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Generator From Maintenance Tunnels", player),
-        Has("Key for Generator Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maintenance Tunnels From Generator", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        ((CanReachRegion("Theater")) & (Has("Viewed Norse Stone"))) & (HelperCall(helper_func=_shiversworldgen_beths_body_available, helper_name="beths_body_available", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]}]}, {'type': 'constant', 'value': 1}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Generator From Beth's Body", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Lobby From Theater", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Theater Back Hallway From Theater", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Theater From Theater Back Hallway", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player),
-        CanReachRegion("Three Floor Elevator")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Maintenance Tunnels From Theater Back Hallway", player),
-        Has("Crawling")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Projector Room", player),
-        Has("Key for Projector Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Theater Back Hallway From Clock Tower Staircase", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Clock Tower", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player),
-        CanReachRegion("Bedroom")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Clock Tower Staircase From Clock Chains", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Clock Tower Staircase From Clock Tower", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Theater Back Hallway From Projector Room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Metal Capture From Projector Room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Prehistoric", player),
-        Has("Key for Prehistoric Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Greenhouse", player),
-        Has("Key for Greenhouse")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Ocean From Prehistoric", player),
-        Has("Key for Ocean Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Oil Capture From Prehistoric", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Metal Capture From Prehistoric", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Prehistoric From Greenhouse", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Sand Capture From Greenhouse", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Prehistoric From Ocean", player),
-        Has("Key for Ocean Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maze Staircase From Ocean", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Crystal Capture From Ocean", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Sand Capture From Ocean", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Ocean From Maze Staircase", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Maze From Maze Staircase", player),
-        CanReachRegion("Projector Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maze Staircase From Maze", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Tar River", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maze From Tar River", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Tar River", player),
-        (HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})) & (Has("Crawling"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Oil Capture From Tar River", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Egypt", player),
-        Has("Key for Egypt Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Burial From Egypt", player),
-        CanReachRegion("Egypt")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Blue Maze From Egypt", player),
-        Has("Crawling")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Cloth Capture From Egypt", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Egypt From Burial", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Shaman From Burial", player),
-        Has("Key for Shaman Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Ash Capture From Burial", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Cloth Capture From Burial", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Burial From Shaman", player),
-        Has("Key for Shaman Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Gods Room From Shaman", player),
-        CanReachRegion("Clock Tower")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wax Capture From Shaman", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Shaman From Gods Room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Anansi From Gods Room", player),
-        CanReachRegion("Maintenance Tunnels")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wood Capture From Gods Room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Norse Stone From Gods Room", player),
-        Has("Aligned Planets")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Gods Room From Norse Stone", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Gods Room From Anansi", player),
-        CanReachRegion("Gods Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Pegasus From Anansi", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wax Capture From Anansi", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Anansi From Pegasus", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Werewolf From Pegasus", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wood Capture From Pegasus", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Pegasus From Werewolf", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Night Staircase From Werewolf", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Werewolf From Night Staircase", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Janitor Closet", player),
-        Has("Key for Janitor Closet")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To UFO From Night Staircase", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Night Staircase From Janitor Closet", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Water Capture From Janitor Closet", player),
-        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Cloth Capture From Janitor Closet", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Night Staircase From UFO", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Orrery From UFO", player),
-        Has("Viewed Fortune")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Inventions From UFO", player),
-        Has("Key for UFO Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To UFO From Orrery", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Egypt From Blue Maze", player),
-        Has("Crawling")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Blue Maze Bottom", player),
-        Has("Key for Three Floor Elevator")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Blue Maze Top", player),
-        Has("Key for Three Floor Elevator")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Fortune Teller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Inventions From Blue Maze", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Wood Capture From Blue Maze", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maintenance Tunnels From Three Floor Elevator", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Blue Maze From Three Floor Elevator", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Blue Maze From Fortune Teller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Blue Maze From Inventions", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To UFO From Inventions", player),
-        Has("Key for UFO Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Torture From Inventions", player),
-        Has("Key for Torture Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Inventions From Torture", player),
-        Has("Key for Torture Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Puzzle Room Mastermind From Torture", player),
-        Has("Key for Puzzle Room")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Guillotine From Torture", player),
-        (Has("Viewed Egyptian Hieroglyphics Explained")) & (Has("Viewed Page 17"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Torture From Guillotine", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Torture", player),
-        Has("Key for Puzzle Room")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Puzzle Room Marbles From Puzzle Room Mastermind", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Puzzle Room Mastermind From Puzzle Room Marbles", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Skull Bridge From Puzzle Room Marbles", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Puzzle Room Marbles From Skull Bridge", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Slide Room", player),
-        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf']}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Skull Bridge From Slide Room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Slide Room", player),
-        Has("Lost Your Head")
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Puzzle Solved Combination Lock", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Gears", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Stone Henge", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Puzzle Solved Office Elevator", player),
-        ((CanReachRegion("Office")) | (CanReachRegion("Underground Lake"))) & (Has("Key for Office Elevator"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Three Floor Elevator", player),
-        ((CanReachRegion("Blue Maze")) | (CanReachRegion("Maintenance Tunnels"))) & (Has("Key for Three Floor Elevator"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Mailbox", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Orange Symbol", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Silver Symbol", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Green Symbol", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: White Symbol", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Brown Symbol", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Tan Symbol", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Windlenot's Ghost", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Egyptian Hieroglyphics Explained", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Windlenot's Body", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Scrapbook", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Desk Drawer", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Atlantis Map", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Tape Recorder Heard", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Workshop Drawers", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Workshop Drawers", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Basilisk Bone Fragments", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Professor Windlenot's Diary", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Theater Door", player),
-        Has("Viewed Egyptian Hieroglyphics Explained")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Museum Brochure", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Slide", player),
-        (CanReachRegion("Slide Room")) & (Has("Lost Your Head"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Transforming Mask", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Library Statue", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained In Search of the Unexplained", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained South American Pictographs", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Mythology of the Stars", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Black Book", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Library Cabinet", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Library Statue", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Beth's Address Book", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Final Riddle: Beth's Body Page 17", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beth's Body", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Theater", player),
-        Has("Viewed Theater Movie")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Beth's Note", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Clock Tower Door", player),
-        CanReachRegion("Three Floor Elevator")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Clock Chains", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Clock Chains", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Beth's Ghost", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Clock Tower", player),
-        Has("Set Time")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Shaman Security Camera", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Jukebox", player),
-        (CanReachRegion("Anansi")) & (CanReachRegion("Clock Tower"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Theater Movie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Viewed Theater Movie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Eagles Nest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Set Skull Dial: Prehistoric", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Greenhouse", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Atlantis", player),
-        CanReachRegion("Office")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Organ", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Museum Blueprints", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Ocean", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Sirens Song Heard", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Maze Door", player),
-        Has("Viewed Theater Movie")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Tar River", player),
-        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Set Skull Dial: Tar River", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Columns of RA", player),
-        Has("Viewed Egyptian Hieroglyphics Explained")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Burial Door", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Egypt", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Egyptian Sphinx Heard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Set Skull Dial: Egypt", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Chinese Solitaire", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Merrick's Notebook", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Chinese Solitaire", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Set Skull Dial: Burial", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Shaman Drums", player),
-        CanReachRegion("Clock Tower")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Shaman Hut", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Lyre", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Red Door", player),
-        CanReachRegion("Maintenance Tunnels")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Lyre", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Set Skull Dial: Gods Room", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Final Riddle: Norse God Stone Message", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Norse Stone", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Anansi Music Box", player),
-        Has("Set Song")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Ancient Astrology", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Skeleton", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Anansi Music Box", player),
-        Has("Set Song")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Set Skull Dial: Werewolf", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Janitor Closet", player),
-        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved UFO Symbols", player),
-        CanReachRegion("Library")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Storage: UFO", player),
-        CanReachRegion("Library")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Final Riddle: Planets Aligned", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Orrery", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Fortune Teller Door", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Elevator Writing", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flashback Memory Obtained Merrick's Ghost", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Final Riddle: Fortune Teller", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Viewed Fortune", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Alchemy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Alchemy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Gallows", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Gallows", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Gallows Information Plaque", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Final Riddle: Guillotine Dropped", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Guillotine", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Mastermind", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Hint Found: Mastermind Information Plaque", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Marble Flipper", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Skull Bridge", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Water", player),
-        HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Bottom'}, {'type': 'constant', 'value': 'Water Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Water Pot Top'}, {'type': 'constant', 'value': 'Water Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Water Pot Complete'}, {'type': 'constant', 'value': 'Water Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wax", player),
-        HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Bottom'}, {'type': 'constant', 'value': 'Wax Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wax Pot Top'}, {'type': 'constant', 'value': 'Wax Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wax Pot Complete'}, {'type': 'constant', 'value': 'Wax Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Ash", player),
-        HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Bottom'}, {'type': 'constant', 'value': 'Ash Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Ash Pot Top'}, {'type': 'constant', 'value': 'Ash Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Ash Pot Complete'}, {'type': 'constant', 'value': 'Ash Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Oil", player),
-        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Bottom'}, {'type': 'constant', 'value': 'Oil Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Oil Pot Top'}, {'type': 'constant', 'value': 'Oil Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Oil Pot Complete'}, {'type': 'constant', 'value': 'Oil Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Cloth", player),
-        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Bottom'}, {'type': 'constant', 'value': 'Cloth Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Cloth Pot Top'}, {'type': 'constant', 'value': 'Cloth Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Cloth Pot Complete'}, {'type': 'constant', 'value': 'Cloth Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wood", player),
-        HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Bottom'}, {'type': 'constant', 'value': 'Wood Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Wood Pot Top'}, {'type': 'constant', 'value': 'Wood Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Wood Pot Complete'}, {'type': 'constant', 'value': 'Wood Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Crystal", player),
-        HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Bottom'}, {'type': 'constant', 'value': 'Crystal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Crystal Pot Top'}, {'type': 'constant', 'value': 'Crystal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Crystal Pot Complete'}, {'type': 'constant', 'value': 'Crystal Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Sand", player),
-        HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Bottom'}, {'type': 'constant', 'value': 'Sand Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Sand Pot Top'}, {'type': 'constant', 'value': 'Sand Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Sand Pot Complete'}, {'type': 'constant', 'value': 'Sand Pot Complete DUPE'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Metal", player),
-        HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Bottom'}, {'type': 'constant', 'value': 'Metal Pot Bottom DUPE'}, {'type': 'constant', 'value': 'Metal Pot Top'}, {'type': 'constant', 'value': 'Metal Pot Top DUPE'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'set', 'elements': [{'type': 'constant', 'value': 'Metal Pot Complete'}, {'type': 'constant', 'value': 'Metal Pot Complete DUPE'}]}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mystery Solved", player),
+        True_()
     )

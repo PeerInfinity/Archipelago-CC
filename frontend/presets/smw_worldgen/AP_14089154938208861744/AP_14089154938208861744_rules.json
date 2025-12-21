@@ -19,8 +19,9 @@
             "name": "Menu -> Yoshi's Island",
             "connected_region": "Yoshi's Island",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,24 +34,27 @@
             "name": "Yoshi's Island -> Yoshi's House - Tile",
             "connected_region": "Yoshi's House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Yoshi's Island -> Yoshi's Island 1 - Tile",
             "connected_region": "Yoshi's Island 1 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Yoshi's Island -> Yoshi's Island 2 - Tile",
             "connected_region": "Yoshi's Island 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -63,8 +67,9 @@
             "name": "Yoshi's House - Tile -> Top Secret Area",
             "connected_region": "Top Secret Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -82,8 +87,9 @@
             "name": "Yoshi's Island 1 - Tile -> Yoshi's Island 1",
             "connected_region": "Yoshi's Island 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -96,8 +102,9 @@
             "name": "Yoshi's Island 1 -> Yoshi's Island 1 - Normal Exit",
             "connected_region": "Yoshi's Island 1 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -110,8 +117,9 @@
             "name": "Yoshi's Island 1 - Normal Exit -> Yellow Switch Palace - Tile",
             "connected_region": "Yellow Switch Palace - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -120,8 +128,9 @@
             "name": "Yoshi's Island 1 - Normal Exit",
             "id": 12320768,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Carry",
@@ -140,8 +149,9 @@
             "name": "Yoshi's Island 2 - Tile -> Yoshi's Island 2",
             "connected_region": "Yoshi's Island 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -154,8 +164,9 @@
             "name": "Yoshi's Island 2 -> Yoshi's Island 2 - Normal Exit",
             "connected_region": "Yoshi's Island 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -168,8 +179,9 @@
             "name": "Yoshi's Island 2 - Normal Exit -> Yoshi's Island 3 - Tile",
             "connected_region": "Yoshi's Island 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -178,8 +190,9 @@
             "name": "Yoshi's Island 2 - Normal Exit",
             "id": 12320769,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Climb",
@@ -198,8 +211,9 @@
             "name": "Yoshi's Island 3 - Tile -> Yoshi's Island 3",
             "connected_region": "Yoshi's Island 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -212,8 +226,9 @@
             "name": "Yoshi's Island 3 -> Yoshi's Island 3 - Normal Exit",
             "connected_region": "Yoshi's Island 3 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -226,8 +241,9 @@
             "name": "Yoshi's Island 3 - Normal Exit -> Yoshi's Island 4 - Tile",
             "connected_region": "Yoshi's Island 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -236,8 +252,9 @@
             "name": "Yoshi's Island 3 - Normal Exit",
             "id": 12320770,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -256,8 +273,9 @@
             "name": "Yoshi's Island 4 - Tile -> Yoshi's Island 4",
             "connected_region": "Yoshi's Island 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -270,8 +288,9 @@
             "name": "Yoshi's Island 4 -> Yoshi's Island 4 - Normal Exit",
             "connected_region": "Yoshi's Island 4 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -284,8 +303,9 @@
             "name": "Yoshi's Island 4 - Normal Exit -> #1 Iggy's Castle - Tile",
             "connected_region": "#1 Iggy's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -294,8 +314,9 @@
             "name": "Yoshi's Island 4 - Normal Exit",
             "id": 12320771,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yoshi",
@@ -314,8 +335,9 @@
             "name": "#1 Iggy's Castle - Tile -> #1 Iggy's Castle",
             "connected_region": "#1 Iggy's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -328,12 +350,9 @@
             "name": "#1 Iggy's Castle -> #1 Iggy's Castle - Normal Exit",
             "connected_region": "#1 Iggy's Castle - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Climb",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -346,12 +365,9 @@
             "name": "#1 Iggy's Castle - Normal Exit -> Donut Plains 1 - Tile",
             "connected_region": "Donut Plains 1 - Tile",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Boss Token",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -360,8 +376,9 @@
             "name": "#1 Iggy's Castle - Normal Exit",
             "id": 12320772,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -375,8 +392,9 @@
             "name": "#1 Iggy's Castle - Boss",
             "id": 12320928,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -395,8 +413,9 @@
             "name": "Yellow Switch Palace - Tile -> Yellow Switch Palace",
             "connected_region": "Yellow Switch Palace",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -410,8 +429,9 @@
             "name": "Yellow Switch Palace",
             "id": 12320773,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -430,8 +450,9 @@
             "name": "Donut Plains 1 - Tile -> Donut Plains 1",
             "connected_region": "Donut Plains 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -444,64 +465,18 @@
             "name": "Donut Plains 1 -> Donut Plains 1 - Normal Exit",
             "connected_region": "Donut Plains 1 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Donut Plains 1 -> Donut Plains 1 - Secret Exit",
             "connected_region": "Donut Plains 1 - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Progressive Powerup",
-                            "count": 3
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Run",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Green Switch Palace",
-                          "Yoshi"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Carry",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -514,8 +489,9 @@
             "name": "Donut Plains 1 - Normal Exit -> Donut Plains 2 - Tile",
             "connected_region": "Donut Plains 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -524,8 +500,9 @@
             "name": "Donut Plains 1 - Normal Exit",
             "id": 12320774,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -544,8 +521,9 @@
             "name": "Donut Plains 1 - Secret Exit -> Donut Secret 1 - Tile",
             "connected_region": "Donut Secret 1 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -554,8 +532,9 @@
             "name": "Donut Plains 1 - Secret Exit",
             "id": 12320775,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -574,8 +553,9 @@
             "name": "Donut Plains 2 - Tile -> Donut Plains 2",
             "connected_region": "Donut Plains 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -588,51 +568,18 @@
             "name": "Donut Plains 2 -> Donut Plains 2 - Normal Exit",
             "connected_region": "Donut Plains 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Donut Plains 2 -> Donut Plains 2 - Secret Exit",
             "connected_region": "Donut Plains 2 - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Climb",
-                          "Progressive Powerup",
-                          "Spin Jump"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Yoshi",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Carry",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -645,8 +592,9 @@
             "name": "Donut Plains 2 - Normal Exit -> Donut Ghost House - Tile",
             "connected_region": "Donut Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -655,8 +603,9 @@
             "name": "Donut Plains 2 - Normal Exit",
             "id": 12320776,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -675,8 +624,9 @@
             "name": "Donut Plains 2 - Secret Exit -> Green Switch Palace - Tile",
             "connected_region": "Green Switch Palace - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -685,8 +635,9 @@
             "name": "Donut Plains 2 - Secret Exit",
             "id": 12320777,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -705,8 +656,9 @@
             "name": "Donut Plains 3 - Tile -> Donut Plains 3",
             "connected_region": "Donut Plains 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -719,8 +671,9 @@
             "name": "Donut Plains 3 -> Donut Plains 3 - Normal Exit",
             "connected_region": "Donut Plains 3 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -733,8 +686,9 @@
             "name": "Donut Plains 3 - Normal Exit -> Donut Plains 4 - Tile",
             "connected_region": "Donut Plains 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -743,8 +697,9 @@
             "name": "Donut Plains 3 - Normal Exit",
             "id": 12320778,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -763,8 +718,9 @@
             "name": "Donut Plains 4 - Tile -> Donut Plains 4",
             "connected_region": "Donut Plains 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -777,8 +733,9 @@
             "name": "Donut Plains 4 -> Donut Plains 4 - Normal Exit",
             "connected_region": "Donut Plains 4 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -791,8 +748,9 @@
             "name": "Donut Plains 4 - Normal Exit -> #2 Morton's Castle - Tile",
             "connected_region": "#2 Morton's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -801,8 +759,9 @@
             "name": "Donut Plains 4 - Normal Exit",
             "id": 12320779,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -821,8 +780,9 @@
             "name": "Donut Secret 1 - Tile -> Donut Secret 1",
             "connected_region": "Donut Secret 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -835,27 +795,18 @@
             "name": "Donut Secret 1 -> Donut Secret 1 - Normal Exit",
             "connected_region": "Donut Secret 1 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Donut Secret 1 -> Donut Secret 1 - Secret Exit",
             "connected_region": "Donut Secret 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "P-Switch",
-                  "Swim"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -868,8 +819,9 @@
             "name": "Donut Secret 1 - Normal Exit -> Donut Ghost House - Tile",
             "connected_region": "Donut Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -878,8 +830,9 @@
             "name": "Donut Secret 1 - Normal Exit",
             "id": 12320780,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -898,8 +851,9 @@
             "name": "Donut Secret 1 - Secret Exit -> Donut Secret House - Tile",
             "connected_region": "Donut Secret House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -908,8 +862,9 @@
             "name": "Donut Secret 1 - Secret Exit",
             "id": 12320781,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -928,8 +883,9 @@
             "name": "Donut Secret 2 - Tile -> Donut Secret 2",
             "connected_region": "Donut Secret 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -942,8 +898,9 @@
             "name": "Donut Secret 2 -> Donut Secret 2 - Normal Exit",
             "connected_region": "Donut Secret 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -956,8 +913,9 @@
             "name": "Donut Secret 2 - Normal Exit -> Donut Plains 3 - Tile",
             "connected_region": "Donut Plains 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -966,8 +924,9 @@
             "name": "Donut Secret 2 - Normal Exit",
             "id": 12320867,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -986,8 +945,9 @@
             "name": "Donut Ghost House - Tile -> Donut Ghost House",
             "connected_region": "Donut Ghost House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1000,66 +960,18 @@
             "name": "Donut Ghost House -> Donut Ghost House - Normal Exit",
             "connected_region": "Donut Ghost House - Normal Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Run",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Donut Ghost House -> Donut Ghost House - Secret Exit",
             "connected_region": "Donut Ghost House - Secret Exit",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Progressive Powerup",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Run",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Climb",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1072,8 +984,9 @@
             "name": "Donut Ghost House - Normal Exit -> Top Secret Area - Tile",
             "connected_region": "Top Secret Area - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1082,8 +995,9 @@
             "name": "Donut Ghost House - Normal Exit",
             "id": 12320782,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Blue Switch Palace",
@@ -1102,8 +1016,9 @@
             "name": "Donut Ghost House - Secret Exit -> Donut Plains 3 - Tile",
             "connected_region": "Donut Plains 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1112,8 +1027,9 @@
             "name": "Donut Ghost House - Secret Exit",
             "id": 12320783,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -1132,8 +1048,9 @@
             "name": "Donut Secret House - Tile -> Donut Secret House",
             "connected_region": "Donut Secret House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1146,68 +1063,18 @@
             "name": "Donut Secret House -> Donut Secret House - Normal Exit",
             "connected_region": "Donut Secret House - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Donut Secret House -> Donut Secret House - Secret Exit",
             "connected_region": "Donut Secret House - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Progressive Powerup",
-                            "count": 3
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Run",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Climb",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Carry",
-                      "P-Switch"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1220,8 +1087,9 @@
             "name": "Donut Secret House - Normal Exit -> Donut Secret 2 - Tile",
             "connected_region": "Donut Secret 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1230,8 +1098,9 @@
             "name": "Donut Secret House - Normal Exit",
             "id": 12320784,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -1250,8 +1119,9 @@
             "name": "Donut Secret House - Secret Exit -> Donut Plains - Star Road",
             "connected_region": "Donut Plains - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1260,8 +1130,9 @@
             "name": "Donut Secret House - Secret Exit",
             "id": 12320785,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Run",
@@ -1280,8 +1151,9 @@
             "name": "#2 Morton's Castle - Tile -> #2 Morton's Castle",
             "connected_region": "#2 Morton's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1294,8 +1166,9 @@
             "name": "#2 Morton's Castle -> #2 Morton's Castle - Normal Exit",
             "connected_region": "#2 Morton's Castle - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1308,12 +1181,9 @@
             "name": "#2 Morton's Castle - Normal Exit -> Vanilla Dome 1 - Tile",
             "connected_region": "Vanilla Dome 1 - Tile",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Boss Token",
-                "count": 2
-              }
+              "args": {}
             }
           }
         ],
@@ -1322,8 +1192,9 @@
             "name": "#2 Morton's Castle - Normal Exit",
             "id": 12320786,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -1337,8 +1208,9 @@
             "name": "#2 Morton's Castle - Boss",
             "id": 12320929,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -1357,8 +1229,9 @@
             "name": "Green Switch Palace - Tile -> Green Switch Palace",
             "connected_region": "Green Switch Palace",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1372,8 +1245,9 @@
             "name": "Green Switch Palace",
             "id": 12320787,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Swim",
@@ -1392,8 +1266,9 @@
             "name": "Top Secret Area - Tile -> Yoshi's House",
             "connected_region": "Yoshi's House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1411,8 +1286,9 @@
             "name": "Vanilla Dome 1 - Tile -> Vanilla Dome 1",
             "connected_region": "Vanilla Dome 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1425,82 +1301,18 @@
             "name": "Vanilla Dome 1 -> Vanilla Dome 1 - Normal Exit",
             "connected_region": "Vanilla Dome 1 - Normal Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Progressive Powerup",
-                      "Super Star Activate"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Run",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Vanilla Dome 1 -> Vanilla Dome 1 - Secret Exit",
             "connected_region": "Vanilla Dome 1 - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Climb",
-                          "Red Switch Palace"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Climb",
-                          "Yoshi"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Red Switch Palace",
-                          "Yoshi"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Carry",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1513,8 +1325,9 @@
             "name": "Vanilla Dome 1 - Normal Exit -> Vanilla Dome 2 - Tile",
             "connected_region": "Vanilla Dome 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1523,8 +1336,9 @@
             "name": "Vanilla Dome 1 - Normal Exit",
             "id": 12320788,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -1543,8 +1357,9 @@
             "name": "Vanilla Dome 1 - Secret Exit -> Vanilla Secret 1 - Tile",
             "connected_region": "Vanilla Secret 1 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1553,8 +1368,9 @@
             "name": "Vanilla Dome 1 - Secret Exit",
             "id": 12320789,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -1573,8 +1389,9 @@
             "name": "Vanilla Dome 2 - Tile -> Vanilla Dome 2",
             "connected_region": "Vanilla Dome 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1587,59 +1404,18 @@
             "name": "Vanilla Dome 2 -> Vanilla Dome 2 - Normal Exit",
             "connected_region": "Vanilla Dome 2 - Normal Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Climb",
-                      "Yoshi"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Swim",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Vanilla Dome 2 -> Vanilla Dome 2 - Secret Exit",
             "connected_region": "Vanilla Dome 2 - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Climb",
-                      "Yoshi"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Carry",
-                      "P-Switch",
-                      "Swim"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -1652,8 +1428,9 @@
             "name": "Vanilla Dome 2 - Normal Exit -> Vanilla Ghost House - Tile",
             "connected_region": "Vanilla Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1662,8 +1439,9 @@
             "name": "Vanilla Dome 2 - Normal Exit",
             "id": 12320790,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Powerup",
@@ -1682,8 +1460,9 @@
             "name": "Vanilla Dome 2 - Secret Exit -> Red Switch Palace - Tile",
             "connected_region": "Red Switch Palace - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1692,8 +1471,9 @@
             "name": "Vanilla Dome 2 - Secret Exit",
             "id": 12320791,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -1712,8 +1492,9 @@
             "name": "Vanilla Dome 3 - Tile -> Vanilla Dome 3",
             "connected_region": "Vanilla Dome 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1726,8 +1507,9 @@
             "name": "Vanilla Dome 3 -> Vanilla Dome 3 - Normal Exit",
             "connected_region": "Vanilla Dome 3 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1740,8 +1522,9 @@
             "name": "Vanilla Dome 3 - Normal Exit -> Vanilla Dome 4 - Tile",
             "connected_region": "Vanilla Dome 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1750,8 +1533,9 @@
             "name": "Vanilla Dome 3 - Normal Exit",
             "id": 12320792,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -1770,8 +1554,9 @@
             "name": "Vanilla Dome 4 - Tile -> Vanilla Dome 4",
             "connected_region": "Vanilla Dome 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1784,8 +1569,9 @@
             "name": "Vanilla Dome 4 -> Vanilla Dome 4 - Normal Exit",
             "connected_region": "Vanilla Dome 4 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1798,8 +1584,9 @@
             "name": "Vanilla Dome 4 - Normal Exit -> #3 Lemmy's Castle - Tile",
             "connected_region": "#3 Lemmy's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1808,8 +1595,9 @@
             "name": "Vanilla Dome 4 - Normal Exit",
             "id": 12320793,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -1828,8 +1616,9 @@
             "name": "Vanilla Secret 1 - Tile -> Vanilla Secret 1",
             "connected_region": "Vanilla Secret 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1842,27 +1631,18 @@
             "name": "Vanilla Secret 1 -> Vanilla Secret 1 - Normal Exit",
             "connected_region": "Vanilla Secret 1 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Climb",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Vanilla Secret 1 -> Vanilla Secret 1 - Secret Exit",
             "connected_region": "Vanilla Secret 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Blue Switch Palace",
-                  "Carry",
-                  "Climb"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -1875,8 +1655,9 @@
             "name": "Vanilla Secret 1 - Normal Exit -> Vanilla Secret 2 - Tile",
             "connected_region": "Vanilla Secret 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1885,8 +1666,9 @@
             "name": "Vanilla Secret 1 - Normal Exit",
             "id": 12320794,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -1905,8 +1687,9 @@
             "name": "Vanilla Secret 1 - Secret Exit -> Vanilla Dome - Star Road",
             "connected_region": "Vanilla Dome - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1915,8 +1698,9 @@
             "name": "Vanilla Secret 1 - Secret Exit",
             "id": 12320795,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -1935,8 +1719,9 @@
             "name": "Vanilla Secret 2 - Tile -> Vanilla Secret 2",
             "connected_region": "Vanilla Secret 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1949,8 +1734,9 @@
             "name": "Vanilla Secret 2 -> Vanilla Secret 2 - Normal Exit",
             "connected_region": "Vanilla Secret 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1963,8 +1749,9 @@
             "name": "Vanilla Secret 2 - Normal Exit -> Vanilla Secret 3 - Tile",
             "connected_region": "Vanilla Secret 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1973,8 +1760,9 @@
             "name": "Vanilla Secret 2 - Normal Exit",
             "id": 12320796,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -1993,8 +1781,9 @@
             "name": "Vanilla Secret 3 - Tile -> Vanilla Secret 3",
             "connected_region": "Vanilla Secret 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2007,12 +1796,9 @@
             "name": "Vanilla Secret 3 -> Vanilla Secret 3 - Normal Exit",
             "connected_region": "Vanilla Secret 3 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2025,8 +1811,9 @@
             "name": "Vanilla Secret 3 - Normal Exit -> Vanilla Fortress - Tile",
             "connected_region": "Vanilla Fortress - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2035,8 +1822,9 @@
             "name": "Vanilla Secret 3 - Normal Exit",
             "id": 12320797,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "P-Switch",
@@ -2055,8 +1843,9 @@
             "name": "Vanilla Ghost House - Tile -> Vanilla Ghost House",
             "connected_region": "Vanilla Ghost House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2069,12 +1858,9 @@
             "name": "Vanilla Ghost House -> Vanilla Ghost House - Normal Exit",
             "connected_region": "Vanilla Ghost House - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2087,8 +1873,9 @@
             "name": "Vanilla Ghost House - Normal Exit -> Vanilla Dome 3 - Tile",
             "connected_region": "Vanilla Dome 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2097,8 +1884,9 @@
             "name": "Vanilla Ghost House - Normal Exit",
             "id": 12320798,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -2117,8 +1905,9 @@
             "name": "Vanilla Fortress - Tile -> Vanilla Fortress",
             "connected_region": "Vanilla Fortress",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2131,12 +1920,9 @@
             "name": "Vanilla Fortress -> Vanilla Fortress - Normal Exit",
             "connected_region": "Vanilla Fortress - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2149,8 +1935,9 @@
             "name": "Vanilla Fortress - Normal Exit -> Butter Bridge 1 - Tile",
             "connected_region": "Butter Bridge 1 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2159,8 +1946,9 @@
             "name": "Vanilla Fortress - Normal Exit",
             "id": 12320800,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2174,8 +1962,9 @@
             "name": "Vanilla Fortress - Boss",
             "id": 12320944,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -2194,8 +1983,9 @@
             "name": "#3 Lemmy's Castle - Tile -> #3 Lemmy's Castle",
             "connected_region": "#3 Lemmy's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2208,8 +1998,9 @@
             "name": "#3 Lemmy's Castle -> #3 Lemmy's Castle - Normal Exit",
             "connected_region": "#3 Lemmy's Castle - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2222,8 +2013,9 @@
             "name": "#3 Lemmy's Castle - Normal Exit -> Cheese Bridge - Tile",
             "connected_region": "Cheese Bridge - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2232,8 +2024,9 @@
             "name": "#3 Lemmy's Castle - Normal Exit",
             "id": 12320801,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -2247,8 +2040,9 @@
             "name": "#3 Lemmy's Castle - Boss",
             "id": 12320930,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -2267,8 +2061,9 @@
             "name": "Red Switch Palace - Tile -> Red Switch Palace",
             "connected_region": "Red Switch Palace",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2282,8 +2077,9 @@
             "name": "Red Switch Palace",
             "id": 12320802,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2302,8 +2098,9 @@
             "name": "Butter Bridge 1 - Tile -> Butter Bridge 1",
             "connected_region": "Butter Bridge 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2316,8 +2113,9 @@
             "name": "Butter Bridge 1 -> Butter Bridge 1 - Normal Exit",
             "connected_region": "Butter Bridge 1 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2330,8 +2128,9 @@
             "name": "Butter Bridge 1 - Normal Exit -> Butter Bridge 2 - Tile",
             "connected_region": "Butter Bridge 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2340,8 +2139,9 @@
             "name": "Butter Bridge 1 - Normal Exit",
             "id": 12320803,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Star Activate",
@@ -2360,8 +2160,9 @@
             "name": "Butter Bridge 2 - Tile -> Butter Bridge 2",
             "connected_region": "Butter Bridge 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2374,8 +2175,9 @@
             "name": "Butter Bridge 2 -> Butter Bridge 2 - Normal Exit",
             "connected_region": "Butter Bridge 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2388,8 +2190,9 @@
             "name": "Butter Bridge 2 - Normal Exit -> #4 Ludwig's Castle - Tile",
             "connected_region": "#4 Ludwig's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2398,8 +2201,9 @@
             "name": "Butter Bridge 2 - Normal Exit",
             "id": 12320804,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Powerup",
@@ -2418,8 +2222,9 @@
             "name": "Cheese Bridge - Tile -> Cheese Bridge",
             "connected_region": "Cheese Bridge",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2432,52 +2237,18 @@
             "name": "Cheese Bridge -> Cheese Bridge - Normal Exit",
             "connected_region": "Cheese Bridge - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Climb",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Cheese Bridge -> Cheese Bridge - Secret Exit",
             "connected_region": "Cheese Bridge - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Progressive Powerup",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Yoshi",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Run",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -2490,8 +2261,9 @@
             "name": "Cheese Bridge - Normal Exit -> Cookie Mountain - Tile",
             "connected_region": "Cookie Mountain - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2500,8 +2272,9 @@
             "name": "Cheese Bridge - Normal Exit",
             "id": 12320805,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -2520,8 +2293,9 @@
             "name": "Cheese Bridge - Secret Exit -> Soda Lake - Tile",
             "connected_region": "Soda Lake - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2530,8 +2304,9 @@
             "name": "Cheese Bridge - Secret Exit",
             "id": 12320806,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2550,8 +2325,9 @@
             "name": "Cookie Mountain - Tile -> Cookie Mountain",
             "connected_region": "Cookie Mountain",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2564,8 +2340,9 @@
             "name": "Cookie Mountain -> Cookie Mountain - Normal Exit",
             "connected_region": "Cookie Mountain - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2578,8 +2355,9 @@
             "name": "Cookie Mountain - Normal Exit -> #4 Ludwig's Castle - Tile",
             "connected_region": "#4 Ludwig's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2588,8 +2366,9 @@
             "name": "Cookie Mountain - Normal Exit",
             "id": 12320807,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2608,8 +2387,9 @@
             "name": "Soda Lake - Tile -> Soda Lake",
             "connected_region": "Soda Lake",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2622,12 +2402,9 @@
             "name": "Soda Lake -> Soda Lake - Normal Exit",
             "connected_region": "Soda Lake - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -2640,8 +2417,9 @@
             "name": "Soda Lake - Normal Exit -> Twin Bridges - Star Road",
             "connected_region": "Twin Bridges - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2650,8 +2428,9 @@
             "name": "Soda Lake - Normal Exit",
             "id": 12320808,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2670,8 +2449,9 @@
             "name": "#4 Ludwig's Castle - Tile -> #4 Ludwig's Castle",
             "connected_region": "#4 Ludwig's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2684,14 +2464,9 @@
             "name": "#4 Ludwig's Castle -> #4 Ludwig's Castle - Normal Exit",
             "connected_region": "#4 Ludwig's Castle - Normal Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Climb",
-                  "Run"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -2704,12 +2479,9 @@
             "name": "#4 Ludwig's Castle - Normal Exit -> Forest of Illusion 1 - Tile",
             "connected_region": "Forest of Illusion 1 - Tile",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Boss Token",
-                "count": 4
-              }
+              "args": {}
             }
           }
         ],
@@ -2718,8 +2490,9 @@
             "name": "#4 Ludwig's Castle - Normal Exit",
             "id": 12320809,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2733,8 +2506,9 @@
             "name": "#4 Ludwig's Castle - Boss",
             "id": 12320931,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -2753,8 +2527,9 @@
             "name": "Forest of Illusion 1 - Tile -> Forest of Illusion 1",
             "connected_region": "Forest of Illusion 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2767,22 +2542,18 @@
             "name": "Forest of Illusion 1 -> Forest of Illusion 1 - Normal Exit",
             "connected_region": "Forest of Illusion 1 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Forest of Illusion 1 -> Forest of Illusion 1 - Secret Exit",
             "connected_region": "Forest of Illusion 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "P-Balloon"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -2795,8 +2566,9 @@
             "name": "Forest of Illusion 1 - Normal Exit -> Forest of Illusion 2 - Tile",
             "connected_region": "Forest of Illusion 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2805,8 +2577,9 @@
             "name": "Forest of Illusion 1 - Normal Exit",
             "id": 12320810,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2825,8 +2598,9 @@
             "name": "Forest of Illusion 1 - Secret Exit -> Forest Ghost House - Tile",
             "connected_region": "Forest Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2835,8 +2609,9 @@
             "name": "Forest of Illusion 1 - Secret Exit",
             "id": 12320811,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -2855,8 +2630,9 @@
             "name": "Forest of Illusion 2 - Tile -> Forest of Illusion 2",
             "connected_region": "Forest of Illusion 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2869,26 +2645,18 @@
             "name": "Forest of Illusion 2 -> Forest of Illusion 2 - Normal Exit",
             "connected_region": "Forest of Illusion 2 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Forest of Illusion 2 -> Forest of Illusion 2 - Secret Exit",
             "connected_region": "Forest of Illusion 2 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "Swim"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -2901,8 +2669,9 @@
             "name": "Forest of Illusion 2 - Normal Exit -> Forest of Illusion 3 - Tile",
             "connected_region": "Forest of Illusion 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2911,8 +2680,9 @@
             "name": "Forest of Illusion 2 - Normal Exit",
             "id": 12320812,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -2931,8 +2701,9 @@
             "name": "Forest of Illusion 2 - Secret Exit -> Blue Switch Palace - Tile",
             "connected_region": "Blue Switch Palace - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2941,8 +2712,9 @@
             "name": "Forest of Illusion 2 - Secret Exit",
             "id": 12320813,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -2961,8 +2733,9 @@
             "name": "Forest of Illusion 3 - Tile -> Forest of Illusion 3",
             "connected_region": "Forest of Illusion 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2975,29 +2748,18 @@
             "name": "Forest of Illusion 3 -> Forest of Illusion 3 - Normal Exit",
             "connected_region": "Forest of Illusion 3 - Normal Exit",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "Yoshi"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "Forest of Illusion 3 -> Forest of Illusion 3 - Secret Exit",
             "connected_region": "Forest of Illusion 3 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "Progressive Powerup",
-                  "Spin Jump"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -3010,8 +2772,9 @@
             "name": "Forest of Illusion 3 - Normal Exit -> Forest Ghost House - Tile",
             "connected_region": "Forest Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3020,8 +2783,9 @@
             "name": "Forest of Illusion 3 - Normal Exit",
             "id": 12320814,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive Powerup",
@@ -3040,8 +2804,9 @@
             "name": "Forest of Illusion 3 - Secret Exit -> #5 Roy's Castle - Tile",
             "connected_region": "#5 Roy's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3050,8 +2815,9 @@
             "name": "Forest of Illusion 3 - Secret Exit",
             "id": 12320815,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -3070,8 +2836,9 @@
             "name": "Forest of Illusion 4 - Tile -> Forest of Illusion 4",
             "connected_region": "Forest of Illusion 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3084,20 +2851,18 @@
             "name": "Forest of Illusion 4 -> Forest of Illusion 4 - Normal Exit",
             "connected_region": "Forest of Illusion 4 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Forest of Illusion 4 -> Forest of Illusion 4 - Secret Exit",
             "connected_region": "Forest of Illusion 4 - Secret Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Carry",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3110,8 +2875,9 @@
             "name": "Forest of Illusion 4 - Normal Exit -> Forest of Illusion 2 - Tile",
             "connected_region": "Forest of Illusion 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3120,8 +2886,9 @@
             "name": "Forest of Illusion 4 - Normal Exit",
             "id": 12320816,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Green Switch Palace",
@@ -3140,8 +2907,9 @@
             "name": "Forest of Illusion 4 - Secret Exit -> Forest Secret - Tile",
             "connected_region": "Forest Secret - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3150,8 +2918,9 @@
             "name": "Forest of Illusion 4 - Secret Exit",
             "id": 12320817,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -3170,8 +2939,9 @@
             "name": "Forest Ghost House - Tile -> Forest Ghost House",
             "connected_region": "Forest Ghost House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3184,24 +2954,18 @@
             "name": "Forest Ghost House -> Forest Ghost House - Normal Exit",
             "connected_region": "Forest Ghost House - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Forest Ghost House -> Forest Ghost House - Secret Exit",
             "connected_region": "Forest Ghost House - Secret Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3214,8 +2978,9 @@
             "name": "Forest Ghost House - Normal Exit -> Forest of Illusion 1 - Tile",
             "connected_region": "Forest of Illusion 1 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3224,8 +2989,9 @@
             "name": "Forest Ghost House - Normal Exit",
             "id": 12320818,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -3244,8 +3010,9 @@
             "name": "Forest Ghost House - Secret Exit -> Forest of Illusion 4 - Tile",
             "connected_region": "Forest of Illusion 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3254,8 +3021,9 @@
             "name": "Forest Ghost House - Secret Exit",
             "id": 12320819,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -3274,8 +3042,9 @@
             "name": "Forest Secret - Tile -> Forest Secret",
             "connected_region": "Forest Secret",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3288,8 +3057,9 @@
             "name": "Forest Secret -> Forest Secret - Normal Exit",
             "connected_region": "Forest Secret - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3302,8 +3072,9 @@
             "name": "Forest Secret - Normal Exit -> Forest Fortress - Tile",
             "connected_region": "Forest Fortress - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3312,8 +3083,9 @@
             "name": "Forest Secret - Normal Exit",
             "id": 12320820,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -3332,8 +3104,9 @@
             "name": "Forest Fortress - Tile -> Forest Fortress",
             "connected_region": "Forest Fortress",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3346,8 +3119,9 @@
             "name": "Forest Fortress -> Forest Fortress - Normal Exit",
             "connected_region": "Forest Fortress - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3360,8 +3134,9 @@
             "name": "Forest Fortress - Normal Exit -> Forest of Illusion - Star Road",
             "connected_region": "Forest of Illusion - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3370,8 +3145,9 @@
             "name": "Forest Fortress - Normal Exit",
             "id": 12320821,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Spin Jump",
@@ -3385,8 +3161,9 @@
             "name": "Forest Fortress - Boss",
             "id": 12320945,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -3405,8 +3182,9 @@
             "name": "#5 Roy's Castle - Tile -> #5 Roy's Castle",
             "connected_region": "#5 Roy's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3419,8 +3197,9 @@
             "name": "#5 Roy's Castle -> #5 Roy's Castle - Normal Exit",
             "connected_region": "#5 Roy's Castle - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3433,12 +3212,9 @@
             "name": "#5 Roy's Castle - Normal Exit -> Chocolate Island 1 - Tile",
             "connected_region": "Chocolate Island 1 - Tile",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Boss Token",
-                "count": 5
-              }
+              "args": {}
             }
           }
         ],
@@ -3447,8 +3223,9 @@
             "name": "#5 Roy's Castle - Normal Exit",
             "id": 12320822,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "P-Balloon",
@@ -3462,8 +3239,9 @@
             "name": "#5 Roy's Castle - Boss",
             "id": 12320932,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -3482,8 +3260,9 @@
             "name": "Blue Switch Palace - Tile -> Blue Switch Palace",
             "connected_region": "Blue Switch Palace",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3497,8 +3276,9 @@
             "name": "Blue Switch Palace",
             "id": 12320823,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -3517,8 +3297,9 @@
             "name": "Chocolate Island 1 - Tile -> Chocolate Island 1",
             "connected_region": "Chocolate Island 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3531,12 +3312,9 @@
             "name": "Chocolate Island 1 -> Chocolate Island 1 - Normal Exit",
             "connected_region": "Chocolate Island 1 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3549,8 +3327,9 @@
             "name": "Chocolate Island 1 - Normal Exit -> Choco-Ghost House - Tile",
             "connected_region": "Choco-Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3559,8 +3338,9 @@
             "name": "Chocolate Island 1 - Normal Exit",
             "id": 12320824,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -3579,8 +3359,9 @@
             "name": "Chocolate Island 2 - Tile -> Chocolate Island 2",
             "connected_region": "Chocolate Island 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3593,20 +3374,18 @@
             "name": "Chocolate Island 2 -> Chocolate Island 2 - Normal Exit",
             "connected_region": "Chocolate Island 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Chocolate Island 2 -> Chocolate Island 2 - Secret Exit",
             "connected_region": "Chocolate Island 2 - Secret Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Carry",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -3619,8 +3398,9 @@
             "name": "Chocolate Island 2 - Normal Exit -> Chocolate Island 3 - Tile",
             "connected_region": "Chocolate Island 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3629,8 +3409,9 @@
             "name": "Chocolate Island 2 - Normal Exit",
             "id": 12320825,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -3649,8 +3430,9 @@
             "name": "Chocolate Island 2 - Secret Exit -> Chocolate Secret - Tile",
             "connected_region": "Chocolate Secret - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3659,8 +3441,9 @@
             "name": "Chocolate Island 2 - Secret Exit",
             "id": 12320826,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -3679,8 +3462,9 @@
             "name": "Chocolate Island 3 - Tile -> Chocolate Island 3",
             "connected_region": "Chocolate Island 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3693,66 +3477,18 @@
             "name": "Chocolate Island 3 -> Chocolate Island 3 - Normal Exit",
             "connected_region": "Chocolate Island 3 - Normal Exit",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "And",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Progressive Powerup",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Run",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Climb",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Chocolate Island 3 -> Chocolate Island 3 - Secret Exit",
             "connected_region": "Chocolate Island 3 - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Run",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -3765,8 +3501,9 @@
             "name": "Chocolate Island 3 - Normal Exit -> Chocolate Island 3 - Tile",
             "connected_region": "Chocolate Island 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3775,8 +3512,9 @@
             "name": "Chocolate Island 3 - Normal Exit",
             "id": 12320827,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -3795,8 +3533,9 @@
             "name": "Chocolate Island 3 - Secret Exit -> Chocolate Fortress - Tile",
             "connected_region": "Chocolate Fortress - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3805,8 +3544,9 @@
             "name": "Chocolate Island 3 - Secret Exit",
             "id": 12320828,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -3825,8 +3565,9 @@
             "name": "Chocolate Island 4 - Tile -> Chocolate Island 4",
             "connected_region": "Chocolate Island 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3839,8 +3580,9 @@
             "name": "Chocolate Island 4 -> Chocolate Island 4 - Normal Exit",
             "connected_region": "Chocolate Island 4 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3853,8 +3595,9 @@
             "name": "Chocolate Island 4 - Normal Exit -> Chocolate Island 5 - Tile",
             "connected_region": "Chocolate Island 5 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3863,8 +3606,9 @@
             "name": "Chocolate Island 4 - Normal Exit",
             "id": 12320829,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red Switch Palace",
@@ -3883,8 +3627,9 @@
             "name": "Chocolate Island 5 - Tile -> Chocolate Island 5",
             "connected_region": "Chocolate Island 5",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3897,8 +3642,9 @@
             "name": "Chocolate Island 5 -> Chocolate Island 5 - Normal Exit",
             "connected_region": "Chocolate Island 5 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3911,8 +3657,9 @@
             "name": "Chocolate Island 5 - Normal Exit -> #6 Wendy's Castle - Tile",
             "connected_region": "#6 Wendy's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3921,8 +3668,9 @@
             "name": "Chocolate Island 5 - Normal Exit",
             "id": 12320830,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -3941,8 +3689,9 @@
             "name": "Choco-Ghost House - Tile -> Choco-Ghost House",
             "connected_region": "Choco-Ghost House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3955,8 +3704,9 @@
             "name": "Choco-Ghost House -> Choco-Ghost House - Normal Exit",
             "connected_region": "Choco-Ghost House - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3969,8 +3719,9 @@
             "name": "Choco-Ghost House - Normal Exit -> Chocolate Island 2 - Tile",
             "connected_region": "Chocolate Island 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3979,8 +3730,9 @@
             "name": "Choco-Ghost House - Normal Exit",
             "id": 12320831,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -3999,8 +3751,9 @@
             "name": "Chocolate Secret - Tile -> Chocolate Secret",
             "connected_region": "Chocolate Secret",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4013,12 +3766,9 @@
             "name": "Chocolate Secret -> Chocolate Secret - Normal Exit",
             "connected_region": "Chocolate Secret - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Run",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4031,8 +3781,9 @@
             "name": "Chocolate Secret - Normal Exit -> #6 Wendy's Castle - Tile",
             "connected_region": "#6 Wendy's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4041,8 +3792,9 @@
             "name": "Chocolate Secret - Normal Exit",
             "id": 12320833,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -4061,8 +3813,9 @@
             "name": "Chocolate Fortress - Tile -> Chocolate Fortress",
             "connected_region": "Chocolate Fortress",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4075,8 +3828,9 @@
             "name": "Chocolate Fortress -> Chocolate Fortress - Normal Exit",
             "connected_region": "Chocolate Fortress - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4089,8 +3843,9 @@
             "name": "Chocolate Fortress - Normal Exit -> Chocolate Island 4 - Tile",
             "connected_region": "Chocolate Island 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4099,8 +3854,9 @@
             "name": "Chocolate Fortress - Normal Exit",
             "id": 12320834,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -4114,8 +3870,9 @@
             "name": "Chocolate Fortress - Boss",
             "id": 12320946,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -4134,8 +3891,9 @@
             "name": "#6 Wendy's Castle - Tile -> #6 Wendy's Castle",
             "connected_region": "#6 Wendy's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4148,12 +3906,9 @@
             "name": "#6 Wendy's Castle -> #6 Wendy's Castle - Normal Exit",
             "connected_region": "#6 Wendy's Castle - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Progressive Powerup",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4166,8 +3921,9 @@
             "name": "#6 Wendy's Castle - Normal Exit -> Sunken Ghost Ship - Tile",
             "connected_region": "Sunken Ghost Ship - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4176,8 +3932,9 @@
             "name": "#6 Wendy's Castle - Normal Exit",
             "id": 12320835,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -4191,8 +3948,9 @@
             "name": "#6 Wendy's Castle - Boss",
             "id": 12320933,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -4211,8 +3969,9 @@
             "name": "Sunken Ghost Ship - Tile -> Sunken Ghost Ship",
             "connected_region": "Sunken Ghost Ship",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4225,12 +3984,9 @@
             "name": "Sunken Ghost Ship -> Sunken Ghost Ship - Normal Exit",
             "connected_region": "Sunken Ghost Ship - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4243,12 +3999,9 @@
             "name": "Sunken Ghost Ship - Normal Exit -> Valley of Bowser 1 - Tile",
             "connected_region": "Valley of Bowser 1 - Tile",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Boss Token",
-                "count": 6
-              }
+              "args": {}
             }
           }
         ],
@@ -4257,8 +4010,9 @@
             "name": "Sunken Ghost Ship - Normal Exit",
             "id": 12320836,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -4277,8 +4031,9 @@
             "name": "Valley of Bowser 1 - Tile -> Valley of Bowser 1",
             "connected_region": "Valley of Bowser 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4291,8 +4046,9 @@
             "name": "Valley of Bowser 1 -> Valley of Bowser 1 - Normal Exit",
             "connected_region": "Valley of Bowser 1 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4305,8 +4061,9 @@
             "name": "Valley of Bowser 1 - Normal Exit -> Valley of Bowser 2 - Tile",
             "connected_region": "Valley of Bowser 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4315,8 +4072,9 @@
             "name": "Valley of Bowser 1 - Normal Exit",
             "id": 12320837,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -4335,8 +4093,9 @@
             "name": "Valley of Bowser 2 - Tile -> Valley of Bowser 2",
             "connected_region": "Valley of Bowser 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4349,20 +4108,18 @@
             "name": "Valley of Bowser 2 -> Valley of Bowser 2 - Normal Exit",
             "connected_region": "Valley of Bowser 2 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Valley of Bowser 2 -> Valley of Bowser 2 - Secret Exit",
             "connected_region": "Valley of Bowser 2 - Secret Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Carry",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4375,8 +4132,9 @@
             "name": "Valley of Bowser 2 - Normal Exit -> Valley Ghost House - Tile",
             "connected_region": "Valley Ghost House - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4385,8 +4143,9 @@
             "name": "Valley of Bowser 2 - Normal Exit",
             "id": 12320838,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -4405,8 +4164,9 @@
             "name": "Valley of Bowser 2 - Secret Exit -> Valley Fortress - Tile",
             "connected_region": "Valley Fortress - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4415,8 +4175,9 @@
             "name": "Valley of Bowser 2 - Secret Exit",
             "id": 12320839,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -4435,8 +4196,9 @@
             "name": "Valley of Bowser 3 - Tile -> Valley of Bowser 3",
             "connected_region": "Valley of Bowser 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4449,8 +4211,9 @@
             "name": "Valley of Bowser 3 -> Valley of Bowser 3 - Normal Exit",
             "connected_region": "Valley of Bowser 3 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4463,8 +4226,9 @@
             "name": "Valley of Bowser 3 - Normal Exit -> Valley of Bowser 4 - Tile",
             "connected_region": "Valley of Bowser 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4473,8 +4237,9 @@
             "name": "Valley of Bowser 3 - Normal Exit",
             "id": 12320840,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -4493,8 +4258,9 @@
             "name": "Valley of Bowser 4 - Tile -> Valley of Bowser 4",
             "connected_region": "Valley of Bowser 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4507,27 +4273,18 @@
             "name": "Valley of Bowser 4 -> Valley of Bowser 4 - Normal Exit",
             "connected_region": "Valley of Bowser 4 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Climb",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Valley of Bowser 4 -> Valley of Bowser 4 - Secret Exit",
             "connected_region": "Valley of Bowser 4 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "Climb",
-                  "Yoshi"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -4540,8 +4297,9 @@
             "name": "Valley of Bowser 4 - Normal Exit -> #7 Larry's Castle - Tile",
             "connected_region": "#7 Larry's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4550,8 +4308,9 @@
             "name": "Valley of Bowser 4 - Normal Exit",
             "id": 12320841,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -4570,8 +4329,9 @@
             "name": "Valley of Bowser 4 - Secret Exit -> Valley of Bowser - Star Road",
             "connected_region": "Valley of Bowser - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4580,8 +4340,9 @@
             "name": "Valley of Bowser 4 - Secret Exit",
             "id": 12320842,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -4600,8 +4361,9 @@
             "name": "Valley Ghost House - Tile -> Valley Ghost House",
             "connected_region": "Valley Ghost House",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4614,27 +4376,18 @@
             "name": "Valley Ghost House -> Valley Ghost House - Normal Exit",
             "connected_region": "Valley Ghost House - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Valley Ghost House -> Valley Ghost House - Secret Exit",
             "connected_region": "Valley Ghost House - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "P-Switch",
-                  "Run"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -4647,8 +4400,9 @@
             "name": "Valley Ghost House - Normal Exit -> Valley of Bowser 3 - Tile",
             "connected_region": "Valley of Bowser 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4657,8 +4411,9 @@
             "name": "Valley Ghost House - Normal Exit",
             "id": 12320843,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -4677,8 +4432,9 @@
             "name": "Valley Ghost House - Secret Exit -> #7 Larry's Castle - Tile",
             "connected_region": "#7 Larry's Castle - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4687,8 +4443,9 @@
             "name": "Valley Ghost House - Secret Exit",
             "id": 12320844,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -4707,8 +4464,9 @@
             "name": "Valley Fortress - Tile -> Valley Fortress",
             "connected_region": "Valley Fortress",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4721,12 +4479,9 @@
             "name": "Valley Fortress -> Valley Fortress - Normal Exit",
             "connected_region": "Valley Fortress - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Progressive Powerup",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4739,8 +4494,9 @@
             "name": "Valley Fortress - Normal Exit -> Back Door - Tile",
             "connected_region": "Back Door - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4749,8 +4505,9 @@
             "name": "Valley Fortress - Normal Exit",
             "id": 12320846,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -4764,8 +4521,9 @@
             "name": "Valley Fortress - Boss",
             "id": 12320947,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -4784,8 +4542,9 @@
             "name": "#7 Larry's Castle - Tile -> #7 Larry's Castle",
             "connected_region": "#7 Larry's Castle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4798,8 +4557,9 @@
             "name": "#7 Larry's Castle -> #7 Larry's Castle - Normal Exit",
             "connected_region": "#7 Larry's Castle - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4812,8 +4572,9 @@
             "name": "#7 Larry's Castle - Normal Exit -> Front Door - Tile",
             "connected_region": "Front Door - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4822,8 +4583,9 @@
             "name": "#7 Larry's Castle - Normal Exit",
             "id": 12320847,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -4837,8 +4599,9 @@
             "name": "#7 Larry's Castle - Boss",
             "id": 12320934,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Boss Token",
@@ -4857,8 +4620,9 @@
             "name": "Front Door - Tile -> Front Door",
             "connected_region": "Front Door",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4871,17 +4635,9 @@
             "name": "Front Door -> Bowser - Region",
             "connected_region": "Bowser - Region",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Boss Token",
-                  "Climb",
-                  "Progressive Powerup",
-                  "Run",
-                  "Swim"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -4894,8 +4650,9 @@
             "name": "Back Door - Tile -> Back Door",
             "connected_region": "Back Door",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4908,12 +4665,9 @@
             "name": "Back Door -> Bowser - Region",
             "connected_region": "Bowser - Region",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Boss Token",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4927,12 +4681,9 @@
             "name": "Bowser",
             "id": 12321280,
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Carry",
-                "count": 1
-              }
+              "args": {}
             },
             "item": {
               "name": "The Princess",
@@ -4951,8 +4702,9 @@
             "name": "Donut Plains - Star Road -> Star Road - Donut Plains",
             "connected_region": "Star Road - Donut Plains",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4965,8 +4717,9 @@
             "name": "Vanilla Dome - Star Road -> Star Road - Vanilla Dome",
             "connected_region": "Star Road - Vanilla Dome",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4979,8 +4732,9 @@
             "name": "Twin Bridges - Star Road -> Star Road - Twin Bridges",
             "connected_region": "Star Road - Twin Bridges",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4993,8 +4747,9 @@
             "name": "Forest of Illusion - Star Road -> Star Road - Forest of Illusion",
             "connected_region": "Star Road - Forest of Illusion",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5007,8 +4762,9 @@
             "name": "Valley of Bowser - Star Road -> Star Road - Valley of Bowser",
             "connected_region": "Star Road - Valley of Bowser",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5021,16 +4777,18 @@
             "name": "Star Road - Donut Plains -> Donut Plains - Star Road",
             "connected_region": "Donut Plains - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road - Donut Plains -> Star Road 1 - Tile",
             "connected_region": "Star Road 1 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5043,16 +4801,18 @@
             "name": "Star Road - Vanilla Dome -> Vanilla Dome - Star Road",
             "connected_region": "Vanilla Dome - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road - Vanilla Dome -> Star Road 2 - Tile",
             "connected_region": "Star Road 2 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5065,16 +4825,18 @@
             "name": "Star Road - Twin Bridges -> Twin Bridges - Star Road",
             "connected_region": "Twin Bridges - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road - Twin Bridges -> Star Road 3 - Tile",
             "connected_region": "Star Road 3 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5087,16 +4849,18 @@
             "name": "Star Road - Forest of Illusion -> Forest of Illusion - Star Road",
             "connected_region": "Forest of Illusion - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road - Forest of Illusion -> Star Road 4 - Tile",
             "connected_region": "Star Road 4 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5109,24 +4873,27 @@
             "name": "Star Road - Valley of Bowser -> Valley of Bowser - Star Road",
             "connected_region": "Valley of Bowser - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road - Valley of Bowser -> Star Road 5 - Tile",
             "connected_region": "Star Road 5 - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road - Valley of Bowser -> Front Door - Tile",
             "connected_region": "Front Door - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5139,8 +4906,9 @@
             "name": "Star Road - Special Zone -> Special Zone - Star Road",
             "connected_region": "Special Zone - Star Road",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5153,16 +4921,18 @@
             "name": "Special Zone - Star Road -> Star Road - Special Zone",
             "connected_region": "Star Road - Special Zone",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Special Zone - Star Road -> Gnarly - Tile",
             "connected_region": "Gnarly - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5175,8 +4945,9 @@
             "name": "Star Road 1 - Tile -> Star Road 1",
             "connected_region": "Star Road 1",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5189,29 +4960,18 @@
             "name": "Star Road 1 -> Star Road 1 - Normal Exit",
             "connected_region": "Star Road 1 - Normal Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Progressive Powerup",
-                  "Spin Jump"
-                ]
-              }
+              "args": {}
             }
           },
           {
             "name": "Star Road 1 -> Star Road 1 - Secret Exit",
             "connected_region": "Star Road 1 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "Progressive Powerup",
-                  "Spin Jump"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5225,8 +4985,9 @@
             "name": "Star Road 1 - Normal Exit",
             "id": 12320849,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -5245,8 +5006,9 @@
             "name": "Star Road 1 - Secret Exit -> Star Road - Vanilla Dome",
             "connected_region": "Star Road - Vanilla Dome",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5255,8 +5017,9 @@
             "name": "Star Road 1 - Secret Exit",
             "id": 12320850,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yellow Switch Palace",
@@ -5275,8 +5038,9 @@
             "name": "Star Road 2 - Tile -> Star Road 2",
             "connected_region": "Star Road 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5289,26 +5053,18 @@
             "name": "Star Road 2 -> Star Road 2 - Normal Exit",
             "connected_region": "Star Road 2 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Star Road 2 -> Star Road 2 - Secret Exit",
             "connected_region": "Star Road 2 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Carry",
-                  "Swim"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5322,8 +5078,9 @@
             "name": "Star Road 2 - Normal Exit",
             "id": 12320851,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 coins",
@@ -5342,8 +5099,9 @@
             "name": "Star Road 2 - Secret Exit -> Star Road - Twin Bridges",
             "connected_region": "Star Road - Twin Bridges",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5352,8 +5110,9 @@
             "name": "Star Road 2 - Secret Exit",
             "id": 12320852,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -5372,8 +5131,9 @@
             "name": "Star Road 3 - Tile -> Star Road 3",
             "connected_region": "Star Road 3",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5386,20 +5146,18 @@
             "name": "Star Road 3 -> Star Road 3 - Normal Exit",
             "connected_region": "Star Road 3 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road 3 -> Star Road 3 - Secret Exit",
             "connected_region": "Star Road 3 - Secret Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Carry",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -5413,8 +5171,9 @@
             "name": "Star Road 3 - Normal Exit",
             "id": 12320853,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -5433,8 +5192,9 @@
             "name": "Star Road 3 - Secret Exit -> Star Road - Forest of Illusion",
             "connected_region": "Star Road - Forest of Illusion",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5443,8 +5203,9 @@
             "name": "Star Road 3 - Secret Exit",
             "id": 12320854,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -5463,8 +5224,9 @@
             "name": "Star Road 4 - Tile -> Star Road 4",
             "connected_region": "Star Road 4",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5477,50 +5239,18 @@
             "name": "Star Road 4 -> Star Road 4 - Normal Exit",
             "connected_region": "Star Road 4 - Normal Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Star Road 4 -> Star Road 4 - Secret Exit",
             "connected_region": "Star Road 4 - Secret Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "options": [],
-                      "args": {
-                        "items": [
-                          "Green Switch Palace",
-                          "Red Switch Palace"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "Yoshi",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Carry",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5534,8 +5264,9 @@
             "name": "Star Road 4 - Normal Exit",
             "id": 12320855,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -5554,8 +5285,9 @@
             "name": "Star Road 4 - Secret Exit -> Star Road - Valley of Bowser",
             "connected_region": "Star Road - Valley of Bowser",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5564,8 +5296,9 @@
             "name": "Star Road 4 - Secret Exit",
             "id": 12320856,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -5584,8 +5317,9 @@
             "name": "Star Road 5 - Tile -> Star Road 5",
             "connected_region": "Star Road 5",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5598,31 +5332,18 @@
             "name": "Star Road 5 -> Star Road 5 - Normal Exit",
             "connected_region": "Star Road 5 - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Switch",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Star Road 5 -> Star Road 5 - Secret Exit",
             "connected_region": "Star Road 5 - Secret Exit",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Blue Switch Palace",
-                  "Carry",
-                  "Climb",
-                  "Green Switch Palace",
-                  "P-Switch",
-                  "Red Switch Palace",
-                  "Yellow Switch Palace"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5635,8 +5356,9 @@
             "name": "Star Road 5 - Normal Exit -> Star Road - Donut Plains",
             "connected_region": "Star Road - Donut Plains",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5645,8 +5367,9 @@
             "name": "Star Road 5 - Normal Exit",
             "id": 12320857,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -5665,8 +5388,9 @@
             "name": "Star Road 5 - Secret Exit -> Star Road - Special Zone",
             "connected_region": "Star Road - Special Zone",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5675,8 +5399,9 @@
             "name": "Star Road 5 - Secret Exit",
             "id": 12320858,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -5695,8 +5420,9 @@
             "name": "Gnarly - Tile -> Gnarly",
             "connected_region": "Gnarly",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5709,54 +5435,9 @@
             "name": "Gnarly -> Gnarly - Normal Exit",
             "connected_region": "Gnarly - Normal Exit",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Or",
-                  "options": [],
-                  "children": [
-                    {
-                      "rule": "And",
-                      "options": [],
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Progressive Powerup",
-                            "count": 3
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "options": [],
-                          "args": {
-                            "item_name": "Run",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "options": [],
-                      "args": {
-                        "item_name": "P-Switch",
-                        "count": 1
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Climb",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5769,8 +5450,9 @@
             "name": "Gnarly - Normal Exit -> Tubular - Tile",
             "connected_region": "Tubular - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5779,8 +5461,9 @@
             "name": "Gnarly - Normal Exit",
             "id": 12320859,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special Zone Clear",
@@ -5799,8 +5482,9 @@
             "name": "Tubular - Tile -> Tubular",
             "connected_region": "Tubular",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5813,12 +5497,9 @@
             "name": "Tubular -> Tubular - Normal Exit",
             "connected_region": "Tubular - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "P-Balloon",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -5831,8 +5512,9 @@
             "name": "Tubular - Normal Exit -> Way Cool - Tile",
             "connected_region": "Way Cool - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5841,8 +5523,9 @@
             "name": "Tubular - Normal Exit",
             "id": 12320860,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -5861,8 +5544,9 @@
             "name": "Way Cool - Tile -> Way Cool",
             "connected_region": "Way Cool",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5875,14 +5559,9 @@
             "name": "Way Cool -> Way Cool - Normal Exit",
             "connected_region": "Way Cool - Normal Exit",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Climb",
-                  "Yoshi"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -5895,8 +5574,9 @@
             "name": "Way Cool - Normal Exit -> Awesome - Tile",
             "connected_region": "Awesome - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5905,8 +5585,9 @@
             "name": "Way Cool - Normal Exit",
             "id": 12320861,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1 coin",
@@ -5925,8 +5606,9 @@
             "name": "Awesome - Tile -> Awesome",
             "connected_region": "Awesome",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5939,26 +5621,9 @@
             "name": "Awesome -> Awesome - Normal Exit",
             "connected_region": "Awesome - Normal Exit",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Super Star Activate",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -5971,8 +5636,9 @@
             "name": "Awesome - Normal Exit -> Groovy - Tile",
             "connected_region": "Groovy - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5981,8 +5647,9 @@
             "name": "Awesome - Normal Exit",
             "id": 12320862,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -6001,8 +5668,9 @@
             "name": "Groovy - Tile -> Groovy",
             "connected_region": "Groovy",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6015,12 +5683,9 @@
             "name": "Groovy -> Groovy - Normal Exit",
             "connected_region": "Groovy - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Progressive Powerup",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -6033,8 +5698,9 @@
             "name": "Groovy - Normal Exit -> Mondo - Tile",
             "connected_region": "Mondo - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6043,8 +5709,9 @@
             "name": "Groovy - Normal Exit",
             "id": 12320863,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -6063,8 +5730,9 @@
             "name": "Mondo - Tile -> Mondo",
             "connected_region": "Mondo",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6077,12 +5745,9 @@
             "name": "Mondo -> Mondo - Normal Exit",
             "connected_region": "Mondo - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Swim",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -6095,8 +5760,9 @@
             "name": "Mondo - Normal Exit -> Outrageous - Tile",
             "connected_region": "Outrageous - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6105,8 +5771,9 @@
             "name": "Mondo - Normal Exit",
             "id": 12320864,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 coins",
@@ -6125,8 +5792,9 @@
             "name": "Outrageous - Tile -> Outrageous",
             "connected_region": "Outrageous",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6139,12 +5807,9 @@
             "name": "Outrageous -> Outrageous - Normal Exit",
             "connected_region": "Outrageous - Normal Exit",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Progressive Powerup",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -6157,8 +5822,9 @@
             "name": "Outrageous - Normal Exit -> Funky - Tile",
             "connected_region": "Funky - Tile",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6167,8 +5833,9 @@
             "name": "Outrageous - Normal Exit",
             "id": 12320865,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-Up Mushroom",
@@ -6187,8 +5854,9 @@
             "name": "Funky - Tile -> Funky",
             "connected_region": "Funky",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6201,38 +5869,9 @@
             "name": "Funky -> Funky - Normal Exit",
             "connected_region": "Funky - Normal Exit",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Progressive Powerup",
-                      "Spin Jump"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "options": [],
-                  "args": {
-                    "items": [
-                      "Carry",
-                      "Yoshi"
-                    ]
-                  }
-                }
-              ]
+              "args": {}
             }
           }
         ],
@@ -6245,8 +5884,9 @@
             "name": "Funky - Normal Exit -> Special Zone - Star Road - Complete",
             "connected_region": "Special Zone - Star Road - Complete",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6255,8 +5895,9 @@
             "name": "Funky - Normal Exit",
             "id": 12320866,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "50 coins",
@@ -6764,8 +6405,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
-        "bosses_required": 7,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -6773,7 +6413,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []

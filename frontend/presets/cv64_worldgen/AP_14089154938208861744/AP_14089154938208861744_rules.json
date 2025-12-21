@@ -19,92 +19,72 @@
             "name": "Start stage",
             "connected_region": "Forest of Silence: first half",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Warp 1",
             "connected_region": "Castle Wall: main area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Warp 2",
             "connected_region": "Tunnel: second half",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 2
-              }
+              "args": {}
             }
           },
           {
             "name": "Warp 3",
             "connected_region": "Underground Waterway: main area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 3
-              }
+              "args": {}
             }
           },
           {
             "name": "Warp 4",
             "connected_region": "Duel Tower",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 4
-              }
+              "args": {}
             }
           },
           {
             "name": "Warp 5",
             "connected_region": "Room of Clocks",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 5
-              }
+              "args": {}
             }
           },
           {
             "name": "Warp 6",
             "connected_region": "Clock Tower: middle",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 6
-              }
+              "args": {}
             }
           },
           {
             "name": "Warp 7",
             "connected_region": "Castle Keep: exterior",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Special1",
-                "count": 7
-              }
+              "args": {}
             }
           }
         ],
@@ -117,8 +97,9 @@
             "name": "Descending bridge gate",
             "connected_region": "Forest of Silence: second half",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -127,8 +108,9 @@
             "name": "Forest of Silence: Grab practice pillars - Right",
             "id": 12992540,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -142,8 +124,9 @@
             "name": "Forest of Silence: Grab practice pillars - Top",
             "id": 12992531,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Healing kit",
@@ -157,8 +140,9 @@
             "name": "Forest of Silence: King Skeleton's bridge",
             "id": 12992524,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -172,8 +156,9 @@
             "name": "Forest of Silence: Moon gazebo inside",
             "id": 12992538,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -187,8 +172,9 @@
             "name": "Forest of Silence: Moon gazebo roof",
             "id": 12992537,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -202,8 +188,9 @@
             "name": "Forest of Silence: Sun gazebo inside",
             "id": 12992523,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -217,8 +204,9 @@
             "name": "Forest of Silence: Sun gazebo roof",
             "id": 12992515,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Healing kit",
@@ -232,8 +220,9 @@
             "name": "Forest of Silence: Were-tiger switch",
             "id": 12992522,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -247,8 +236,9 @@
             "name": "Forest of Silence: Dirge maiden gate",
             "id": 12992519,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -262,8 +252,9 @@
             "name": "Forest of Silence: Dirge maiden crypt - Upper",
             "id": 12992520,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Left Tower Key",
@@ -277,8 +268,9 @@
             "name": "Forest of Silence: Dirge maiden pedestal plaque",
             "id": 12992518,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -292,8 +284,9 @@
             "name": "Forest of Silence: Tri-corpse save junction",
             "id": 12992527,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -307,8 +300,9 @@
             "name": "Forest of Silence: Descending bridge wall side",
             "id": 12992536,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -322,8 +316,9 @@
             "name": "Forest of Silence: Descending bridge switch side",
             "id": 12992521,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -342,8 +337,9 @@
             "name": "Werewolf gate",
             "connected_region": "Forest of Silence: end area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -352,8 +348,9 @@
             "name": "Forest of Silence: Tri-corpse gate - Right",
             "id": 12992526,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -367,8 +364,9 @@
             "name": "Forest of Silence: Three-crypt plaza main path crypt - Upper-front",
             "id": 12992539,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -382,8 +380,9 @@
             "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front",
             "id": 12992528,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -397,8 +396,9 @@
             "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Upper",
             "id": 12992542,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -412,8 +412,9 @@
             "name": "Forest of Silence: Invisible bridge platform",
             "id": 12992514,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -427,8 +428,9 @@
             "name": "Forest of Silence: Werewolf crypt - Right",
             "id": 12992516,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -442,8 +444,9 @@
             "name": "Forest of Silence: Werewolf statue plaque",
             "id": 12992513,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -457,8 +460,9 @@
             "name": "Forest of Silence: Werewolf path near tree",
             "id": 12992525,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -472,8 +476,9 @@
             "name": "Forest of Silence: Three-crypt plaza switch",
             "id": 12992530,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -492,8 +497,9 @@
             "name": "Dracula's drawbridge",
             "connected_region": "Castle Wall: main area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -506,20 +512,18 @@
             "name": "Central portcullis",
             "connected_region": "Castle Wall: exit room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Left Tower door",
             "connected_region": "Castle Wall: left tower",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Left Tower Key",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -528,8 +532,9 @@
             "name": "Castle Wall: Above bottom right tower door",
             "id": 12992989,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -543,8 +548,9 @@
             "name": "Castle Wall: White Dragons switch door",
             "id": 12992851,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -558,8 +564,9 @@
             "name": "Castle Wall: Central rampart near right tower",
             "id": 12992854,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -573,8 +580,9 @@
             "name": "Castle Wall: Central rampart near left tower",
             "id": 12992853,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -588,8 +596,9 @@
             "name": "Castle Wall: Sandbag shelf - Visible",
             "id": 12992856,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -603,8 +612,9 @@
             "name": "Castle Wall: Sandbag shelf - Invisible",
             "id": 12992846,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -624,8 +634,9 @@
             "name": "Castle Wall: Ground gatehouse - Middle",
             "id": 12992857,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -644,8 +655,9 @@
             "name": "End portcullis",
             "connected_region": "Villa: dog gates",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -654,8 +666,9 @@
             "name": "Castle Wall: Above bottom left tower door",
             "id": 12992990,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -669,8 +682,9 @@
             "name": "Castle Wall: Left tower child ledge",
             "id": 12992988,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mandragora",
@@ -684,8 +698,9 @@
             "name": "Castle Wall: Dracula cutscene switch door",
             "id": 12992852,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -704,8 +719,9 @@
             "name": "Front dog gates",
             "connected_region": "Villa: main interior",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -714,8 +730,9 @@
             "name": "Villa: Outer front gate - Left",
             "id": 12992819,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -729,8 +746,9 @@
             "name": "Villa: Outer front gate - Right",
             "id": 12992818,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -744,8 +762,9 @@
             "name": "Villa: Outer front gate platform",
             "id": 12992820,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -759,8 +778,9 @@
             "name": "Villa: Inner front gate dog food",
             "id": 12992824,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -779,633 +799,27 @@
             "name": "To Storeroom door",
             "connected_region": "Villa: storeroom",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Villa: Storeroom statue"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Villa: Storeroom - Right"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Villa: Storeroom - Left"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Storeroom Key",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "To Archives door",
             "connected_region": "Villa: archives",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Villa: Archives rear corner"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Villa: Archives table"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Archives Key",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "To maze gate",
             "connected_region": "Villa: maze",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Garden Key",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -1414,8 +828,9 @@
             "name": "Villa: Front yard cross grave near gates",
             "id": 12992817,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -1429,8 +844,9 @@
             "name": "Villa: Front yard cross grave near porch",
             "id": 12992830,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Science Key1",
@@ -1444,8 +860,9 @@
             "name": "Villa: Front yard visitor's tombstone",
             "id": 12992815,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Healing kit",
@@ -1459,8 +876,9 @@
             "name": "Villa: Midnight fountain - Front-left",
             "id": 12992825,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -1474,8 +892,9 @@
             "name": "Villa: Midnight fountain - Front-right",
             "id": 12992816,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -1489,8 +908,9 @@
             "name": "Villa: Midnight fountain - Middle-left",
             "id": 12992826,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -1504,8 +924,9 @@
             "name": "Villa: Midnight fountain - Middle-right",
             "id": 12992829,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -1519,8 +940,9 @@
             "name": "Villa: Midnight fountain - Rear-left",
             "id": 12992827,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -1534,8 +956,9 @@
             "name": "Villa: Midnight fountain - Rear-right",
             "id": 12992828,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -1549,8 +972,9 @@
             "name": "Villa: Foyer lower level - Front-right",
             "id": 12992573,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -1564,8 +988,9 @@
             "name": "Villa: Foyer lower level - Front-left",
             "id": 12992571,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -1579,8 +1004,9 @@
             "name": "Villa: Foyer lower level - Middle-left",
             "id": 12992572,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 GOLD",
@@ -1594,8 +1020,9 @@
             "name": "Villa: Foyer lower level - Rear-right",
             "id": 12992568,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -1609,8 +1036,9 @@
             "name": "Villa: Foyer lower level - Rear-left",
             "id": 12992569,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -1624,8 +1052,9 @@
             "name": "Villa: Foyer upper-right pot",
             "id": 12992558,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 GOLD",
@@ -1639,8 +1068,9 @@
             "name": "Villa: Foyer upper-left pot",
             "id": 12992559,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -1654,8 +1084,9 @@
             "name": "Villa: Foyer sofa",
             "id": 12992557,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -1669,8 +1100,9 @@
             "name": "Villa: Rose garden staircase bottom",
             "id": 12992564,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Magical Nitro",
@@ -1684,8 +1116,9 @@
             "name": "Villa: Bedroom near chairs",
             "id": 12992563,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -1699,8 +1132,9 @@
             "name": "Villa: Bedroom near bed",
             "id": 12992562,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -1714,8 +1148,9 @@
             "name": "Villa: Vincent",
             "id": 12992547,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -1729,8 +1164,9 @@
             "name": "Villa: Mary's room table",
             "id": 12992555,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -1744,8 +1180,9 @@
             "name": "Villa: Dining room rose vase",
             "id": 12992554,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -1759,8 +1196,9 @@
             "name": "Villa: Living room - Right pot",
             "id": 12992550,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cure ampoule",
@@ -1774,8 +1212,9 @@
             "name": "Villa: Living room - Left pot",
             "id": 12992549,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -1789,8 +1228,9 @@
             "name": "Villa: Living room clawed painting",
             "id": 12992556,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -1804,8 +1244,9 @@
             "name": "Villa: Living room ceiling light",
             "id": 12992552,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -1819,8 +1260,9 @@
             "name": "Villa: Living room lion head",
             "id": 12992560,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -1834,8 +1276,9 @@
             "name": "Villa: Maze garden exit knight",
             "id": 12992551,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -1854,12 +1297,9 @@
             "name": "From Storeroom door",
             "connected_region": "Villa: main interior",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Storeroom Key",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -1868,8 +1308,9 @@
             "name": "Villa: Storeroom - Left",
             "id": 12992566,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -1883,8 +1324,9 @@
             "name": "Villa: Storeroom - Right",
             "id": 12992567,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -1898,8 +1340,9 @@
             "name": "Villa: Storeroom statue",
             "id": 12992561,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -1919,8 +1362,9 @@
             "name": "Villa: Archives table",
             "id": 12992553,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -1934,8 +1378,9 @@
             "name": "Villa: Archives rear corner",
             "id": 12992548,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -1954,24 +1399,18 @@
             "name": "From maze gate",
             "connected_region": "Villa: servants entrance",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Garden Key",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Copper door",
             "connected_region": "Villa: crypt",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Copper Key",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -1980,8 +1419,9 @@
             "name": "Villa: Front maze garden - Malus start torch",
             "id": 12992883,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -1995,8 +1435,9 @@
             "name": "Villa: Front maze garden - Malus's hiding bush",
             "id": 12992876,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Science Key3",
@@ -2010,8 +1451,9 @@
             "name": "Villa: Front maze garden - Frankie's left dead-end",
             "id": 12992887,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2025,8 +1467,9 @@
             "name": "Villa: Front maze garden - Frankie's right dead-end urn",
             "id": 12992878,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -2040,8 +1483,9 @@
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Front",
             "id": 12992882,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -2055,8 +1499,9 @@
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front",
             "id": 12992881,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -2070,8 +1515,9 @@
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear",
             "id": 12992884,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -2085,8 +1531,9 @@
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Rear",
             "id": 12992880,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2100,8 +1547,9 @@
             "name": "Villa: Rear maze garden - Viewing platform dead-end",
             "id": 12992886,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -2115,8 +1563,9 @@
             "name": "Villa: Rear maze garden - Past-exit dead-end",
             "id": 12992885,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -2130,8 +1579,9 @@
             "name": "Villa: Servants' path small alcove",
             "id": 12992890,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -2150,8 +1600,9 @@
             "name": "Servants' door",
             "connected_region": "Villa: main interior",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2160,8 +1611,9 @@
             "name": "Villa: Servants' entrance",
             "id": 12992574,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2180,24 +1632,27 @@
             "name": "From bridge door",
             "connected_region": "Villa: maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Villa Reinhardt (daytime) exit",
             "connected_region": "Tunnel: first half",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Villa Carrie (nighttime) exit",
             "connected_region": "Underground Waterway: main area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2206,8 +1661,9 @@
             "name": "Villa: Crypt entrance",
             "id": 12992888,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2221,8 +1677,9 @@
             "name": "Villa: Crypt bridge upstream",
             "id": 12992889,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clocktower Key2",
@@ -2236,8 +1693,9 @@
             "name": "Villa: Crypt - Left from entrance",
             "id": 12992713,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2251,8 +1709,9 @@
             "name": "Villa: Crypt - Right from entrance",
             "id": 12992704,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -2266,8 +1725,9 @@
             "name": "Villa: Crypt - Left wall",
             "id": 12992706,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -2281,8 +1741,9 @@
             "name": "Villa: Crypt - Right wall",
             "id": 12992705,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clocktower Key1",
@@ -2296,8 +1757,9 @@
             "name": "Villa: Crypt - Right of coffin",
             "id": 12992712,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -2316,8 +1778,9 @@
             "name": "Gondola ride",
             "connected_region": "Tunnel: second half",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2326,8 +1789,9 @@
             "name": "Tunnel: Landing point",
             "id": 12992919,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -2341,8 +1805,9 @@
             "name": "Tunnel: Landing point rock crusher",
             "id": 12992918,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -2356,8 +1821,9 @@
             "name": "Tunnel: Stepping stone alcove - Left",
             "id": 12992903,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -2371,8 +1837,9 @@
             "name": "Tunnel: Twin arrow signs",
             "id": 12992917,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -2386,8 +1853,9 @@
             "name": "Tunnel: Near lonesome bucket",
             "id": 12992905,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cure ampoule",
@@ -2401,8 +1869,9 @@
             "name": "Tunnel: Lonesome bucket poison pit",
             "id": 12992913,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2416,8 +1885,9 @@
             "name": "Tunnel: Lonesome bucket-Albert junction",
             "id": 12992912,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2431,8 +1901,9 @@
             "name": "Tunnel: Albert's campsite",
             "id": 12992914,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2446,8 +1917,9 @@
             "name": "Tunnel: Albert's poison pit",
             "id": 12992915,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 GOLD",
@@ -2461,8 +1933,9 @@
             "name": "Tunnel: Gondola rock crusher sun door - Middle",
             "id": 12992926,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Archives Key",
@@ -2476,8 +1949,9 @@
             "name": "Tunnel: Gondola rock crusher sun door - Right",
             "id": 12992904,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -2491,8 +1965,9 @@
             "name": "Tunnel: Gondola rock crusher",
             "id": 12992924,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -2506,8 +1981,9 @@
             "name": "Tunnel: Red gondola station",
             "id": 12992916,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -2521,8 +1997,9 @@
             "name": "Tunnel: Gondola transfer point",
             "id": 12992902,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Storeroom Key",
@@ -2541,8 +2018,9 @@
             "name": "End Tunnel door",
             "connected_region": "Castle Center: main area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2551,8 +2029,9 @@
             "name": "Tunnel: Corpse bucket poison pit",
             "id": 12992910,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2566,8 +2045,9 @@
             "name": "Tunnel: Corpse bucket moon door - Right",
             "id": 12992901,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2581,8 +2061,9 @@
             "name": "Tunnel: Shovel poison pit start",
             "id": 12992909,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2596,8 +2077,9 @@
             "name": "Tunnel: Exit door poison pit start",
             "id": 12992908,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -2611,8 +2093,9 @@
             "name": "Tunnel: Shovel poison pit end",
             "id": 12992907,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -2626,8 +2109,9 @@
             "name": "Tunnel: Exit door poison pit end",
             "id": 12992900,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -2641,8 +2125,9 @@
             "name": "Tunnel: Shovel",
             "id": 12992911,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -2656,8 +2141,9 @@
             "name": "Tunnel: Shovel zone save junction",
             "id": 12992906,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Healing kit",
@@ -2671,8 +2157,9 @@
             "name": "Tunnel: Shovel zone moon door - Left",
             "id": 12992899,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -2686,8 +2173,9 @@
             "name": "Tunnel: Shovel zone sun door - Left",
             "id": 12992898,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2701,8 +2189,9 @@
             "name": "Tunnel: Shovel zone sun door - Middle",
             "id": 12992925,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -2721,8 +2210,9 @@
             "name": "Final waterfall",
             "connected_region": "Underground Waterway: end",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2731,8 +2221,9 @@
             "name": "Underground Waterway: Near entrance corridor",
             "id": 12992588,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clocktower Key3",
@@ -2746,8 +2237,9 @@
             "name": "Underground Waterway: Across from entrance",
             "id": 12992590,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -2761,8 +2253,9 @@
             "name": "Underground Waterway: Across poison parkour ledges",
             "id": 12992589,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -2776,8 +2269,9 @@
             "name": "Underground Waterway: Waterfall alcove ledge",
             "id": 12992599,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -2791,8 +2285,9 @@
             "name": "Underground Waterway: Brick platforms save corridor",
             "id": 12992602,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -2806,8 +2301,9 @@
             "name": "Underground Waterway: Above skeleton crusher ledge",
             "id": 12992598,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -2826,8 +2322,9 @@
             "name": "End Waterway door",
             "connected_region": "Castle Center: main area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2840,526 +2337,27 @@
             "name": "Torture Chamber door",
             "connected_region": "Castle Center: torture chamber",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Castle Center: Torture chamber rafters"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Castle Center: Torture chamber instrument rack"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Castle Center: Mandragora shelf - Right"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Castle Center: Mandragora shelf - Left"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Chamber Key",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Lower sealed cracked wall",
             "connected_region": "Castle Center: big crystal",
             "access_rule": {
-              "rule": "And",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Magical Nitro",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Mandragora",
-                    "count": 2
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Upper cracked wall",
             "connected_region": "Castle Center: library",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "items": [
-                  "Magical Nitro",
-                  "Mandragora"
-                ]
-              }
+              "args": {}
             }
           }
         ],
@@ -3368,8 +2366,9 @@
             "name": "Castle Center: Entrance hallway",
             "id": 12992943,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -3383,8 +2382,9 @@
             "name": "Castle Center: Basement hallway junction",
             "id": 12992936,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cure ampoule",
@@ -3398,8 +2398,9 @@
             "name": "Castle Center: Torture chamber hallway",
             "id": 12992942,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cure ampoule",
@@ -3413,8 +2414,9 @@
             "name": "Castle Center: Behemoth arena - Left far-front torch",
             "id": 12992941,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -3428,8 +2430,9 @@
             "name": "Castle Center: Behemoth arena - Left mid-front torch",
             "id": 12992947,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cure ampoule",
@@ -3443,8 +2446,9 @@
             "name": "Castle Center: Behemoth arena - Left mid-rear torch",
             "id": 12992940,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -3458,8 +2462,9 @@
             "name": "Castle Center: Behemoth arena - Left far-rear torch",
             "id": 12992946,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -3473,8 +2478,9 @@
             "name": "Castle Center: Behemoth arena - Right far-front torch",
             "id": 12992945,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -3488,8 +2494,9 @@
             "name": "Castle Center: Behemoth arena - Right mid-front torch",
             "id": 12992939,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -3503,8 +2510,9 @@
             "name": "Castle Center: Behemoth arena - Right mid-rear torch",
             "id": 12992944,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -3518,8 +2526,9 @@
             "name": "Castle Center: Behemoth arena - Right far-rear torch",
             "id": 12992938,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 GOLD",
@@ -3533,8 +2542,9 @@
             "name": "Castle Center: Near elevator room machine",
             "id": 12992794,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 GOLD",
@@ -3548,8 +2558,9 @@
             "name": "Castle Center: Atop elevator room machine",
             "id": 12992792,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -3563,8 +2574,9 @@
             "name": "Castle Center: Elevator pipe device",
             "id": 12992795,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moon card",
@@ -3578,8 +2590,9 @@
             "name": "Castle Center: Elevator room staircase",
             "id": 12992793,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -3593,8 +2606,9 @@
             "name": "Castle Center: Red carpet hall knight",
             "id": 12992778,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -3608,8 +2622,9 @@
             "name": "Castle Center: Gear room side",
             "id": 12992783,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -3623,8 +2638,9 @@
             "name": "Castle Center: Gear room center",
             "id": 12992782,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -3638,8 +2654,9 @@
             "name": "Castle Center: Gear room corner",
             "id": 12992781,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -3653,8 +2670,9 @@
             "name": "Castle Center: Lizard locker knight",
             "id": 12992777,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -3668,8 +2686,9 @@
             "name": "Castle Center: Lizard locker room near pit",
             "id": 12992780,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -3683,8 +2702,9 @@
             "name": "Castle Center: Lizard locker room corner",
             "id": 12992779,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -3698,8 +2718,9 @@
             "name": "Castle Center: Broken staircase floor",
             "id": 12992635,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -3713,8 +2734,9 @@
             "name": "Castle Center: Broken staircase knight",
             "id": 12992628,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mandragora",
@@ -3728,8 +2750,9 @@
             "name": "Castle Center: Above broken staircase savepoint",
             "id": 12992636,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -3743,8 +2766,9 @@
             "name": "Castle Center: Stained Glass Knight room - Left",
             "id": 12992634,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -3758,8 +2782,9 @@
             "name": "Castle Center: Stained Glass Knight room - Right",
             "id": 12992638,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -3773,8 +2798,9 @@
             "name": "Castle Center: Butler bros. room near door",
             "id": 12992637,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -3788,8 +2814,9 @@
             "name": "Castle Center: Butler bros. room inner",
             "id": 12992633,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -3803,8 +2830,9 @@
             "name": "Castle Center: Past butler room flamethrowers",
             "id": 12992632,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -3818,8 +2846,9 @@
             "name": "Castle Center: Inside cracked wall hallway flamethrower",
             "id": 12992627,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -3833,8 +2862,9 @@
             "name": "Castle Center: Past upper cracked wall flamethrowers",
             "id": 12992631,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -3848,8 +2878,9 @@
             "name": "Castle Center: Heinrich Meyer",
             "id": 12992617,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -3863,8 +2894,9 @@
             "name": "Castle Center: Nitro room crates",
             "id": 12992614,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Garden Key",
@@ -3878,8 +2910,9 @@
             "name": "Castle Center: Magical Nitro shelf - Heinrich side",
             "id": 12992597,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Execution Key",
@@ -3893,8 +2926,9 @@
             "name": "Castle Center: Hell Knight landing corner knight",
             "id": 12992609,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -3908,8 +2942,9 @@
             "name": "Castle Center: Maid sisters room vase",
             "id": 12992611,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -3923,8 +2958,9 @@
             "name": "Castle Center: Maid sisters room outer table",
             "id": 12992619,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Science Key2",
@@ -3938,8 +2974,9 @@
             "name": "Castle Center: Maid sisters room inner table",
             "id": 12992618,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chamber Key",
@@ -3953,8 +2990,9 @@
             "name": "Castle Center: Invention room maid sisters door",
             "id": 12992620,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -3968,8 +3006,9 @@
             "name": "Castle Center: Invention room spike crusher door",
             "id": 12992622,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -3983,8 +3022,9 @@
             "name": "Castle Center: Invention room giant Famicart",
             "id": 12992612,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -3998,8 +3038,9 @@
             "name": "Castle Center: Invention room zeppelin",
             "id": 12992621,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -4013,8 +3054,9 @@
             "name": "Castle Center: Invention room round machine",
             "id": 12992613,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -4028,8 +3070,9 @@
             "name": "Castle Center: Inside nitro hallway flamethrower",
             "id": 12992610,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -4043,8 +3086,9 @@
             "name": "Castle Center: Past nitro room flamethrowers",
             "id": 12992623,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -4058,8 +3102,9 @@
             "name": "Castle Center: Magical Nitro shelf - Invention side",
             "id": 12992608,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -4079,8 +3124,9 @@
             "name": "Castle Center: Mandragora shelf - Left",
             "id": 12992928,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Copper Key",
@@ -4094,8 +3140,9 @@
             "name": "Castle Center: Mandragora shelf - Right",
             "id": 12992929,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -4109,8 +3156,9 @@
             "name": "Castle Center: Torture chamber instrument rack",
             "id": 12992937,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -4124,8 +3172,9 @@
             "name": "Castle Center: Torture chamber rafters",
             "id": 12992930,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -4145,8 +3194,9 @@
             "name": "Castle Center: Inside upper cracked wall",
             "id": 12992630,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -4160,8 +3210,9 @@
             "name": "Castle Center: Library bookshelf",
             "id": 12992870,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 GOLD",
@@ -4180,8 +3231,9 @@
             "name": "Activate crystal and ride elevator",
             "connected_region": "Castle Center: elevator top",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4190,8 +3242,9 @@
             "name": "Castle Center: Behind the seal",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal",
@@ -4210,16 +3263,18 @@
             "name": "Castle Center Reinhardt (Medusa Head) exit",
             "connected_region": "Duel Tower",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Castle Center Carrie (Ghost) exit",
             "connected_region": "Tower of Science: turret lab",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4232,16 +3287,18 @@
             "name": "Duel Tower start passage",
             "connected_region": "Castle Center: elevator top",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Duel Tower end passage",
             "connected_region": "Tower of Execution: main area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4250,8 +3307,9 @@
             "name": "Duel Tower: Invisible bridge balcony - Left",
             "id": 12992641,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -4265,8 +3323,9 @@
             "name": "Duel Tower: Invisible bridge balcony - Right",
             "id": 12992640,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -4280,8 +3339,9 @@
             "name": "Duel Tower: Stepping stone path start",
             "id": 12992643,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -4295,8 +3355,9 @@
             "name": "Duel Tower: Above Were-bull arena",
             "id": 12992642,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -4315,28 +3376,27 @@
             "name": "Tower of Execution start passage",
             "connected_region": "Duel Tower",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Execution gate",
             "connected_region": "Tower of Execution: gated ledge",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Execution Key",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Tower of Execution end staircase",
             "connected_region": "Room of Clocks",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4345,8 +3405,9 @@
             "name": "Tower of Execution: Past mid-savepoint spikes - Right",
             "id": 12992668,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -4360,8 +3421,9 @@
             "name": "Tower of Execution: Past mid-savepoint spikes - Left",
             "id": 12992667,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -4375,8 +3437,9 @@
             "name": "Tower of Execution: Electric grate ledge",
             "id": 12992665,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -4390,8 +3453,9 @@
             "name": "Tower of Execution: Invisible bridge ledge",
             "id": 12992664,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -4405,8 +3469,9 @@
             "name": "Tower of Execution: Guillotine tower top level",
             "id": 12992669,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -4426,8 +3491,9 @@
             "name": "Tower of Execution: Key gate alcove - Left",
             "id": 12992666,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -4446,155 +3512,27 @@
             "name": "Tower of Science start passage",
             "connected_region": "Castle Center: elevator top",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Science Door 1",
             "connected_region": "Tower of Science: locked key1 room",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Tower of Science: Pick-a-door hallway locked middle room"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Science Key1",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "To Science Door 2",
             "connected_region": "Tower of Science: spiky conveyors",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Science Key2",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -4603,8 +3541,9 @@
             "name": "Tower of Science: Elevator hallway",
             "id": 12993020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -4618,8 +3557,9 @@
             "name": "Tower of Science: Plain sight side room",
             "id": 12993023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -4633,8 +3573,9 @@
             "name": "Tower of Science: Staircase side room",
             "id": 12993019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -4654,8 +3595,9 @@
             "name": "Tower of Science: Pick-a-door hallway locked middle room",
             "id": 12993022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -4674,272 +3616,27 @@
             "name": "From Science Door 2",
             "connected_region": "Tower of Science: turret lab",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Science Key2",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Science Door 3",
             "connected_region": "Tower of Science: locked key3 room",
             "access_rule": {
-              "rule": "Or",
+              "rule": "True_",
               "options": [],
-              "children": [
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Tower of Science: Locked Key3 room - Left"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Compare",
-                  "options": [],
-                  "args": {
-                    "left": {
-                      "rule": "HelperCall",
-                      "options": [],
-                      "args": {
-                        "helper_name": "location_item_name",
-                        "args": [
-                          "Tower of Science: Locked Key3 room - Right"
-                        ],
-                        "body_data": {
-                          "params": [
-                            "location"
-                          ],
-                          "body": {
-                            "type": "block",
-                            "statements": [
-                              {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "name",
-                                      "name": "location"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "if_statement",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "location"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "body": [
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "constant",
-                                      "value": null
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "location"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
-                    }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "options": [],
-                  "args": {
-                    "item_name": "Science Key3",
-                    "count": 1
-                  }
-                }
-              ]
+              "args": {}
             }
           },
           {
             "name": "Tower of Science end passage",
             "connected_region": "Tower of Sorcery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4948,8 +3645,9 @@
             "name": "Tower of Science: Invisible bridge platform torch",
             "id": 12993011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -4963,8 +3661,9 @@
             "name": "Tower of Science: Spiky conveyor side room",
             "id": 12993015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -4978,8 +3677,9 @@
             "name": "Tower of Science: Exit hallway",
             "id": 12993021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -4999,8 +3699,9 @@
             "name": "Tower of Science: Locked Key3 room - Right",
             "id": 12993018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -5014,8 +3715,9 @@
             "name": "Tower of Science: Locked Key3 room - Left",
             "id": 12993017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "300 GOLD",
@@ -5034,16 +3736,18 @@
             "name": "Tower of Sorcery start passage",
             "connected_region": "Tower of Science: spiky conveyors",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Tower of Sorcery end passage",
             "connected_region": "Room of Clocks",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5052,8 +3756,9 @@
             "name": "Tower of Sorcery: Stained glass tower",
             "id": 12992662,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purifying",
@@ -5067,8 +3772,9 @@
             "name": "Tower of Sorcery: Mid-savepoint platform",
             "id": 12992661,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -5082,8 +3788,9 @@
             "name": "Tower of Sorcery: Trick shot from mid-savepoint platform",
             "id": 12992658,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -5097,8 +3804,9 @@
             "name": "Tower of Sorcery: Above yellow bubble",
             "id": 12992657,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -5112,8 +3820,9 @@
             "name": "Tower of Sorcery: Above tiny blue platforms start",
             "id": 12992660,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -5127,8 +3836,9 @@
             "name": "Tower of Sorcery: Lone red platform side island",
             "id": 12992659,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5142,8 +3852,9 @@
             "name": "Tower of Sorcery: Invisible bridge platform",
             "id": 12992656,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -5162,8 +3873,9 @@
             "name": "Defeat boss gate",
             "connected_region": "Clock Tower: start",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5172,8 +3884,9 @@
             "name": "Room of Clocks: Left from entrance hallway",
             "id": 12992710,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(L)",
@@ -5187,8 +3900,9 @@
             "name": "Room of Clocks: Right from entrance hallway",
             "id": 12992707,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Magical Nitro",
@@ -5202,8 +3916,9 @@
             "name": "Room of Clocks: Right of Contract",
             "id": 12992709,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5222,12 +3937,9 @@
             "name": "To Clocktower Door 1",
             "connected_region": "Clock Tower: middle",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clocktower Key1",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -5236,8 +3948,9 @@
             "name": "Clock Tower: Gear climb room side",
             "id": 12992685,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast chicken",
@@ -5251,8 +3964,9 @@
             "name": "Clock Tower: Gear climb room corner",
             "id": 12992679,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5271,24 +3985,18 @@
             "name": "From Clocktower Door 1",
             "connected_region": "Clock Tower: start",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clocktower Key1",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "To Clocktower Door 2",
             "connected_region": "Clock Tower: end",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clocktower Key2",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -5297,8 +4005,9 @@
             "name": "Clock Tower: Bone Pillar chasm room - Front-left",
             "id": 12992677,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Special1",
@@ -5312,8 +4021,9 @@
             "name": "Clock Tower: Bone Pillar chasm room - Front-right",
             "id": 12992678,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5327,8 +4037,9 @@
             "name": "Clock Tower: Bone Pillar chasm room key alcove",
             "id": 12992684,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roast beef",
@@ -5347,24 +4058,18 @@
             "name": "From Clocktower Door 2",
             "connected_region": "Clock Tower: middle",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clocktower Key2",
-                "count": 1
-              }
+              "args": {}
             }
           },
           {
             "name": "Clocktower Door 3",
             "connected_region": "Castle Keep: exterior",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_",
               "options": [],
-              "args": {
-                "item_name": "Clocktower Key3",
-                "count": 1
-              }
+              "args": {}
             }
           }
         ],
@@ -5373,8 +4078,9 @@
             "name": "Clock Tower: Final room key ledge",
             "id": 12992683,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5393,8 +4099,9 @@
             "name": "Dracula's door",
             "connected_region": "Castle Keep: Dracula's chamber",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5403,8 +4110,9 @@
             "name": "Castle Keep: Left Dracula door flame",
             "id": 12992687,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5418,8 +4126,9 @@
             "name": "Castle Keep: Right Dracula door flame",
             "id": 12992686,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "PowerUp",
@@ -5433,8 +4142,9 @@
             "name": "Castle Keep: Behind Dracula's chamber",
             "id": 12992703,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sun card",
@@ -5448,8 +4158,9 @@
             "name": "Castle Keep: Dracula's floating cube",
             "id": 12992693,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red jewel(S)",
@@ -5469,8 +4180,9 @@
             "name": "Dracula",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Count Downed",
@@ -6192,7 +4904,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -6200,7 +4912,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -6213,6 +4925,17 @@
       "name": "Castlevania 64 WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) GOLD$",
+          "extract_value": true,
+          "target": "gold",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "gold": 0
       },
       "web_theme": "stone",
       "web_tutorials": [
@@ -6230,5 +4953,103 @@
       "world_description": "Castlevania for the Nintendo 64 is the first 3D game in the Castlevania franchise. As either whip-wielding Belmont\ndescendant Reinhardt Schneider or powerful sorceress Carrie Fernandez, brave many terrifying traps and foes as you\nmake your way to Dracula's chamber and stop his rule of terror!"
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "location_item_name": {
+        "body": {
+          "statements": [
+            {
+              "name": "location",
+              "type": "assign",
+              "value": {
+                "args": [
+                  {
+                    "name": "location",
+                    "type": "name"
+                  }
+                ],
+                "function": {
+                  "attr": "get_location",
+                  "object": {
+                    "attr": "multiworld",
+                    "object": {
+                      "name": "state",
+                      "type": "name"
+                    },
+                    "type": "attribute"
+                  },
+                  "type": "attribute"
+                },
+                "type": "function_call"
+              }
+            },
+            {
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": null
+                  }
+                }
+              ],
+              "test": {
+                "left": {
+                  "attr": "item",
+                  "object": {
+                    "name": "location",
+                    "type": "name"
+                  },
+                  "type": "attribute"
+                },
+                "op": "is",
+                "right": {
+                  "type": "constant",
+                  "value": null
+                },
+                "type": "compare"
+              },
+              "type": "if_statement"
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "list",
+                "value": [
+                  {
+                    "attr": "name",
+                    "object": {
+                      "attr": "item",
+                      "object": {
+                        "name": "location",
+                        "type": "name"
+                      },
+                      "type": "attribute"
+                    },
+                    "type": "attribute"
+                  },
+                  {
+                    "attr": "player",
+                    "object": {
+                      "attr": "item",
+                      "object": {
+                        "name": "location",
+                        "type": "name"
+                      },
+                      "type": "attribute"
+                    },
+                    "type": "attribute"
+                  }
+                ]
+              }
+            }
+          ],
+          "type": "block"
+        },
+        "params": [
+          "location"
+        ]
+      }
+    }
+  }
 }

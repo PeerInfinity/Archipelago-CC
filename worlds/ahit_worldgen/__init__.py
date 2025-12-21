@@ -21,18 +21,18 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "100 Pons": 5,
+    "100 Pons": 6,
     "25 Pons": 39,
-    "50 Pons": 12,
+    "50 Pons": 17,
     "Badge Pin": 2,
     "Fast Hatter Badge": 1,
-    "Health Pon": 31,
+    "Health Pon": 15,
     "Hookshot Badge": 1,
     "Hover Badge": 1,
     "Item Magnet Badge": 1,
     "No Bonk Badge": 1,
     "Projectile Badge": 1,
-    "Random Cosmetic": 24,
+    "Random Cosmetic": 30,
     "Relic (Blue Crayon)": 1,
     "Relic (Burger Cushion)": 1,
     "Relic (Burger Patty)": 1,
@@ -71,7 +71,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
     "Compass Badge": 1,
-    "PONS": 2075,
+    "PONS": 2425,
 }
 
 
@@ -127,15 +127,254 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
         "PONS": 0,
     }
 
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Spaceship - Rumbi Abuse": "25 Pons",
+        "Mafia Boss Shop Item": "Relic (Cool Cow)",
+        "Act Completion (Time Rift - Gallery)": "Random Cosmetic",
+        "Act Completion (Time Rift - The Lab)": "Time Piece",
+        "Welcome to Mafia Town - Umbrella": "25 Pons",
+        "Act Completion (Welcome to Mafia Town)": "Time Piece",
+        "Act Completion (Barrel Battle)": "25 Pons",
+        "Act Completion (She Came from Outer Space)": "Relic (Tin-foil Hat Cow)",
+        "Mafia HQ - Hallway Brewing Crate": "Random Cosmetic",
+        "Mafia HQ - Freezer Chest": "Yarn",
+        "Mafia HQ - Secret Room": "Relic (Red Crayon)",
+        "Mafia HQ - Bathroom Stall Chest": "25 Pons",
+        "Act Completion (Down with the Mafia!)": "Random Cosmetic",
+        "Act Completion (Heating Up Mafia Town)": "25 Pons",
+        "HUMT Access": "HUMT Access",
+        "Act Completion (Cheating the Race)": "Random Cosmetic",
+        "Act Completion (The Golden Vault)": "Random Cosmetic",
+        "Act Completion (Dead Bird Studio)": "100 Pons",
+        "Murder on the Owl Express - Cafeteria": "Hookshot Badge",
+        "Murder on the Owl Express - Luggage Room Top": "50 Pons",
+        "Murder on the Owl Express - Luggage Room Bottom": "Yarn",
+        "Murder on the Owl Express - Raven Suite Room": "No Bonk Badge",
+        "Murder on the Owl Express - Raven Suite Top": "Time Piece",
+        "Murder on the Owl Express - Lounge Chest": "25 Pons",
+        "Act Completion (Murder on the Owl Express)": "Time Piece",
+        "Picture Perfect - Behind Badge Seller": "Time Piece",
+        "Picture Perfect - Hats Buy Building": "50 Pons",
+        "Act Completion (Picture Perfect)": "Yarn",
+        "Act Completion (Train Rush)": "Yarn",
+        "Act Completion (The Big Parade)": "Yarn",
+        "Act Completion (Award Ceremony)": "25 Pons",
+        "Dead Bird Studio Basement - Window Platform": "Yarn",
+        "Dead Bird Studio Basement - Cardboard Conductor": "50 Pons",
+        "Dead Bird Studio Basement - Above Conductor Sign": "Random Cosmetic",
+        "Dead Bird Studio Basement - Logo Wall": "Random Cosmetic",
+        "Dead Bird Studio Basement - Disco Room": "50 Pons",
+        "Dead Bird Studio Basement - Small Room": "Yarn",
+        "Dead Bird Studio Basement - Vent Pipe": "25 Pons",
+        "Dead Bird Studio Basement - Tightrope": "Time Piece",
+        "Dead Bird Studio Basement - Cameras": "Yarn",
+        "Dead Bird Studio Basement - Locked Room": "25 Pons",
+        "Act Completion (Dead Bird Studio Basement)": "Relic (Burger Cushion)",
+        "Act Completion (Time Rift - Dead Bird Studio)": "25 Pons",
+        "Dead Bird Studio (Rift) - Page: Behind Cardboard Planet": "25 Pons",
+        "Dead Bird Studio (Rift) - Page: Near Time Rift Gate": "25 Pons",
+        "Dead Bird Studio (Rift) - Page: Top of Metal Bar": "Yarn",
+        "Dead Bird Studio (Rift) - Page: Lava Lamp": "Time Piece",
+        "Dead Bird Studio (Rift) - Page: Above Horse Picture": "Yarn",
+        "Dead Bird Studio (Rift) - Page: Green Screen": "25 Pons",
+        "Dead Bird Studio (Rift) - Page: In The Corner": "Time Piece",
+        "Dead Bird Studio (Rift) - Page: Above TV Room": "Yarn",
+        "Act Completion (Time Rift - The Owl Express)": "Yarn",
+        "Act Completion (Time Rift - The Moon)": "Time Piece",
+        "Dead Bird Studio - Up the Ladder": "Random Cosmetic",
+        "Dead Bird Studio - Red Building Top": "Snatcher's Contract - The Subcon Well",
+        "Dead Bird Studio - Behind Water Tower": "Time Piece",
+        "Dead Bird Studio - Side of House": "Yarn",
+        "Dead Bird Studio - DJ Grooves Sign Chest": "Time Piece",
+        "Dead Bird Studio - Tightrope Chest": "100 Pons",
+        "Dead Bird Studio - Tepee Chest": "Snatcher's Contract - Mail Delivery Service",
+        "Dead Bird Studio - Conductor Chest": "100 Pons",
+        "Contractual Obligations - Cherry Bomb Bone Cage": "25 Pons",
+        "Act Completion (Contractual Obligations)": "Time Piece",
+        "Snatcher's Contract - The Subcon Well": "Time Piece",
+        "Subcon Well - Hookshot Badge Chest": "Projectile Badge",
+        "Subcon Well - Above Chest": "Health Pon",
+        "Subcon Well - On Pipe": "Random Cosmetic",
+        "Subcon Well - Mushroom": "Time Piece",
+        "Act Completion (The Subcon Well)": "Time Piece",
+        "Act Completion (Toilet of Doom)": "Relic (UFO)",
+        "TOD Access": "TOD Access",
+        "Queen Vanessa's Manor - Cellar": "Yarn",
+        "Queen Vanessa's Manor - Bedroom Chest": "Yarn",
+        "Queen Vanessa's Manor - Hall Chest": "25 Pons",
+        "Queen Vanessa's Manor - Chandelier": "Health Pon",
+        "Act Completion (Queen Vanessa's Manor)": "100 Pons",
+        "Act Completion (Mail Delivery Service)": "25 Pons",
+        "AFR Access": "AFR Access",
+        "Alpine Skyline - The Purrloined Village: Horned Stone": "25 Pons",
+        "Alpine Skyline - The Purrloined Village: Chest Reward": "Time Piece",
+        "Alpine Skyline - Mystifying Time Mesa: Zipline": "Time Piece",
+        "Alpine Skyline - Mystifying Time Mesa: Gate Puzzle": "Badge Pin",
+        "Alpine Skyline - The Twilight Path": "Yarn",
+        "Alpine Skyline - Goat Village: Below Hookpoint": "Relic (Mountain Set)",
+        "Alpine Skyline - Goat Village: Hidden Branch": "Time Piece",
+        "Alpine Skyline - Goat Refinery": "Random Cosmetic",
+        "Alpine Skyline - Bird Pass Fork": "Fast Hatter Badge",
+        "Alpine Skyline - Yellow Band Hills": "Scooter Badge",
+        "Alpine Skyline - Ember Summit": "Yarn",
+        "Alpine Skyline - Goat Outpost Horn": "Random Cosmetic",
+        "Alpine Skyline - Windy Passage": "25 Pons",
+        "Alpine Skyline - The Birdhouse: Triple Crow Chest": "Health Pon",
+        "Alpine Skyline - The Birdhouse: Dweller Platforms Relic": "50 Pons",
+        "Alpine Skyline - The Birdhouse: Brewing Crate House": "Time Piece",
+        "Alpine Skyline - The Birdhouse: Hay Bale": "25 Pons",
+        "Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet": "25 Pons",
+        "Alpine Skyline - The Birdhouse: Outer Edge": "Yarn",
+        "Act Completion (The Birdhouse)": "Umbrella",
+        "Birdhouse Cleared": "Birdhouse Cleared",
+        "Alpine Skyline - The Lava Cake: Center Fence Cage": "Random Cosmetic",
+        "Alpine Skyline - The Lava Cake: Outer Island Chest": "Yarn",
+        "Alpine Skyline - The Lava Cake: Dweller Pillars": "Snatcher's Contract - Toilet of Doom",
+        "Alpine Skyline - The Lava Cake: Top Cake": "Random Cosmetic",
+        "Act Completion (The Lava Cake)": "Yarn",
+        "Lava Cake Cleared": "Lava Cake Cleared",
+        "Alpine Skyline - The Windmill: Inside Pon Cluster": "Yarn",
+        "Alpine Skyline - The Windmill: Entrance": "Health Pon",
+        "Alpine Skyline - The Windmill: Dropdown": "Random Cosmetic",
+        "Alpine Skyline - The Windmill: House Window": "Hover Badge",
+        "Act Completion (The Windmill)": "Health Pon",
+        "Windmill Cleared": "Windmill Cleared",
+        "Alpine Skyline - The Twilight Bell: Wide Purple Platform": "Time Piece",
+        "Alpine Skyline - The Twilight Bell: Ice Platform": "Health Pon",
+        "Act Completion (The Twilight Bell)": "Yarn",
+        "Twilight Bell Cleared": "Twilight Bell Cleared",
+        "Act Completion (The Illness has Spread)": "Time Piece",
+        "TIHS Access": "TIHS Access",
+        "Act Completion (Time Rift - Alpine Skyline)": "25 Pons",
+        "Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge": "25 Pons",
+        "Alpine Skyline (Rift) - Page: Windmill Island Ledge": "Random Cosmetic",
+        "Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar": "Relic (Burger Patty)",
+        "Alpine Skyline (Rift) - Page: Lonely Birdhouse Top": "Yarn",
+        "Alpine Skyline (Rift) - Page: Below Aqueduct": "Yarn",
+        "Act Completion (Time Rift - The Twilight Bell)": "Relic (Blue Crayon)",
+        "Act Completion (Time Rift - Curly Tail Trail)": "50 Pons",
+        "Mafia Town - Old Man (Seaside Spaghetti)": "25 Pons",
+        "Mafia Town - Old Man (Steel Beams)": "Random Cosmetic",
+        "Mafia Town - Blue Vault": "Time Piece",
+        "Mafia Town - Green Vault": "25 Pons",
+        "Mafia Town - Red Vault": "50 Pons",
+        "Mafia Town - Blue Vault Brewing Crate": "50 Pons",
+        "Mafia Town - Plaza Under Boxes": "Yarn",
+        "Mafia Town - Small Boat": "100 Pons",
+        "Mafia Town - Staircase Pon Cluster": "Health Pon",
+        "Mafia Town - Palm Tree": "50 Pons",
+        "Mafia Town - Port": "Yarn",
+        "Mafia Town - Docks Chest": "Random Cosmetic",
+        "Mafia Town - Ice Hat Cage": "Health Pon",
+        "Mafia Town - Hidden Buttons Chest": "25 Pons",
+        "Mafia Town - Dweller Boxes": "25 Pons",
+        "Mafia Town - Ledge Chest": "Random Cosmetic",
+        "Mafia Town - Yellow Sphere Building Chest": "Yarn",
+        "Mafia Town - Beneath Scaffolding": "Random Cosmetic",
+        "Mafia Town - On Scaffolding": "Random Cosmetic",
+        "Mafia Town - Cargo Ship": "50 Pons",
+        "Mafia Town - Beach Alcove": "Time Piece",
+        "Mafia Town - Wood Cage": "Yarn",
+        "Mafia Town - Beach Patio": "Random Cosmetic",
+        "Mafia Town - Steel Beam Nest": "Yarn",
+        "Mafia Town - Top of Ruined Tower": "Time Piece",
+        "Mafia Town - Hot Air Balloon": "Random Cosmetic",
+        "Mafia Town - Camera Badge 1": "Time Piece",
+        "Mafia Town - Camera Badge 2": "Relic (Crayon Box)",
+        "Mafia Town - Chest Beneath Aqueduct": "Time Piece",
+        "Mafia Town - Secret Cave": "Yarn",
+        "Mafia Town - Crow Chest": "Time Piece",
+        "Mafia Town - Above Boats": "Health Pon",
+        "Mafia Town - Slip Slide Chest": "Health Pon",
+        "Mafia Town - Behind Faucet": "Time Piece",
+        "Mafia Town - Clock Tower Chest": "Health Pon",
+        "Mafia Town - Top of Lighthouse": "Item Magnet Badge",
+        "Mafia Town - Mafia Geek Platform": "Yarn",
+        "Mafia Town - Behind HQ Chest": "25 Pons",
+        "Act Completion (Time Rift - Mafia of Cooks)": "50 Pons",
+        "Mafia of Cooks - Page: Fish Pile": "Health Pon",
+        "Mafia of Cooks - Page: Trash Mound": "50 Pons",
+        "Mafia of Cooks - Page: Beside Red Building": "25 Pons",
+        "Mafia of Cooks - Page: Behind Shipping Containers": "Badge Pin",
+        "Mafia of Cooks - Page: Top of Boat": "Yarn",
+        "Mafia of Cooks - Page: Below Dock": "Time Piece",
+        "Act Completion (Time Rift - Sewers)": "Health Pon",
+        "Act Completion (Time Rift - Bazaar)": "Yarn",
+        "Subcon Village - Tree Top Ice Cube": "50 Pons",
+        "Subcon Village - Graveyard Ice Cube": "Health Pon",
+        "Subcon Village - House Top": "Random Cosmetic",
+        "Subcon Village - Ice Cube House": "25 Pons",
+        "Subcon Village - Stump Platform Chest": "Time Piece",
+        "Subcon Forest - Giant Tree Climb": "Time Piece",
+        "Subcon Forest - Ice Cube Shack": "50 Pons",
+        "Subcon Forest - Swamp Gravestone": "Yarn",
+        "Subcon Forest - Swamp Near Well": "Random Cosmetic",
+        "Subcon Forest - Swamp Tree A": "25 Pons",
+        "Subcon Forest - Swamp Tree B": "Random Cosmetic",
+        "Subcon Forest - Swamp Ice Wall": "Time Piece",
+        "Subcon Forest - Swamp Treehouse": "Yarn",
+        "Subcon Forest - Swamp Tree Chest": "Time Piece",
+        "Subcon Forest - Burning House": "Random Cosmetic",
+        "Subcon Forest - Burning Tree Climb": "25 Pons",
+        "Subcon Forest - Burning Stump Chest": "Snatcher's Contract - Queen Vanessa's Manor",
+        "Subcon Forest - Burning Forest Treehouse": "50 Pons",
+        "Subcon Forest - Spider Bone Cage A": "Yarn",
+        "Subcon Forest - Spider Bone Cage B": "Random Cosmetic",
+        "Subcon Forest - Triple Spider Bounce": "25 Pons",
+        "Subcon Forest - Noose Treehouse": "50 Pons",
+        "Subcon Forest - Long Tree Climb Chest": "25 Pons",
+        "Subcon Forest - Manor Rooftop": "Yarn",
+        "Subcon Forest - Infinite Yarn Bush": "100 Pons",
+        "Subcon Forest - Magnet Badge Bush": "Relic (Green Crayon)",
+        "Subcon Forest - Dweller Stump": "Yarn",
+        "Subcon Forest - Dweller Floating Rocks": "Yarn",
+        "Subcon Forest - Dweller Platforming Tree A": "Yarn",
+        "Subcon Forest - Dweller Platforming Tree B": "Yarn",
+        "Subcon Forest - Giant Time Piece": "25 Pons",
+        "Subcon Forest - Gallows": "50 Pons",
+        "Subcon Forest - Green and Purple Dweller Rocks": "Yarn",
+        "Subcon Forest - Dweller Shack": "Time Piece",
+        "Subcon Forest - Tall Tree Hookshot Swing": "Yarn",
+        "Snatcher's Contract - Toilet of Doom": "Random Cosmetic",
+        "Snatcher's Contract - Queen Vanessa's Manor": "Yarn",
+        "Snatcher's Contract - Mail Delivery Service": "Random Cosmetic",
+        "Subcon Village - Snatcher Statue Chest": "Relic (Cow)",
+        "Subcon Forest - Boss Arena Chest": "Time Piece",
+        "Act Completion (Your Contract has Expired)": "Yarn",
+        "Act Completion (Time Rift - Sleepy Subcon)": "25 Pons",
+        "Sleepy Subcon - Page: Behind Entrance Area": "Yarn",
+        "Sleepy Subcon - Page: Near Wrecking Ball": "25 Pons",
+        "Sleepy Subcon - Page: Behind Crane": "Health Pon",
+        "Sleepy Subcon - Page: Wrecked Treehouse": "Yarn",
+        "Sleepy Subcon - Page: Behind 2nd Rift Gate": "25 Pons",
+        "Sleepy Subcon - Page: Rotating Platform": "Time Piece",
+        "Sleepy Subcon - Page: Behind 3rd Rift Gate": "Time Piece",
+        "Sleepy Subcon - Page: Frozen Tree": "Relic (Train)",
+        "Sleepy Subcon - Page: Secret Library": "Time Piece",
+        "Act Completion (Time Rift - Pipe)": "Yarn",
+        "Act Completion (Time Rift - Village)": "Yarn",
+        "Badge Seller - Item 1": "25 Pons",
+        "Badge Seller - Item 2": "Random Cosmetic",
+        "Badge Seller - Item 3": "Time Piece",
+        "Badge Seller - Item 4": "25 Pons",
+        "The Finale - Frozen Item": "Time Piece",
+        "Act Completion (The Finale)": "Yarn",
+        "Time Piece Cluster": "Time Piece Cluster",
+    }
+
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.hat_yarn_costs = {0: 6, 1: 4, 2: 8, 3: 6, 4: 6}
-        self.hat_craft_order = [3, 2, 4, 1, 0]
+        self.hat_yarn_costs = {0: 8, 1: 4, 2: 8, 3: 6, 4: 5}
+        self.hat_craft_order = [2, 4, 1, 0, 3]
 
     def generate_early(self) -> None:
-        """Push starting items as precollected."""
+        """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -223,6 +462,29 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
+
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

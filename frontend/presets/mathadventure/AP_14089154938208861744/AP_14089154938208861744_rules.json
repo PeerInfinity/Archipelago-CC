@@ -19,8 +19,9 @@
             "name": "StartProof",
             "connected_region": "Definitions",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -33,31 +34,40 @@
             "name": "ToAxioms",
             "connected_region": "Axioms",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "ToBasicProperties",
             "connected_region": "BasicProperties",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "ToOperations",
             "connected_region": "ArithmeticOperations",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "df-2"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "df-2"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "df-3"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "df-3"
+                  }
                 }
               ]
             }
@@ -68,8 +78,9 @@
             "name": "Definition of 2",
             "id": 200000001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "df-2",
@@ -83,8 +94,9 @@
             "name": "Definition of 3",
             "id": 200000002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "df-3",
@@ -98,8 +110,9 @@
             "name": "Definition of 4",
             "id": 200000003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "df-4",
@@ -118,8 +131,9 @@
             "name": "BackToDefinitions",
             "connected_region": "Definitions",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -128,8 +142,9 @@
             "name": "1 is Complex",
             "id": 200000004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "ax-1cn",
@@ -148,8 +163,9 @@
             "name": "BackToDefinitionsFromProperties",
             "connected_region": "Definitions",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -158,8 +174,9 @@
             "name": "2 is Complex",
             "id": 200000005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2cn",
@@ -178,15 +195,22 @@
             "name": "ToProofCompletion",
             "connected_region": "ProofCompletion",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "addassi"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "addassi"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "oveq2i"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "oveq2i"
+                  }
                 }
               ]
             }
@@ -197,8 +221,11 @@
             "name": "Equality Substitution Right",
             "id": 200000006,
             "access_rule": {
-              "type": "item_check",
-              "item": "df-2"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "df-2"
+              }
             },
             "item": {
               "name": "oveq2i",
@@ -212,8 +239,11 @@
             "name": "Equality Substitution Left",
             "id": 200000007,
             "access_rule": {
-              "type": "item_check",
-              "item": "df-3"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "df-3"
+              }
             },
             "item": {
               "name": "oveq1i",
@@ -227,15 +257,22 @@
             "name": "Addition Associativity",
             "id": 200000008,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "2cn"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "2cn"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "ax-1cn"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "ax-1cn"
+                  }
                 }
               ]
             },
@@ -257,19 +294,29 @@
             "name": "Triple Equality Transitivity",
             "id": 200000009,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "addassi"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "addassi"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "df-4"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "df-4"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "oveq1i"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "oveq1i"
+                  }
                 }
               ]
             },
@@ -285,15 +332,22 @@
             "name": "Final Equality",
             "id": 200000010,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "3eqtri"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "3eqtri"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "oveq2i"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "oveq2i"
+                  }
                 }
               ]
             },
@@ -309,8 +363,11 @@
             "name": "Theorem: 2+2=4",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "eqtr4i"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "eqtr4i"
+              }
             },
             "item": {
               "name": "Victory",
@@ -508,7 +565,7 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
-        "accessibility": 0,
+        "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -516,7 +573,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []

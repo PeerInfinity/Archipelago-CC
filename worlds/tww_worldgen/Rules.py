@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachRegion, Has, HasAll, HelperCall
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -588,6 +588,2270 @@ def _thewindwakerworldgen_has_mirror_shield(state: "CollectionState", player: in
     return state.has('Progressive Shield', player, 2)
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                    'value': 4},
+                                                                                                       'item': 'DRC '
+                                                                                                               'Small '
+                                                                                                               'Key',
+                                                                                                       'type': 'item_check'},
+                                                                                                   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                             'value': [   'Grappling '
+                                                                                                                                                          'Hook',
+                                                                                                                                                          'Hookshot']}],
+                                                                                                                             'method': 'has_any',
+                                                                                                                             'type': 'state_method'},
+                                                                                                                         {   'args': [   ],
+                                                                                                                             'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                             'type': 'helper'},
+                                                                                                                         {   'args': [   ],
+                                                                                                                             'name': 'has_ice_arrows',
+                                                                                                                             'type': 'helper'}],
+                                                                                                       'type': 'or'}],
+                                                                                 'type': 'and'},
+                                                                             {   'item': 'DRC Big Key',
+                                                                                 'type': 'item_check'}],
+                                                           'type': 'and'},
+    'can_access_boss_entrance_in_earth_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                'name': 'can_reach_earth_temple_third_crypt',
+                                                                                                'type': 'helper'},
+                                                                                            {   'args': [],
+                                                                                                'name': 'can_play_earth_gods_lyric',
+                                                                                                'type': 'helper'}],
+                                                                          'type': 'and'},
+                                                                      {'item': 'ET Big Key', 'type': 'item_check'}],
+                                                    'type': 'and'},
+    'can_access_boss_entrance_in_forbidden_woods': {   'conditions': [   {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'has_magic_meter',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'and'},
+                                                                         {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                   'value': [   'Bombs',
+                                                                                                                                'Boomerang',
+                                                                                                                                'Hookshot',
+                                                                                                                                'Skull '
+                                                                                                                                'Hammer']}],
+                                                                                                   'method': 'has_any',
+                                                                                                   'type': 'state_method'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'has_heros_sword',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'has_heros_bow',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'conditions': [   {   'args': [   ],
+                                                                                                                         'name': 'can_fan_with_deku_leaf',
+                                                                                                                         'type': 'helper'},
+                                                                                                                     {   'item': 'Grappling '
+                                                                                                                                 'Hook',
+                                                                                                                         'type': 'item_check'}],
+                                                                                                   'type': 'and'}],
+                                                                             'type': 'or'},
+                                                                         {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                         'value': [   'Bombs',
+                                                                                                                                                      'Boomerang',
+                                                                                                                                                      'Hookshot']}],
+                                                                                                                         'method': 'has_any',
+                                                                                                                         'type': 'state_method'},
+                                                                                                                     {   'args': [   ],
+                                                                                                                         'name': 'has_heros_bow',
+                                                                                                                         'type': 'helper'}],
+                                                                                                   'type': 'or'},
+                                                                                               {   'item': 'Grappling '
+                                                                                                           'Hook',
+                                                                                                   'type': 'item_check'}],
+                                                                             'type': 'or'},
+                                                                         {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                   'value': [   'Bombs',
+                                                                                                                                'Skull '
+                                                                                                                                'Hammer']}],
+                                                                                                   'method': 'has_any',
+                                                                                                   'type': 'state_method'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'has_heros_sword',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'has_heros_bow',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'or'},
+                                                                         {'item': 'FW Big Key', 'type': 'item_check'}],
+                                                       'type': 'and'},
+    'can_access_boss_entrance_in_forsaken_fortress': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                     'name': 'can_get_past_forsaken_fortress_gate',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'item': 'Skull '
+                                                                                                             'Hammer',
+                                                                                                     'type': 'item_check'}],
+                                                                               'type': 'and'},
+                                                                           {   'item': 'Skull Hammer',
+                                                                               'type': 'item_check'},
+                                                                           {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                   'Leaf',
+                                                                                                                           'type': 'item_check'},
+                                                                                                                       {   'args': [   ],
+                                                                                                                           'name': 'has_magic_meter',
+                                                                                                                           'type': 'helper'}],
+                                                                                                     'type': 'and'},
+                                                                                                 {   'item': 'Hookshot',
+                                                                                                     'type': 'item_check'},
+                                                                                                 {   'conditions': [   {   'type': 'constant',
+                                                                                                                           'value': False},
+                                                                                                                       {   'type': 'constant',
+                                                                                                                           'value': False}],
+                                                                                                     'type': 'and'}],
+                                                                               'type': 'or'},
+                                                                           {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                           'value': [   'Bombs',
+                                                                                                                                                        'Skull '
+                                                                                                                                                        'Hammer']}],
+                                                                                                                           'method': 'has_any',
+                                                                                                                           'type': 'state_method'},
+                                                                                                                       {   'args': [   ],
+                                                                                                                           'name': 'has_heros_sword',
+                                                                                                                           'type': 'helper'},
+                                                                                                                       {   'args': [   ],
+                                                                                                                           'name': 'has_heros_bow',
+                                                                                                                           'type': 'helper'}],
+                                                                                                     'type': 'or'},
+                                                                                                 {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                   'Leaf',
+                                                                                                                           'type': 'item_check'},
+                                                                                                                       {   'args': [   ],
+                                                                                                                           'name': 'has_magic_meter',
+                                                                                                                           'type': 'helper'},
+                                                                                                                       {   'args': [   ],
+                                                                                                                           'name': 'can_play_winds_requiem',
+                                                                                                                           'type': 'helper'}],
+                                                                                                     'type': 'and'},
+                                                                                                 {   'item': 'Grappling '
+                                                                                                             'Hook',
+                                                                                                     'type': 'item_check'}],
+                                                                               'type': 'or'}],
+                                                         'type': 'and'},
+    'can_access_boss_entrance_in_tower_of_the_gods': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                     'name': 'can_reach_tower_of_the_gods_second_floor',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'args': [],
+                                                                                                     'name': 'can_bring_west_servant_of_the_tower',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'args': [],
+                                                                                                     'name': 'can_bring_north_servant_of_the_tower',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'item': 'Wind '
+                                                                                                             'Waker',
+                                                                                                     'type': 'item_check'}],
+                                                                               'type': 'and'},
+                                                                           {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                     'value': [   'Bombs',
+                                                                                                                                  'Hookshot',
+                                                                                                                                  'Skull '
+                                                                                                                                  'Hammer']}],
+                                                                                                     'method': 'has_any',
+                                                                                                     'type': 'state_method'},
+                                                                                                 {   'args': [],
+                                                                                                     'name': 'has_heros_sword',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'args': [],
+                                                                                                     'name': 'has_heros_bow',
+                                                                                                     'type': 'helper'}],
+                                                                               'type': 'or'},
+                                                                           {   'item': 'TotG Big Key',
+                                                                               'type': 'item_check'}],
+                                                         'type': 'and'},
+    'can_access_boss_entrance_in_wind_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                               'name': 'can_open_wind_temple_upper_giant_grate',
+                                                                                               'type': 'helper'},
+                                                                                           {   'args': [],
+                                                                                               'name': 'can_open_wind_temple_lower_giant_grate',
+                                                                                               'type': 'helper'},
+                                                                                           {   'count': {   'type': 'constant',
+                                                                                                            'value': 2},
+                                                                                               'item': 'WT Small Key',
+                                                                                               'type': 'item_check'}],
+                                                                         'type': 'and'},
+                                                                     {   'args': [   {   'type': 'constant',
+                                                                                         'value': [   'Hookshot',
+                                                                                                      'Iron Boots',
+                                                                                                      'WT Big Key']}],
+                                                                         'method': 'has_all',
+                                                                         'type': 'state_method'},
+                                                                     {   'args': [   {   'type': 'constant',
+                                                                                         'value': [   'Command Melody',
+                                                                                                      'Wind Waker']}],
+                                                                         'method': 'has_all',
+                                                                         'type': 'state_method'},
+                                                                     {   'args': [   {   'type': 'constant',
+                                                                                         'value': [   "Wind God's Aria",
+                                                                                                      'Wind Waker']}],
+                                                                         'method': 'has_all',
+                                                                         'type': 'state_method'}],
+                                                   'type': 'and'},
+    'can_access_dungeon_entrance_in_forest_haven_sector': {   'conditions': [   {   'conditions': [   {   'item': 'Grappling '
+                                                                                                                  'Hook',
+                                                                                                          'type': 'item_check'},
+                                                                                                      {   'args': [],
+                                                                                                          'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                          'type': 'helper'}],
+                                                                                    'type': 'or'},
+                                                                                {   'conditions': [   {   'item': 'Grappling '
+                                                                                                                  'Hook',
+                                                                                                          'type': 'item_check'},
+                                                                                                      {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                              'Leaf',
+                                                                                                                                                      'type': 'item_check'},
+                                                                                                                                                  {   'args': [   ],
+                                                                                                                                                      'name': 'has_magic_meter',
+                                                                                                                                                      'type': 'helper'}],
+                                                                                                                                'type': 'and'},
+                                                                                                                            {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                              'Leaf',
+                                                                                                                                                      'type': 'item_check'},
+                                                                                                                                                  {   'args': [   ],
+                                                                                                                                                      'name': 'has_magic_meter',
+                                                                                                                                                      'type': 'helper'},
+                                                                                                                                                  {   'args': [   ],
+                                                                                                                                                      'name': 'can_play_winds_requiem',
+                                                                                                                                                      'type': 'helper'}],
+                                                                                                                                'type': 'and'},
+                                                                                                                            {   'type': 'constant',
+                                                                                                                                'value': False},
+                                                                                                                            {   'type': 'constant',
+                                                                                                                                'value': False}],
+                                                                                                          'type': 'and'}],
+                                                                                    'type': 'or'},
+                                                                                {   'conditions': [   {   'item': 'Deku '
+                                                                                                                  'Leaf',
+                                                                                                          'type': 'item_check'},
+                                                                                                      {   'args': [],
+                                                                                                          'name': 'has_magic_meter',
+                                                                                                          'type': 'helper'},
+                                                                                                      {   'args': [],
+                                                                                                          'name': 'can_play_winds_requiem',
+                                                                                                          'type': 'helper'}],
+                                                                                    'type': 'and'},
+                                                                                {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                'value': [   'Bombs',
+                                                                                                                                                             'Boomerang',
+                                                                                                                                                             'Skull '
+                                                                                                                                                             'Hammer']}],
+                                                                                                                                'method': 'has_any',
+                                                                                                                                'type': 'state_method'},
+                                                                                                                            {   'args': [   ],
+                                                                                                                                'name': 'has_heros_sword',
+                                                                                                                                'type': 'helper'}],
+                                                                                                          'type': 'or'},
+                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                       'value': 2},
+                                                                                                          'item': 'Progressive '
+                                                                                                                  'Magic '
+                                                                                                                  'Meter',
+                                                                                                          'type': 'item_check'}],
+                                                                                    'type': 'or'}],
+                                                              'type': 'and'},
+    'can_access_dungeon_entrance_in_tower_of_the_gods_sector': {   'args': [   {'type': 'constant', 'value': 'Pearls'},
+                                                                               {'type': 'constant', 'value': 3}],
+                                                                   'method': 'has_group_unique',
+                                                                   'type': 'state_method'},
+    'can_access_dungeon_entrance_on_dragon_roost_island': {'type': 'constant', 'value': True},
+    'can_access_dungeon_entrance_on_gale_isle': {   'args': [   {   'type': 'constant',
+                                                                    'value': ['Iron Boots', 'Skull Hammer']}],
+                                                    'method': 'has_all',
+                                                    'type': 'state_method'},
+    'can_access_dungeon_entrance_on_headstone_island': {'item': 'Power Bracelets', 'type': 'item_check'},
+    'can_access_fairy_fountain_entrance_on_eastern_fairy_island': {   'args': [   {   'type': 'constant',
+                                                                                      'value': [   'Bombs',
+                                                                                                   'Power Bracelets']}],
+                                                                      'method': 'has_any',
+                                                                      'type': 'state_method'},
+    'can_access_fairy_fountain_entrance_on_northern_fairy_island': {'type': 'constant', 'value': True},
+    'can_access_fairy_fountain_entrance_on_outset_island': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                           'name': 'can_reach_outset_island_upper_level',
+                                                                                                           'type': 'helper'},
+                                                                                                       {   'args': [],
+                                                                                                           'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                           'type': 'helper'}],
+                                                                                     'type': 'and'},
+                                                                                 {   'args': [   {   'type': 'constant',
+                                                                                                     'value': [   'Bombs',
+                                                                                                                  'Power '
+                                                                                                                  'Bracelets']}],
+                                                                                     'method': 'has_any',
+                                                                                     'type': 'state_method'}],
+                                                               'type': 'and'},
+    'can_access_fairy_fountain_entrance_on_southern_fairy_island': {   'conditions': [   {   'item': 'Bombs',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                'value': 2},
+                                                                                                                   'item': 'Progressive '
+                                                                                                                           'Bow',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'args': [   ],
+                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                   'type': 'helper'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+    'can_access_fairy_fountain_entrance_on_thorned_fairy_island': {'item': 'Skull Hammer', 'type': 'item_check'},
+    'can_access_fairy_fountain_entrance_on_western_fairy_island': {'item': 'Skull Hammer', 'type': 'item_check'},
+    'can_access_forest_haven': {   'conditions': [   {'item': 'Grappling Hook', 'type': 'item_check'},
+                                                     {   'conditions': [   {'item': 'Deku Leaf', 'type': 'item_check'},
+                                                                           {   'args': [],
+                                                                               'name': 'has_magic_meter',
+                                                                               'type': 'helper'},
+                                                                           {   'args': [],
+                                                                               'name': 'can_play_winds_requiem',
+                                                                               'type': 'helper'}],
+                                                         'type': 'and'}],
+                                   'type': 'or'},
+    'can_access_forest_of_fairies': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                    'name': 'can_cut_down_outset_trees',
+                                                                                    'type': 'helper'},
+                                                                                {   'conditions': [   {   'args': [],
+                                                                                                          'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                          'type': 'helper'},
+                                                                                                      {   'type': 'constant',
+                                                                                                          'value': False}],
+                                                                                    'type': 'and'}],
+                                                              'type': 'or'},
+                                                          {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                    'type': 'item_check'},
+                                                                                {   'args': [],
+                                                                                    'name': 'has_magic_meter',
+                                                                                    'type': 'helper'},
+                                                                                {   'args': [],
+                                                                                    'name': 'can_play_winds_requiem',
+                                                                                    'type': 'helper'}],
+                                                              'type': 'and'}],
+                                        'type': 'and'},
+    'can_access_ganons_tower': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                               'name': 'can_access_hyrule',
+                                                                               'type': 'helper'},
+                                                                           {   'conditions': [   {   'args': [],
+                                                                                                     'name': 'has_full_power_master_sword',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'type': 'constant',
+                                                                                                     'value': False}],
+                                                                               'type': 'or'}],
+                                                         'type': 'and'},
+                                                     {   'conditions': [   {'item': 'Hookshot', 'type': 'item_check'},
+                                                                           {   'conditions': [   {   'item': 'Deku '
+                                                                                                             'Leaf',
+                                                                                                     'type': 'item_check'},
+                                                                                                 {   'args': [],
+                                                                                                     'name': 'has_magic_meter',
+                                                                                                     'type': 'helper'}],
+                                                                               'type': 'and'}],
+                                                         'type': 'or'}],
+                                   'type': 'and'},
+    'can_access_hyrule': {   'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}],
+                             'method': 'has_group_unique',
+                             'type': 'state_method'},
+    'can_access_inner_entrance_in_cliff_plateau_isles_secret_cave': {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                    'value': [   'Bombs',
+                                                                                                                                                 'Boomerang',
+                                                                                                                                                 'Hookshot',
+                                                                                                                                                 'Skull '
+                                                                                                                                                 'Hammer']}],
+                                                                                                                    'method': 'has_any',
+                                                                                                                    'type': 'state_method'},
+                                                                                                                {   'args': [   ],
+                                                                                                                    'name': 'has_heros_sword',
+                                                                                                                    'type': 'helper'},
+                                                                                                                {   'args': [   ],
+                                                                                                                    'name': 'has_heros_bow',
+                                                                                                                    'type': 'helper'},
+                                                                                                                {   'conditions': [   {   'args': [   ],
+                                                                                                                                          'name': 'can_fan_with_deku_leaf',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'item': 'Grappling '
+                                                                                                                                                  'Hook',
+                                                                                                                                          'type': 'item_check'}],
+                                                                                                                    'type': 'and'}],
+                                                                                              'type': 'or'},
+                                                                                          {   'conditions': [   {   'item': 'Deku '
+                                                                                                                            'Leaf',
+                                                                                                                    'type': 'item_check'},
+                                                                                                                {   'args': [   ],
+                                                                                                                    'name': 'has_magic_meter',
+                                                                                                                    'type': 'helper'}],
+                                                                                              'type': 'and'}],
+                                                                        'type': 'and'},
+    'can_access_inner_entrance_in_ice_ring_isle_secret_cave': {'item': 'Iron Boots', 'type': 'item_check'},
+    'can_access_miniboss_entrance_in_earth_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                    'name': 'can_reach_earth_temple_left_path',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'args': [],
+                                                                                                    'name': 'has_fire_arrows',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'item': 'Power '
+                                                                                                            'Bracelets',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'args': [],
+                                                                                                    'name': 'can_defeat_floormasters',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'conditions': [   {   'args': [   ],
+                                                                                                                          'name': 'can_play_command_melody',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'args': [   ],
+                                                                                                                          'name': 'has_mirror_shield',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'or'}],
+                                                                              'type': 'and'},
+                                                                          {   'count': {'type': 'constant', 'value': 3},
+                                                                              'item': 'ET Small Key',
+                                                                              'type': 'item_check'}],
+                                                        'type': 'and'},
+    'can_access_miniboss_entrance_in_forbidden_woods': {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                               'Leaf',
+                                                                                                       'type': 'item_check'},
+                                                                                                   {   'args': [],
+                                                                                                       'name': 'has_magic_meter',
+                                                                                                       'type': 'helper'}],
+                                                                                 'type': 'and'},
+                                                                             {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                       'value': [   'Bombs',
+                                                                                                                                    'Boomerang',
+                                                                                                                                    'Hookshot',
+                                                                                                                                    'Skull '
+                                                                                                                                    'Hammer']}],
+                                                                                                       'method': 'has_any',
+                                                                                                       'type': 'state_method'},
+                                                                                                   {   'args': [],
+                                                                                                       'name': 'has_heros_sword',
+                                                                                                       'type': 'helper'},
+                                                                                                   {   'args': [],
+                                                                                                       'name': 'has_heros_bow',
+                                                                                                       'type': 'helper'},
+                                                                                                   {   'conditions': [   {   'args': [   ],
+                                                                                                                             'name': 'can_fan_with_deku_leaf',
+                                                                                                                             'type': 'helper'},
+                                                                                                                         {   'item': 'Grappling '
+                                                                                                                                     'Hook',
+                                                                                                                             'type': 'item_check'}],
+                                                                                                       'type': 'and'}],
+                                                                                 'type': 'or'},
+                                                                             {   'args': [   {   'type': 'constant',
+                                                                                                 'value': [   'FW '
+                                                                                                              'Small '
+                                                                                                              'Key',
+                                                                                                              'Grappling '
+                                                                                                              'Hook']}],
+                                                                                 'method': 'has_all',
+                                                                                 'type': 'state_method'}],
+                                                           'type': 'and'},
+    'can_access_miniboss_entrance_in_hyrule_castle': {   'args': [],
+                                                         'name': 'has_all_8_triforce_shards',
+                                                         'type': 'helper'},
+    'can_access_miniboss_entrance_in_tower_of_the_gods': {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                         'value': [   'Bombs',
+                                                                                                                                      'TotG '
+                                                                                                                                      'Small '
+                                                                                                                                      'Key']}],
+                                                                                                         'method': 'has_all',
+                                                                                                         'type': 'state_method'},
+                                                                                                     {   'args': [],
+                                                                                                         'name': 'can_defeat_yellow_chuchus',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'and'},
+                                                                               {   'conditions': [   {   'item': 'Grappling '
+                                                                                                                 'Hook',
+                                                                                                         'type': 'item_check'},
+                                                                                                     {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                       'Leaf',
+                                                                                                                               'type': 'item_check'},
+                                                                                                                           {   'args': [   ],
+                                                                                                                               'name': 'has_magic_meter',
+                                                                                                                               'type': 'helper'}],
+                                                                                                         'type': 'and'}],
+                                                                                   'type': 'or'},
+                                                                               {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                         'value': [   'Command '
+                                                                                                                                      'Melody',
+                                                                                                                                      'Wind '
+                                                                                                                                      'Waker']}],
+                                                                                                         'method': 'has_all',
+                                                                                                         'type': 'state_method'},
+                                                                                                     {   'count': {   'type': 'constant',
+                                                                                                                      'value': 1},
+                                                                                                         'item': 'Progressive '
+                                                                                                                 'Bow',
+                                                                                                         'type': 'item_check'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
+    'can_access_miniboss_entrance_in_wind_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                   'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'item': 'Iron Boots',
+                                                                                                   'type': 'item_check'}],
+                                                                             'type': 'and'},
+                                                                         {   'count': {'type': 'constant', 'value': 2},
+                                                                             'item': 'WT Small Key',
+                                                                             'type': 'item_check'}],
+                                                       'type': 'and'},
+    'can_access_secret_cave_entrance_on_angular_isles': {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                'Leaf',
+                                                                                                        'type': 'item_check'},
+                                                                                                    {   'args': [],
+                                                                                                        'name': 'has_magic_meter',
+                                                                                                        'type': 'helper'},
+                                                                                                    {   'args': [],
+                                                                                                        'name': 'can_play_winds_requiem',
+                                                                                                        'type': 'helper'}],
+                                                                                  'type': 'and'},
+                                                                              {   'item': 'Hookshot',
+                                                                                  'type': 'item_check'}],
+                                                            'type': 'or'},
+    'can_access_secret_cave_entrance_on_birds_peak_rock': {'item': 'Bait Bag', 'type': 'item_check'},
+    'can_access_secret_cave_entrance_on_boating_course': {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                 'Leaf',
+                                                                                                         'type': 'item_check'},
+                                                                                                     {   'args': [],
+                                                                                                         'name': 'has_magic_meter',
+                                                                                                         'type': 'helper'},
+                                                                                                     {   'args': [],
+                                                                                                         'name': 'can_play_winds_requiem',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'and'},
+                                                                               {   'item': 'Hookshot',
+                                                                                   'type': 'item_check'}],
+                                                             'type': 'or'},
+    'can_access_secret_cave_entrance_on_bomb_island': {   'args': [   {   'type': 'constant',
+                                                                          'value': ['Bombs', 'Power Bracelets']}],
+                                                          'method': 'has_any',
+                                                          'type': 'state_method'},
+    'can_access_secret_cave_entrance_on_cliff_plateau_isles': {'type': 'constant', 'value': True},
+    'can_access_secret_cave_entrance_on_diamond_steppe_island': {'item': 'Hookshot', 'type': 'item_check'},
+    'can_access_secret_cave_entrance_on_dragon_roost_island': {   'args': [   {   'type': 'constant',
+                                                                                  'value': [   'Bombs',
+                                                                                               'Power Bracelets']}],
+                                                                  'method': 'has_any',
+                                                                  'type': 'state_method'},
+    'can_access_secret_cave_entrance_on_fire_mountain': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                               'value': 2},
+                                                                                  'item': 'Progressive Bow',
+                                                                                  'type': 'item_check'},
+                                                                              {   'args': [],
+                                                                                  'name': 'has_magic_meter',
+                                                                                  'type': 'helper'}],
+                                                            'type': 'and'},
+    'can_access_secret_cave_entrance_on_horseshoe_island': {'item': 'Deku Leaf', 'type': 'item_check'},
+    'can_access_secret_cave_entrance_on_ice_ring_isle': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                               'value': 2},
+                                                                                  'item': 'Progressive Bow',
+                                                                                  'type': 'item_check'},
+                                                                              {   'args': [],
+                                                                                  'name': 'has_magic_meter',
+                                                                                  'type': 'helper'}],
+                                                            'type': 'and'},
+    'can_access_secret_cave_entrance_on_needle_rock_isle': {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                  'value': 2},
+                                                                                     'item': 'Progressive Bow',
+                                                                                     'type': 'item_check'},
+                                                                                 {   'args': [],
+                                                                                     'name': 'has_magic_meter',
+                                                                                     'type': 'helper'}],
+                                                               'type': 'and'},
+    'can_access_secret_cave_entrance_on_outset_island': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'args': [   ],
+                                                                                                                                                    'name': 'can_cut_down_outset_trees',
+                                                                                                                                                    'type': 'helper'},
+                                                                                                                                                {   'conditions': [   {   'args': [   ],
+                                                                                                                                                                          'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                                                                                          'type': 'helper'},
+                                                                                                                                                                      {   'type': 'constant',
+                                                                                                                                                                          'value': False}],
+                                                                                                                                                    'type': 'and'}],
+                                                                                                                              'type': 'or'},
+                                                                                                                          {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                            'Leaf',
+                                                                                                                                                    'type': 'item_check'},
+                                                                                                                                                {   'args': [   ],
+                                                                                                                                                    'name': 'has_magic_meter',
+                                                                                                                                                    'type': 'helper'},
+                                                                                                                                                {   'args': [   ],
+                                                                                                                                                    'name': 'can_play_winds_requiem',
+                                                                                                                                                    'type': 'helper'}],
+                                                                                                                              'type': 'and'}],
+                                                                                                        'type': 'and'},
+                                                                                                    {   'item': 'Hookshot',
+                                                                                                        'type': 'item_check'}],
+                                                                                  'type': 'or'},
+                                                                              {   'item': 'Power Bracelets',
+                                                                                  'type': 'item_check'}],
+                                                            'type': 'and'},
+    'can_access_secret_cave_entrance_on_overlook_island': {'item': 'Hookshot', 'type': 'item_check'},
+    'can_access_secret_cave_entrance_on_pawprint_isle': {'type': 'constant', 'value': True},
+    'can_access_secret_cave_entrance_on_pawprint_isle_side_isle': {'item': 'Hookshot', 'type': 'item_check'},
+    'can_access_secret_cave_entrance_on_private_oasis': {   'args': [   {   'type': 'constant',
+                                                                            'value': [   'Cabana Deed',
+                                                                                         'Delivery Bag',
+                                                                                         'Grappling Hook']}],
+                                                            'method': 'has_all',
+                                                            'type': 'state_method'},
+    'can_access_secret_cave_entrance_on_rock_spire_isle': {'item': 'Bombs', 'type': 'item_check'},
+    'can_access_secret_cave_entrance_on_shark_island': {   'args': [   {   'type': 'constant',
+                                                                           'value': ['Iron Boots', 'Skull Hammer']}],
+                                                           'method': 'has_all',
+                                                           'type': 'state_method'},
+    'can_access_secret_cave_entrance_on_star_island': {   'args': [   {   'type': 'constant',
+                                                                          'value': ['Bombs', 'Power Bracelets']}],
+                                                          'method': 'has_any',
+                                                          'type': 'state_method'},
+    'can_access_secret_cave_entrance_on_stone_watcher_island': {'item': 'Power Bracelets', 'type': 'item_check'},
+    'can_activate_wind_temple_giant_fan': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                          'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
+                                                                                          'type': 'helper'},
+                                                                                      {   'item': 'Iron Boots',
+                                                                                          'type': 'item_check'}],
+                                                                    'type': 'and'},
+                                                                {   'args': [   {   'type': 'constant',
+                                                                                    'value': [   'Command Melody',
+                                                                                                 'Wind Waker']}],
+                                                                    'method': 'has_all',
+                                                                    'type': 'state_method'}],
+                                              'type': 'and'},
+    'can_aim_mirror_shield': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                       'item': 'Progressive Shield',
+                                                       'type': 'item_check'},
+                                                   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                             'value': [   'Boomerang',
+                                                                                                          'Deku Leaf',
+                                                                                                          'Grappling '
+                                                                                                          'Hook',
+                                                                                                          'Hookshot',
+                                                                                                          'Wind '
+                                                                                                          'Waker']}],
+                                                                             'method': 'has_any',
+                                                                             'type': 'state_method'},
+                                                                         {   'count': {'type': 'constant', 'value': 1},
+                                                                             'item': 'Progressive Sword',
+                                                                             'type': 'item_check'},
+                                                                         {   'count': {'type': 'constant', 'value': 1},
+                                                                             'item': 'Progressive Bow',
+                                                                             'type': 'item_check'}],
+                                                       'type': 'or'}],
+                                 'type': 'and'},
+    'can_bring_north_servant_of_the_tower': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                      'item': 'TotG Small Key',
+                                                                      'type': 'item_check'},
+                                                                  {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                          'Leaf',
+                                                                                                                  'type': 'item_check'},
+                                                                                                              {   'args': [   ],
+                                                                                                                  'name': 'has_magic_meter',
+                                                                                                                  'type': 'helper'}],
+                                                                                            'type': 'and'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': False}],
+                                                                      'type': 'or'},
+                                                                  {   'args': [   {   'type': 'constant',
+                                                                                      'value': [   'Command Melody',
+                                                                                                   'Wind Waker']}],
+                                                                      'method': 'has_all',
+                                                                      'type': 'state_method'}],
+                                                'type': 'and'},
+    'can_bring_west_servant_of_the_tower': {   'conditions': [   {   'conditions': [   {   'item': 'Grappling Hook',
+                                                                                           'type': 'item_check'},
+                                                                                       {   'conditions': [   {   'item': 'Deku '
+                                                                                                                         'Leaf',
+                                                                                                                 'type': 'item_check'},
+                                                                                                             {   'args': [   ],
+                                                                                                                 'name': 'has_magic_meter',
+                                                                                                                 'type': 'helper'}],
+                                                                                           'type': 'and'}],
+                                                                     'type': 'or'},
+                                                                 {   'args': [   {   'type': 'constant',
+                                                                                     'value': [   'Command Melody',
+                                                                                                  'Wind Waker']}],
+                                                                     'method': 'has_all',
+                                                                     'type': 'state_method'},
+                                                                 {   'count': {'type': 'constant', 'value': 1},
+                                                                     'item': 'Progressive Bow',
+                                                                     'type': 'item_check'}],
+                                               'type': 'and'},
+    'can_complete_all_memory_dungeons_and_bosses': {   'conditions': [   {   'conditions': [   {   'item': 'Grappling '
+                                                                                                           'Hook',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'can_defeat_gohma',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'and'},
+                                                                         {   'conditions': [   {   'args': [],
+                                                                                                   'name': 'can_fan_with_deku_leaf',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'can_defeat_kalle_demos',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'and'},
+                                                                         {   'args': [],
+                                                                             'name': 'can_defeat_jalhalla',
+                                                                             'type': 'helper'},
+                                                                         {   'conditions': [   {   'args': [],
+                                                                                                   'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                   'type': 'helper'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'can_defeat_molgera',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'and'}],
+                                                       'type': 'and'},
+    'can_complete_memory_dragon_roost_cavern_and_gohma': {   'conditions': [   {   'item': 'Grappling Hook',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'item': 'Deku '
+                                                                                                                 'Leaf',
+                                                                                                         'type': 'item_check'},
+                                                                                                     {   'args': [],
+                                                                                                         'name': 'has_magic_meter',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'and'},
+                                                                               {   'item': 'Grappling Hook',
+                                                                                   'type': 'item_check'}],
+                                                             'type': 'and'},
+    'can_complete_memory_earth_temple_and_jalhalla': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                     'name': 'can_aim_mirror_shield',
+                                                                                                     'type': 'helper'},
+                                                                                                 {   'args': [],
+                                                                                                     'name': 'has_light_arrows',
+                                                                                                     'type': 'helper'}],
+                                                                               'type': 'or'},
+                                                                           {   'item': 'Power Bracelets',
+                                                                               'type': 'item_check'},
+                                                                           {   'args': [],
+                                                                               'name': 'can_defeat_jalhalla_poes',
+                                                                               'type': 'helper'}],
+                                                         'type': 'and'},
+    'can_complete_memory_forbidden_woods_and_kalle_demos': {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                     'type': 'item_check'},
+                                                                                 {   'conditions': [   {   'item': 'Deku '
+                                                                                                                   'Leaf',
+                                                                                                           'type': 'item_check'},
+                                                                                                       {   'args': [],
+                                                                                                           'name': 'has_magic_meter',
+                                                                                                           'type': 'helper'}],
+                                                                                     'type': 'and'},
+                                                                                 {   'item': 'Boomerang',
+                                                                                     'type': 'item_check'}],
+                                                               'type': 'and'},
+    'can_complete_memory_wind_temple_and_molgera': {   'conditions': [   {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'args': [],
+                                                                                                   'name': 'has_magic_meter',
+                                                                                                   'type': 'helper'}],
+                                                                             'type': 'and'},
+                                                                         {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                         'value': [   'Bombs',
+                                                                                                                                                      'Boomerang',
+                                                                                                                                                      'Grappling '
+                                                                                                                                                      'Hook',
+                                                                                                                                                      'Skull '
+                                                                                                                                                      'Hammer']}],
+                                                                                                                         'method': 'has_any',
+                                                                                                                         'type': 'state_method'},
+                                                                                                                     {   'args': [   ],
+                                                                                                                         'name': 'has_heros_sword',
+                                                                                                                         'type': 'helper'},
+                                                                                                                     {   'args': [   ],
+                                                                                                                         'name': 'has_heros_bow',
+                                                                                                                         'type': 'helper'}],
+                                                                                                   'type': 'or'}],
+                                                                             'type': 'and'}],
+                                                       'type': 'and'},
+    'can_cut_down_hanging_drc_platform': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                   'value': ['Bombs', 'Skull Hammer']}],
+                                                                   'method': 'has_any',
+                                                                   'type': 'state_method'},
+                                                               {   'count': {'type': 'constant', 'value': 1},
+                                                                   'item': 'Progressive Sword',
+                                                                   'type': 'item_check'},
+                                                               {   'count': {'type': 'constant', 'value': 1},
+                                                                   'item': 'Progressive Bow',
+                                                                   'type': 'item_check'},
+                                                               {   'conditions': [   {   'item': 'Hookshot',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'type': 'constant',
+                                                                                         'value': False}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Grappling Hook',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'type': 'constant',
+                                                                                         'value': False}],
+                                                                   'type': 'and'}],
+                                             'type': 'or'},
+    'can_cut_down_outset_trees': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                           'value': ['Boomerang', 'Skull Hammer']}],
+                                                           'method': 'has_any',
+                                                           'type': 'state_method'},
+                                                       {   'count': {'type': 'constant', 'value': 1},
+                                                           'item': 'Progressive Sword',
+                                                           'type': 'item_check'},
+                                                       {   'conditions': [   {   'item': 'Power Bracelets',
+                                                                                 'type': 'item_check'},
+                                                                             {'type': 'constant', 'value': False}],
+                                                           'type': 'and'}],
+                                     'type': 'or'},
+    'can_cut_grass': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                               'value': ['Bombs', 'Boomerang', 'Skull Hammer']}],
+                                               'method': 'has_any',
+                                               'type': 'state_method'},
+                                           {   'count': {'type': 'constant', 'value': 1},
+                                               'item': 'Progressive Sword',
+                                               'type': 'item_check'}],
+                         'type': 'or'},
+    'can_defeat_armos': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                  'value': ['Bombs', 'Hookshot', 'Skull Hammer']}],
+                                                  'method': 'has_any',
+                                                  'type': 'state_method'},
+                                              {   'count': {'type': 'constant', 'value': 1},
+                                                  'item': 'Progressive Sword',
+                                                  'type': 'item_check'},
+                                              {   'count': {'type': 'constant', 'value': 1},
+                                                  'item': 'Progressive Bow',
+                                                  'type': 'item_check'}],
+                            'type': 'or'},
+    'can_defeat_blue_bubbles': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                            'value': 2},
+                                                                               'item': 'Progressive Bow',
+                                                                               'type': 'item_check'},
+                                                                           {   'args': [],
+                                                                               'name': 'has_magic_meter',
+                                                                               'type': 'helper'}],
+                                                         'type': 'and'},
+                                                     {'item': 'Bombs', 'type': 'item_check'},
+                                                     {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                             'Leaf',
+                                                                                                     'type': 'item_check'},
+                                                                                                 {   'item': 'Hookshot',
+                                                                                                     'type': 'item_check'}],
+                                                                               'type': 'or'},
+                                                                           {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                     'value': [   'Grappling '
+                                                                                                                                  'Hook',
+                                                                                                                                  'Skull '
+                                                                                                                                  'Hammer']}],
+                                                                                                     'method': 'has_any',
+                                                                                                     'type': 'state_method'},
+                                                                                                 {   'count': {   'type': 'constant',
+                                                                                                                  'value': 1},
+                                                                                                     'item': 'Progressive '
+                                                                                                             'Sword',
+                                                                                                     'type': 'item_check'},
+                                                                                                 {   'count': {   'type': 'constant',
+                                                                                                                  'value': 1},
+                                                                                                     'item': 'Progressive '
+                                                                                                             'Bow',
+                                                                                                     'type': 'item_check'}],
+                                                                               'type': 'or'}],
+                                                         'type': 'and'}],
+                                   'type': 'or'},
+    'can_defeat_boko_babas': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                       'value': [   'Bombs',
+                                                                                    'Boomerang',
+                                                                                    'Hookshot',
+                                                                                    'Skull Hammer']}],
+                                                       'method': 'has_any',
+                                                       'type': 'state_method'},
+                                                   {   'count': {'type': 'constant', 'value': 1},
+                                                       'item': 'Progressive Sword',
+                                                       'type': 'item_check'},
+                                                   {   'count': {'type': 'constant', 'value': 1},
+                                                       'item': 'Progressive Bow',
+                                                       'type': 'item_check'},
+                                                   {   'conditions': [   {'item': 'Deku Leaf', 'type': 'item_check'},
+                                                                         {   'item': 'Grappling Hook',
+                                                                             'type': 'item_check'}],
+                                                       'type': 'and'}],
+                                 'type': 'or'},
+    'can_defeat_bokoblins': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                      'value': ['Bombs', 'Skull Hammer']}],
+                                                      'method': 'has_any',
+                                                      'type': 'state_method'},
+                                                  {   'count': {'type': 'constant', 'value': 1},
+                                                      'item': 'Progressive Sword',
+                                                      'type': 'item_check'},
+                                                  {   'count': {'type': 'constant', 'value': 1},
+                                                      'item': 'Progressive Bow',
+                                                      'type': 'item_check'}],
+                                'type': 'or'},
+    'can_defeat_darknuts': {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                     'item': 'Progressive Sword',
+                                                     'type': 'item_check'},
+                                                 {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
+                                                                           'item': 'Progressive Bow',
+                                                                           'type': 'item_check'},
+                                                                       {   'args': [],
+                                                                           'name': 'has_magic_meter',
+                                                                           'type': 'helper'}],
+                                                     'type': 'and'},
+                                                 {'item': 'Skull Hammer', 'type': 'item_check'}],
+                               'type': 'or'},
+    'can_defeat_darknuts_easily': {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                            'item': 'Progressive Sword',
+                                                            'type': 'item_check'},
+                                                        {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                               'value': 3},
+                                                                                  'item': 'Progressive Bow',
+                                                                                  'type': 'item_check'},
+                                                                              {   'args': [],
+                                                                                  'name': 'has_magic_meter',
+                                                                                  'type': 'helper'}],
+                                                            'type': 'and'}],
+                                      'type': 'or'},
+    'can_defeat_door_flowers': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                         'value': ['Bombs', 'Boomerang', 'Hookshot']}],
+                                                         'method': 'has_any',
+                                                         'type': 'state_method'},
+                                                     {   'count': {'type': 'constant', 'value': 1},
+                                                         'item': 'Progressive Bow',
+                                                         'type': 'item_check'}],
+                                   'type': 'or'},
+    'can_defeat_floormasters': {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                         'item': 'Progressive Sword',
+                                                         'type': 'item_check'},
+                                                     {   'count': {'type': 'constant', 'value': 1},
+                                                         'item': 'Progressive Bow',
+                                                         'type': 'item_check'},
+                                                     {   'conditions': [   {   'item': 'Skull Hammer',
+                                                                               'type': 'item_check'},
+                                                                           {'type': 'constant', 'value': False}],
+                                                         'type': 'and'}],
+                                   'type': 'or'},
+    'can_defeat_ganondorf': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                                            'item': 'Progressive Sword',
+                                                                            'type': 'item_check'},
+                                                                        {'type': 'constant', 'value': False}],
+                                                      'type': 'or'},
+                                                  {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                                            'item': 'Progressive Shield',
+                                                                            'type': 'item_check'},
+                                                                        {   'conditions': [   {   'item': 'Skull '
+                                                                                                          'Hammer',
+                                                                                                  'type': 'item_check'},
+                                                                                              {   'type': 'constant',
+                                                                                                  'value': False}],
+                                                                            'type': 'and'}],
+                                                      'type': 'or'}],
+                                'type': 'and'},
+    'can_defeat_gohdan': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                                         'item': 'Progressive Bow',
+                                                                         'type': 'item_check'},
+                                                                     {   'conditions': [   {   'item': 'Hookshot',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'type': 'constant',
+                                                                                               'value': False},
+                                                                                           {   'type': 'constant',
+                                                                                               'value': False}],
+                                                                         'type': 'and'}],
+                                                   'type': 'or'},
+                                               {'item': 'Bombs', 'type': 'item_check'}],
+                             'type': 'and'},
+    'can_defeat_gohma': {'item': 'Grappling Hook', 'type': 'item_check'},
+    'can_defeat_green_chuchus': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                          'value': ['Bombs', 'Skull Hammer']}],
+                                                          'method': 'has_any',
+                                                          'type': 'state_method'},
+                                                      {'args': [], 'name': 'has_heros_sword', 'type': 'helper'},
+                                                      {'args': [], 'name': 'has_heros_bow', 'type': 'helper'}],
+                                    'type': 'or'},
+    'can_defeat_helmaroc_king': {'item': 'Skull Hammer', 'type': 'item_check'},
+    'can_defeat_jalhalla': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                 'name': 'has_mirror_shield',
+                                                                                                 'type': 'helper'},
+                                                                                             {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                       'value': [   'Boomerang',
+                                                                                                                                                    'Deku '
+                                                                                                                                                    'Leaf',
+                                                                                                                                                    'Grappling '
+                                                                                                                                                    'Hook',
+                                                                                                                                                    'Hookshot',
+                                                                                                                                                    'Wind '
+                                                                                                                                                    'Waker']}],
+                                                                                                                       'method': 'has_any',
+                                                                                                                       'type': 'state_method'},
+                                                                                                                   {   'args': [   ],
+                                                                                                                       'name': 'has_heros_sword',
+                                                                                                                       'type': 'helper'},
+                                                                                                                   {   'args': [   ],
+                                                                                                                       'name': 'has_heros_bow',
+                                                                                                                       'type': 'helper'}],
+                                                                                                 'type': 'or'}],
+                                                                           'type': 'and'},
+                                                                       {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                              'value': 3},
+                                                                                                 'item': 'Progressive '
+                                                                                                         'Bow',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'args': [],
+                                                                                                 'name': 'has_magic_meter',
+                                                                                                 'type': 'helper'}],
+                                                                           'type': 'and'}],
+                                                     'type': 'or'},
+                                                 {'item': 'Power Bracelets', 'type': 'item_check'},
+                                                 {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                           'value': [   'Bombs',
+                                                                                                        'Skull '
+                                                                                                        'Hammer']}],
+                                                                           'method': 'has_any',
+                                                                           'type': 'state_method'},
+                                                                       {   'args': [],
+                                                                           'name': 'has_heros_sword',
+                                                                           'type': 'helper'},
+                                                                       {   'args': [],
+                                                                           'name': 'has_heros_bow',
+                                                                           'type': 'helper'}],
+                                                     'type': 'or'}],
+                               'type': 'and'},
+    'can_defeat_jalhalla_poes': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                          'value': ['Bombs', 'Skull Hammer']}],
+                                                          'method': 'has_any',
+                                                          'type': 'state_method'},
+                                                      {   'count': {'type': 'constant', 'value': 1},
+                                                          'item': 'Progressive Sword',
+                                                          'type': 'item_check'},
+                                                      {   'count': {'type': 'constant', 'value': 1},
+                                                          'item': 'Progressive Bow',
+                                                          'type': 'item_check'}],
+                                    'type': 'or'},
+    'can_defeat_kalle_demos': {'item': 'Boomerang', 'type': 'item_check'},
+    'can_defeat_mighty_darknuts': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                  'name': 'has_heros_sword',
+                                                                                  'type': 'helper'},
+                                                                              {   'args': [],
+                                                                                  'name': 'has_light_arrows',
+                                                                                  'type': 'helper'}],
+                                                            'type': 'or'},
+                                                        {   'conditions': [   {   'item': 'Skull Hammer',
+                                                                                  'type': 'item_check'},
+                                                                              {'type': 'constant', 'value': False}],
+                                                            'type': 'and'}],
+                                      'type': 'or'},
+    'can_defeat_moblins': {   'conditions': [   {   'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}],
+                                                    'method': 'has_any',
+                                                    'type': 'state_method'},
+                                                {   'count': {'type': 'constant', 'value': 1},
+                                                    'item': 'Progressive Sword',
+                                                    'type': 'item_check'},
+                                                {   'count': {'type': 'constant', 'value': 1},
+                                                    'item': 'Progressive Bow',
+                                                    'type': 'item_check'}],
+                              'type': 'or'},
+    'can_defeat_molgera': {   'conditions': [   {'item': 'Hookshot', 'type': 'item_check'},
+                                                {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                          'value': [   'Bombs',
+                                                                                                       'Boomerang',
+                                                                                                       'Grappling Hook',
+                                                                                                       'Skull '
+                                                                                                       'Hammer']}],
+                                                                          'method': 'has_any',
+                                                                          'type': 'state_method'},
+                                                                      {   'count': {'type': 'constant', 'value': 1},
+                                                                          'item': 'Progressive Sword',
+                                                                          'type': 'item_check'},
+                                                                      {   'count': {'type': 'constant', 'value': 1},
+                                                                          'item': 'Progressive Bow',
+                                                                          'type': 'item_check'}],
+                                                    'type': 'or'}],
+                              'type': 'and'},
+    'can_defeat_morths': {   'conditions': [   {   'args': [{'type': 'constant', 'value': ['Boomerang', 'Hookshot']}],
+                                                   'method': 'has_any',
+                                                   'type': 'state_method'},
+                                               {   'count': {'type': 'constant', 'value': 1},
+                                                   'item': 'Progressive Sword',
+                                                   'type': 'item_check'},
+                                               {   'count': {'type': 'constant', 'value': 1},
+                                                   'item': 'Progressive Bow',
+                                                   'type': 'item_check'}],
+                             'type': 'or'},
+    'can_defeat_mothulas': {   'conditions': [   {   'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}],
+                                                     'method': 'has_any',
+                                                     'type': 'state_method'},
+                                                 {   'count': {'type': 'constant', 'value': 1},
+                                                     'item': 'Progressive Sword',
+                                                     'type': 'item_check'},
+                                                 {   'count': {'type': 'constant', 'value': 1},
+                                                     'item': 'Progressive Bow',
+                                                     'type': 'item_check'}],
+                               'type': 'or'},
+    'can_defeat_peahats': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                    'value': ['Bombs', 'Boomerang', 'Skull Hammer']}],
+                                                    'method': 'has_any',
+                                                    'type': 'state_method'},
+                                                {   'conditions': [   {'item': 'Hookshot', 'type': 'item_check'},
+                                                                      {   'count': {'type': 'constant', 'value': 1},
+                                                                          'item': 'Progressive Sword',
+                                                                          'type': 'item_check'}],
+                                                    'type': 'and'},
+                                                {   'conditions': [   {'item': 'Deku Leaf', 'type': 'item_check'},
+                                                                      {   'count': {'type': 'constant', 'value': 1},
+                                                                          'item': 'Progressive Sword',
+                                                                          'type': 'item_check'}],
+                                                    'type': 'and'},
+                                                {   'count': {'type': 'constant', 'value': 1},
+                                                    'item': 'Progressive Bow',
+                                                    'type': 'item_check'}],
+                              'type': 'or'},
+    'can_defeat_phantom_ganon': {   'conditions': [   {   'conditions': [   {   'operand': {   'type': 'constant',
+                                                                                               'value': False},
+                                                                                'type': 'not'},
+                                                                            {   'count': {   'type': 'constant',
+                                                                                             'value': 2},
+                                                                                'item': 'Progressive Sword',
+                                                                                'type': 'item_check'}],
+                                                          'type': 'and'},
+                                                      {   'conditions': [   {'type': 'constant', 'value': False},
+                                                                            {   'item': 'Skull Hammer',
+                                                                                'type': 'item_check'}],
+                                                          'type': 'and'}],
+                                    'type': 'or'},
+    'can_defeat_puppet_ganon': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                            'value': 3},
+                                                                               'item': 'Progressive Bow',
+                                                                               'type': 'item_check'},
+                                                                           {   'args': [],
+                                                                               'name': 'has_magic_meter',
+                                                                               'type': 'helper'}],
+                                                         'type': 'and'},
+                                                     {   'conditions': [   {'item': 'Boomerang', 'type': 'item_check'},
+                                                                           {'type': 'constant', 'value': False}],
+                                                         'type': 'or'}],
+                                   'type': 'and'},
+    'can_defeat_red_bubbles': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                        'value': ['Bombs', 'Skull Hammer']}],
+                                                        'method': 'has_any',
+                                                        'type': 'state_method'},
+                                                    {   'count': {'type': 'constant', 'value': 1},
+                                                        'item': 'Progressive Sword',
+                                                        'type': 'item_check'},
+                                                    {   'count': {'type': 'constant', 'value': 1},
+                                                        'item': 'Progressive Bow',
+                                                        'type': 'item_check'},
+                                                    {   'conditions': [   {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'item': 'Hookshot',
+                                                                                                    'type': 'item_check'}],
+                                                                              'type': 'or'},
+                                                                          {   'item': 'Grappling Hook',
+                                                                              'type': 'item_check'}],
+                                                        'type': 'and'}],
+                                  'type': 'or'},
+    'can_defeat_red_chuchus': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                        'value': ['Bombs', 'Skull Hammer']}],
+                                                        'method': 'has_any',
+                                                        'type': 'state_method'},
+                                                    {   'count': {'type': 'constant', 'value': 1},
+                                                        'item': 'Progressive Sword',
+                                                        'type': 'item_check'},
+                                                    {   'count': {'type': 'constant', 'value': 1},
+                                                        'item': 'Progressive Bow',
+                                                        'type': 'item_check'}],
+                                  'type': 'or'},
+    'can_defeat_stalfos': {   'conditions': [   {   'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}],
+                                                    'method': 'has_any',
+                                                    'type': 'state_method'},
+                                                {   'count': {'type': 'constant', 'value': 1},
+                                                    'item': 'Progressive Sword',
+                                                    'type': 'item_check'},
+                                                {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
+                                                                          'item': 'Progressive Bow',
+                                                                          'type': 'item_check'},
+                                                                      {   'args': [],
+                                                                          'name': 'has_magic_meter',
+                                                                          'type': 'helper'}],
+                                                    'type': 'and'}],
+                              'type': 'or'},
+    'can_defeat_winged_mothulas': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                            'value': ['Bombs', 'Skull Hammer']}],
+                                                            'method': 'has_any',
+                                                            'type': 'state_method'},
+                                                        {   'count': {'type': 'constant', 'value': 1},
+                                                            'item': 'Progressive Sword',
+                                                            'type': 'item_check'},
+                                                        {   'count': {'type': 'constant', 'value': 1},
+                                                            'item': 'Progressive Bow',
+                                                            'type': 'item_check'}],
+                                      'type': 'or'},
+    'can_defeat_wizzrobes': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                      'value': ['Bombs', 'Hookshot', 'Skull Hammer']}],
+                                                      'method': 'has_any',
+                                                      'type': 'state_method'},
+                                                  {   'count': {'type': 'constant', 'value': 1},
+                                                      'item': 'Progressive Sword',
+                                                      'type': 'item_check'},
+                                                  {   'count': {'type': 'constant', 'value': 1},
+                                                      'item': 'Progressive Bow',
+                                                      'type': 'item_check'}],
+                                'type': 'or'},
+    'can_defeat_yellow_chuchus': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                           'value': ['Bombs', 'Skull Hammer']}],
+                                                           'method': 'has_any',
+                                                           'type': 'state_method'},
+                                                       {   'conditions': [   {   'item': 'Boomerang',
+                                                                                 'type': 'item_check'},
+                                                                             {   'count': {   'type': 'constant',
+                                                                                              'value': 1},
+                                                                                 'item': 'Progressive Sword',
+                                                                                 'type': 'item_check'}],
+                                                           'type': 'and'},
+                                                       {   'count': {'type': 'constant', 'value': 1},
+                                                           'item': 'Progressive Bow',
+                                                           'type': 'item_check'},
+                                                       {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                 'type': 'item_check'},
+                                                                             {   'count': {   'type': 'constant',
+                                                                                              'value': 1},
+                                                                                 'item': 'Progressive Sword',
+                                                                                 'type': 'item_check'}],
+                                                           'type': 'and'},
+                                                       {   'conditions': [   {   'item': 'Grappling Hook',
+                                                                                 'type': 'item_check'},
+                                                                             {   'count': {   'type': 'constant',
+                                                                                              'value': 1},
+                                                                                 'item': 'Progressive Sword',
+                                                                                 'type': 'item_check'},
+                                                                             {'type': 'constant', 'value': False},
+                                                                             {'type': 'constant', 'value': False}],
+                                                           'type': 'and'}],
+                                     'type': 'or'},
+    'can_destroy_seeds_hanging_by_vines': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                    'value': [   'Bombs',
+                                                                                                 'Boomerang',
+                                                                                                 'Hookshot']}],
+                                                                    'method': 'has_any',
+                                                                    'type': 'state_method'},
+                                                                {   'count': {'type': 'constant', 'value': 1},
+                                                                    'item': 'Progressive Bow',
+                                                                    'type': 'item_check'}],
+                                              'type': 'or'},
+    'can_fan_with_deku_leaf': {'item': 'Deku Leaf', 'type': 'item_check'},
+    'can_fly_with_deku_leaf_indoors': {   'conditions': [   {'item': 'Deku Leaf', 'type': 'item_check'},
+                                                            {   'count': {'type': 'constant', 'value': 1},
+                                                                'item': 'Progressive Magic Meter',
+                                                                'type': 'item_check'}],
+                                          'type': 'and'},
+    'can_fly_with_deku_leaf_outdoors': {   'conditions': [   {'item': 'Deku Leaf', 'type': 'item_check'},
+                                                             {   'count': {'type': 'constant', 'value': 1},
+                                                                 'item': 'Progressive Magic Meter',
+                                                                 'type': 'item_check'},
+                                                             {   'args': [   {   'type': 'constant',
+                                                                                 'value': [   'Wind Waker',
+                                                                                              "Wind's Requiem"]}],
+                                                                 'method': 'has_all',
+                                                                 'type': 'state_method'}],
+                                           'type': 'and'},
+    'can_get_inside_forsaken_fortress': {   'conditions': [   {   'conditions': [   {   'item': 'Bombs',
+                                                                                        'type': 'item_check'},
+                                                                                    {   'conditions': [   {   'type': 'constant',
+                                                                                                              'value': False},
+                                                                                                          {   'type': 'constant',
+                                                                                                              'value': False}],
+                                                                                        'type': 'and'},
+                                                                                    {   'conditions': [   {   'args': [   ],
+                                                                                                              'name': 'can_open_ganons_tower_dark_portal',
+                                                                                                              'type': 'helper'},
+                                                                                                          {   'type': 'constant',
+                                                                                                              'value': False}],
+                                                                                        'type': 'and'}],
+                                                                  'type': 'or'},
+                                                              {'item': 'Skull Hammer', 'type': 'item_check'}],
+                                            'type': 'and'},
+    'can_get_past_forsaken_fortress_gate': {   'conditions': [   {'item': 'Bombs', 'type': 'item_check'},
+                                                                 {   'conditions': [   {   'type': 'constant',
+                                                                                           'value': False},
+                                                                                       {   'type': 'constant',
+                                                                                           'value': False}],
+                                                                     'type': 'and'},
+                                                                 {   'conditions': [   {   'conditions': [   {   'args': [   ],
+                                                                                                                 'name': 'can_reach_ganons_tower_phantom_ganon_room',
+                                                                                                                 'type': 'helper'},
+                                                                                                             {   'item': 'Boomerang',
+                                                                                                                 'type': 'item_check'}],
+                                                                                           'type': 'and'},
+                                                                                       {   'type': 'constant',
+                                                                                           'value': False}],
+                                                                     'type': 'and'}],
+                                               'type': 'or'},
+    'can_get_past_hyrule_barrier': {   'conditions': [   {   'args': [],
+                                                             'name': 'has_all_8_triforce_shards',
+                                                             'type': 'helper'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 4},
+                                                                                   'item': 'Progressive Sword',
+                                                                                   'type': 'item_check'},
+                                                                               {'type': 'constant', 'value': False}],
+                                                             'type': 'or'}],
+                                       'type': 'and'},
+    'can_move_boulders': {   'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}],
+                             'method': 'has_any',
+                             'type': 'state_method'},
+    'can_open_ganons_tower_dark_portal': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                         'name': 'can_access_ganons_tower',
+                                                                                         'type': 'helper'},
+                                                                                     {   'args': [],
+                                                                                         'name': 'can_unlock_ganons_tower_four_boss_door',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {'item': 'Boomerang', 'type': 'item_check'}],
+                                             'type': 'and'},
+    'can_open_wind_temple_lower_giant_grate': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                              'name': 'can_play_command_melody',
+                                                                                              'type': 'helper'},
+                                                                                          {   'item': 'Iron Boots',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                              'type': 'helper'}],
+                                                                        'type': 'and'},
+                                                                    {'item': 'Hookshot', 'type': 'item_check'},
+                                                                    {   'conditions': [   {   'args': [],
+                                                                                              'name': 'has_ice_arrows',
+                                                                                              'type': 'helper'},
+                                                                                          {   'item': 'Bombs',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'conditions': [   {   'conditions': [   {   'args': [   ],
+                                                                                                                                          'name': 'can_fan_with_deku_leaf',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'item': 'Hookshot',
+                                                                                                                                          'type': 'item_check'}],
+                                                                                                                    'type': 'or'},
+                                                                                                                {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                          'value': [   'Grappling '
+                                                                                                                                                                       'Hook',
+                                                                                                                                                                       'Skull '
+                                                                                                                                                                       'Hammer']}],
+                                                                                                                                          'method': 'has_any',
+                                                                                                                                          'type': 'state_method'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'has_heros_sword',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'has_heros_bow',
+                                                                                                                                          'type': 'helper'}],
+                                                                                                                    'type': 'or'}],
+                                                                                              'type': 'and'}],
+                                                                        'type': 'or'}],
+                                                  'type': 'and'},
+    'can_open_wind_temple_upper_giant_grate': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                              'name': 'can_reach_wind_temple_kidnapping_room',
+                                                                                              'type': 'helper'},
+                                                                                          {   'conditions': [   {   'conditions': [   {   'item': 'Iron '
+                                                                                                                                                  'Boots',
+                                                                                                                                          'type': 'item_check'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'can_fan_with_deku_leaf',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'can_cut_grass',
+                                                                                                                                          'type': 'helper'}],
+                                                                                                                    'type': 'and'},
+                                                                                                                {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                                                          'type': 'item_check'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'can_defeat_blue_bubbles',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                                          'type': 'helper'}],
+                                                                                                                    'type': 'and'},
+                                                                                                                {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                                                          'type': 'item_check'},
+                                                                                                                                      {   'args': [   ],
+                                                                                                                                          'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                                          'type': 'helper'},
+                                                                                                                                      {   'type': 'constant',
+                                                                                                                                          'value': False},
+                                                                                                                                      {   'type': 'constant',
+                                                                                                                                          'value': False}],
+                                                                                                                    'type': 'and'}],
+                                                                                              'type': 'or'}],
+                                                                        'type': 'and'},
+                                                                    {'item': 'Iron Boots', 'type': 'item_check'}],
+                                                  'type': 'and'},
+    'can_play_command_melody': {   'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+    'can_play_earth_gods_lyric': {   'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}],
+                                     'method': 'has_all',
+                                     'type': 'state_method'},
+    'can_play_wind_gods_aria': {   'args': [{'type': 'constant', 'value': ["Wind God's Aria", 'Wind Waker']}],
+                                   'method': 'has_all',
+                                   'type': 'state_method'},
+    'can_play_winds_requiem': {   'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}],
+                                  'method': 'has_all',
+                                  'type': 'state_method'},
+    'can_reach_and_defeat_ganondorf': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                      'name': 'can_reach_ganons_tower_phantom_ganon_room',
+                                                                                      'type': 'helper'},
+                                                                                  {   'args': [],
+                                                                                      'name': 'has_light_arrows',
+                                                                                      'type': 'helper'},
+                                                                                  {   'args': [],
+                                                                                      'name': 'can_unlock_puppet_ganon_door',
+                                                                                      'type': 'helper'},
+                                                                                  {   'args': [],
+                                                                                      'name': 'can_defeat_puppet_ganon',
+                                                                                      'type': 'helper'}],
+                                                                'type': 'and'},
+                                                            {   'args': [   {   'type': 'constant',
+                                                                                'value': [   'Grappling Hook',
+                                                                                             'Hookshot']}],
+                                                                'method': 'has_all',
+                                                                'type': 'state_method'},
+                                                            {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                            'name': 'has_heros_sword',
+                                                                                                            'type': 'helper'},
+                                                                                                        {   'type': 'constant',
+                                                                                                            'value': False}],
+                                                                                      'type': 'or'},
+                                                                                  {   'conditions': [   {   'args': [],
+                                                                                                            'name': 'has_heros_shield',
+                                                                                                            'type': 'helper'},
+                                                                                                        {   'conditions': [   {   'item': 'Skull '
+                                                                                                                                          'Hammer',
+                                                                                                                                  'type': 'item_check'},
+                                                                                                                              {   'type': 'constant',
+                                                                                                                                  'value': False}],
+                                                                                                            'type': 'and'}],
+                                                                                      'type': 'or'}],
+                                                                'type': 'and'}],
+                                          'type': 'and'},
+    'can_reach_and_defeat_phantom_ganon': {   'conditions': [   {   'conditions': [   {   'item': 'Bombs',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'conditions': [   {   'type': 'constant',
+                                                                                                                'value': False},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': False}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'args': [   ],
+                                                                                                                'name': 'can_open_ganons_tower_dark_portal',
+                                                                                                                'type': 'helper'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': False}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'conditions': [   {   'operand': {   'type': 'constant',
+                                                                                                                               'value': False},
+                                                                                                                'type': 'not'},
+                                                                                                            {   'args': [   ],
+                                                                                                                'name': 'has_any_master_sword',
+                                                                                                                'type': 'helper'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'type': 'constant',
+                                                                                                                'value': False},
+                                                                                                            {   'item': 'Skull '
+                                                                                                                        'Hammer',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'}],
+                                              'type': 'and'},
+    'can_reach_and_defeat_puppet_ganon': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                         'name': 'can_access_ganons_tower',
+                                                                                         'type': 'helper'},
+                                                                                     {   'args': [],
+                                                                                         'name': 'can_unlock_ganons_tower_four_boss_door',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Progressive Bow',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'args': [],
+                                                                                         'name': 'has_magic_meter',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'args': [],
+                                                                                         'name': 'can_defeat_moblins',
+                                                                                         'type': 'helper'},
+                                                                                     {   'args': [],
+                                                                                         'name': 'can_defeat_mighty_darknuts',
+                                                                                         'type': 'helper'},
+                                                                                     {   'conditions': [   {   'operand': {   'type': 'constant',
+                                                                                                                              'value': False},
+                                                                                                               'type': 'not'},
+                                                                                                           {   'conditions': [   {   'type': 'constant',
+                                                                                                                                     'value': False},
+                                                                                                                                 {   'type': 'constant',
+                                                                                                                                     'value': True}],
+                                                                                                               'type': 'and'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'args': [],
+                                                                                         'name': 'has_light_arrows',
+                                                                                         'type': 'helper'},
+                                                                                     {   'conditions': [   {   'item': 'Boomerang',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'type': 'constant',
+                                                                                                               'value': False}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'}],
+                                             'type': 'and'},
+    'can_reach_dragon_roost_cavern_boss_stairs': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                           'item': 'DRC Small Key',
+                                                                           'type': 'item_check'},
+                                                                       {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                 'value': [   'Grappling '
+                                                                                                                              'Hook',
+                                                                                                                              'Hookshot']}],
+                                                                                                 'method': 'has_any',
+                                                                                                 'type': 'state_method'},
+                                                                                             {   'conditions': [   {   'item': 'Deku '
+                                                                                                                               'Leaf',
+                                                                                                                       'type': 'item_check'},
+                                                                                                                   {   'args': [   ],
+                                                                                                                       'name': 'has_magic_meter',
+                                                                                                                       'type': 'helper'}],
+                                                                                                 'type': 'and'},
+                                                                                             {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                    'value': 2},
+                                                                                                                       'item': 'Progressive '
+                                                                                                                               'Bow',
+                                                                                                                       'type': 'item_check'},
+                                                                                                                   {   'args': [   ],
+                                                                                                                       'name': 'has_magic_meter',
+                                                                                                                       'type': 'helper'}],
+                                                                                                 'type': 'and'}],
+                                                                           'type': 'or'}],
+                                                     'type': 'and'},
+    'can_reach_dragon_roost_cavern_gaping_maw': {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
+                                                                          'item': 'DRC Small Key',
+                                                                          'type': 'item_check'},
+                                                                      {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                   'value': 4},
+                                                                                                                      'item': 'DRC '
+                                                                                                                              'Small '
+                                                                                                                              'Key',
+                                                                                                                      'type': 'item_check'},
+                                                                                                                  {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                            'value': [   'Bombs',
+                                                                                                                                                                         'Skull '
+                                                                                                                                                                         'Hammer']}],
+                                                                                                                                            'method': 'has_any',
+                                                                                                                                            'type': 'state_method'},
+                                                                                                                                        {   'args': [   ],
+                                                                                                                                            'name': 'has_heros_sword',
+                                                                                                                                            'type': 'helper'},
+                                                                                                                                        {   'args': [   ],
+                                                                                                                                            'name': 'has_heros_bow',
+                                                                                                                                            'type': 'helper'},
+                                                                                                                                        {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                                                                                  'type': 'item_check'},
+                                                                                                                                                              {   'type': 'constant',
+                                                                                                                                                                  'value': False}],
+                                                                                                                                            'type': 'and'},
+                                                                                                                                        {   'conditions': [   {   'item': 'Grappling '
+                                                                                                                                                                          'Hook',
+                                                                                                                                                                  'type': 'item_check'},
+                                                                                                                                                              {   'type': 'constant',
+                                                                                                                                                                  'value': False}],
+                                                                                                                                            'type': 'and'}],
+                                                                                                                      'type': 'or'}],
+                                                                                                'type': 'and'},
+                                                                                            {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                    'Leaf',
+                                                                                                                                            'type': 'item_check'},
+                                                                                                                                        {   'args': [   ],
+                                                                                                                                            'name': 'has_magic_meter',
+                                                                                                                                            'type': 'helper'}],
+                                                                                                                      'type': 'and'},
+                                                                                                                  {   'type': 'constant',
+                                                                                                                      'value': False}],
+                                                                                                'type': 'and'},
+                                                                                            {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                                         'value': 2},
+                                                                                                                                            'item': 'Progressive '
+                                                                                                                                                    'Bow',
+                                                                                                                                            'type': 'item_check'},
+                                                                                                                                        {   'args': [   ],
+                                                                                                                                            'name': 'has_magic_meter',
+                                                                                                                                            'type': 'helper'}],
+                                                                                                                      'type': 'and'},
+                                                                                                                  {   'type': 'constant',
+                                                                                                                      'value': False},
+                                                                                                                  {   'type': 'constant',
+                                                                                                                      'value': False}],
+                                                                                                'type': 'and'}],
+                                                                          'type': 'or'}],
+                                                    'type': 'and'},
+    'can_reach_earth_temple_basement': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                       'name': 'can_play_command_melody',
+                                                                                       'type': 'helper'},
+                                                                                   {   'args': [],
+                                                                                       'name': 'can_defeat_red_chuchus',
+                                                                                       'type': 'helper'},
+                                                                                   {   'args': [],
+                                                                                       'name': 'can_defeat_green_chuchus',
+                                                                                       'type': 'helper'}],
+                                                                 'type': 'and'},
+                                                             {   'args': [   {   'type': 'constant',
+                                                                                 'value': [   'Command Melody',
+                                                                                              'Wind Waker']}],
+                                                                 'method': 'has_all',
+                                                                 'type': 'state_method'},
+                                                             {   'conditions': [   {   'args': [],
+                                                                                       'name': 'has_mirror_shield',
+                                                                                       'type': 'helper'},
+                                                                                   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                             'value': [   'Boomerang',
+                                                                                                                                          'Deku '
+                                                                                                                                          'Leaf',
+                                                                                                                                          'Grappling '
+                                                                                                                                          'Hook',
+                                                                                                                                          'Hookshot',
+                                                                                                                                          'Wind '
+                                                                                                                                          'Waker']}],
+                                                                                                             'method': 'has_any',
+                                                                                                             'type': 'state_method'},
+                                                                                                         {   'args': [],
+                                                                                                             'name': 'has_heros_sword',
+                                                                                                             'type': 'helper'},
+                                                                                                         {   'args': [],
+                                                                                                             'name': 'has_heros_bow',
+                                                                                                             'type': 'helper'}],
+                                                                                       'type': 'or'}],
+                                                                 'type': 'and'}],
+                                           'type': 'and'},
+    'can_reach_earth_temple_left_path': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                        'name': 'can_play_command_melody',
+                                                                                        'type': 'helper'},
+                                                                                    {   'args': [],
+                                                                                        'name': 'can_defeat_red_chuchus',
+                                                                                        'type': 'helper'},
+                                                                                    {   'args': [],
+                                                                                        'name': 'can_defeat_green_chuchus',
+                                                                                        'type': 'helper'}],
+                                                                  'type': 'and'},
+                                                              {   'count': {'type': 'constant', 'value': 2},
+                                                                  'item': 'ET Small Key',
+                                                                  'type': 'item_check'}],
+                                            'type': 'and'},
+    'can_reach_earth_temple_many_mirrors_room': {   'conditions': [   {   'args': [],
+                                                                          'name': 'can_reach_earth_temple_third_crypt',
+                                                                          'type': 'helper'},
+                                                                      {   'args': [],
+                                                                          'name': 'can_play_earth_gods_lyric',
+                                                                          'type': 'helper'}],
+                                                    'type': 'and'},
+    'can_reach_earth_temple_moblins_and_poes_room': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                    'name': 'can_reach_earth_temple_sun_statue_room',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'count': {   'type': 'constant',
+                                                                                                                 'value': 2},
+                                                                                                    'item': 'ET Small '
+                                                                                                            'Key',
+                                                                                                    'type': 'item_check'}],
+                                                                              'type': 'and'},
+                                                                          {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                 'value': 2},
+                                                                                                    'item': 'Progressive '
+                                                                                                            'Bow',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'args': [],
+                                                                                                    'name': 'has_magic_meter',
+                                                                                                    'type': 'helper'}],
+                                                                              'type': 'and'},
+                                                                          {   'item': 'Power Bracelets',
+                                                                              'type': 'item_check'},
+                                                                          {   'conditions': [   {   'args': [],
+                                                                                                    'name': 'has_heros_sword',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'args': [],
+                                                                                                    'name': 'has_heros_bow',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'conditions': [   {   'item': 'Skull '
+                                                                                                                                  'Hammer',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'type': 'constant',
+                                                                                                                          'value': False}],
+                                                                                                    'type': 'and'}],
+                                                                              'type': 'or'},
+                                                                          {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                    'value': [   'Command '
+                                                                                                                                 'Melody',
+                                                                                                                                 'Wind '
+                                                                                                                                 'Waker']}],
+                                                                                                    'method': 'has_all',
+                                                                                                    'type': 'state_method'},
+                                                                                                {   'count': {   'type': 'constant',
+                                                                                                                 'value': 2},
+                                                                                                    'item': 'Progressive '
+                                                                                                            'Shield',
+                                                                                                    'type': 'item_check'}],
+                                                                              'type': 'or'}],
+                                                        'type': 'and'},
+    'can_reach_earth_temple_redead_hub_room': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                              'name': 'can_reach_earth_temple_sun_statue_room',
+                                                                                              'type': 'helper'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'can_play_command_melody',
+                                                                                              'type': 'helper'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'can_aim_mirror_shield',
+                                                                                              'type': 'helper'}],
+                                                                        'type': 'and'},
+                                                                    {   'args': [   {   'type': 'constant',
+                                                                                        'value': [   "Earth God's "
+                                                                                                     'Lyric',
+                                                                                                     'Wind Waker']}],
+                                                                        'method': 'has_all',
+                                                                        'type': 'state_method'}],
+                                                  'type': 'and'},
+    'can_reach_earth_temple_right_path': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                         'name': 'can_play_command_melody',
+                                                                                         'type': 'helper'},
+                                                                                     {   'args': [],
+                                                                                         'name': 'can_defeat_red_chuchus',
+                                                                                         'type': 'helper'},
+                                                                                     {   'args': [],
+                                                                                         'name': 'can_defeat_green_chuchus',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'args': [   {   'type': 'constant',
+                                                                                   'value': [   'Command Melody',
+                                                                                                'Wind Waker']}],
+                                                                   'method': 'has_all',
+                                                                   'type': 'state_method'},
+                                                               {'item': 'Skull Hammer', 'type': 'item_check'}],
+                                             'type': 'and'},
+    'can_reach_earth_temple_sun_statue_room': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                        'value': [   'Command Melody',
+                                                                                                     'Wind Waker']}],
+                                                                        'method': 'has_all',
+                                                                        'type': 'state_method'},
+                                                                    {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                              'value': [   'Bombs',
+                                                                                                                           'Skull '
+                                                                                                                           'Hammer']}],
+                                                                                              'method': 'has_any',
+                                                                                              'type': 'state_method'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'has_heros_sword',
+                                                                                              'type': 'helper'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'has_heros_bow',
+                                                                                              'type': 'helper'}],
+                                                                        'type': 'or'},
+                                                                    {   'args': [],
+                                                                        'name': 'can_defeat_red_chuchus',
+                                                                        'type': 'helper'}],
+                                                  'type': 'and'},
+    'can_reach_earth_temple_tall_vine_room': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                             'name': 'can_reach_earth_temple_redead_hub_room',
+                                                                                             'type': 'helper'},
+                                                                                         {   'conditions': [   {   'args': [   ],
+                                                                                                                   'name': 'can_play_command_melody',
+                                                                                                                   'type': 'helper'},
+                                                                                                               {   'args': [   ],
+                                                                                                                   'name': 'can_aim_mirror_shield',
+                                                                                                                   'type': 'helper'}],
+                                                                                             'type': 'or'},
+                                                                                         {   'args': [   {   'type': 'constant',
+                                                                                                             'value': {   'ET Small Key': 3,
+                                                                                                                          'Power Bracelets': 1,
+                                                                                                                          'Skull Hammer': 1}}],
+                                                                                             'method': 'has_all_counts',
+                                                                                             'type': 'state_method'},
+                                                                                         {   'conditions': [   {   'args': [   ],
+                                                                                                                   'name': 'can_defeat_red_bubbles',
+                                                                                                                   'type': 'helper'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': False}],
+                                                                                             'type': 'or'},
+                                                                                         {   'args': [],
+                                                                                             'name': 'can_play_command_melody',
+                                                                                             'type': 'helper'},
+                                                                                         {   'args': [],
+                                                                                             'name': 'can_aim_mirror_shield',
+                                                                                             'type': 'helper'}],
+                                                                       'type': 'and'},
+                                                                   {   'args': [   {   'type': 'constant',
+                                                                                       'value': [   "Earth God's Lyric",
+                                                                                                    'Wind Waker']}],
+                                                                       'method': 'has_all',
+                                                                       'type': 'state_method'}],
+                                                 'type': 'and'},
+    'can_reach_earth_temple_third_crypt': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                          'name': 'can_reach_earth_temple_basement',
+                                                                                          'type': 'helper'},
+                                                                                      {   'args': [],
+                                                                                          'name': 'can_play_earth_gods_lyric',
+                                                                                          'type': 'helper'}],
+                                                                    'type': 'and'},
+                                                                {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                          'value': [   'Command '
+                                                                                                                       'Melody',
+                                                                                                                       'Wind '
+                                                                                                                       'Waker']}],
+                                                                                          'method': 'has_all',
+                                                                                          'type': 'state_method'},
+                                                                                      {   'conditions': [   {   'args': [   ],
+                                                                                                                'name': 'has_mirror_shield',
+                                                                                                                'type': 'helper'},
+                                                                                                            {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                      'value': [   'Boomerang',
+                                                                                                                                                                   'Deku '
+                                                                                                                                                                   'Leaf',
+                                                                                                                                                                   'Grappling '
+                                                                                                                                                                   'Hook',
+                                                                                                                                                                   'Hookshot',
+                                                                                                                                                                   'Wind '
+                                                                                                                                                                   'Waker']}],
+                                                                                                                                      'method': 'has_any',
+                                                                                                                                      'type': 'state_method'},
+                                                                                                                                  {   'args': [   ],
+                                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                                      'type': 'helper'},
+                                                                                                                                  {   'args': [   ],
+                                                                                                                                      'name': 'has_heros_bow',
+                                                                                                                                      'type': 'helper'}],
+                                                                                                                'type': 'or'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'args': [   {   'type': 'constant',
+                                                                                    'value': {   'ET Small Key': 3,
+                                                                                                 'Power Bracelets': 1,
+                                                                                                 'Skull Hammer': 1}}],
+                                                                    'method': 'has_all_counts',
+                                                                    'type': 'state_method'},
+                                                                {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                'value': [   'Bombs',
+                                                                                                                                             'Skull '
+                                                                                                                                             'Hammer']}],
+                                                                                                                'method': 'has_any',
+                                                                                                                'type': 'state_method'},
+                                                                                                            {   'args': [   ],
+                                                                                                                'name': 'has_heros_sword',
+                                                                                                                'type': 'helper'},
+                                                                                                            {   'args': [   ],
+                                                                                                                'name': 'has_heros_bow',
+                                                                                                                'type': 'helper'},
+                                                                                                            {   'conditions': [   {   'conditions': [   {   'args': [   ],
+                                                                                                                                                            'name': 'can_fan_with_deku_leaf',
+                                                                                                                                                            'type': 'helper'},
+                                                                                                                                                        {   'item': 'Hookshot',
+                                                                                                                                                            'type': 'item_check'}],
+                                                                                                                                      'type': 'or'},
+                                                                                                                                  {   'item': 'Grappling '
+                                                                                                                                              'Hook',
+                                                                                                                                      'type': 'item_check'}],
+                                                                                                                'type': 'and'}],
+                                                                                          'type': 'or'},
+                                                                                      {   'type': 'constant',
+                                                                                          'value': False}],
+                                                                    'type': 'or'},
+                                                                {   'args': [   {   'type': 'constant',
+                                                                                    'value': [   'Command Melody',
+                                                                                                 'Wind Waker']}],
+                                                                    'method': 'has_all',
+                                                                    'type': 'state_method'},
+                                                                {   'conditions': [   {   'args': [],
+                                                                                          'name': 'has_mirror_shield',
+                                                                                          'type': 'helper'},
+                                                                                      {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                'value': [   'Boomerang',
+                                                                                                                                             'Deku '
+                                                                                                                                             'Leaf',
+                                                                                                                                             'Grappling '
+                                                                                                                                             'Hook',
+                                                                                                                                             'Hookshot',
+                                                                                                                                             'Wind '
+                                                                                                                                             'Waker']}],
+                                                                                                                'method': 'has_any',
+                                                                                                                'type': 'state_method'},
+                                                                                                            {   'args': [   ],
+                                                                                                                'name': 'has_heros_sword',
+                                                                                                                'type': 'helper'},
+                                                                                                            {   'args': [   ],
+                                                                                                                'name': 'has_heros_bow',
+                                                                                                                'type': 'helper'}],
+                                                                                          'type': 'or'}],
+                                                                    'type': 'and'}],
+                                              'type': 'and'},
+    'can_reach_end_of_wind_temple_many_cyclones_room': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                       'name': 'can_play_command_melody',
+                                                                                                       'type': 'helper'},
+                                                                                                   {   'item': 'Iron '
+                                                                                                               'Boots',
+                                                                                                       'type': 'item_check'},
+                                                                                                   {   'args': [],
+                                                                                                       'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                       'type': 'helper'}],
+                                                                                 'type': 'and'},
+                                                                             {   'conditions': [   {   'conditions': [   {   'item': 'Iron '
+                                                                                                                                     'Boots',
+                                                                                                                             'type': 'item_check'},
+                                                                                                                         {   'item': 'Deku '
+                                                                                                                                     'Leaf',
+                                                                                                                             'type': 'item_check'},
+                                                                                                                         {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                           'Leaf',
+                                                                                                                                                   'type': 'item_check'},
+                                                                                                                                               {   'args': [   ],
+                                                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                                                   'type': 'helper'}],
+                                                                                                                             'type': 'and'},
+                                                                                                                         {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                                   'value': [   'Bombs',
+                                                                                                                                                                                'Boomerang',
+                                                                                                                                                                                'Skull '
+                                                                                                                                                                                'Hammer']}],
+                                                                                                                                                   'method': 'has_any',
+                                                                                                                                                   'type': 'state_method'},
+                                                                                                                                               {   'args': [   ],
+                                                                                                                                                   'name': 'has_heros_sword',
+                                                                                                                                                   'type': 'helper'}],
+                                                                                                                             'type': 'or'}],
+                                                                                                       'type': 'and'},
+                                                                                                   {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                                             'type': 'item_check'},
+                                                                                                                         {   'conditions': [   {   'args': [   ],
+                                                                                                                                                   'name': 'has_ice_arrows',
+                                                                                                                                                   'type': 'helper'},
+                                                                                                                                               {   'item': 'Bombs',
+                                                                                                                                                   'type': 'item_check'},
+                                                                                                                                               {   'conditions': [   {   'conditions': [   {   'args': [   ],
+                                                                                                                                                                                               'name': 'can_fan_with_deku_leaf',
+                                                                                                                                                                                               'type': 'helper'},
+                                                                                                                                                                                           {   'item': 'Hookshot',
+                                                                                                                                                                                               'type': 'item_check'}],
+                                                                                                                                                                         'type': 'or'},
+                                                                                                                                                                     {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                                                                                                               'value': [   'Grappling '
+                                                                                                                                                                                                                            'Hook',
+                                                                                                                                                                                                                            'Skull '
+                                                                                                                                                                                                                            'Hammer']}],
+                                                                                                                                                                                               'method': 'has_any',
+                                                                                                                                                                                               'type': 'state_method'},
+                                                                                                                                                                                           {   'args': [   ],
+                                                                                                                                                                                               'name': 'has_heros_sword',
+                                                                                                                                                                                               'type': 'helper'},
+                                                                                                                                                                                           {   'args': [   ],
+                                                                                                                                                                                               'name': 'has_heros_bow',
+                                                                                                                                                                                               'type': 'helper'}],
+                                                                                                                                                                         'type': 'or'}],
+                                                                                                                                                   'type': 'and'}],
+                                                                                                                             'type': 'or'},
+                                                                                                                         {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                           'Leaf',
+                                                                                                                                                   'type': 'item_check'},
+                                                                                                                                               {   'args': [   ],
+                                                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                                                   'type': 'helper'}],
+                                                                                                                             'type': 'and'}],
+                                                                                                       'type': 'and'},
+                                                                                                   {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                                             'type': 'item_check'},
+                                                                                                                         {   'conditions': [   {   'item': 'Deku '
+                                                                                                                                                           'Leaf',
+                                                                                                                                                   'type': 'item_check'},
+                                                                                                                                               {   'args': [   ],
+                                                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                                                   'type': 'helper'}],
+                                                                                                                             'type': 'and'},
+                                                                                                                         {   'type': 'constant',
+                                                                                                                             'value': False},
+                                                                                                                         {   'type': 'constant',
+                                                                                                                             'value': False}],
+                                                                                                       'type': 'and'}],
+                                                                                 'type': 'or'}],
+                                                           'type': 'and'},
+    'can_reach_ganons_tower_phantom_ganon_room': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                 'name': 'can_get_past_hyrule_barrier',
+                                                                                                 'type': 'helper'},
+                                                                                             {   'conditions': [   {   'item': 'Hookshot',
+                                                                                                                       'type': 'item_check'},
+                                                                                                                   {   'args': [   ],
+                                                                                                                       'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                       'type': 'helper'}],
+                                                                                                 'type': 'or'}],
+                                                                           'type': 'and'},
+                                                                       {   'conditions': [   {   'args': [],
+                                                                                                 'name': 'can_complete_all_memory_dungeons_and_bosses',
+                                                                                                 'type': 'helper'},
+                                                                                             {   'type': 'constant',
+                                                                                                 'value': True}],
+                                                                           'type': 'or'}],
+                                                     'type': 'and'},
+    'can_reach_outset_island_upper_level': {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                           'value': [   'Boomerang',
+                                                                                                                        'Skull '
+                                                                                                                        'Hammer']}],
+                                                                                           'method': 'has_any',
+                                                                                           'type': 'state_method'},
+                                                                                       {   'args': [],
+                                                                                           'name': 'has_heros_sword',
+                                                                                           'type': 'helper'},
+                                                                                       {   'conditions': [   {   'item': 'Power '
+                                                                                                                         'Bracelets',
+                                                                                                                 'type': 'item_check'},
+                                                                                                             {   'type': 'constant',
+                                                                                                                 'value': False}],
+                                                                                           'type': 'and'}],
+                                                                     'type': 'or'},
+                                                                 {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
+                                                                                                                         'Leaf',
+                                                                                                                 'type': 'item_check'},
+                                                                                                             {   'args': [   ],
+                                                                                                                 'name': 'has_magic_meter',
+                                                                                                                 'type': 'helper'},
+                                                                                                             {   'args': [   ],
+                                                                                                                 'name': 'can_play_winds_requiem',
+                                                                                                                 'type': 'helper'}],
+                                                                                           'type': 'and'},
+                                                                                       {   'type': 'constant',
+                                                                                           'value': False}],
+                                                                     'type': 'and'}],
+                                               'type': 'or'},
+    'can_reach_tower_of_the_gods_second_floor': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                          'value': [   'Bombs',
+                                                                                                       'TotG Small '
+                                                                                                       'Key']}],
+                                                                          'method': 'has_all',
+                                                                          'type': 'state_method'},
+                                                                      {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                                'value': [   'Bombs',
+                                                                                                                             'Skull '
+                                                                                                                             'Hammer']}],
+                                                                                                'method': 'has_any',
+                                                                                                'type': 'state_method'},
+                                                                                            {   'conditions': [   {   'item': 'Boomerang',
+                                                                                                                      'type': 'item_check'},
+                                                                                                                  {   'args': [   ],
+                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                      'type': 'helper'}],
+                                                                                                'type': 'and'},
+                                                                                            {   'args': [],
+                                                                                                'name': 'has_heros_bow',
+                                                                                                'type': 'helper'},
+                                                                                            {   'conditions': [   {   'args': [   ],
+                                                                                                                      'name': 'can_fan_with_deku_leaf',
+                                                                                                                      'type': 'helper'},
+                                                                                                                  {   'args': [   ],
+                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                      'type': 'helper'}],
+                                                                                                'type': 'and'},
+                                                                                            {   'conditions': [   {   'item': 'Grappling '
+                                                                                                                              'Hook',
+                                                                                                                      'type': 'item_check'},
+                                                                                                                  {   'args': [   ],
+                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                      'type': 'helper'},
+                                                                                                                  {   'type': 'constant',
+                                                                                                                      'value': False},
+                                                                                                                  {   'type': 'constant',
+                                                                                                                      'value': False}],
+                                                                                                'type': 'and'}],
+                                                                          'type': 'or'}],
+                                                    'type': 'and'},
+    'can_reach_tower_of_the_gods_third_floor': {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                               'value': [   'Bombs',
+                                                                                                                            'TotG '
+                                                                                                                            'Small '
+                                                                                                                            'Key']}],
+                                                                                               'method': 'has_all',
+                                                                                               'type': 'state_method'},
+                                                                                           {   'args': [],
+                                                                                               'name': 'can_defeat_yellow_chuchus',
+                                                                                               'type': 'helper'}],
+                                                                         'type': 'and'},
+                                                                     {   'conditions': [   {   'conditions': [   {   'item': 'Grappling '
+                                                                                                                             'Hook',
+                                                                                                                     'type': 'item_check'},
+                                                                                                                 {   'args': [   ],
+                                                                                                                     'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                     'type': 'helper'}],
+                                                                                               'type': 'or'},
+                                                                                           {   'args': [],
+                                                                                               'name': 'can_play_command_melody',
+                                                                                               'type': 'helper'},
+                                                                                           {   'args': [],
+                                                                                               'name': 'has_heros_bow',
+                                                                                               'type': 'helper'}],
+                                                                         'type': 'and'},
+                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                            'value': 2},
+                                                                                               'item': 'TotG Small Key',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'conditions': [   {   'args': [   ],
+                                                                                                                     'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                     'type': 'helper'},
+                                                                                                                 {   'type': 'constant',
+                                                                                                                     'value': False}],
+                                                                                               'type': 'or'},
+                                                                                           {   'args': [],
+                                                                                               'name': 'can_play_command_melody',
+                                                                                               'type': 'helper'}],
+                                                                         'type': 'and'},
+                                                                     {'item': 'Wind Waker', 'type': 'item_check'}],
+                                                   'type': 'and'},
+    'can_reach_wind_temple_kidnapping_room': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                       'value': [   'Command Melody',
+                                                                                                    'Wind Waker']}],
+                                                                       'method': 'has_all',
+                                                                       'type': 'state_method'},
+                                                                   {'item': 'Iron Boots', 'type': 'item_check'},
+                                                                   {   'conditions': [   {   'item': 'Deku Leaf',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'args': [],
+                                                                                             'name': 'has_magic_meter',
+                                                                                             'type': 'helper'}],
+                                                                       'type': 'and'}],
+                                                 'type': 'and'},
+    'can_reach_wind_temple_tall_basement_room': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                                'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
+                                                                                                'type': 'helper'},
+                                                                                            {   'item': 'Iron Boots',
+                                                                                                'type': 'item_check'}],
+                                                                          'type': 'and'},
+                                                                      {   'conditions': [   {   'args': [],
+                                                                                                'name': 'can_reach_wind_temple_kidnapping_room',
+                                                                                                'type': 'helper'},
+                                                                                            {   'item': 'Hookshot',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'args': [],
+                                                                                                'name': 'can_defeat_blue_bubbles',
+                                                                                                'type': 'helper'}],
+                                                                          'type': 'and'},
+                                                                      {   'count': {'type': 'constant', 'value': 2},
+                                                                          'item': 'WT Small Key',
+                                                                          'type': 'item_check'}],
+                                                    'type': 'and'},
+    'can_remove_peahat_armor': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                         'value': [   'Bombs',
+                                                                                      'Boomerang',
+                                                                                      'Hookshot',
+                                                                                      'Skull Hammer']}],
+                                                         'method': 'has_any',
+                                                         'type': 'state_method'},
+                                                     {'item': 'Deku Leaf', 'type': 'item_check'},
+                                                     {   'count': {'type': 'constant', 'value': 1},
+                                                         'item': 'Progressive Bow',
+                                                         'type': 'item_check'}],
+                                   'type': 'or'},
+    'can_stun_magtails': {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                   'value': [   'Bombs',
+                                                                                'Boomerang',
+                                                                                'Grappling Hook',
+                                                                                'Hookshot',
+                                                                                'Skull Hammer']}],
+                                                   'method': 'has_any',
+                                                   'type': 'state_method'},
+                                               {   'count': {'type': 'constant', 'value': 1},
+                                                   'item': 'Progressive Sword',
+                                                   'type': 'item_check'},
+                                               {   'count': {'type': 'constant', 'value': 1},
+                                                   'item': 'Progressive Bow',
+                                                   'type': 'item_check'}],
+                             'type': 'or'},
+    'can_unlock_ganons_tower_four_boss_door': {   'conditions': [   {   'conditions': [   {   'args': [],
+                                                                                              'name': 'can_complete_memory_dragon_roost_cavern_and_gohma',
+                                                                                              'type': 'helper'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'can_complete_memory_forbidden_woods_and_kalle_demos',
+                                                                                              'type': 'helper'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'can_complete_memory_earth_temple_and_jalhalla',
+                                                                                              'type': 'helper'},
+                                                                                          {   'args': [],
+                                                                                              'name': 'can_complete_memory_wind_temple_and_molgera',
+                                                                                              'type': 'helper'}],
+                                                                        'type': 'and'},
+                                                                    {'type': 'constant', 'value': True}],
+                                                  'type': 'or'},
+    'can_unlock_puppet_ganon_door': {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
+                                                                                                    'value': [   'Bombs',
+                                                                                                                 'Skull '
+                                                                                                                 'Hammer']}],
+                                                                                    'method': 'has_any',
+                                                                                    'type': 'state_method'},
+                                                                                {   'args': [],
+                                                                                    'name': 'has_heros_sword',
+                                                                                    'type': 'helper'},
+                                                                                {   'args': [],
+                                                                                    'name': 'has_heros_bow',
+                                                                                    'type': 'helper'}],
+                                                              'type': 'or'},
+                                                          {   'conditions': [   {   'args': [],
+                                                                                    'name': 'can_defeat_darknuts_easily',
+                                                                                    'type': 'helper'},
+                                                                                {   'conditions': [   {   'item': 'Skull '
+                                                                                                                  'Hammer',
+                                                                                                          'type': 'item_check'},
+                                                                                                      {   'type': 'constant',
+                                                                                                          'value': False}],
+                                                                                    'type': 'and'}],
+                                                              'type': 'or'},
+                                                          {   'conditions': [   {   'operand': {   'type': 'constant',
+                                                                                                   'value': False},
+                                                                                    'type': 'not'},
+                                                                                {   'conditions': [   {   'type': 'constant',
+                                                                                                          'value': False},
+                                                                                                      {   'type': 'constant',
+                                                                                                          'value': True}],
+                                                                                    'type': 'and'}],
+                                                              'type': 'or'}],
+                                        'type': 'and'},
+    'has_all_8_triforce_shards': {   'args': [   {'type': 'constant', 'value': 'Shards'},
+                                                 {'type': 'constant', 'value': 8}],
+                                     'method': 'has_group_unique',
+                                     'type': 'state_method'},
+    'has_any_master_sword': {   'count': {'type': 'constant', 'value': 2},
+                                'item': 'Progressive Sword',
+                                'type': 'item_check'},
+    'has_any_wallet_upgrade': {   'count': {'type': 'constant', 'value': 1},
+                                  'item': 'Wallet Capacity Upgrade',
+                                  'type': 'item_check'},
+    'has_fire_arrows': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                 'item': 'Progressive Bow',
+                                                 'type': 'item_check'},
+                                             {   'count': {'type': 'constant', 'value': 1},
+                                                 'item': 'Progressive Magic Meter',
+                                                 'type': 'item_check'}],
+                           'type': 'and'},
+    'has_full_power_master_sword': {   'count': {'type': 'constant', 'value': 4},
+                                       'item': 'Progressive Sword',
+                                       'type': 'item_check'},
+    'has_heros_bow': {'count': {'type': 'constant', 'value': 1}, 'item': 'Progressive Bow', 'type': 'item_check'},
+    'has_heros_shield': {'count': {'type': 'constant', 'value': 1}, 'item': 'Progressive Shield', 'type': 'item_check'},
+    'has_heros_sword': {'count': {'type': 'constant', 'value': 1}, 'item': 'Progressive Sword', 'type': 'item_check'},
+    'has_ice_arrows': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                'item': 'Progressive Bow',
+                                                'type': 'item_check'},
+                                            {   'count': {'type': 'constant', 'value': 1},
+                                                'item': 'Progressive Magic Meter',
+                                                'type': 'item_check'}],
+                          'type': 'and'},
+    'has_light_arrows': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
+                                                  'item': 'Progressive Bow',
+                                                  'type': 'item_check'},
+                                              {   'count': {'type': 'constant', 'value': 1},
+                                                  'item': 'Progressive Magic Meter',
+                                                  'type': 'item_check'}],
+                            'type': 'and'},
+    'has_magic_meter': {   'count': {'type': 'constant', 'value': 1},
+                           'item': 'Progressive Magic Meter',
+                           'type': 'item_check'},
+    'has_magic_meter_upgrade': {   'count': {'type': 'constant', 'value': 2},
+                                   'item': 'Progressive Magic Meter',
+                                   'type': 'item_check'},
+    'has_mirror_shield': {   'count': {'type': 'constant', 'value': 2},
+                             'item': 'Progressive Shield',
+                             'type': 'item_check'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -596,680 +2860,765 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_dragon_roost_island, helper_name="can_access_dungeon_entrance_on_dragon_roost_island", body_data={'type': 'constant', 'value': True})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Forest Haven Sector -> Forbidden Woods", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_in_forest_haven_sector, helper_name="can_access_dungeon_entrance_in_forest_haven_sector", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 2}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_in_tower_of_the_gods_sector, helper_name="can_access_dungeon_entrance_in_tower_of_the_gods_sector", body_data={'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Pearls'}, {'type': 'constant', 'value': 3}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Headstone Island -> Earth Temple", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_headstone_island, helper_name="can_access_dungeon_entrance_on_headstone_island", body_data={'type': 'item_check', 'item': 'Power Bracelets'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Gale Isle -> Wind Temple", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Iron Boots', 'Skull Hammer']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Hyrule Castle -> Master Sword Chamber", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_hyrule_castle, helper_name="can_access_miniboss_entrance_in_hyrule_castle", body_data={'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_forsaken_fortress, helper_name="can_access_boss_entrance_in_forsaken_fortress", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]}, {'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Outset Island -> Savage Labyrinth", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_outset_island, helper_name="can_access_secret_cave_entrance_on_outset_island", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'constant', 'value': False}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}]}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Power Bracelets'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Dragon Roost Island -> Dragon Roost Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_dragon_roost_island, helper_name="can_access_secret_cave_entrance_on_dragon_roost_island", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Fire Mountain -> Fire Mountain Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_fire_mountain, helper_name="can_access_secret_cave_entrance_on_fire_mountain", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Ice Ring Isle -> Ice Ring Isle Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_ice_ring_isle, helper_name="can_access_secret_cave_entrance_on_ice_ring_isle", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Private Oasis -> Cabana Labyrinth", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Cabana Deed', 'Delivery Bag', 'Grappling Hook']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Needle Rock Isle -> Needle Rock Isle Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_needle_rock_isle, helper_name="can_access_secret_cave_entrance_on_needle_rock_isle", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_angular_isles, helper_name="can_access_secret_cave_entrance_on_angular_isles", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'item_check', 'item': 'Hookshot'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Boating Course -> Boating Course Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_boating_course, helper_name="can_access_secret_cave_entrance_on_boating_course", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'item_check', 'item': 'Hookshot'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_stone_watcher_island, helper_name="can_access_secret_cave_entrance_on_stone_watcher_island", body_data={'type': 'item_check', 'item': 'Power Bracelets'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_overlook_island, helper_name="can_access_secret_cave_entrance_on_overlook_island", body_data={'type': 'item_check', 'item': 'Hookshot'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_birds_peak_rock, helper_name="can_access_secret_cave_entrance_on_birds_peak_rock", body_data={'type': 'item_check', 'item': 'Bait Bag'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle", body_data={'type': 'constant', 'value': True})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle_side_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle_side_isle", body_data={'type': 'item_check', 'item': 'Hookshot'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_diamond_steppe_island, helper_name="can_access_secret_cave_entrance_on_diamond_steppe_island", body_data={'type': 'item_check', 'item': 'Hookshot'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bomb Island -> Bomb Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_bomb_island, helper_name="can_access_secret_cave_entrance_on_bomb_island", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_rock_spire_isle, helper_name="can_access_secret_cave_entrance_on_rock_spire_isle", body_data={'type': 'item_check', 'item': 'Bombs'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Shark Island -> Shark Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Iron Boots', 'Skull Hammer']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_cliff_plateau_isles, helper_name="can_access_secret_cave_entrance_on_cliff_plateau_isles", body_data={'type': 'constant', 'value': True})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Horseshoe Island -> Horseshoe Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_horseshoe_island, helper_name="can_access_secret_cave_entrance_on_horseshoe_island", body_data={'type': 'item_check', 'item': 'Deku Leaf'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Star Island -> Star Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_star_island, helper_name="can_access_secret_cave_entrance_on_star_island", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_outset_island, helper_name="can_access_fairy_fountain_entrance_on_outset_island", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'constant', 'value': False}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]}]}, {'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_thorned_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_thorned_fairy_island", body_data={'type': 'item_check', 'item': 'Skull Hammer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Eastern Fairy Island -> Eastern Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_eastern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_eastern_fairy_island", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_western_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_western_fairy_island", body_data={'type': 'item_check', 'item': 'Skull Hammer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_southern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_southern_fairy_island", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_northern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_northern_fairy_island", body_data={'type': 'constant', 'value': True})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_dragon_roost_cavern, helper_name="can_access_boss_entrance_in_dragon_roost_cavern", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'DRC Small Key', 'count': {'type': 'constant', 'value': 4}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Hookshot']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'item_check', 'item': 'DRC Big Key'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_forbidden_woods, helper_name="can_access_miniboss_entrance_in_forbidden_woods", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['FW Small Key', 'Grappling Hook']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_forbidden_woods, helper_name="can_access_boss_entrance_in_forbidden_woods", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'FW Big Key'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_tower_of_the_gods, helper_name="can_access_miniboss_entrance_in_tower_of_the_gods", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Tower of the Gods -> Gohdan Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_tower_of_the_gods, helper_name="can_access_boss_entrance_in_tower_of_the_gods", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'TotG Small Key', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}]}, {'type': 'item_check', 'item': 'Wind Waker'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'TotG Big Key'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_earth_temple, helper_name="can_access_miniboss_entrance_in_earth_temple", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'ET Small Key', 'count': {'type': 'constant', 'value': 2}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}]}]}, {'type': 'item_check', 'item': 'ET Small Key', 'count': {'type': 'constant', 'value': 3}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Earth Temple -> Jalhalla Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_earth_temple, helper_name="can_access_boss_entrance_in_earth_temple", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all_counts', 'args': [{'type': 'constant', 'value': {'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'item_check', 'item': 'ET Big Key'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_wind_temple, helper_name="can_access_miniboss_entrance_in_wind_temple", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]}, {'type': 'item_check', 'item': 'WT Small Key', 'count': {'type': 'constant', 'value': 2}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Wind Temple -> Molgera Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_wind_temple, helper_name="can_access_boss_entrance_in_wind_temple", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'item_check', 'item': 'WT Small Key', 'count': {'type': 'constant', 'value': 2}}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Hookshot', 'Iron Boots', 'WT Big Key']}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Wind God's Aria", 'Wind Waker']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_inner_entrance_in_ice_ring_isle_secret_cave, helper_name="can_access_inner_entrance_in_ice_ring_isle_secret_cave", body_data={'type': 'item_check', 'item': 'Iron Boots'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_inner_entrance_in_cliff_plateau_isles_secret_cave, helper_name="can_access_inner_entrance_in_cliff_plateau_isles_secret_cave", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})
+        True_()
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Defeat Ganondorf", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_and_defeat_ganondorf, helper_name="can_reach_and_defeat_ganondorf", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'not', 'operand': {'type': 'constant', 'value': False}}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': True}]}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Hookshot']}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Guarded By Bokoblin", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Inside Lower Jail Cell", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) | (True_()) | (Has("Hookshot")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest on Bed", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Phantom Ganon", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_and_defeat_phantom_ganon, helper_name="can_reach_and_defeat_phantom_ganon", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'not', 'operand': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 2}}]}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'item_check', 'item': 'Skull Hammer'}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ganon's Tower - Maze Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_phantom_ganon, helper_name="can_defeat_phantom_ganon", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'not', 'operand': {'type': 'constant', 'value': False}}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 2}}]}, {'type': 'and', 'conditions': [{'type': 'constant', 'value': False}, {'type': 'item_check', 'item': 'Skull Hammer'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_ganons_tower_phantom_ganon_room, helper_name="can_reach_ganons_tower_phantom_ganon_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_group_unique', 'args': [{'type': 'constant', 'value': 'Shards'}, {'type': 'constant', 'value': 8}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 4}}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Boomerang'}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'constant', 'value': True}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Outset Island - Great Fairy", player),
-        CanReachRegion("Outset Fairy Fountain")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade", body_data={'type': 'item_check', 'item': 'Wallet Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade", body_data={'type': 'item_check', 'item': 'Wallet Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade", body_data={'type': 'item_check', 'item': 'Wallet Capacity Upgrade', 'count': {'type': 'constant', 'value': 1}})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("The Great Sea - Salvage Corp Gift", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Windfall Island - Jail - Tingle - First Gift", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Windfall Island - Jail - Tingle - Second Gift", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Windfall Island - Maggie - Free Item", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Windfall Island - Tott - Teach Rhythm", player),
-        Has("Wind Waker")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Alcove With Water Jugs", player),
-        Has("DRC Small Key")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Big Key Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_gaping_maw, helper_name="can_reach_dragon_roost_cavern_gaping_maw", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'DRC Small Key', 'count': {'type': 'constant', 'value': 1}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'DRC Small Key', 'count': {'type': 'constant', 'value': 4}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_stun_magtails, helper_name="can_stun_magtails", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) & (Has("Grappling Hook"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Bird's Nest", player),
-        Has("DRC Small Key", 3)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boarded Up Chest", player),
-        Has("DRC Small Key")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boss Stairs Left Chest", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'DRC Small Key', 'count': {'type': 'constant', 'value': 4}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Hookshot']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boss Stairs Right Chest", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'DRC Small Key', 'count': {'type': 'constant', 'value': 4}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Hookshot']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player),
-        (((True_()) & (Has("Hookshot"))) | (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) | (Has("Grappling Hook"))) & (Has("DRC Small Key", 2))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Dark Room", player),
-        Has("DRC Small Key", 4)
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dragon Roost Cavern - First Room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Miniboss", player),
-        Has("DRC Small Key", 4)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Pot Room Chest", player),
-        Has("DRC Small Key", 4)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Rat Room", player),
-        Has("DRC Small Key", 2)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Rat Room Boarded Up Chest", player),
-        Has("DRC Small Key", 2)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Under Rope Bridge", player),
-        ((HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors, helper_name="can_fly_with_deku_leaf_outdoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]}]})) | (Has("Grappling Hook"))) & (Has("DRC Small Key", 4))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Big Key Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (HasAll('Boomerang', 'Grappling Hook'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest Across Red Hanging Flower", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (HasAll('Boomerang', 'Grappling Hook'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest in Locked Tree Trunk", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (HasAll('Boomerang', 'Grappling Hook'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Climb to Top Using Boko Baba Bulbs", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Double Mothula Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_mothulas, helper_name="can_defeat_mothulas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) | (Has("Grappling Hook")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forbidden Woods - First Room", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Hole in Tree", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Inside Hollow Tree's Mouth", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) | (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Morth Pit", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (Has("Grappling Hook"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_destroy_seeds_hanging_by_vines, helper_name="can_destroy_seeds_hanging_by_vines", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) | (True_())) & (HasAll('FW Small Key', 'Grappling Hook'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_defeat_peahats, helper_name="can_defeat_peahats", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) | (True_())) & (HasAll('FW Small Key', 'Grappling Hook'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Left Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (Has("Grappling Hook"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Right Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (Has("Grappling Hook"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Big Key Chest", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_third_floor, helper_name="can_reach_tower_of_the_gods_third_floor", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'TotG Small Key', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}]}, {'type': 'item_check', 'item': 'Wind Waker'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Chest Behind Bombable Walls", player),
-        Has("Bombs")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - First Chest Guarded by Armos Knights", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow", body_data={'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Floating Platforms Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]})) & (((HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (True_())) | ((True_()) & (Has("Hookshot"))) | (HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow", body_data={'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}})))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tower of the Gods - Hop Across Floating Boxes", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Light Two Torches", player),
-        Has("Bombs")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Second Chest Guarded by Armos Knights", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]})) & (Has("Bombs"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Shoot Eye Above Skulls Room Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow", body_data={'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}})) & (Has("Bombs"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Skulls Room Chest", player),
-        Has("Bombs")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Stone Tablet", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]})) & (Has("Wind Waker"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Top of Floating Platforms Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Bombs', 'TotG Small Key']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Boomerang'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Grappling Hook'}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow", body_data={'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Big Key Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all_counts', 'args': [{'type': 'constant', 'value': {'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]})) & (((HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow", body_data={'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}})) & (True_())) | (((HelperCall(helper_func=_thewindwakerworldgen_has_any_master_sword, helper_name="has_any_master_sword", body_data={'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 2}})) | (HelperCall(helper_func=_thewindwakerworldgen_has_heros_sword, helper_name="has_heros_sword", body_data={'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}})) | (Has("Skull Hammer"))) & (True_()) & (True_())) | (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}))) & (Has("Power Bracelets"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Casket in Second Crypt", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'ET Small Key', 'count': {'type': 'constant', 'value': 2}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Destructible Walls", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})) & (HelperCall(helper_func=_thewindwakerworldgen_has_mirror_shield, helper_name="has_mirror_shield", body_data={'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Statues", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'ET Small Key', 'count': {'type': 'constant', 'value': 2}}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}]}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) | (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest In Three Blocks Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_floormasters, helper_name="can_defeat_floormasters", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'ET Small Key', 'count': {'type': 'constant', 'value': 2}}]})) & (HelperCall(helper_func=_thewindwakerworldgen_has_fire_arrows, helper_name="has_fire_arrows", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) | (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}))) & (Has("Power Bracelets"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest in Third Crypt", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_third_crypt, helper_name="can_reach_earth_temple_third_crypt", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all_counts', 'args': [{'type': 'constant', 'value': {'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - End of Foggy Room With Floormasters", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) | (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Kill All Floormasters in Foggy Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_floormasters, helper_name="can_defeat_floormasters", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) | (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Left Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all_counts', 'args': [{'type': 'constant', 'value': {'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]})) & (Has("Power Bracelets"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Right Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all_counts', 'args': [{'type': 'constant', 'value': {'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Crypt Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all_counts', 'args': [{'type': 'constant', 'value': {'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}}]}, {'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}, {'type': 'constant', 'value': False}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Earth God's Lyric", 'Wind Waker']}]}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest In Warp Pot Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest in First Crypt", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})) | (HelperCall(helper_func=_thewindwakerworldgen_has_mirror_shield, helper_name="has_mirror_shield", body_data={'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}))) & (Has("Power Bracelets"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Big Key Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_data={'type': 'item_check', 'item': 'Deku Leaf'})) & (HelperCall(helper_func=_thewindwakerworldgen_can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ["Wind God's Aria", 'Wind Waker']}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) & (Has("Iron Boots"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Seven Armos", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_armos, helper_name="can_defeat_armos", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Stone Head", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) & (HasAll('Hookshot', 'Iron Boots'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Between Two Dirt Patches", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) & (((HelperCall(helper_func=_thewindwakerworldgen_can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles", body_data={'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (Has("Hookshot"))) | ((HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_data={'type': 'item_check', 'item': 'Deku Leaf'})) & (HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_cut_grass, helper_name="can_cut_grass", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]})) | (HelperCall(helper_func=_thewindwakerworldgen_has_magic_meter_upgrade, helper_name="has_magic_meter_upgrade", body_data={'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 2}}))) & (Has("Iron Boots"))) | ((HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) & (True_()) & (True_()) & (Has("Hookshot"))))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Middle Of Hub Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest at Top of Hub Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]}, {'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest in Left Alcove", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_data={'type': 'item_check', 'item': 'Deku Leaf'})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room", body_data={'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) & (Has("Iron Boots"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Kill All Enemies in Tall Basement Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_morths, helper_name="can_defeat_morths", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Hookshot']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_wizzrobes, helper_name="can_defeat_wizzrobes", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_tall_basement_room, helper_name="can_reach_wind_temple_tall_basement_room", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]}, {'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}]}, {'type': 'item_check', 'item': 'WT Small Key', 'count': {'type': 'constant', 'value': 2}}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - Destroy All Cracked Floors", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]})) & (Has("Iron Boots"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - First Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate", body_data={'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'and', 'conditions': [{'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Command Melody', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Iron Boots'}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Bombs'}, {'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Hookshot'}]}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}]}, {'type': 'item_check', 'item': 'Iron Boots'}]})) & (Has("Iron Boots"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Mothula Miniboss Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_winged_mothulas, helper_name="can_defeat_winged_mothulas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Darknut Miniboss Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Miniboss Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]})) | (Has("Hookshot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Wizzrobe Miniboss Room", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts", body_data={'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}, {'type': 'item_check', 'item': 'Skull Hammer'}]})) & (HelperCall(helper_func=_thewindwakerworldgen_can_remove_peahat_armor, helper_name="can_remove_peahat_armor", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule - Master Sword Chamber", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_mighty_darknuts, helper_name="can_defeat_mighty_darknuts", body_data={'type': 'or', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Skull Hammer'}, {'type': 'constant', 'value': False}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Gohma Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_gohma, helper_name="can_defeat_gohma", body_data={'type': 'item_check', 'item': 'Grappling Hook'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Kalle Demos Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_kalle_demos, helper_name="can_defeat_kalle_demos", body_data={'type': 'item_check', 'item': 'Boomerang'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Gohdan Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_gohdan, helper_name="can_defeat_gohdan", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'constant', 'value': False}, {'type': 'constant', 'value': False}]}]}, {'type': 'item_check', 'item': 'Bombs'}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Helmaroc King Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_helmaroc_king, helper_name="can_defeat_helmaroc_king", body_data={'type': 'item_check', 'item': 'Skull Hammer'})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Jalhalla Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_jalhalla, helper_name="can_defeat_jalhalla", body_data={'type': 'and', 'conditions': [{'type': 'or', 'conditions': [{'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 3}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]}]}, {'type': 'item_check', 'item': 'Power Bracelets'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Molgera Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_molgera, helper_name="can_defeat_molgera", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Hookshot'}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ice Ring Isle - Cave - Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Lower Floor Chest", player),
-        Has("Skull Hammer")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Upper Floor Chest", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]})) & (Has("Skull Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Needle Rock Isle - Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_fire_arrows, helper_name="has_fire_arrows", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 2}}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Angular Isles - Cave", player),
-        (HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Progressive Shield', 'count': {'type': 'constant', 'value': 2}}, {'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]}]})) & ((HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors", body_data={'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Progressive Magic Meter', 'count': {'type': 'constant', 'value': 1}}]})) | (Has("Hookshot")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bird's Peak Rock - Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem", body_data={'type': 'state_method', 'method': 'has_all', 'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Left Boulder", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_move_boulders, helper_name="can_move_boulders", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Right Boulder", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_move_boulders, helper_name="can_move_boulders", body_data={'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}]})
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pawprint Isle - Chuchu Cave - Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Scale the Wall", player),
-        Has("Grappling Hook")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Diamond Steppe Island - Warp Maze Cave - First Chest", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Diamond Steppe Island - Warp Maze Cave - Second Chest", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bomb Island - Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_stun_magtails, helper_name="can_stun_magtails", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Grappling Hook', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}]})
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Cliff Plateau Isles - Cave", player),
-        ((True_()) & (True_()) & (Has("Grappling Hook"))) | (HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas", body_data={'type': 'or', 'conditions': [{'type': 'state_method', 'method': 'has_any', 'args': [{'type': 'constant', 'value': ['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer']}]}, {'type': 'item_check', 'item': 'Progressive Sword', 'count': {'type': 'constant', 'value': 1}}, {'type': 'item_check', 'item': 'Progressive Bow', 'count': {'type': 'constant', 'value': 1}}, {'type': 'and', 'conditions': [{'type': 'item_check', 'item': 'Deku Leaf'}, {'type': 'item_check', 'item': 'Grappling Hook'}]}]}))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cliff Plateau Isles - Highest Isle", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Thorned Fairy Island - Great Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Eastern Fairy Island - Great Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Western Fairy Island - Great Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Southern Fairy Island - Great Fairy", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Northern Fairy Island - Great Fairy", player),
+        True_()
     )

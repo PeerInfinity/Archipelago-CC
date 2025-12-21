@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, CanReachLocation, CanReachRegion, Compare, False_, Has, HelperCall, True_
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -20,6 +20,49 @@ def _oldschoolrunescapeworldgen_quest_points(state: "CollectionState", player: i
     return sum((qp_value if state.has(item_name, player) else 0) for (item_name, qp_value) in {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}.items())
 
 
+# Helper definitions for frontend evaluation
+# These are looked up by name instead of being inlined at every call site
+_HELPER_DEFINITIONS = {   'quest_points': {   'element_rule': {   'if_false': {'type': 'constant', 'value': 0},
+                                            'if_true': {'name': 'qp_value', 'type': 'name'},
+                                            'test': {   'item': {'name': 'item_name', 'type': 'name'},
+                                                        'type': 'item_check'},
+                                            'type': 'conditional'},
+                        'iterator_info': {   'iterator': {   'args': [],
+                                                             'method': 'items',
+                                                             'object': {   'type': 'constant',
+                                                                           'value': {   '1 QP (Below Ice Mountain)': 1,
+                                                                                        "1 QP (Cook's Assistant)": 1,
+                                                                                        "1 QP (Doric's Quest)": 1,
+                                                                                        '1 QP (Imp Catcher)': 1,
+                                                                                        '1 QP (Misthalin Mystery)': 1,
+                                                                                        '1 QP (Rune Mysteries)': 1,
+                                                                                        '1 QP (Sheep Shearer)': 1,
+                                                                                        '1 QP (Shield of Arrav)': 1,
+                                                                                        "1 QP (The Knight's Sword)": 1,
+                                                                                        '1 QP (The Restless Ghost)': 1,
+                                                                                        "1 QP (Witch's Potion)": 1,
+                                                                                        '1 QP (X Marks The Spot)': 1,
+                                                                                        "2 QP (Pirate's Treasure)": 2,
+                                                                                        '2 QP (The Corsair Curse)': 2,
+                                                                                        "3 QP (Black Knights' Fortress)": 3,
+                                                                                        '3 QP (Demon Slayer)': 3,
+                                                                                        '3 QP (Prince Ali Rescue)': 3,
+                                                                                        '3 QP (Vampyre Slayer)': 3,
+                                                                                        '4 QP (Ernest the Chicken)': 4,
+                                                                                        '5 QP (Goblin Diplomacy)': 5,
+                                                                                        '5 QP (Romeo & Juliet)': 5}},
+                                                             'type': 'method_call'},
+                                             'target': {   'elements': [   {'name': 'item_name', 'type': 'name'},
+                                                                           {'name': 'qp_value', 'type': 'name'}],
+                                                           'type': 'tuple'}},
+                        'type': 'sum_of'}}
+
+
+def get_helper_definitions() -> dict:
+    """Return helper definitions for frontend evaluation."""
+    return _HELPER_DEFINITIONS
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -28,1080 +71,2395 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Start->Lumbridge", player),
-        Has("Area: Lumbridge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Lumbridge Farms East", player),
-        Has("Area: Lumbridge Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Lumbridge Farms West", player),
-        Has("Area: Lumbridge Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Al Kharid", player),
-        Has("Area: Al Kharid")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Lumbridge Swamp", player),
-        Has("Area: Lumbridge Swamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->HAM Hideout", player),
-        Has("Area: HAM Hideout")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->South of Varrock", player),
-        (True_()) & (Has("Area: South of Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Barbarian Village", player),
-        (CanReachRegion("Oak Tree")) & (Has("Area: Barbarian Village"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Edgeville", player),
-        ((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (Has("Area: Edgeville"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Wilderness", player),
-        (False_()) & (Has("Area: Wilderness"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Mind Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Spinning Wheel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Furnace", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Bronze Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Fly Fishing Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Willow Tree", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Canoe Tree", player),
-        (((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (CanReachRegion("Edgeville"))) | ((False_()) & (CanReachRegion("Wilderness"))) | ((True_()) & (CanReachRegion("South of Varrock"))) | ((CanReachRegion("Barbarian Village")) & (CanReachRegion("Oak Tree")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Goblin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Duck", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge->Bar", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Swamp->Lumbridge", player),
-        Has("Area: Lumbridge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Swamp->HAM Hideout", player),
-        Has("Area: HAM Hideout")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Bronze Ores", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Shrimp Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Goblin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Swamp->Duck", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Lumbridge Farms West", player),
-        Has("Area: Lumbridge Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Lumbridge", player),
-        Has("Area: Lumbridge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Lumbridge Swamp", player),
-        Has("Area: Lumbridge Swamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Draynor Village", player),
-        Has("Area: Draynor Village")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("HAM Hideout->Goblin", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms West->Sourhog's Lair", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms West->HAM Hideout", player),
-        Has("Area: HAM Hideout")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms West->Draynor Village", player),
-        Has("Area: Draynor Village")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Sheep", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Wheat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Windmill", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Egg", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Milk", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Willow Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Potato", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms West->Haystack", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms East->South of Varrock", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms East->Lumbridge", player),
-        Has("Area: Lumbridge")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Egg", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Milk", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Willow Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Goblin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumbridge Farms East->Potato", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sourhog's Lair->Lumbridge Farms West", player),
-        Has("Area: Lumbridge Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Sourhog's Lair->Draynor Manor Outskirts", player),
-        Has("Area: Draynor Manor")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Al Kharid", player),
-        Has("Area: Al Kharid")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Central Varrock", player),
-        Has("Area: Central Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Lumberyard", player),
-        Has("Area: Lumberyard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Lumbridge Farms East", player),
-        Has("Area: Lumbridge Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Lumbridge", player),
-        (True_()) & (Has("Area: Lumbridge"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Barbarian Village", player),
-        (True_()) & (Has("Area: Barbarian Village"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Edgeville", player),
-        ((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (Has("Area: Edgeville"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Wilderness", player),
-        (False_()) & (Has("Area: Wilderness"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Sheep", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Bronze Ores", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Silver Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Redberry Bush", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Wheat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Willow Tree", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Canoe Tree", player),
-        (((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (CanReachRegion("Wilderness"))) | ((True_()) & (CanReachRegion("Barbarian Village"))) | ((True_()) & (CanReachRegion("Lumbridge"))) | ((CanReachRegion("Edgeville")) & (CanReachRegion("Oak Tree")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Clay Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South of Varrock->Duck", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->South of Varrock", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->Central Varrock", player),
-        Has("Area: Central Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->Varrock Palace", player),
-        Has("Area: Varrock Palace")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumberyard->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Lumberyard->Bar", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->Varrock Palace", player),
-        Has("Area: Varrock Palace")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->Lumberyard", player),
-        Has("Area: Lumberyard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->South of Varrock", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Mind Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Barbarian", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Rune Essence", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Makeover", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Central Varrock->Bar", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->Lumberyard", player),
-        Has("Area: Lumberyard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->Central Varrock", player),
-        Has("Area: Central Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Pie Dish", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Zombie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Deadly Red Spider", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Moss Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Makeover", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Varrock Palace->Red Spider Eggs", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Varrock Palace", player),
-        Has("Area: Varrock Palace")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->South of Varrock", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Barbarian Village", player),
-        Has("Area: Barbarian Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Edgeville", player),
-        Has("Area: Edgeville")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Cook's Guild", player),
-        (((((CanReachRegion("Fly Fishing Spot")) & (CanReachRegion("Port Sarim")) & (CanReachRegion("Shrimp Spot"))) & (CanReachRegion("Fly Fishing Spot"))) | (CanReachRegion("Port Sarim"))) & (((CanReachRegion("Wheat")) & (CanReachRegion("Windmill"))) | (CanReachRegion("Egg")) | (CanReachRegion("Milk")) | (CanReachRegion("Shrimp Spot")))) & (Has("Area: West Varrock"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("West Varrock->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("West Varrock->Wheat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("West Varrock->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("West Varrock->Goblin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("West Varrock->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("West Varrock->Onion", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Cook's Guild->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cook's Guild->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cook's Guild->Cooking Apple", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cook's Guild->Pie Dish", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cook's Guild->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cook's Guild->Windmill", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Barbarian Village", player),
-        Has("Area: Barbarian Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->South of Varrock", player),
-        (CanReachRegion("Oak Tree")) & (Has("Area: South of Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Lumbridge", player),
-        ((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (Has("Area: Lumbridge"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Furnace", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Bronze Ores", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Willow Tree", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Canoe Tree", player),
-        (((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (CanReachRegion("Lumbridge"))) | ((True_()) & (CanReachRegion("Barbarian Village"))) | ((True_()) & (CanReachRegion("Wilderness"))) | ((CanReachRegion("Oak Tree")) & (CanReachRegion("South of Varrock")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Zombie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Hill Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Limpwurt Root", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Edgeville->Haystack", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Edgeville", player),
-        Has("Area: Edgeville")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Draynor Manor Outskirts", player),
-        Has("Area: Draynor Manor")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Dwarven Mountain Pass", player),
-        Has("Area: Dwarven Mines")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Spinning Wheel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Fly Fishing Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Meat", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Canoe Tree", player),
-        ((True_()) & (CanReachRegion("Edgeville"))) | ((True_()) & (CanReachRegion("South of Varrock"))) | ((CanReachRegion("Lumbridge")) & (CanReachRegion("Oak Tree"))) | ((CanReachRegion("Oak Tree")) & (CanReachRegion("Wilderness")))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Barbarian", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Zombie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barbarian Village->Law Runes", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Barbarian Village", player),
-        Has("Area: Barbarian Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Sourhog's Lair", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Draynor Village", player),
-        Has("Area: Draynor Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Falador East Outskirts", player),
-        Has("Area: Falador")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Manor Outskirts->Goblin", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor->Draynor Village", player),
-        Has("Area: Draynor Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador East Outskirts->Dwarven Mountain Pass", player),
-        Has("Area: Dwarven Mines")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador East Outskirts->Draynor Manor Outskirts", player),
-        Has("Area: Draynor Manor")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador East Outskirts->Falador Farms", player),
-        Has("Area: Falador Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Goblin Village", player),
-        Has("Area: Ice Mountain")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Monastery", player),
-        Has("Area: Monastery")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Barbarian Village", player),
-        Has("Area: Barbarian Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Falador East Outskirts", player),
-        Has("Area: Falador")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Falador", player),
-        Has("Area: Falador")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Anvil", player),
-        Has("1 QP (Doric's Quest)")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mountain Pass->Wheat", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mines->Monastery", player),
-        Has("Area: Monastery")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mines->Ice Mountain", player),
-        Has("Area: Ice Mountain")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mines->Falador", player),
-        Has("Area: Falador")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Bronze Ores", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Gold Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Pie Dish", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dwarven Mines->Clay Ore", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Goblin Village->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Goblin Village->Dwarven Mountain Pass", player),
-        Has("Area: Dwarven Mines")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Goblin Village->Meat", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Monastery", player),
-        Has("Area: Monastery")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Dwarven Mines", player),
-        Has("Area: Dwarven Mines")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Camdozaal", player),
-        (Has("1 QP (Below Ice Mountain)")) & (Has("Area: Ice Mountain"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Camdozaal->Ice Mountain", player),
-        Has("Area: Ice Mountain")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Camdozaal->Clay Ore", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Wilderness", player),
-        Has("Area: Wilderness")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Dwarven Mountain Pass", player),
-        Has("Area: Dwarven Mines")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Dwarven Mines", player),
-        Has("Area: Dwarven Mines")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Ice Mountain", player),
-        Has("Area: Ice Mountain")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Monastery->Sheep", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador->Dwarven Mountain Pass", player),
-        Has("Area: Dwarven Mines")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador->Falador Farms", player),
-        Has("Area: Falador Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador->Dwarven Mines", player),
-        Has("Area: Dwarven Mines")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Furnace", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Guard", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Duck", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Makeover", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador->Bar", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Falador", player),
-        Has("Area: Falador")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Falador East Outskirts", player),
-        Has("Area: Falador")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Draynor Village", player),
-        Has("Area: Draynor Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Port Sarim", player),
-        Has("Area: Port Sarim")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Rimmington", player),
-        Has("Area: Rimmington")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Crafting Guild Outskirts", player),
-        Has("Area: Crafting Guild")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Spinning Wheel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Egg", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Milk", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Falador Farms->Duck", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Falador Farms", player),
-        Has("Area: Falador Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Mudskipper Point", player),
-        Has("Area: Mudskipper Point")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Rimmington", player),
-        Has("Area: Rimmington")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Karamja Docks", player),
-        Has("Area: Mudskipper Point")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Crandor", player),
-        (((((((((CanReachRegion("South of Varrock")) & (Has("Area: Crandor"))) & (CanReachRegion("Edgeville"))) & (CanReachRegion("Lumbridge"))) & (CanReachRegion("Rimmington"))) & (CanReachRegion("Monastery"))) & (CanReachRegion("Dwarven Mines"))) & (CanReachRegion("Port Sarim"))) & (CanReachRegion("Draynor Village"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">=", 32))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Mind Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Shrimp Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Cheese", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Tomato", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Willow Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Goblin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Port Sarim->Potato", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Karamja Docks->Port Sarim", player),
-        Has("Area: Port Sarim")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Karamja Docks->Karamja", player),
-        Has("Area: Karamja")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mudskipper Point->Rimmington", player),
-        Has("Area: Rimmington")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Mudskipper Point->Port Sarim", player),
-        Has("Area: Port Sarim")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mudskipper Point->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mudskipper Point->Ice Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mudskipper Point->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mudskipper Point->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mudskipper Point->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mudskipper Point->Limpwurt Root", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Karamja->Karamja Docks", player),
-        Has("Area: Mudskipper Point")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Karamja->Crandor", player),
-        (((((((((CanReachRegion("South of Varrock")) & (Has("Area: Crandor"))) & (CanReachRegion("Edgeville"))) & (CanReachRegion("Lumbridge"))) & (CanReachRegion("Rimmington"))) & (CanReachRegion("Monastery"))) & (CanReachRegion("Dwarven Mines"))) & (CanReachRegion("Port Sarim"))) & (CanReachRegion("Draynor Village"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">=", 32))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Gold Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Lobster Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Deadly Red Spider", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Karamja->Red Spider Eggs", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crandor->Karamja", player),
-        Has("Area: Karamja")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crandor->Port Sarim", player),
-        Has("Area: Port Sarim")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Gold Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Moss Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Lesser Demon", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crandor->Limpwurt Root", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Falador Farms", player),
-        Has("Area: Falador Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Port Sarim", player),
-        Has("Area: Port Sarim")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Mudskipper Point", player),
-        Has("Area: Mudskipper Point")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Crafting Guild Peninsula", player),
-        Has("Area: Crafting Guild")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Corsair Cove", player),
-        (CanReachRegion("Falador Farms")) & (Has("Area: Corsair Cove"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Bronze Ores", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Gold Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Wheat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Willow Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Crafting Moulds", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Imps", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Clay Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Rimmington->Onion", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Peninsula->Falador Farms", player),
-        Has("Area: Falador Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Peninsula->Rimmington", player),
-        Has("Area: Rimmington")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild Peninsula->Limpwurt Root", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Outskirts->Falador Farms", player),
-        Has("Area: Falador Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player),
-        ((((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Gold Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Coal Ore")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Silver Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((CanReachRegion("Al Kharid")) & (CanReachRegion("Milk")))) & (Has("Area: Crafting Guild"))) & (CanReachRegion("Central Varrock"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild Outskirts->Sheep", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild Outskirts->Willow Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild Outskirts->Oak Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild Outskirts->Makeover", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player),
-        ((((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Gold Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Coal Ore")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Silver Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((CanReachRegion("Al Kharid")) & (CanReachRegion("Milk")))) & (Has("Area: Crafting Guild"))) & (CanReachRegion("Central Varrock"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Spinning Wheel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Silver Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Gold Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Milk", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Crafting Guild->Clay Ore", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->Draynor Manor", player),
-        Has("Area: Draynor Manor")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->Lumbridge Farms West", player),
-        Has("Area: Lumbridge Farms")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->HAM Hideout", player),
-        Has("Area: HAM Hideout")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->Wizard Tower", player),
-        Has("Area: Wizard Tower")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Shrimp Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Wheat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Cheese", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Tomato", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Willow Tree", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Goblin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Zombie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Draynor Village->Imps", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wizard Tower->Draynor Village", player),
-        Has("Area: Draynor Village")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wizard Tower->Lesser Demon", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wizard Tower->Rune Essence", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Corsair Cove->Rimmington", player),
-        Has("Area: Rimmington")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Corsair Cove->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Corsair Cove->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Corsair Cove->Limpwurt Root", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->South of Varrock", player),
-        Has("Area: South of Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->Citharede Abbey", player),
-        Has("Area: Citharede Abbey")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->Lumbridge", player),
-        Has("Area: Lumbridge")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->Port Sarim", player),
-        Has("Area: Port Sarim")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Furnace", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Bronze Ores", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Silver Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Gold Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Shrimp Spot", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Bowl", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Cheese", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Crafting Moulds", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Al Kharid->Imps", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Citharede Abbey->Al Kharid", player),
-        Has("Area: Al Kharid")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Hill Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Citharede Abbey->Limpwurt Root", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Lumberyard", player),
-        Has("Area: Lumberyard")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Varrock Palace", player),
-        Has("Area: Varrock Palace")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->West Varrock", player),
-        Has("Area: West Varrock")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Edgeville", player),
-        Has("Area: Edgeville")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Monastery", player),
-        Has("Area: Monastery")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Ice Mountain", player),
-        Has("Area: Ice Mountain")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Goblin Village", player),
-        Has("Area: Ice Mountain")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->South of Varrock", player),
-        ((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (Has("Area: South of Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Lumbridge", player),
-        (False_()) & (Has("Area: Lumbridge"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Furnace", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Chisel", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Iron Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Coal Ore", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Anvil", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Meat", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Cake Tin", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Cheese", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Tomato", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Oak Tree", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Canoe Tree", player),
-        (((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (CanReachRegion("South of Varrock"))) | ((False_()) & (CanReachRegion("Lumbridge"))) | ((True_()) & (CanReachRegion("Edgeville"))) | ((CanReachRegion("Barbarian Village")) & (CanReachRegion("Oak Tree")))
+        True_()
     )
-    # Register indirect conditions for proper sphere calculation
-    multiworld.register_indirect_condition(
-        world.get_region("Falador Farms"),
-        multiworld.get_entrance("Rimmington->Corsair Cove", player)
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Zombie", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Hill Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Deadly Red Spider", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Moss Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Ice Giant", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Lesser Demon", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Nature Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Law Runes", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Big Bones", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Limpwurt Root", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Wilderness->Bar", player),
+        True_()
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Reach a Level 10", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Reach a Level 20", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Total XP 125,000", player),
-        Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 6)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Total Level 150", player),
-        Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 2)
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Get Prompted to Buy Membership", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Total Level 50", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burn a Log", player),
-        (True_()) & (True_())
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Combat Level 15", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Total XP 25,000", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Activate the \"Protect Item\" Prayer", player),
-        (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 2)) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Cook's Assistant", player),
-        ((((CanReachRegion("Lumbridge")) & (CanReachRegion("Wheat"))) & (CanReachRegion("Windmill"))) & (CanReachRegion("Egg"))) & (CanReachRegion("Milk"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Cook's Assistant", player),
-        CanReachLocation("Quest: Cook's Assistant")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: The Restless Ghost", player),
-        ((CanReachRegion("Lumbridge Swamp")) & (CanReachRegion("Lumbridge"))) & (CanReachRegion("Wizard Tower"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: The Restless Ghost", player),
-        CanReachLocation("Quest: The Restless Ghost")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Rune Mysteries", player),
-        ((CanReachRegion("Lumbridge")) & (CanReachRegion("Wizard Tower"))) & (CanReachRegion("Central Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Rune Mysteries", player),
-        CanReachLocation("Quest: Rune Mysteries")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: X Marks the Spot", player),
-        ((CanReachRegion("Draynor Village")) & (CanReachRegion("Lumbridge"))) & (CanReachRegion("Port Sarim"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: X Marks the Spot", player),
-        CanReachLocation("Quest: X Marks the Spot")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Misthalin Mystery", player),
-        CanReachRegion("Lumbridge Swamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Misthalin Mystery", player),
-        CanReachLocation("Quest: Misthalin Mystery")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Kill a Giant Frog", player),
-        (True_()) & (CanReachRegion("Lumbridge Swamp"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Sheep Shearer", player),
-        (CanReachRegion("Lumbridge Farms West")) & (CanReachRegion("Spinning Wheel"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Sheep Shearer", player),
-        CanReachLocation("Quest: Sheep Shearer")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Demon Slayer", player),
-        (((CanReachRegion("Central Varrock")) & (CanReachRegion("Varrock Palace"))) & (CanReachRegion("Wizard Tower"))) & (CanReachRegion("South of Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Demon Slayer", player),
-        CanReachLocation("Quest: Demon Slayer")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Romeo & Juliet", player),
-        (((CanReachRegion("Central Varrock")) & (CanReachRegion("Varrock Palace"))) & (CanReachRegion("South of Varrock"))) & (CanReachRegion("West Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Romeo & Juliet", player),
-        CanReachLocation("Quest: Romeo & Juliet")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Shield of Arrav", player),
-        (((CanReachRegion("Central Varrock")) & (CanReachRegion("Varrock Palace"))) & (CanReachRegion("South of Varrock"))) & (CanReachRegion("West Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Shield of Arrav", player),
-        CanReachLocation("Quest: Shield of Arrav")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Have the Apothecary Make a Strength Potion", player),
-        ((CanReachRegion("Central Varrock")) & (CanReachRegion("Red Spider Eggs"))) & (CanReachRegion("Limpwurt Root"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Enter the Cook's Guild", player),
-        (((((CanReachRegion("Fly Fishing Spot")) & (CanReachRegion("Port Sarim")) & (CanReachRegion("Shrimp Spot"))) & (CanReachRegion("Fly Fishing Spot"))) | (CanReachRegion("Port Sarim"))) & (((CanReachRegion("Wheat")) & (CanReachRegion("Windmill"))) | (CanReachRegion("Egg")) | (CanReachRegion("Milk")) | (CanReachRegion("Shrimp Spot")))) & (CanReachRegion("Cook's Guild"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Ernest the Chicken", player),
-        CanReachRegion("Draynor Manor")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Ernest the Chicken", player),
-        CanReachLocation("Quest: Ernest the Chicken")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Doric's Quest", player),
-        ((((CanReachRegion("Clay Ore")) & (CanReachRegion("Dwarven Mountain Pass"))) & (CanReachRegion("Iron Ore"))) & (CanReachRegion("Bronze Ores"))) & (((CanReachRegion("Bronze Ores")) | (CanReachRegion("Clay Ore"))) & (CanReachRegion("Iron Ore")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Doric's Quest", player),
-        CanReachLocation("Quest: Doric's Quest")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Black Knights' Fortress", player),
-        ((((((CanReachRegion("Dwarven Mines")) & (CanReachRegion("Falador"))) & (CanReachRegion("Monastery"))) & (CanReachRegion("Ice Mountain"))) & (CanReachRegion("Falador Farms"))) & (Has("Progressive Armor"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 12))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Black Knights' Fortress", player),
-        CanReachLocation("Quest: Black Knights' Fortress")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Below Ice Mountain", player),
-        (((((((CanReachRegion("Dwarven Mines")) & (CanReachRegion("Dwarven Mountain Pass"))) & (CanReachRegion("Ice Mountain"))) & (CanReachRegion("Barbarian Village"))) & (CanReachRegion("Falador"))) & (CanReachRegion("Central Varrock"))) & (CanReachRegion("Edgeville"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 16))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Below Ice Mountain", player),
-        CanReachLocation("Quest: Below Ice Mountain")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Goblin Diplomacy", player),
-        ((((CanReachRegion("Draynor Village")) & (CanReachRegion("Goblin Village"))) & (CanReachRegion("Falador"))) & (CanReachRegion("South of Varrock"))) & (CanReachRegion("Onion"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Goblin Diplomacy", player),
-        CanReachLocation("Quest: Goblin Diplomacy")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Open an Ornate Lockbox", player),
-        CanReachRegion("Camdozaal")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: The Knight's Sword", player),
-        ((((((((CanReachRegion("Falador")) & (CanReachRegion("Varrock Palace"))) & (CanReachRegion("Mudskipper Point"))) & (CanReachRegion("South of Varrock"))) & (CanReachRegion("Windmill"))) & (CanReachRegion("Pie Dish"))) & (CanReachRegion("Port Sarim"))) & (((CanReachRegion("Wheat")) & (CanReachRegion("Windmill"))) | (CanReachRegion("Egg")) | (CanReachRegion("Milk")) | (CanReachRegion("Shrimp Spot")))) & ((CanReachRegion("Bronze Ores")) | (CanReachRegion("Clay Ore")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: The Knight's Sword", player),
-        CanReachLocation("Quest: The Knight's Sword")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Pirate's Treasure", player),
-        (((CanReachRegion("Karamja")) & (CanReachRegion("Port Sarim"))) & (CanReachRegion("Falador"))) & (CanReachRegion("Central Varrock"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Pirate's Treasure", player),
-        CanReachLocation("Quest: Pirate's Treasure")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Dragon Slayer", player),
-        (((((((((CanReachRegion("Crandor")) & (CanReachRegion("South of Varrock"))) & (CanReachRegion("Edgeville"))) & (CanReachRegion("Lumbridge"))) & (CanReachRegion("Rimmington"))) & (CanReachRegion("Monastery"))) & (CanReachRegion("Dwarven Mines"))) & (CanReachRegion("Port Sarim"))) & (CanReachRegion("Draynor Village"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 32))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Witch's Potion", player),
-        (CanReachRegion("Port Sarim")) & (CanReachRegion("Rimmington"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Witch's Potion", player),
-        CanReachLocation("Quest: Witch's Potion")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: The Corsair Curse", player),
-        ((CanReachRegion("Falador Farms")) & (CanReachRegion("Rimmington"))) & (CanReachRegion("Corsair Cove"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: The Corsair Curse", player),
-        CanReachLocation("Quest: The Corsair Curse")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Vampyre Slayer", player),
-        ((CanReachRegion("Central Varrock")) & (CanReachRegion("Draynor Village"))) & (CanReachRegion("Draynor Manor"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Vampyre Slayer", player),
-        CanReachLocation("Quest: Vampyre Slayer")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Equip an Orange Cape", player),
-        CanReachRegion("Draynor Village")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Imp Catcher", player),
-        (CanReachRegion("Imps")) & (CanReachRegion("Wizard Tower"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Imp Catcher", player),
-        CanReachLocation("Quest: Imp Catcher")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest: Prince Ali Rescue", player),
-        ((((((CanReachRegion("Al Kharid")) & (CanReachRegion("Central Varrock"))) & (CanReachRegion("Bronze Ores"))) & (CanReachRegion("Clay Ore"))) & (CanReachRegion("Sheep"))) & (CanReachRegion("Spinning Wheel"))) & (CanReachRegion("Draynor Village"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Points: Prince Ali Rescue", player),
-        CanReachLocation("Quest: Prince Ali Rescue")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Get Sent to Jail in Shantay Pass", player),
-        (CanReachRegion("Al Kharid")) & (CanReachRegion("Port Sarim"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Cut a Diamond", player),
-        ((((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Gold Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Coal Ore")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Silver Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((CanReachRegion("Al Kharid")) & (CanReachRegion("Milk")))) & (CanReachRegion("Chisel"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 8))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Cut a Ruby", player),
-        ((((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Gold Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Coal Ore")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((((CanReachRegion("Al Kharid")) | (CanReachRegion("Rimmington"))) & (CanReachRegion("Furnace")) & (CanReachRegion("Silver Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) | ((CanReachRegion("Al Kharid")) & (CanReachRegion("Milk")))) & (CanReachRegion("Chisel"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 4))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Smelt an Iron Bar", player),
-        (((CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) & (((CanReachRegion("Bronze Ores")) | (CanReachRegion("Clay Ore"))) & (CanReachRegion("Iron Ore")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mine Silver", player),
-        (((CanReachRegion("Bronze Ores")) | (CanReachRegion("Clay Ore"))) & (CanReachRegion("Iron Ore"))) & (CanReachRegion("Silver Ore"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Smelt a Gold Bar", player),
-        ((((CanReachRegion("Furnace")) & (CanReachRegion("Gold Ore"))) & ((CanReachRegion("Anvil")) & (CanReachRegion("Bronze Ores")) & (CanReachRegion("Coal Ore")) & (CanReachRegion("Furnace")) & (CanReachRegion("Iron Ore")))) & (((CanReachRegion("Bronze Ores")) | (CanReachRegion("Clay Ore"))) & (CanReachRegion("Iron Ore")))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 6))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catch a Trout", player),
-        ((CanReachRegion("Fly Fishing Spot")) & (CanReachRegion("Port Sarim")) & (CanReachRegion("Shrimp Spot"))) & (CanReachRegion("Fly Fishing Spot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Catch a Lobster", player),
-        (((CanReachRegion("Fly Fishing Spot")) & (CanReachRegion("Port Sarim")) & (CanReachRegion("Shrimp Spot"))) & (CanReachRegion("Lobster Spot"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 6))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bake a Redberry Pie", player),
-        ((((CanReachRegion("Redberry Bush")) & (CanReachRegion("Wheat"))) & (CanReachRegion("Windmill"))) & (CanReachRegion("Pie Dish"))) & (((CanReachRegion("Wheat")) & (CanReachRegion("Windmill"))) | (CanReachRegion("Egg")) | (CanReachRegion("Milk")) | (CanReachRegion("Shrimp Spot")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Bake a Cake", player),
-        ((((((CanReachRegion("Wheat")) & (CanReachRegion("Windmill"))) & (CanReachRegion("Egg"))) & (CanReachRegion("Milk"))) & (CanReachRegion("Cake Tin"))) & (((((CanReachRegion("Fly Fishing Spot")) & (CanReachRegion("Port Sarim")) & (CanReachRegion("Shrimp Spot"))) & (CanReachRegion("Fly Fishing Spot"))) | (CanReachRegion("Port Sarim"))) & (((CanReachRegion("Wheat")) & (CanReachRegion("Windmill"))) | (CanReachRegion("Egg")) | (CanReachRegion("Milk")) | (CanReachRegion("Shrimp Spot"))))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 6))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burn some Oak Logs", player),
-        (((CanReachRegion("Oak Tree")) & (CanReachRegion("Oak Tree"))) & (CanReachRegion("Oak Tree"))) & (CanReachRegion("Oak Tree"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Burn some Willow Logs", player),
-        ((((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree"))) & (CanReachRegion("Willow Tree"))) & (CanReachRegion("Willow Tree"))) & ((CanReachRegion("Oak Tree")) & (CanReachRegion("Willow Tree")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Kill a Barbarian", player),
-        (True_()) & (CanReachRegion("Barbarian"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Kill a Zombie", player),
-        (True_()) & (CanReachRegion("Zombie"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Kill a Hill Giant", player),
-        ((True_()) & (CanReachRegion("Hill Giant"))) & (Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points", body_data={'type': 'sum_of', 'iterator_info': {'target': {'type': 'tuple', 'elements': [{'type': 'name', 'name': 'item_name'}, {'type': 'name', 'name': 'qp_value'}]}, 'iterator': {'type': 'method_call', 'object': {'type': 'constant', 'value': {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}}, 'method': 'items', 'args': []}}, 'element_rule': {'type': 'conditional', 'test': {'type': 'item_check', 'item': {'type': 'name', 'name': 'item_name'}}, 'if_true': {'type': 'name', 'name': 'qp_value'}, 'if_false': {'type': 'constant', 'value': 0}}}), ">", 2))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Cast Bones To Bananas", player),
-        (CanReachRegion("Nature Runes")) & (CanReachRegion("Mind Runes"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Kill a Duck", player),
-        (True_()) & (CanReachRegion("Duck"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Find a Needle in a Haystack", player),
-        CanReachRegion("Haystack")
+        True_()
     )

@@ -3,11 +3,11 @@
   "assume_bidirectional_exits": false,
   "use_resolved_items": false,
   "options": {
-    "accessibility": 0,
+    "accessibility": "full",
     "exclude_locations": [],
     "extra_ranks": 0,
-    "include_jobs": 1,
-    "include_secret": 0,
+    "include_jobs": "true",
+    "include_secret": "false",
     "item_links": [],
     "local_items": [],
     "non_local_items": [],
@@ -17,7 +17,7 @@
     "start_hints": [],
     "start_inventory": {},
     "start_location_hints": [],
-    "trade_quest_hinting": 2
+    "trade_quest_hinting": "full"
   },
   "world_directory": "mmbn3"
 }

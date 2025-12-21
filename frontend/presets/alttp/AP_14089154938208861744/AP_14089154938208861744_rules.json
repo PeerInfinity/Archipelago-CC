@@ -3023,17 +3023,12 @@
             "name": "Desert Palace East Wing",
             "connected_region": "Desert Palace East",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Desert Palace)",
-                "count": {
-                  "type": "constant",
-                  "value": 4
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Desert Palace)",
+                "count": 4
+              }
             }
           }
         ],
@@ -3221,17 +3216,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Desert Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Desert Palace)",
+                    "count": 2
+                  }
                 },
                 {
                   "rule": "can_kill_most_things",
@@ -3268,17 +3258,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Desert Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Desert Palace)",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "can_kill_most_things",
@@ -3315,17 +3300,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Desert Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Desert Palace)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "AST_function_call",
@@ -3410,17 +3390,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Desert Palace)",
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Desert Palace)",
+                        "count": 4
+                      }
                     },
                     {
                       "rule": "AST_function_call",
@@ -3746,17 +3721,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Eastern Palace)",
-                            "count": {
-                              "type": "constant",
-                              "value": 2
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Eastern Palace)",
+                            "count": 2
+                          }
                         }
                       ]
                     }
@@ -3813,17 +3783,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Eastern Palace)",
-                            "count": {
-                              "type": "constant",
-                              "value": 2
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Eastern Palace)",
+                            "count": 2
+                          }
                         },
                         {
                           "rule": "AST_function_call",
@@ -3906,17 +3871,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Eastern Palace)",
-                            "count": {
-                              "type": "constant",
-                              "value": 2
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Eastern Palace)",
+                            "count": 2
+                          }
                         },
                         {
                           "rule": "AST_function_call",
@@ -4247,17 +4207,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Hyrule Castle)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Or",
@@ -4272,23 +4227,33 @@
                           "options": [],
                           "args": {
                             "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "subscript",
-                                "value": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "world"
+                              "rule": "Attribute",
+                              "options": [],
+                              "args": {
+                                "object": {
+                                  "rule": "AST_subscript",
+                                  "options": [],
+                                  "args": {
+                                    "value": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "world"
+                                      },
+                                      "attr": "worlds"
+                                    },
+                                    "index": {
+                                      "type": "constant",
+                                      "value": 1
+                                    },
+                                    "_original_ast_type": "subscript"
                                   },
-                                  "attr": "worlds"
+                                  "_converted_from_cc": true
                                 },
-                                "index": {
-                                  "type": "constant",
-                                  "value": 1
-                                }
+                                "attr": "options",
+                                "_original_ast_type": "attribute"
                               },
-                              "attr": "options"
+                              "_converted_from_cc": true
                             },
                             "attr": "enemy_health",
                             "_original_ast_type": "attribute"
@@ -4439,17 +4404,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Hyrule Castle)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "can_kill_most_things",
@@ -4572,17 +4532,12 @@
                   ]
                 },
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Hyrule Castle)",
+                    "count": 4
+                  }
                 }
               ]
             }
@@ -4616,17 +4571,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Hyrule Castle)",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "can_kill_most_things",
@@ -4681,17 +4631,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Hyrule Castle)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4833,17 +4778,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Agahnims Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Agahnims Tower)",
+                        "count": 4
+                      }
                     },
                     {
                       "rule": "has_sword",
@@ -4915,17 +4855,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Agahnims Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Agahnims Tower)",
+                        "count": 1
+                      }
                     },
                     {
                       "rule": "can_kill_most_things",
@@ -4975,17 +4910,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Agahnims Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Agahnims Tower)",
+                        "count": 2
+                      }
                     },
                     {
                       "rule": "can_kill_most_things",
@@ -5035,17 +4965,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Agahnims Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Agahnims Tower)",
+                        "count": 3
+                      }
                     },
                     {
                       "rule": "can_kill_most_things",
@@ -6451,17 +6376,12 @@
                       "_converted_from_cc": true
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Tower of Hera)",
-                        "count": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Tower of Hera)",
+                        "count": 1
+                      }
                     }
                   ]
                 }
@@ -10391,17 +10311,12 @@
             "name": "Swamp Palace Small Key Door",
             "connected_region": "Swamp Palace (Starting Area)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Swamp Palace)",
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Swamp Palace)",
+                "count": 1
+              }
             }
           }
         ],
@@ -10442,17 +10357,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Swamp Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10525,17 +10435,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Swamp Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 2
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10572,17 +10477,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Swamp Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 5
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10598,17 +10498,12 @@
             "name": "Swamp Palace (West)",
             "connected_region": "Swamp Palace (West)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Swamp Palace)",
-                "count": {
-                  "type": "constant",
-                  "value": 6
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Swamp Palace)",
+                "count": 6
+              }
             }
           }
         ],
@@ -10911,17 +10806,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Swamp Palace)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Swamp Palace)",
+                        "count": 6
+                      }
                     },
                     {
                       "rule": "AST_function_call",
@@ -10984,17 +10874,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Swamp Palace)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Swamp Palace)",
+                        "count": 6
+                      }
                     },
                     {
                       "rule": "AST_function_call",
@@ -11169,17 +11054,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Thieves Town)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Thieves Town)",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "can_use_bombs",
@@ -11201,17 +11081,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Thieves Town)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Thieves Town)",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11295,32 +11170,22 @@
                               "_converted_from_cc": true
                             },
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Thieves Town)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 2
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Thieves Town)",
+                                "count": 2
+                              }
                             }
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Thieves Town)",
-                            "count": {
-                              "type": "constant",
-                              "value": 3
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Thieves Town)",
+                            "count": 3
+                          }
                         }
                       ]
                     },
@@ -11378,17 +11243,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Thieves Town)",
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Thieves Town)",
+                    "count": 1
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11416,17 +11276,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Thieves Town)",
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Thieves Town)",
+                    "count": 1
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11595,34 +11450,24 @@
             "name": "Skull Woods First Section South Door",
             "connected_region": "Skull Woods First Section (Right)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Skull Woods)",
-                "count": {
-                  "type": "constant",
-                  "value": 5
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Skull Woods)",
+                "count": 5
+              }
             }
           },
           {
             "name": "Skull Woods First Section West Door",
             "connected_region": "Skull Woods First Section (Left)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Skull Woods)",
-                "count": {
-                  "type": "constant",
-                  "value": 5
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Skull Woods)",
+                "count": 5
+              }
             }
           }
         ],
@@ -11702,17 +11547,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Skull Woods)",
-                    "count": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 5
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11788,17 +11628,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Skull Woods)",
-                    "count": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 5
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12174,17 +12009,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Skull Woods)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "has_sword",
@@ -12274,17 +12104,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Skull Woods)",
-                        "count": {
-                          "type": "constant",
-                          "value": 5
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Skull Woods)",
+                        "count": 5
+                      }
                     },
                     {
                       "rule": "AST_function_call",
@@ -12347,17 +12172,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Skull Woods)",
-                        "count": {
-                          "type": "constant",
-                          "value": 5
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Skull Woods)",
+                        "count": 5
+                      }
                     },
                     {
                       "rule": "AST_function_call",
@@ -12425,17 +12245,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Ice Palace)",
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Ice Palace)",
+                    "count": 1
+                  }
                 },
                 {
                   "rule": "can_melt_things",
@@ -12509,17 +12324,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ice Palace)",
-                        "count": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ice Palace)",
+                        "count": 1
+                      }
                     },
                     {
                       "rule": "can_melt_things",
@@ -12561,17 +12371,12 @@
             "name": "Ice Palace (Main)",
             "connected_region": "Ice Palace (Main)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Ice Palace)",
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Ice Palace)",
+                "count": 2
+              }
             }
           }
         ],
@@ -12648,30 +12453,20 @@
                           "_converted_from_cc": true
                         },
                         "if_true": {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ice Palace)",
-                            "count": {
-                              "type": "constant",
-                              "value": 4
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ice Palace)",
+                            "count": 4
+                          }
                         },
                         "if_false": {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ice Palace)",
-                            "count": {
-                              "type": "constant",
-                              "value": 6
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ice Palace)",
+                            "count": 6
+                          }
                         },
                         "_original_ast_type": "conditional"
                       },
@@ -12744,17 +12539,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ice Palace)",
-                            "count": {
-                              "type": "constant",
-                              "value": 5
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ice Palace)",
+                            "count": 5
+                          }
                         },
                         {
                           "rule": "Has",
@@ -12766,17 +12556,12 @@
                       ]
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ice Palace)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ice Palace)",
+                        "count": 6
+                      }
                     }
                   ]
                 },
@@ -13355,30 +13140,20 @@
                   ]
                 },
                 "if_true": {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Misery Mire)",
-                    "count": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 5
+                  }
                 },
                 "if_false": {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Misery Mire)",
-                    "count": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 6
+                  }
                 },
                 "_original_ast_type": "conditional"
               },
@@ -13446,17 +13221,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Misery Mire)",
-                            "count": {
-                              "type": "constant",
-                              "value": 2
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Misery Mire)",
+                            "count": 2
+                          }
                         },
                         {
                           "rule": "can_activate_crystal_switch",
@@ -13468,17 +13238,12 @@
                       ]
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Misery Mire)",
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 4
+                      }
                     }
                   ]
                 },
@@ -13516,17 +13281,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Misery Mire)",
-                            "count": {
-                              "type": "constant",
-                              "value": 3
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Misery Mire)",
+                            "count": 3
+                          }
                         },
                         {
                           "rule": "can_activate_crystal_switch",
@@ -13538,17 +13298,12 @@
                       ]
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Misery Mire)",
-                        "count": {
-                          "type": "constant",
-                          "value": 5
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 5
+                      }
                     }
                   ]
                 },
@@ -13692,17 +13447,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Misery Mire)",
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 4
+                      }
                     },
                     {
                       "rule": "Has",
@@ -13881,30 +13631,20 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Misery Mire)",
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 4
+                      }
                     },
                     "if_false": {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Misery Mire)",
-                        "count": {
-                          "type": "constant",
-                          "value": 5
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 5
+                      }
                     },
                     "_original_ast_type": "conditional"
                   },
@@ -14225,17 +13965,12 @@
             "name": "Turtle Rock Entrance to Pokey Room",
             "connected_region": "Turtle Rock (Pokey Room)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Turtle Rock)",
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 1
+              }
             }
           },
           {
@@ -14425,17 +14160,12 @@
             "name": "Turtle Rock (Pokey Room) (North)",
             "connected_region": "Turtle Rock (Chain Chomp Room)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Turtle Rock)",
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 2
+              }
             }
           },
           {
@@ -14470,30 +14200,20 @@
                   "_converted_from_cc": true
                 },
                 "if_true": {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Turtle Rock)",
-                    "count": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 4
+                  }
                 },
                 "if_false": {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Turtle Rock)",
-                    "count": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 6
+                  }
                 },
                 "_original_ast_type": "conditional"
               },
@@ -14569,17 +14289,12 @@
             "name": "Turtle Rock (Chain Chomp Room) (North)",
             "connected_region": "Turtle Rock (Second Section)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Turtle Rock)",
-                "count": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 3
+              }
             }
           },
           {
@@ -14601,30 +14316,20 @@
                   "_converted_from_cc": true
                 },
                 "if_true": {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Turtle Rock)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 3
+                  }
                 },
                 "if_false": {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Turtle Rock)",
-                    "count": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 5
+                  }
                 },
                 "_original_ast_type": "conditional"
               },
@@ -14857,79 +14562,139 @@
                               "options": [],
                               "children": [
                                 {
-                                  "rule": "CountCheck",
+                                  "rule": "Has",
                                   "options": [],
                                   "args": {
-                                    "item": "Small Key (Turtle Rock)",
+                                    "item_name": "Small Key (Turtle Rock)",
                                     "count": {
-                                      "type": "conditional",
-                                      "test": {
-                                        "type": "compare",
-                                        "left": {
-                                          "type": "placement_lookup",
-                                          "location": {
-                                            "type": "constant",
-                                            "value": "Turtle Rock - Big Key Chest"
-                                          }
-                                        },
-                                        "op": "==",
-                                        "right": {
-                                          "type": "list",
-                                          "value": [
-                                            {
-                                              "type": "constant",
-                                              "value": "Small Key (Turtle Rock)"
-                                            },
-                                            {
-                                              "type": "constant",
-                                              "value": 1
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "if_true": {
-                                        "type": "constant",
-                                        "value": 0
-                                      },
-                                      "if_false": {
-                                        "type": "conditional",
+                                      "rule": "Conditional",
+                                      "options": [],
+                                      "args": {
                                         "test": {
-                                          "type": "compare",
-                                          "left": {
-                                            "type": "placement_lookup",
-                                            "location": {
-                                              "type": "constant",
-                                              "value": "Turtle Rock - Big Key Chest"
-                                            }
-                                          },
-                                          "op": "==",
-                                          "right": {
-                                            "type": "list",
-                                            "value": [
-                                              {
-                                                "type": "constant",
-                                                "value": "Big Key (Turtle Rock)"
+                                          "rule": "Compare",
+                                          "options": [],
+                                          "args": {
+                                            "left": {
+                                              "rule": "AST_placement_lookup",
+                                              "options": [],
+                                              "args": {
+                                                "location": "Turtle Rock - Big Key Chest",
+                                                "_original_ast_type": "placement_lookup"
                                               },
-                                              {
-                                                "type": "constant",
-                                                "value": 1
-                                              }
-                                            ]
-                                          }
+                                              "_converted_from_cc": true
+                                            },
+                                            "op": "==",
+                                            "right": {
+                                              "rule": "List",
+                                              "options": [],
+                                              "args": {
+                                                "value": [
+                                                  {
+                                                    "rule": "Constant",
+                                                    "options": [],
+                                                    "args": {
+                                                      "value": "Small Key (Turtle Rock)"
+                                                    },
+                                                    "_converted_from_cc": true
+                                                  },
+                                                  {
+                                                    "rule": "Constant",
+                                                    "options": [],
+                                                    "args": {
+                                                      "value": 1
+                                                    },
+                                                    "_converted_from_cc": true
+                                                  }
+                                                ],
+                                                "_original_ast_type": "list"
+                                              },
+                                              "_converted_from_cc": true
+                                            },
+                                            "_original_ast_type": "compare"
+                                          },
+                                          "_converted_from_cc": true
                                         },
                                         "if_true": {
-                                          "type": "constant",
-                                          "value": 4
+                                          "rule": "Constant",
+                                          "options": [],
+                                          "args": {
+                                            "value": 0
+                                          },
+                                          "_converted_from_cc": true
                                         },
                                         "if_false": {
-                                          "type": "constant",
-                                          "value": 6
-                                        }
-                                      }
-                                    },
-                                    "_original_ast_type": "count_check"
-                                  },
-                                  "_converted_from_cc": true
+                                          "rule": "Conditional",
+                                          "options": [],
+                                          "args": {
+                                            "test": {
+                                              "rule": "Compare",
+                                              "options": [],
+                                              "args": {
+                                                "left": {
+                                                  "rule": "AST_placement_lookup",
+                                                  "options": [],
+                                                  "args": {
+                                                    "location": "Turtle Rock - Big Key Chest",
+                                                    "_original_ast_type": "placement_lookup"
+                                                  },
+                                                  "_converted_from_cc": true
+                                                },
+                                                "op": "==",
+                                                "right": {
+                                                  "rule": "List",
+                                                  "options": [],
+                                                  "args": {
+                                                    "value": [
+                                                      {
+                                                        "rule": "Constant",
+                                                        "options": [],
+                                                        "args": {
+                                                          "value": "Big Key (Turtle Rock)"
+                                                        },
+                                                        "_converted_from_cc": true
+                                                      },
+                                                      {
+                                                        "rule": "Constant",
+                                                        "options": [],
+                                                        "args": {
+                                                          "value": 1
+                                                        },
+                                                        "_converted_from_cc": true
+                                                      }
+                                                    ],
+                                                    "_original_ast_type": "list"
+                                                  },
+                                                  "_converted_from_cc": true
+                                                },
+                                                "_original_ast_type": "compare"
+                                              },
+                                              "_converted_from_cc": true
+                                            },
+                                            "if_true": {
+                                              "rule": "Constant",
+                                              "options": [],
+                                              "args": {
+                                                "value": 4
+                                              },
+                                              "_converted_from_cc": true
+                                            },
+                                            "if_false": {
+                                              "rule": "Constant",
+                                              "options": [],
+                                              "args": {
+                                                "value": 6
+                                              },
+                                              "_converted_from_cc": true
+                                            },
+                                            "_original_ast_type": "conditional"
+                                          },
+                                          "_converted_from_cc": true
+                                        },
+                                        "_original_ast_type": "conditional"
+                                      },
+                                      "_converted_from_cc": true
+                                    }
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -15237,17 +15002,12 @@
             "name": "Turtle Rock Dark Room Staircase",
             "connected_region": "Turtle Rock (Dark Room)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Turtle Rock)",
-                "count": {
-                  "type": "constant",
-                  "value": 5
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 5
+              }
             }
           },
           {
@@ -15412,17 +15172,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Turtle Rock)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Turtle Rock)",
+                        "count": 6
+                      }
                     },
                     {
                       "rule": "Has",
@@ -15919,17 +15674,12 @@
             "name": "Palace of Darkness Bridge Room",
             "connected_region": "Palace of Darkness (Center)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Palace of Darkness)",
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Palace of Darkness)",
+                "count": 1
+              }
             }
           },
           {
@@ -16072,32 +15822,22 @@
                           "_converted_from_cc": true
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Palace of Darkness)",
-                            "count": {
-                              "type": "constant",
-                              "value": 3
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Palace of Darkness)",
+                            "count": 3
+                          }
                         }
                       ]
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Palace of Darkness)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Palace of Darkness)",
+                        "count": 6
+                      }
                     }
                   ]
                 }
@@ -16108,17 +15848,12 @@
             "name": "Palace of Darkness (North)",
             "connected_region": "Palace of Darkness (North)",
             "access_rule": {
-              "rule": "CountCheck",
+              "rule": "Has",
               "options": [],
               "args": {
-                "item": "Small Key (Palace of Darkness)",
-                "count": {
-                  "type": "constant",
-                  "value": 4
-                },
-                "_original_ast_type": "count_check"
-              },
-              "_converted_from_cc": true
+                "item_name": "Small Key (Palace of Darkness)",
+                "count": 4
+              }
             }
           },
           {
@@ -16133,17 +15868,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Palace of Darkness)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Palace of Darkness)",
+                        "count": 6
+                      }
                     },
                     {
                       "rule": "can_shoot_arrows",
@@ -16421,32 +16151,22 @@
                       "_converted_from_cc": true
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Palace of Darkness)",
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Palace of Darkness)",
+                        "count": 4
+                      }
                     }
                   ]
                 },
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Palace of Darkness)",
-                    "count": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 6
+                  }
                 }
               ]
             }
@@ -16459,17 +16179,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Palace of Darkness)",
-                    "count": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 6
+                  }
                 },
                 {
                   "rule": "Has",
@@ -17012,17 +16727,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 5
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 5
+                          }
                         },
                         {
                           "rule": "AST_placement_search",
@@ -17059,17 +16769,12 @@
                       ]
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ganons Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 7
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 7
+                      }
                     }
                   ]
                 },
@@ -17125,17 +16830,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ganons Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 5
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 5
+                      }
                     },
                     {
                       "rule": "AST_placement_search",
@@ -17172,17 +16872,12 @@
                   ]
                 },
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Ganons Tower)",
-                    "count": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 7
+                  }
                 }
               ]
             }
@@ -17209,17 +16904,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 5
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -17256,17 +16946,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 7
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
                         }
                       ]
                     },
@@ -17337,17 +17022,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 5
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -17384,17 +17064,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 7
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
                         }
                       ]
                     },
@@ -17465,17 +17140,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 5
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -17512,17 +17182,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 7
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
                         }
                       ]
                     },
@@ -17593,17 +17258,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 5
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -17640,17 +17300,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 7
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
                         }
                       ]
                     },
@@ -17721,17 +17376,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 5
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -17768,17 +17418,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 7
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
                         }
                       ]
                     },
@@ -17904,32 +17549,22 @@
                       "_converted_from_cc": true
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ganons Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 6
+                      }
                     }
                   ]
                 },
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Ganons Tower)",
-                    "count": {
-                      "type": "constant",
-                      "value": 8
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 8
+                  }
                 }
               ]
             }
@@ -17942,17 +17577,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Ganons Tower)",
-                    "count": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 6
+                  }
                 },
                 {
                   "rule": "Has",
@@ -18189,17 +17819,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ganons Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 5
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 5
+                      }
                     },
                     {
                       "rule": "AST_placement_search",
@@ -18252,17 +17877,12 @@
                   ]
                 },
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Ganons Tower)",
-                    "count": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 7
+                  }
                 }
               ]
             }
@@ -18285,17 +17905,12 @@
                       "options": [],
                       "children": [
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 5
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 5
+                          }
                         },
                         {
                           "rule": "Or",
@@ -18350,17 +17965,12 @@
                       ]
                     },
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ganons Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 7
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 7
+                      }
                     }
                   ]
                 },
@@ -18429,17 +18039,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 6
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -18472,17 +18077,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 8
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
                         }
                       ]
                     }
@@ -18533,17 +18133,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 6
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -18576,17 +18171,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 8
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
                         }
                       ]
                     }
@@ -18637,17 +18227,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 6
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -18680,17 +18265,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 8
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
                         }
                       ]
                     }
@@ -18741,17 +18321,12 @@
                           "options": [],
                           "children": [
                             {
-                              "rule": "CountCheck",
+                              "rule": "Has",
                               "options": [],
                               "args": {
-                                "item": "Small Key (Ganons Tower)",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 6
-                                },
-                                "_original_ast_type": "count_check"
-                              },
-                              "_converted_from_cc": true
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
                             },
                             {
                               "rule": "AST_placement_search",
@@ -18784,17 +18359,12 @@
                           ]
                         },
                         {
-                          "rule": "CountCheck",
+                          "rule": "Has",
                           "options": [],
                           "args": {
-                            "item": "Small Key (Ganons Tower)",
-                            "count": {
-                              "type": "constant",
-                              "value": 8
-                            },
-                            "_original_ast_type": "count_check"
-                          },
-                          "_converted_from_cc": true
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
                         }
                       ]
                     }
@@ -19243,17 +18813,12 @@
               "options": [],
               "children": [
                 {
-                  "rule": "CountCheck",
+                  "rule": "Has",
                   "options": [],
                   "args": {
-                    "item": "Small Key (Ganons Tower)",
-                    "count": {
-                      "type": "constant",
-                      "value": 8
-                    },
-                    "_original_ast_type": "count_check"
-                  },
-                  "_converted_from_cc": true
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 8
+                  }
                 },
                 {
                   "rule": "can_use_bombs",
@@ -19317,17 +18882,12 @@
                   "options": [],
                   "children": [
                     {
-                      "rule": "CountCheck",
+                      "rule": "Has",
                       "options": [],
                       "args": {
-                        "item": "Small Key (Ganons Tower)",
-                        "count": {
-                          "type": "constant",
-                          "value": 7
-                        },
-                        "_original_ast_type": "count_check"
-                      },
-                      "_converted_from_cc": true
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 7
+                      }
                     },
                     {
                       "rule": "can_use_bombs",

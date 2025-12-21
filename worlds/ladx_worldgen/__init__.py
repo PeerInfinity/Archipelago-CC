@@ -10,7 +10,7 @@ from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
 
 if TYPE_CHECKING:
-    from BaseClasses import CollectionState
+    from BaseClasses import CollectionState, MultiWorld
 
 from .Items import item_table, LinksAwakeningDXWorldGenItem
 from .Locations import location_table, LinksAwakeningDXWorldGenLocation
@@ -213,7 +213,6 @@ class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
-
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
     }
@@ -253,7 +252,7 @@ class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
 
     # Initial values for prog_items accumulators
     prog_items_init: ClassVar[dict] = {
-        "RUPEES": 1670,
+        "RUPEES": 0,
     }
 
     # Canonical item placements - where items belong in the "vanilla" game
