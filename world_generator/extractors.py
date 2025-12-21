@@ -716,6 +716,87 @@ def compute_state_counter_accumulator_rules(
         })
         prog_items_init[target_name] = 0
 
+    # Pattern 4: Find items like "Time Shard", "Time Shard (100)" that accumulate to a counter
+    # These are detected by finding:
+    # - A counter name referenced in rules but not existing as an item (e.g., "Shards")
+    # - Items matching "Base Name" or "Base Name (N)" where Base Name relates to counter
+    # - The pattern extracts value from parentheses or defaults to 1
+    #
+    # Example: "Time Shard", "Time Shard (100)" -> accumulate to "Shards"
+    parenthetical_pattern = regex_module.compile(r'^(.+?)\s*\((\d+)\)$')
+    base_items = {}  # base_name -> list of items (base + variants with parens)
+
+    for item_name in items.keys():
+        match = parenthetical_pattern.match(item_name)
+        if match:
+            base_name = match.group(1).strip()
+            if base_name not in base_items:
+                base_items[base_name] = []
+            base_items[base_name].append(item_name)
+
+    # Also check original_placements for additional items
+    for loc_name, item_name in original_placements.items():
+        match = parenthetical_pattern.match(item_name)
+        if match:
+            base_name = match.group(1).strip()
+            if base_name not in base_items:
+                base_items[base_name] = []
+            if item_name not in base_items[base_name]:
+                base_items[base_name].append(item_name)
+
+    # Check if the base item itself exists (without parentheses)
+    for base_name in list(base_items.keys()):
+        if base_name in items:
+            if base_name not in base_items[base_name]:
+                base_items[base_name].append(base_name)
+
+    # For each base_name with multiple variants, check if there's a related counter
+    # Heuristic: look for counter names that are the plural form or end with the base
+    for base_name, matching_items in base_items.items():
+        if len(matching_items) < 2:
+            continue  # Need at least 2 items to be a meaningful pattern
+
+        # Try to find a related counter name
+        # Check for: "Base Name" -> "Names" (last word pluralized)
+        # E.g., "Time Shard" -> "Shards"
+        words = base_name.split()
+        if words:
+            last_word = words[-1]
+            # Try common counter name patterns
+            potential_targets = [
+                last_word + 's',           # "Shard" -> "Shards"
+                last_word + 'es',          # Not common but possible
+                base_name + 's',           # "Time Shard" -> "Time Shards"
+            ]
+
+            for target_name in potential_targets:
+                # Skip if we already have a rule for this target
+                if any(rule['target'] == target_name for rule in accumulator_rules):
+                    continue
+
+                # Skip if there's already an item with exactly this name
+                if target_name in items:
+                    continue
+
+                # Check if this target appears to be used (counter items have id=None or
+                # we can check if it's referenced somewhere - for now, just create the rule
+                # if the pattern looks right)
+
+                # Create the accumulator rule with a pattern that handles both:
+                # - "Base Name" (value = 1)
+                # - "Base Name (N)" (value = N)
+                escaped_base = regex_module.escape(base_name)
+                pattern = f'^{escaped_base}(?: \\((\\d+)\\))?$'
+                accumulator_rules.append({
+                    'pattern': pattern,
+                    'extract_value': True,
+                    'target': target_name,
+                    'discriminator': None,
+                    'default_value': 1  # When no number in parens, value is 1
+                })
+                prog_items_init[target_name] = 0
+                break  # Only create one rule per base_name
+
     return accumulator_rules, prog_items_init
 
 
@@ -841,12 +922,18 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
             import re
             pattern = rule['pattern']
             target = rule['target']
+            default_value = rule.get('default_value', 1)
             total = 0
             for loc_name, item_name in original_placements.items():
                 match = re.match(pattern, item_name)
                 if match:
                     try:
-                        value = int(match.group(1))
+                        group = match.group(1)
+                        if group:
+                            value = int(group)
+                        else:
+                            # Pattern matched but no capture group (e.g., "Time Shard" without parens)
+                            value = default_value
                         total += value
                     except (ValueError, IndexError):
                         pass
