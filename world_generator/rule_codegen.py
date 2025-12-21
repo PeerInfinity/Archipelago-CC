@@ -529,6 +529,17 @@ class RuleCodeGenerator:
                 if rule_type:
                     return self._convert_rule_builder_format(rule, rb_rule, rule_type)
 
+                # Check if this is a helper call from CC exporter format
+                # CC exports helpers with rule=helper_name and _original_ast_type="helper"
+                if rule.get('_original_ast_type') == 'helper' or rb_rule in self.known_helpers:
+                    # Convert to format expected by _convert_helper
+                    helper_rule = {
+                        'type': 'helper',
+                        'name': rb_rule,
+                        'args': rule.get('args', [])
+                    }
+                    return self._convert_helper(helper_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
