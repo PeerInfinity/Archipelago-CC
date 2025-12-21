@@ -70,7 +70,7 @@ export class EventBus {
         'textAdventure', 'textAdventureUI', 'iframePanel', 'panelManager', 'messageHandler',
         'locationManager', 'playerState', 'playerStatePanel', 'spoilerTest', 'progressBarPanel',
         'progressBar', 'ProgressBar', 'iframeAdapter', 'core', 'metaGame', 'metaGamePanel',
-        'iframeManagerPanel'
+        'iframeManagerPanel', 'editorCore', 'editorCodeMirror6'
       ];
       const isKnownModule = knownModuleNames.includes(moduleName);
       
