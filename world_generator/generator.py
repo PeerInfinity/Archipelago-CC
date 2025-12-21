@@ -99,6 +99,10 @@ class WorldGenerator:
 
         old_name = self.data.metadata.game_name
 
+        # Store original game directory for fallback helper imports
+        # This is needed because the worldgen world needs to call the original world's helpers
+        self.data.metadata.original_game_directory = self.data.metadata.game_directory
+
         # Update game name
         self.data.metadata.game_name = new_name
 

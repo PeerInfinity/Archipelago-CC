@@ -10,41 +10,48 @@ from BaseClasses import CollectionState
 
 from rule_builder import True_, False_
 
+# Import original world's logic for fallback helpers
+try:
+    from worlds.sc2.rules import SC2Logic
+    _ORIGINAL_LOGIC_AVAILABLE = True
+except ImportError:
+    _ORIGINAL_LOGIC_AVAILABLE = False
+
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
 
 
 # Helper functions
-def _starcraft2worldgen_marine_medic_firebat_upgrade(state: "CollectionState", player: int) -> bool:
-    return (_starcraft2worldgen_marine_medic_upgrade(state, player)) or ((state.count('Progressive Stimpack (Firebat)', player) >= 2)) or ((state.has('Juggernaut Plating (Firebat)', player)) or (state.has('Nano Projectors (Firebat)', player)))
+def _starcraft2worldgen_marine_medic_firebat_upgrade(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return (_starcraft2worldgen_marine_medic_upgrade(state, player, world)) or ((state.count('Progressive Stimpack (Firebat)', player) >= 2)) or ((state.has('Juggernaut Plating (Firebat)', player)) or (state.has('Nano Projectors (Firebat)', player)))
 
 
-def _starcraft2worldgen_marine_medic_upgrade(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_marine_medic_upgrade(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return ((state.has('Combat Shield (Marine)', player)) or (state.has('Magrail Munitions (Marine)', player)) or (state.has('Stabilizer Medpacks (Medic)', player))) or (((state.count('Progressive Stimpack (Marine)', player) >= 2)) and (state.has_group('Missions', player))) or ((False) and (state.has('Laser Targeting System (Marine)', player)))
 
 
-def _starcraft2worldgen_min2(state: "CollectionState", player: int, a = None, b = None) -> bool:
+def _starcraft2worldgen_min2(state: "CollectionState", player: int, world: "World" = None, a = None, b = None) -> bool:
     return (a if (a <= b) else b)
 
 
-def _starcraft2worldgen_nova_anti_air_weapon(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_nova_anti_air_weapon(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return (state.has('Blazefire Gunblade (Nova Weapon)', player)) or (state.has('C20A Canister Rifle (Nova Weapon)', player)) or (state.has('Plasma Rifle (Nova Weapon)', player))
 
 
-def _starcraft2worldgen_nova_full_stealth(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_nova_full_stealth(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return (state.count('Progressive Stealth Suit Module (Nova Suit Module)', player) >= 2)
 
 
-def _starcraft2worldgen_nova_heal(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_nova_heal(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return (state.has('Armored Suit Module (Nova Suit Module)', player)) or (state.has('Stim Infusion (Nova Gadget)', player))
 
 
-def _starcraft2worldgen_nova_ranged_weapon(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_nova_ranged_weapon(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return (state.has('C20A Canister Rifle (Nova Weapon)', player)) or (state.has('Hellfire Shotgun (Nova Weapon)', player)) or (state.has('Plasma Rifle (Nova Weapon)', player))
 
 
-def _starcraft2worldgen_soa_power_rating(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_soa_power_rating(state: "CollectionState", player: int, world: "World" = None) -> bool:
     power_rating = 0
     for item, rating in {'Time Stop (Spear of Adun)': 4, 'Purifier Beam (Spear of Adun)': 3, 'Solar Bombardment (Spear of Adun)': 3}.items():
         if state.has(item, player):
@@ -66,31 +73,31 @@ def _starcraft2worldgen_soa_power_rating(state: "CollectionState", player: int) 
     return power_rating
 
 
-def _starcraft2worldgen_terran_air(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Viking', player)) or (state.has('Wraith', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((False) and ((((state.has('Hercules', player)) or (state.has('Medivac', player))) and (_starcraft2worldgen_terran_common_unit(state, player))) or ((state.has('Hunter-Seeker Weapon (Raven)', player)) and (state.has('Raven', player)))))
+def _starcraft2worldgen_terran_air(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return ((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Viking', player)) or (state.has('Wraith', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((False) and ((((state.has('Hercules', player)) or (state.has('Medivac', player))) and (_starcraft2worldgen_terran_common_unit(state, player, world))) or ((state.has('Hunter-Seeker Weapon (Raven)', player)) and (state.has('Raven', player)))))
 
 
-def _starcraft2worldgen_terran_air_anti_air(state: "CollectionState", player: int) -> bool:
-    return (state.has('Viking', player)) or ((state.has('Advanced Laser Technology (Wraith)', player)) and (state.has('Wraith', player))) or ((state.has('ATX Laser Battery (Battlecruiser)', player)) and (state.has('Battlecruiser', player))) or ((False) and ((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((True >= 2)))
+def _starcraft2worldgen_terran_air_anti_air(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return (state.has('Viking', player)) or ((state.has('Advanced Laser Technology (Wraith)', player)) and (state.has('Wraith', player))) or ((state.has('ATX Laser Battery (Battlecruiser)', player)) and (state.has('Battlecruiser', player))) or ((False) and ((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((_original_weapon_armor_upgrade_count(state, player, world) >= 2)))
 
 
-def _starcraft2worldgen_terran_basic_anti_air(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Brynhilds', player)) or (state.has('Bulwark Company', player)) or (state.has("Hel's Angels", player)) or (state.has('Missile Turret', player)) or (state.has('Sky Fury', player)) or (state.has('Son of Korhal', player)) or (state.has('Spartan Company', player)) or (state.has('War Pigs', player)) or (state.has('Winged Nightmares', player))) or (_starcraft2worldgen_terran_moderate_anti_air(state, player)) or ((False) and ((state.has('Blackhammer', player)) or (state.has("Emperor's Guardian", player)) or (state.has("Emperor's Shadow", player)) or (state.has('Night Hawk', player)) or (state.has('Pride of Augustgrad', player)) or (state.has('Widow Mine', player))))
+def _starcraft2worldgen_terran_basic_anti_air(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return ((state.has('Brynhilds', player)) or (state.has('Bulwark Company', player)) or (state.has("Hel's Angels", player)) or (state.has('Missile Turret', player)) or (state.has('Sky Fury', player)) or (state.has('Son of Korhal', player)) or (state.has('Spartan Company', player)) or (state.has('War Pigs', player)) or (state.has('Winged Nightmares', player))) or (_starcraft2worldgen_terran_moderate_anti_air(state, player, world)) or ((False) and ((state.has('Blackhammer', player)) or (state.has("Emperor's Guardian", player)) or (state.has("Emperor's Shadow", player)) or (state.has('Night Hawk', player)) or (state.has('Pride of Augustgrad', player)) or (state.has('Widow Mine', player))))
 
 
-def _starcraft2worldgen_terran_bio_heal(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_terran_bio_heal(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return ((state.has('Field Response Theta', player)) or (state.has('Medic', player)) or (state.has('Medivac', player))) or ((False) and ((state.has('Bio Mechanical Repair Drone (Raven)', player)) and (state.has('Raven', player))))
 
 
-def _starcraft2worldgen_terran_common_unit(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_terran_common_unit(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return state.has_any(('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'), player)
 
 
-def _starcraft2worldgen_terran_competent_anti_air(state: "CollectionState", player: int) -> bool:
-    return (True) or (_starcraft2worldgen_terran_air_anti_air(state, player))
+def _starcraft2worldgen_terran_competent_anti_air(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return (_original_terran_competent_ground_to_air(state, player, world)) or (_starcraft2worldgen_terran_air_anti_air(state, player, world))
 
 
-def _starcraft2worldgen_terran_defense_rating(state: "CollectionState", player: int, zerg_enemy = None, air_enemy: bool = True) -> bool:
+def _starcraft2worldgen_terran_defense_rating(state: "CollectionState", player: int, world: "World" = None, zerg_enemy = None, air_enemy: bool = True) -> bool:
     defense_score = sum({'Siege Tank': 5, 'Planetary Fortress': 3, 'Perdition Turret': 2, 'Devastator Turret': 2, 'Vulture': 1, 'Banshee': 1, 'Battlecruiser': 1, 'Liberator': 4, 'Widow Mine': 1}[item] for item in {'Siege Tank': 5, 'Planetary Fortress': 3, 'Perdition Turret': 2, 'Devastator Turret': 2, 'Vulture': 1, 'Banshee': 1, 'Battlecruiser': 1, 'Liberator': 4, 'Widow Mine': 1} if state.has(item, player))
     if (state.has_any(('Dominion Trooper', 'Marauder', 'Marine'), player)) and (state.has('Bunker', player)):
         defense_score += 3
@@ -108,7 +115,7 @@ def _starcraft2worldgen_terran_defense_rating(state: "CollectionState", player: 
     if zerg_enemy:
         defense_score += sum({'Perdition Turret': 2, 'Liberator': -2, 'Hive Mind Emulator': 3, 'Psi Disrupter': 3}[item] for item in {'Perdition Turret': 2, 'Liberator': -2, 'Hive Mind Emulator': 3, 'Psi Disrupter': 3} if state.has(item, player))
     if air_enemy:
-        defense_score += _starcraft2worldgen_min2(state, player, 2, sum({'Missile Turret': 2}[item] for item in {'Missile Turret': 2} if state.has(item, player)))
+        defense_score += _starcraft2worldgen_min2(state, player, world, 2, sum({'Missile Turret': 2}[item] for item in {'Missile Turret': 2} if state.has(item, player)))
     if (air_enemy) and (zerg_enemy) and (state.has('Valkyrie', player)):
         defense_score += 2
     if False:
@@ -116,30 +123,56 @@ def _starcraft2worldgen_terran_defense_rating(state: "CollectionState", player: 
     return defense_score
 
 
-def _starcraft2worldgen_terran_early_tech(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_terran_early_tech(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return ((state.has('Dominion Trooper', player)) or (state.has('Firebat', player)) or (state.has('Hellion', player)) or (state.has('Marauder', player)) or (state.has('Marine', player)) or (state.has('Reaper', player))) or ((False) and ((state.has('Banshee', player)) or (state.has('Diamondback', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))))
 
 
-def _starcraft2worldgen_terran_maw_requirement(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Battlecruiser', player)) and (((True >= 2)) or (state.has('ATX Laser Battery (Battlecruiser)', player)))) or ((_starcraft2worldgen_terran_air(state, player)) and (((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Goliath', player)) or (state.has('Thor', player)) or (state.has('Viking', player)) or (state.has('Warhound', player)) or (state.has('Wraith', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Marauder', player)) and (_starcraft2worldgen_terran_bio_heal(state, player)))) and (((state.has('Cyclone', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))) or (((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((True >= 2))) or ((state.has('Progressive High Impact Payload (Thor)', player)) and (state.has('Thor', player)))) and (True) and (_starcraft2worldgen_terran_competent_anti_air(state, player)) and (_starcraft2worldgen_terran_sustainable_mech_heal(state, player)))
+def _starcraft2worldgen_terran_maw_requirement(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return ((state.has('Battlecruiser', player)) and (((_original_weapon_armor_upgrade_count(state, player, world) >= 2)) or (state.has('ATX Laser Battery (Battlecruiser)', player)))) or ((_starcraft2worldgen_terran_air(state, player, world)) and (((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Goliath', player)) or (state.has('Thor', player)) or (state.has('Viking', player)) or (state.has('Warhound', player)) or (state.has('Wraith', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Marauder', player)) and (_starcraft2worldgen_terran_bio_heal(state, player, world)))) and (((state.has('Cyclone', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))) or (((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((_original_weapon_armor_upgrade_count(state, player, world) >= 2))) or ((state.has('Progressive High Impact Payload (Thor)', player)) and (state.has('Thor', player)))) and (_original_terran_competent_comp(state, player, world)) and (_starcraft2worldgen_terran_competent_anti_air(state, player, world)) and (_starcraft2worldgen_terran_sustainable_mech_heal(state, player, world)))
 
 
-def _starcraft2worldgen_terran_moderate_anti_air(state: "CollectionState", player: int) -> bool:
-    return (_starcraft2worldgen_terran_competent_anti_air(state, player)) or (((state.has('Battlecruiser', player)) or (state.has('Cyclone', player)) or (state.has('Dominion Trooper', player)) or (state.has('Marine', player)) or (state.has('Thor', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) or (((state.has('Medivac', player)) and (state.has('Siege Tank', player))) and ((state.count('Progressive Transport Hook (Siege Tank)', player) >= 2))) or ((False) and ((state.has('Ghost', player)) or (state.has('Liberator', player)) or (state.has('Spectre', player)))))
+def _starcraft2worldgen_terran_moderate_anti_air(state: "CollectionState", player: int, world: "World" = None) -> bool:
+    return (_starcraft2worldgen_terran_competent_anti_air(state, player, world)) or (((state.has('Battlecruiser', player)) or (state.has('Cyclone', player)) or (state.has('Dominion Trooper', player)) or (state.has('Marine', player)) or (state.has('Thor', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) or (((state.has('Medivac', player)) and (state.has('Siege Tank', player))) and ((state.count('Progressive Transport Hook (Siege Tank)', player) >= 2))) or ((False) and ((state.has('Ghost', player)) or (state.has('Liberator', player)) or (state.has('Spectre', player)))))
 
 
-def _starcraft2worldgen_terran_power_rating(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_terran_power_rating(state: "CollectionState", player: int, world: "World" = None) -> bool:
     power_score = 0
     power_score += sum(rating for [item, rating] in {'Automated Refinery (Terran)': 4, 'MULE (Command Center)': 4, 'Orbital Depots (Terran)': 2, 'Command Center Reactor (Command Center)': 2, 'Extra Supplies (Command Center)': 2, 'Micro-Filtering (Terran)': 2, 'Tech Reactor (Terran)': 2}.items() if state.has(item, player))
     if (4 == 'everywhere'):
-        power_score += _starcraft2worldgen_soa_power_rating(state, player)
+        power_score += _starcraft2worldgen_soa_power_rating(state, player, world)
     if (4 == 'everywhere'):
         power_score += sum(rating for [item, rating] in {'Guardian Shell (Spear of Adun)': 4, 'Overwatch (Spear of Adun)': 2}.items() if state.has(item, player))
     return power_score
 
 
-def _starcraft2worldgen_terran_sustainable_mech_heal(state: "CollectionState", player: int) -> bool:
+def _starcraft2worldgen_terran_sustainable_mech_heal(state: "CollectionState", player: int, world: "World" = None) -> bool:
     return (state.has('Science Vessel', player)) or (((state.has('Field Response Theta', player)) or (state.has('Medic', player))) and (state.has('Adaptive Medpacks (Medic)', player))) or ((state.count('Progressive Regenerative Bio-Steel (Terran)', player) >= 3)) or ((False) and (((state.has('Bio Mechanical Repair Drone (Raven)', player)) and (state.has('Raven', player))) or ((state.count('Progressive Regenerative Bio-Steel (Terran)', player) >= 2))))
+
+
+# Fallback helpers - call original world logic
+
+def _original_terran_competent_comp(state: "CollectionState", player: int, world: "World") -> bool:
+    """Fallback wrapper for terran_competent_comp - calls original world's helper."""
+    if not _ORIGINAL_LOGIC_AVAILABLE:
+        return True  # Safe fallback if original logic not available
+    logic = SC2Logic(world)
+    return logic.terran_competent_comp(state)
+
+
+def _original_terran_competent_ground_to_air(state: "CollectionState", player: int, world: "World") -> bool:
+    """Fallback wrapper for terran_competent_ground_to_air - calls original world's helper."""
+    if not _ORIGINAL_LOGIC_AVAILABLE:
+        return True  # Safe fallback if original logic not available
+    logic = SC2Logic(world)
+    return logic.terran_competent_ground_to_air(state)
+
+
+def _original_weapon_armor_upgrade_count(state: "CollectionState", player: int, world: "World") -> bool:
+    """Fallback wrapper for weapon_armor_upgrade_count - calls original world's helper."""
+    if not _ORIGINAL_LOGIC_AVAILABLE:
+        return True  # Safe fallback if original logic not available
+    logic = SC2Logic(world)
+    return logic.weapon_armor_upgrade_count(state)
 
 
 # Helper definitions for frontend evaluation
@@ -1302,160 +1335,98 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Smash and Grab (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Smash and Grab (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Piercing the Shroud", player),
-        True_()
-    )
+    multiworld.get_entrance("Piercing the Shroud", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Liberation Day", player),
-        True_()
-    )
+    multiworld.get_entrance("Liberation Day", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("All-In (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("All-In (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("The Dig (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("The Dig (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Gates of Hell (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Gates of Hell (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Maw of the Void (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Maw of the Void (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("The Moebius Factor (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("The Moebius Factor (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Haven's Fall (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Haven's Fall (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Outbreak (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Outbreak (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Cutthroat (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Cutthroat (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Belly of the Beast", player),
-        True_()
-    )
+    multiworld.get_entrance("Belly of the Beast", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Shatter the Sky (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Shatter the Sky (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("The Outlaws (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("The Outlaws (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("The Great Train Robbery (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("The Great Train Robbery (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Zero Hour (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Zero Hour (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Ghost of a Chance", player),
-        True_()
-    )
+    multiworld.get_entrance("Ghost of a Chance", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Safe Haven (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Safe Haven (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Welcome to the Jungle (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Welcome to the Jungle (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Supernova (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Supernova (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Breakout", player),
-        True_()
-    )
+    multiworld.get_entrance("Breakout", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Devil's Playground (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Devil's Playground (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Media Blitz (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Media Blitz (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_entrance("Engine of Destruction (Terran)", player),
-        True_()
-    )
+    multiworld.get_entrance("Engine of Destruction (Terran)", player).access_rule = \
+        lambda state: True
     # Location rules
-    world.set_rule(
-        multiworld.get_location("All-In (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("All-In (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("All-In (Terran): First Kerrigan Attack", player),
-        True_()
-    )
+    multiworld.get_location("All-In (Terran): First Kerrigan Attack", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("All-In (Terran): Second Kerrigan Attack", player),
-        True_()
-    )
+    multiworld.get_location("All-In (Terran): Second Kerrigan Attack", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("All-In (Terran): Third Kerrigan Attack", player),
-        True_()
-    )
+    multiworld.get_location("All-In (Terran): Third Kerrigan Attack", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("All-In (Terran): Fourth Kerrigan Attack", player),
-        True_()
-    )
+    multiworld.get_location("All-In (Terran): Fourth Kerrigan Attack", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("All-In (Terran): Fifth Kerrigan Attack", player),
-        True_()
-    )
+    multiworld.get_location("All-In (Terran): Fifth Kerrigan Attack", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat All-In (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat All-In (Terran)", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Liberation Day: Victory", player),
@@ -1507,25 +1478,19 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Evacuation (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): North Chrysalis", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): West Chrysalis", player),
-        True_()
-    )
+    multiworld.get_location("Evacuation (Terran): West Chrysalis", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): East Chrysalis", player),
-        True_()
-    )
+    multiworld.get_location("Evacuation (Terran): East Chrysalis", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Reach Hanson", player),
@@ -1537,60 +1502,40 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): Flawless", player),
-        True_()
-    )
+    multiworld.get_location("Evacuation (Terran): Flawless", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): Western Zerg Base", player),
-        True_()
-    )
+    multiworld.get_location("Evacuation (Terran): Western Zerg Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Evacuation (Terran): Eastern Zerg Base", player),
-        True_()
-    )
+    multiworld.get_location("Evacuation (Terran): Eastern Zerg Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Evacuation (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Evacuation (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Victory", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Holding Cell Relic", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Brutalisk Relic", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: Brutalisk Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: First Escape Relic", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: First Escape Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Second Escape Relic", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: Second Escape Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Brutalisk", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: Brutalisk", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Fusion Reactor", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: Fusion Reactor", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Entrance Holding Pen", player),
@@ -1602,160 +1547,100 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Piercing the Shroud: Escape Warbot", player),
-        True_()
-    )
+    multiworld.get_location("Piercing the Shroud: Escape Warbot", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Piercing the Shroud", player),
-        True_()
-    )
+    multiworld.get_location("Beat Piercing the Shroud", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Large Army", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Large Army", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): 2 Drop Pods", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): 2 Drop Pods", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): 4 Drop Pods", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): 4 Drop Pods", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): 6 Drop Pods", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): 6 Drop Pods", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): 8 Drop Pods", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): 8 Drop Pods", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Southwest Spore Cannon", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Southwest Spore Cannon", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Northwest Spore Cannon", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Northwest Spore Cannon", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Northeast Spore Cannon", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Northeast Spore Cannon", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): East Spore Cannon", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): East Spore Cannon", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Southeast Spore Cannon", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Southeast Spore Cannon", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Gates of Hell (Terran): Expansion Spore Cannon", player),
-        True_()
-    )
+    multiworld.get_location("Gates of Hell (Terran): Expansion Spore Cannon", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Gates of Hell (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Gates of Hell (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Landing Zone Cleared", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Expansion Prisoners", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Expansion Prisoners", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): South Close Prisoners", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): South Close Prisoners", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): South Far Prisoners", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): South Far Prisoners", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): North Prisoners", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): North Prisoners", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Mothership", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Mothership", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Expansion Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Expansion Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Middle Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Middle Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Southeast Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Southeast Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Stargate Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Stargate Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Northwest Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Northwest Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): West Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): West Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Maw of the Void (Terran): Southwest Rip Field Generator", player),
-        True_()
-    )
+    multiworld.get_location("Maw of the Void (Terran): Southwest Rip Field Generator", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Maw of the Void (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Maw of the Void (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Supernova (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): West Relic", player),
@@ -1767,160 +1652,102 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): South Relic", player),
-        True_()
-    )
+    multiworld.get_location("Supernova (Terran): South Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): East Relic", player),
-        True_()
-    )
+    multiworld.get_location("Supernova (Terran): East Relic", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Landing Zone Cleared", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): Middle Base", player),
-        True_()
-    )
+    multiworld.get_location("Supernova (Terran): Middle Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Supernova (Terran): Southeast Base", player),
-        True_()
-    )
+    multiworld.get_location("Supernova (Terran): Southeast Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Supernova (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Supernova (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 1st Data Core", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): 2nd Data Core", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): 2nd Data Core", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): South Rescue", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): South Rescue", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): Wall Rescue", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): Wall Rescue", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): Mid Rescue", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): Mid Rescue", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): Nydus Roof Rescue", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): Nydus Roof Rescue", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): Alive Inside Rescue", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): Alive Inside Rescue", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): Brutalisk", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): Brutalisk", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Moebius Factor (Terran): 3rd Data Core", player),
-        True_()
-    )
+    multiworld.get_location("The Moebius Factor (Terran): 3rd Data Core", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat The Moebius Factor (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat The Moebius Factor (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Left Relic", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Left Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Right Ground Relic", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Right Ground Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Right Cliff Relic", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Right Cliff Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Moebius Base", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Moebius Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Door Outer Layer", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Door Outer Layer", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Door Thermal Barrier", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Door Thermal Barrier", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Cutting Through the Core", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Cutting Through the Core", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Structure Access Imminent", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Structure Access Imminent", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Northwestern Protoss Base", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Northwestern Protoss Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Northeastern Protoss Base", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Northeastern Protoss Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Dig (Terran): Eastern Protoss Base", player),
-        True_()
-    )
+    multiworld.get_location("The Dig (Terran): Eastern Protoss Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat The Dig (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat The Dig (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("The Great Train Robbery (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): North Defiler", player),
@@ -1967,550 +1794,346 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Kill Team", player),
-        True_()
-    )
+    multiworld.get_location("The Great Train Robbery (Terran): Kill Team", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): Flawless", player),
-        True_()
-    )
+    multiworld.get_location("The Great Train Robbery (Terran): Flawless", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): 2 Trains Destroyed", player),
-        True_()
-    )
+    multiworld.get_location("The Great Train Robbery (Terran): 2 Trains Destroyed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): 4 Trains Destroyed", player),
-        True_()
-    )
+    multiworld.get_location("The Great Train Robbery (Terran): 4 Trains Destroyed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Great Train Robbery (Terran): 6 Trains Destroyed", player),
-        True_()
-    )
+    multiworld.get_location("The Great Train Robbery (Terran): 6 Trains Destroyed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat The Great Train Robbery (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat The Great Train Robbery (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): Mira Han", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): Mira Han", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): North Relic", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): North Relic", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Mid Relic", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): Southwest Relic", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): Southwest Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): North Command Center", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): North Command Center", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): South Command Center", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): South Command Center", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Cutthroat (Terran): West Command Center", player),
-        True_()
-    )
+    multiworld.get_location("Cutthroat (Terran): West Command Center", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Cutthroat (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Cutthroat (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): First Relic", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): Second Relic", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): Second Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): Third Relic", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): Third Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): Fourth Relic", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): Fourth Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): First Forcefield Area Busted", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): First Forcefield Area Busted", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): Second Forcefield Area Busted", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): Second Forcefield Area Busted", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Smash and Grab (Terran): Defeat Kerrigan", player),
-        True_()
-    )
+    multiworld.get_location("Smash and Grab (Terran): Defeat Kerrigan", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Smash and Grab (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Smash and Grab (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Outlaws (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("The Outlaws (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Outlaws (Terran): Rebel Base", player),
-        True_()
-    )
+    multiworld.get_location("The Outlaws (Terran): Rebel Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Outlaws (Terran): North Resource Pickups", player),
-        True_()
-    )
+    multiworld.get_location("The Outlaws (Terran): North Resource Pickups", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("The Outlaws (Terran): Bunker", player),
-        True_()
-    )
+    multiworld.get_location("The Outlaws (Terran): Bunker", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Close Resource Pickups", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Beat The Outlaws (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat The Outlaws (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): Left Infestor", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): Left Infestor", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): Right Infestor", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): Right Infestor", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): North Infested Command Center", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): North Infested Command Center", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): South Infested Command Center", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): South Infested Command Center", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): Northwest Bar", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): Northwest Bar", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): North Bar", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): North Bar", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Outbreak (Terran): South Bar", player),
-        True_()
-    )
+    multiworld.get_location("Outbreak (Terran): South Bar", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Outbreak (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Outbreak (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): North Hive", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): North Hive", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): East Hive", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): East Hive", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): South Hive", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): South Hive", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Northeast Colony Base", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): Northeast Colony Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): East Colony Base", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): East Colony Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Middle Colony Base", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): Middle Colony Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Southeast Colony Base", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): Southeast Colony Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Southwest Colony Base", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): Southwest Colony Base", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Haven's Fall (Terran): Southwest Gas Pickups", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): East Gas Pickups", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): East Gas Pickups", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Haven's Fall (Terran): Southeast Gas Pickups", player),
-        True_()
-    )
+    multiworld.get_location("Haven's Fall (Terran): Southeast Gas Pickups", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Haven's Fall (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Haven's Fall (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Close Coolant Tower", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Close Coolant Tower", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Northwest Coolant Tower", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Northwest Coolant Tower", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Southeast Coolant Tower", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Southeast Coolant Tower", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Southwest Coolant Tower", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Southwest Coolant Tower", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Leviathan", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Leviathan", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): East Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): East Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): North Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): North Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Shatter the Sky (Terran): Mid Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Shatter the Sky (Terran): Mid Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Shatter the Sky (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Shatter the Sky (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): North Nexus", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): North Nexus", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): East Nexus", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): East Nexus", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): South Nexus", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): South Nexus", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): First Terror Fleet", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): First Terror Fleet", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): Second Terror Fleet", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): Second Terror Fleet", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Safe Haven (Terran): Third Terror Fleet", player),
-        True_()
-    )
+    multiworld.get_location("Safe Haven (Terran): Third Terror Fleet", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Safe Haven (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Safe Haven (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Odin", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Odin", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Loki", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Loki", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Lab Devourer", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Lab Devourer", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): North Devourer", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): North Devourer", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Southeast Devourer", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Southeast Devourer", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): West Base", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): West Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Northwest Base", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Northwest Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Northeast Base", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Northeast Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Engine of Destruction (Terran): Southeast Base", player),
-        True_()
-    )
+    multiworld.get_location("Engine of Destruction (Terran): Southeast Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Engine of Destruction (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Engine of Destruction (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Close Relic", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): West Relic", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): West Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): North-East Relic", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): North-East Relic", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Middle Base", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Middle Base", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Protoss Cleared", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Protoss Cleared", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): No Terrazine Nodes Sealed", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): No Terrazine Nodes Sealed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Up to 2 Terrazine Nodes Sealed", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Up to 2 Terrazine Nodes Sealed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Up to 3 Terrazine Nodes Sealed", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Up to 3 Terrazine Nodes Sealed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed", player),
-        True_()
-    )
+    multiworld.get_location("Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Welcome to the Jungle (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Welcome to the Jungle (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Tower 1", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): Tower 1", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Tower 2", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): Tower 2", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Tower 3", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): Tower 3", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Science Facility", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): Science Facility", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): All Barracks", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): All Barracks", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): All Factories", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): All Factories", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): All Starports", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): All Starports", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Media Blitz (Terran): Odin Not Trashed", player),
-        True_()
-    )
+    multiworld.get_location("Media Blitz (Terran): Odin Not Trashed", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Media Blitz (Terran): Surprise Attack Ends", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Beat Media Blitz (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Media Blitz (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: Victory", player),
-        True_()
-    )
+    multiworld.get_location("Belly of the Beast: Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: First Charge", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: Second Charge", player),
-        True_()
-    )
+    multiworld.get_location("Belly of the Beast: Second Charge", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: Third Charge", player),
-        True_()
-    )
+    multiworld.get_location("Belly of the Beast: Third Charge", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: First Group Rescued", player),
@@ -2522,125 +2145,81 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Belly of the Beast: Third Group Rescued", player),
-        True_()
-    )
+    multiworld.get_location("Belly of the Beast: Third Group Rescued", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Belly of the Beast", player),
-        True_()
-    )
+    multiworld.get_location("Beat Belly of the Beast", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Ghost of a Chance: Victory", player),
-        True_()
-    )
+    multiworld.get_location("Ghost of a Chance: Victory", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Ghost of a Chance: Terrazine Tank", player),
-        True_()
-    )
+    multiworld.get_location("Ghost of a Chance: Terrazine Tank", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Ghost of a Chance: Jorium Stockpile", player),
-        True_()
-    )
+    multiworld.get_location("Ghost of a Chance: Jorium Stockpile", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Ghost of a Chance: First Island Spectres", player),
-        True_()
-    )
+    multiworld.get_location("Ghost of a Chance: First Island Spectres", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Ghost of a Chance: Second Island Spectres", player),
-        True_()
-    )
+    multiworld.get_location("Ghost of a Chance: Second Island Spectres", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Ghost of a Chance: Third Island Spectres", player),
-        True_()
-    )
+    multiworld.get_location("Ghost of a Chance: Third Island Spectres", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Ghost of a Chance", player),
-        True_()
-    )
+    multiworld.get_location("Beat Ghost of a Chance", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): First Group Rescued", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Second Group Rescued", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Second Group Rescued", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Third Group Rescued", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Third Group Rescued", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): First Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): First Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Second Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Second Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Third Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Third Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Fourth Hatchery", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Fourth Hatchery", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Ride's on its Way", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Ride's on its Way", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Hold Just a Little Longer", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Hold Just a Little Longer", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Zero Hour (Terran): Cavalry's on the Way", player),
-        True_()
-    )
+    multiworld.get_location("Zero Hour (Terran): Cavalry's on the Way", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Zero Hour (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Zero Hour (Terran)", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Victory", player),
-        True_()
-    )
+    multiworld.get_location("Devil's Playground (Terran): Victory", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Tosh's Miners", player),
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Brutalisk", player),
-        True_()
-    )
+    multiworld.get_location("Devil's Playground (Terran): Brutalisk", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): North Reapers", player),
@@ -2652,30 +2231,20 @@ def set_rules(world: "World") -> None:
         True_()
     )
 
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Southwest Reapers", player),
-        True_()
-    )
+    multiworld.get_location("Devil's Playground (Terran): Southwest Reapers", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Southeast Reapers", player),
-        True_()
-    )
+    multiworld.get_location("Devil's Playground (Terran): Southeast Reapers", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): East Reapers", player),
-        True_()
-    )
+    multiworld.get_location("Devil's Playground (Terran): East Reapers", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Devil's Playground (Terran): Zerg Cleared", player),
-        True_()
-    )
+    multiworld.get_location("Devil's Playground (Terran): Zerg Cleared", player).access_rule = \
+        lambda state: True
 
-    world.set_rule(
-        multiworld.get_location("Beat Devil's Playground (Terran)", player),
-        True_()
-    )
+    multiworld.get_location("Beat Devil's Playground (Terran)", player).access_rule = \
+        lambda state: True
 
     world.set_rule(
         multiworld.get_location("Breakout: Victory", player),

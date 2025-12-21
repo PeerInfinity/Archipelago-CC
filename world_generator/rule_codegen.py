@@ -12,9 +12,11 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from CC format rules."""
 
-    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None) -> None:
+    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None,
+                 game_directory: str = None) -> None:
         self.required_imports: Set[str] = set()
         self.game_name = game_name
+        self.game_directory = game_directory  # e.g., "sc2" for importing original world
         self.settings = settings or {}  # Resolved settings for evaluating setting_value nodes
         # Sanitize game name for use in Python identifiers
         import re
@@ -22,11 +24,13 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> CC format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        self.fallback_helpers: Set[str] = set()  # Helpers that need to call original world
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
         self._inline_counter = 0
+        self.fallback_helpers = set()
 
     def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
                      helper_params: Dict[str, List[str]] = None,
@@ -500,6 +504,29 @@ class RuleCodeGenerator:
                 return repr(rule)
 
         rule_type = rule.get('type', '')
+
+        # Handle Rule Builder format (rule: "helper_name") from CC exports
+        # These rules have a 'rule' field instead of 'type' field
+        if not rule_type and 'rule' in rule:
+            rule_name = rule.get('rule', '')
+            original_type = rule.get('_original_ast_type', '')
+
+            # If it's a helper rule, convert to helper format
+            if original_type == 'helper' or rule_name not in ('True_', 'False_'):
+                if rule_name == 'True_':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif rule_name == 'False_':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                else:
+                    # This is a helper - convert to helper format
+                    helper_rule = {
+                        'type': 'helper',
+                        'name': rule_name,
+                        'args': rule.get('args', [])
+                    }
+                    return self._convert_helper(helper_rule)
 
         # Dispatch based on rule type
         converters = {
@@ -1287,7 +1314,15 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return True_() as placeholder
+        # Unknown helper - if we have original game info, mark it for fallback generation
+        # The actual lambda will be generated in templates.py since Rule Builder can't
+        # handle arbitrary lambdas - the location/entrance needs to use a lambda rule directly
+        if self.game_directory:
+            # Track this helper as needing a fallback implementation
+            self.fallback_helpers.add(helper_name)
+
+        # Return True_() as placeholder for Rule Builder format
+        # Rules using unknown helpers will need to use lambda format instead
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -1379,15 +1414,18 @@ class HelperCodeGenerator:
     this generates raw Python code with lambda-compatible expressions.
     """
 
-    def __init__(self, game_name: str, settings: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, game_name: str, settings: Optional[Dict[str, Any]] = None,
+                 game_directory: str = None) -> None:
         """
         Initialize the helper code generator.
 
         Args:
             game_name: The game name (used for generating function names)
             settings: Optional dict of resolved setting values for evaluating setting_value nodes
+            game_directory: Original game directory for importing fallback helpers
         """
         self.game_name = game_name
+        self.game_directory = game_directory  # e.g., "sc2" for importing original world
         self.settings = settings or {}
         # Sanitize game name for use in Python identifiers
         import re
@@ -1395,6 +1433,7 @@ class HelperCodeGenerator:
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
         self.uses_math: bool = False  # Track if math functions are used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
+        self.fallback_helpers: Set[str] = set()  # Helpers that need to call original world
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -1444,6 +1483,10 @@ class HelperCodeGenerator:
         func_name = self.get_function_name(helper_name)
         sig_params = ['state: "CollectionState"', 'player: int']
 
+        # Add world parameter if we have original game info (fallback helpers may be needed)
+        if self.game_directory:
+            sig_params.append('world: "World" = None')
+
         for param in params:
             if param in defaults:
                 default_val = defaults[param]
@@ -1490,6 +1533,9 @@ class HelperCodeGenerator:
 
         # Generate argument expressions
         arg_exprs = ['state', 'player']
+        # Add world parameter if we have original game info (fallback helpers may be needed)
+        if self.game_directory:
+            arg_exprs.append('world')
         for arg in args:
             arg_exprs.append(self._generate_expression(arg))
 
@@ -2009,7 +2055,15 @@ class HelperCodeGenerator:
                 return f"abs({', '.join(arg_exprs)})"
             return f"math.{name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - return True as safe fallback
+        # Unknown helper - if we have original game info, generate a fallback call
+        if self.game_directory:
+            # Track this helper as needing a fallback implementation
+            self.fallback_helpers.add(name)
+            # Generate a call to the fallback wrapper function
+            # Note: 'world' is expected to be in scope from the lambda context
+            return f'_original_{name}(state, player, world)'
+
+        # No fallback available - return True as safe fallback
         # This handles helpers that were blacklisted during export (too complex to export)
         # Returning True makes the location always accessible, which is safer than crashing
         return 'True'

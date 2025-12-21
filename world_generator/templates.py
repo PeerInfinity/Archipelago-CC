@@ -21,6 +21,26 @@ def sanitize_class_name(name: str) -> str:
     return re.sub(r'[^a-zA-Z0-9]', '', name)
 
 
+def _get_logic_class_name(game_directory: str) -> str:
+    """Get the logic class name for a game directory.
+
+    Maps game directories to their logic class names.
+    E.g., "sc2" -> "SC2Logic", "alttp" -> "ALTTPLogic"
+    """
+    # Map of known game directories to their logic class names
+    logic_class_map = {
+        'sc2': 'SC2Logic',
+        'alttp': 'ALTTPLogic',
+        'lttp': 'ALTTPLogic',
+        'sm': 'SMLogic',
+        # Add more as needed
+    }
+    if game_directory in logic_class_map:
+        return logic_class_map[game_directory]
+    # Default: capitalize the game directory and add "Logic"
+    return game_directory.upper() + 'Logic'
+
+
 def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> List[str]:
     """Extract region names from can_reach calls in a rule.
 
@@ -137,12 +157,13 @@ def _rule_uses_helpers(rule: dict) -> bool:
     return False
 
 
-def _rule_needs_lambda(rule: dict) -> bool:
+def _rule_needs_lambda(rule: dict, known_helpers: Set[str] = None) -> bool:
     """
     Check if a rule needs to use lambda-based generation instead of Rule Builder.
 
     Returns True if the rule contains:
     - Block statements (loops, assignments, etc.)
+    - Unknown helpers (if known_helpers is provided)
 
     Note: Most rule types including helpers, not, compare, and conditional
     can now be handled by RuleCodeGenerator with the new Rule Builder classes.
@@ -156,14 +177,28 @@ def _rule_needs_lambda(rule: dict) -> bool:
     if rule_type == 'block':
         return True
 
+    # Check for unknown helpers in Rule Builder format (rule: "helper_name")
+    if known_helpers is not None and not rule_type and 'rule' in rule:
+        rule_name = rule.get('rule', '')
+        original_type = rule.get('_original_ast_type', '')
+        # If it looks like a helper and is not known, we need lambda
+        if original_type == 'helper' or (rule_name and rule_name not in ('True_', 'False_') and rule_name not in known_helpers):
+            return True
+
+    # Check for unknown helpers in type: helper format
+    if known_helpers is not None and rule_type == 'helper':
+        helper_name = rule.get('name', '')
+        if helper_name and helper_name not in known_helpers:
+            return True
+
     # Recursively check all dict and list values
     for value in rule.values():
         if isinstance(value, dict):
-            if _rule_needs_lambda(value):
+            if _rule_needs_lambda(value, known_helpers):
                 return True
         elif isinstance(value, list):
             for item in value:
-                if isinstance(item, dict) and _rule_needs_lambda(item):
+                if isinstance(item, dict) and _rule_needs_lambda(item, known_helpers):
                     return True
 
     return False
@@ -452,25 +487,33 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.defaults
     }
 
-    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
+    # Get original game directory for importing fallback helpers
+    # For worldgen worlds, this is stored when the game name is renamed
+    game_directory = data.metadata.game_directory
+    original_game_directory = data.metadata.original_game_directory or game_directory
+
+    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings,
+                                                game_directory=game_directory)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
-    helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
+    helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings,
+                                            game_directory=game_directory)
     helper_generator.set_known_helpers(set(data.helpers.keys()))
     helper_generator.set_placements(data.original_placements)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
+    known_helpers = set(data.helpers.keys())
     needs_lambda = False
 
     for exit_data in data.exits.values():
-        if exit_data.access_rule and _rule_needs_lambda(exit_data.access_rule):
+        if exit_data.access_rule and _rule_needs_lambda(exit_data.access_rule, known_helpers):
             needs_lambda = True
             break
 
     if not needs_lambda:
         for loc_data in data.locations.values():
-            if loc_data.access_rule and _rule_needs_lambda(loc_data.access_rule):
+            if loc_data.access_rule and _rule_needs_lambda(loc_data.access_rule, known_helpers):
                 needs_lambda = True
                 break
 
@@ -502,7 +545,7 @@ def generate_rules_py(data: ExtractedData) -> str:
             for region_name in region_deps:
                 indirect_conditions.append((exit_name, region_name))
 
-            if _rule_needs_lambda(exit_data.access_rule):
+            if _rule_needs_lambda(exit_data.access_rule, known_helpers):
                 # Use lambda with helper code generator
                 rule_expr = helper_generator._generate_expression(exit_data.access_rule)
                 entrance_rules.append(
@@ -524,7 +567,7 @@ def generate_rules_py(data: ExtractedData) -> str:
         if not is_trivial_rule(loc_data.access_rule):
             loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
 
-            if _rule_needs_lambda(loc_data.access_rule):
+            if _rule_needs_lambda(loc_data.access_rule, known_helpers):
                 # Use lambda with helper code generator
                 rule_expr = helper_generator._generate_expression(loc_data.access_rule)
                 location_rules.append(
@@ -549,6 +592,37 @@ def generate_rules_py(data: ExtractedData) -> str:
     helpers_section = ''
     if helper_functions:
         helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+
+    # Collect fallback helpers from both generators
+    all_fallback_helpers = rule_builder_generator.fallback_helpers | helper_generator.fallback_helpers
+
+    # Generate fallback wrapper functions for helpers that need to call original world
+    fallback_section = ''
+    original_logic_import = ''
+    if all_fallback_helpers and original_game_directory:
+        logic_class_name = _get_logic_class_name(original_game_directory)
+        # Generate import for original world's logic class
+        original_logic_import = f'''
+# Import original world's logic for fallback helpers
+try:
+    from worlds.{original_game_directory}.rules import {logic_class_name}
+    _ORIGINAL_LOGIC_AVAILABLE = True
+except ImportError:
+    _ORIGINAL_LOGIC_AVAILABLE = False
+'''
+        # Generate fallback wrapper functions
+        fallback_funcs = []
+        for helper_name in sorted(all_fallback_helpers):
+            fallback_func = f'''
+def _original_{helper_name}(state: "CollectionState", player: int, world: "World") -> bool:
+    """Fallback wrapper for {helper_name} - calls original world's helper."""
+    if not _ORIGINAL_LOGIC_AVAILABLE:
+        return True  # Safe fallback if original logic not available
+    logic = {logic_class_name}(world)
+    return logic.{helper_name}(state)
+'''
+            fallback_funcs.append(fallback_func)
+        fallback_section = '\n\n# Fallback helpers - call original world logic\n' + '\n'.join(fallback_funcs)
 
     # Build indirect condition registrations
     indirect_section = ''
@@ -634,11 +708,11 @@ Auto-generated by world_generator.
 
 from typing import TYPE_CHECKING
 {math_import}
-{collection_state_import}{imports_section}
+{collection_state_import}{imports_section}{original_logic_import}
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
-{helpers_section}{helper_definitions_section}
+{helpers_section}{fallback_section}{helper_definitions_section}
 
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""

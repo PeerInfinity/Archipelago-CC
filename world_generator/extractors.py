@@ -47,6 +47,7 @@ class GameMetadata:
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
+    original_game_directory: Optional[str] = None  # Original game directory before worldgen rename
 
 
 @dataclass
