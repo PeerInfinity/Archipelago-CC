@@ -533,6 +533,7 @@ class RuleCodeGenerator:
                     'Arithmetic': 'binary_op',
                     'SettingValue': 'setting_value',
                     'Conditional': 'conditional',
+                    'Name': 'name',  # Option/setting references
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -640,6 +641,7 @@ class RuleCodeGenerator:
             if children:
                 child_expr = self._convert_rule(children[0])
             elif 'condition' in args:
+                # Handle Rule Builder format from AST exporter (args.condition)
                 child_expr = self._convert_rule(args['condition'])
             else:
                 child_expr = 'True_()'
@@ -828,6 +830,23 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
             return self._convert_ast_block(rule)
+
+        if rb_rule == 'Name':
+            # Convert Name rule to constant based on settings
+            # The name is in args.name for Rule Builder format
+            name = args.get('name', '')
+            if name in self.settings:
+                value = self.settings[name]
+                if value:
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                else:
+                    self.required_imports.add('False_')
+                    return 'False_()'
+            # Unknown name - default to False (disables optional features)
+            # This is safe because Not(False) = True, making locations accessible
+            self.required_imports.add('False_')
+            return 'False_()'
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
