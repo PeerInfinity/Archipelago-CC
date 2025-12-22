@@ -532,6 +532,7 @@ class RuleCodeGenerator:
                     'AST_any_of': 'ast_any_of',
                     'Arithmetic': 'arithmetic',
                     'AST_count_item': 'ast_count_item',
+                    'CountItem': 'count_item',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -751,7 +752,8 @@ class RuleCodeGenerator:
 
         if rb_rule == 'Constant':
             # Handle Constant rule
-            # Values can be booleans (True/False) or integers (0/1) representing boolean conditions
+            # Numeric values are converted to True_/False_ for boolean contexts (And/Or children)
+            # Arithmetic/Compare handlers use _get_numeric_value() to get raw values
             value = args.get('value')
             if value is True:
                 self.required_imports.add('True_')
@@ -759,9 +761,8 @@ class RuleCodeGenerator:
             elif value is False:
                 self.required_imports.add('False_')
                 return 'False_()'
-            elif isinstance(value, int):
-                # Integer values represent boolean conditions (0 = false, non-zero = true)
-                # This handles cases like settings that resolve to 0/1 instead of False/True
+            elif isinstance(value, (int, float)):
+                # Convert to boolean for And/Or contexts
                 if value:
                     self.required_imports.add('True_')
                     return 'True_()'
@@ -769,7 +770,9 @@ class RuleCodeGenerator:
                     self.required_imports.add('False_')
                     return 'False_()'
             else:
-                return repr(value)
+                # String or other value - treat as truthy
+                self.required_imports.add('True_')
+                return 'True_()'
 
         if rb_rule == 'AST_all_of':
             # Delegate to the dedicated converter
@@ -783,14 +786,15 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_true':
             return self._convert_count_true_from_args(args)
 
-        # Handle Arithmetic rules (Rule Builder format from exporter)
+        # Handle Arithmetic rule (Rule Builder format)
         if rb_rule == 'Arithmetic':
+            self.required_imports.add('Arithmetic')
             left = args.get('left', {})
             op = args.get('op', '+')
             right = args.get('right', {})
-            left_code = self._convert_rule(left)
-            right_code = self._convert_rule(right)
-            self.required_imports.add('Arithmetic')
+            # Use _convert_arithmetic_operand to preserve raw numeric Constant values
+            left_code = self._convert_arithmetic_operand(left)
+            right_code = self._convert_arithmetic_operand(right)
             return f'Arithmetic({left_code}, "{op}", {right_code})'
 
         # Handle AST_count_item rules (exported count_item from AST format)
@@ -798,6 +802,13 @@ class RuleCodeGenerator:
             item = args.get('item', '')
             self.required_imports.add('CountItem')
             return f'CountItem({repr(item)})'
+
+        # Handle CountItem rule (Rule Builder format)
+        if rb_rule == 'CountItem':
+            item_name = args.get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -1397,10 +1408,37 @@ class RuleCodeGenerator:
         return None
 
     def _convert_compare_operand(self, operand: Any) -> str:
-        """Convert a compare operand to Python code."""
+        """Convert a compare operand to Python code.
+
+        For compare contexts, Constant values should return raw numeric values
+        rather than True_()/False_().
+        """
         if not isinstance(operand, dict):
             return repr(operand)
 
+        # Handle Rule Builder format (has 'rule' field)
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            # Return raw numeric value for compare context
+            value = operand.get('args', {}).get('value')
+            return repr(value)
+        elif rb_rule == 'CountItem':
+            # Handle Rule Builder CountItem
+            item_name = operand.get('args', {}).get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+        elif rb_rule == 'Arithmetic':
+            # Handle Rule Builder Arithmetic
+            return self._convert_arithmetic_operand(operand)
+        elif rb_rule == 'AST_min':
+            # Handle min() - delegate to arithmetic operand handler
+            return self._convert_arithmetic_operand(operand)
+        elif rb_rule:
+            # Other Rule Builder format - fall through to _convert_rule
+            return self._convert_rule(operand)
+
+        # Handle AST format (has 'type' field)
         op_type = operand.get('type', '')
         rb_rule = operand.get('rule', '')
 
@@ -1462,10 +1500,53 @@ class RuleCodeGenerator:
         return f'Arithmetic({left_code}, "{op}", {right_code})'
 
     def _convert_arithmetic_operand(self, operand: Any) -> str:
-        """Convert an arithmetic operand to Python code."""
+        """Convert an arithmetic operand to Python code.
+
+        For arithmetic contexts (Arithmetic, Compare), Constant values should
+        return raw numeric values rather than True_()/False_().
+        """
         if not isinstance(operand, dict):
             return repr(operand)
 
+        # Handle Rule Builder format (has 'rule' field)
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            # Return raw numeric value for arithmetic context
+            value = operand.get('args', {}).get('value')
+            return repr(value)
+        elif rb_rule == 'CountItem':
+            # Handle Rule Builder CountItem
+            item_name = operand.get('args', {}).get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+        elif rb_rule == 'Arithmetic':
+            # Handle nested Arithmetic
+            self.required_imports.add('Arithmetic')
+            args = operand.get('args', {})
+            left = args.get('left', {})
+            op = args.get('op', '+')
+            right = args.get('right', {})
+            left_code = self._convert_arithmetic_operand(left)
+            right_code = self._convert_arithmetic_operand(right)
+            return f'Arithmetic({left_code}, "{op}", {right_code})'
+        elif rb_rule == 'AST_min':
+            # Handle min() - converts to MinValue(left, right)
+            self.required_imports.add('MinValue')
+            min_args = operand.get('args', {}).get('args', [])
+            if len(min_args) >= 2:
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            elif len(min_args) == 1:
+                return self._convert_arithmetic_operand(min_args[0])
+            else:
+                return '0'
+        elif rb_rule:
+            # Other Rule Builder format - fall through to _convert_rule
+            return self._convert_rule(operand)
+
+        # Handle AST format (has 'type' field)
         op_type = operand.get('type', '')
 
         if op_type == 'constant':
