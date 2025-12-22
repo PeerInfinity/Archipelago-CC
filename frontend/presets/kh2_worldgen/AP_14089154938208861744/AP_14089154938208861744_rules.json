@@ -34,54 +34,72 @@
             "name": "Garden Of Assemblage -> Space Paranoids",
             "connected_region": "Space Paranoids",
             "access_rule": {
-              "rule": "True_",
+              "rule": "sp_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Port Royal",
             "connected_region": "Port Royal",
             "access_rule": {
-              "rule": "True_",
+              "rule": "pr_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Twilight Town",
             "connected_region": "Twilight Town",
             "access_rule": {
-              "rule": "True_",
+              "rule": "tt_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Olympus Coliseum",
             "connected_region": "Olympus Coliseum",
             "access_rule": {
-              "rule": "True_",
+              "rule": "oc_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Holloween Town",
             "connected_region": "Holloween Town",
             "access_rule": {
-              "rule": "True_",
+              "rule": "ht_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Land of Dragons",
             "connected_region": "Land of Dragons",
             "access_rule": {
-              "rule": "True_",
+              "rule": "lod_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -97,54 +115,72 @@
             "name": "Garden Of Assemblage -> Beast's Castle",
             "connected_region": "Beast's Castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "bc_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Agrabah",
             "connected_region": "Agrabah",
             "access_rule": {
-              "rule": "True_",
+              "rule": "ag_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Pride Lands",
             "connected_region": "Pride Lands",
             "access_rule": {
-              "rule": "True_",
+              "rule": "pl_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Hollow Bastion",
             "connected_region": "Hollow Bastion",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hb_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Disney Castle",
             "connected_region": "Disney Castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "dc_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Garden Of Assemblage -> Simulated Twilight Town",
             "connected_region": "Simulated Twilight Town",
             "access_rule": {
-              "rule": "True_",
+              "rule": "stt_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -169,9 +205,12 @@
             "name": "Garden Of Assemblage -> Levels Region (1 Visit Locking Item)",
             "connected_region": "Levels Region (1 Visit Locking Item)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -214,9 +253,45 @@
             "name": "Garden Of Assemblage -> Final Form",
             "connected_region": "Final Form",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "Roxas Event Location"
+                  }
+                }
+              ]
             }
           },
           {
@@ -296,9 +371,10 @@
             "name": "Land of Dragons -> Shan Yu",
             "connected_region": "Shan Yu",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_shan_yu_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -584,9 +660,12 @@
             "name": "Shan Yu -> Land of Dragons 2",
             "connected_region": "Land of Dragons 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "lod_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -680,9 +759,10 @@
             "name": "Land of Dragons 2 -> Ansem Riku",
             "connected_region": "Ansem Riku",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_ansem_riku_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -695,9 +775,10 @@
             "name": "Ansem Riku -> Storm Rider",
             "connected_region": "Storm Rider",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_storm_rider_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -855,9 +936,10 @@
             "name": "Storm Rider -> Data Xigbar",
             "connected_region": "Data Xigbar",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_xigbar_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -957,9 +1039,22 @@
             "name": "Agrabah -> Twin Lords",
             "connected_region": "Twin Lords",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "get_blizzard_lord_rules",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "get_fire_lord_rules",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -1437,9 +1532,26 @@
             "name": "Twin Lords -> Agrabah 2",
             "connected_region": "Agrabah 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "ag_unlocked",
+                  "options": [],
+                  "args": [
+                    2
+                  ],
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "kh2_has_all",
+                  "options": [],
+                  "args": [
+                    null
+                  ],
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -1501,9 +1613,10 @@
             "name": "Agrabah 2 -> Genie Jafar",
             "connected_region": "Genie Jafar",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_genie_jafar_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1549,9 +1662,10 @@
             "name": "Genie Jafar -> Data Lexaeus",
             "connected_region": "Data Lexaeus",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_lexaeus_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1683,9 +1797,12 @@
             "name": "Disney Castle -> Timeless River",
             "connected_region": "Timeless River",
             "access_rule": {
-              "rule": "True_",
+              "rule": "dc_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1955,9 +2072,10 @@
             "name": "Old Pete -> Future Pete",
             "connected_region": "Future Pete",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_future_pete_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2099,18 +2217,34 @@
             "name": "Future Pete -> Terra",
             "connected_region": "Terra",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "get_terra_rules",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Proof of Connection",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Future Pete -> Data Marluxia",
             "connected_region": "Data Marluxia",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_marluxia_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2360,9 +2494,12 @@
             "name": "Pooh's House -> Piglet's House",
             "connected_region": "Piglet's House",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hundred_acre_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                1
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2424,9 +2561,12 @@
             "name": "Piglet's House -> Rabbit's House",
             "connected_region": "Rabbit's House",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hundred_acre_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2488,9 +2628,12 @@
             "name": "Rabbit's House -> Roo's House",
             "connected_region": "Roo's House",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hundred_acre_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                3
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2552,9 +2695,12 @@
             "name": "Roo's House -> Spooky Cave",
             "connected_region": "Spooky Cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hundred_acre_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                4
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2616,9 +2762,12 @@
             "name": "Spooky Cave -> Starry Hill",
             "connected_region": "Starry Hill",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hundred_acre_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                5
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2830,9 +2979,10 @@
             "name": "Port Royal -> Barbosa",
             "connected_region": "Barbosa",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_barbosa_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3150,9 +3300,12 @@
             "name": "Barbosa -> Port Royal 2",
             "connected_region": "Port Royal 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "pr_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3277,9 +3430,10 @@
             "name": "Grim Reaper 1 -> Grim Reaper 2",
             "connected_region": "Grim Reaper 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_grim_reaper2_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3485,9 +3639,10 @@
             "name": "Grim Reaper 2 -> Data Luxord",
             "connected_region": "Data Luxord",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_luxord_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3603,9 +3758,10 @@
             "name": "Olympus Coliseum -> Cerberus",
             "connected_region": "Cerberus",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_cerberus_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3731,9 +3887,10 @@
             "name": "Cerberus -> Olympus Pete",
             "connected_region": "Olympus Pete",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_olympus_pete_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4067,9 +4224,10 @@
             "name": "Olympus Pete -> Hydra",
             "connected_region": "Hydra",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_hydra_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4147,27 +4305,32 @@
             "name": "Hydra -> Pain and Panic Cup",
             "connected_region": "Pain and Panic Cup",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_pain_and_panic_cup_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Hydra -> Cerberus Cup",
             "connected_region": "Cerberus Cup",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_cerberus_cup_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Hydra -> Olympus Coliseum 2",
             "connected_region": "Olympus Coliseum 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "oc_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4245,9 +4408,10 @@
             "name": "Olympus Coliseum 2 -> Hades",
             "connected_region": "Hades",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_hades_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4277,27 +4441,30 @@
             "name": "Hades -> Titan Cup",
             "connected_region": "Titan Cup",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_titan_cup_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Hades -> Goddess of Fate Cup",
             "connected_region": "Goddess of Fate Cup",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_goddess_of_fate_cup_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Hades -> Data Zexion",
             "connected_region": "Data Zexion",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_zexion_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4543,9 +4710,10 @@
             "name": "Goddess of Fate Cup -> Olympus Coliseum Hade's Paradox",
             "connected_region": "Olympus Coliseum Hade's Paradox",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_hades_cup_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4734,9 +4902,10 @@
             "name": "Beast's Castle -> Thresholder",
             "connected_region": "Thresholder",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_thresholder_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5134,9 +5303,10 @@
             "name": "Beast -> Dark Thorn",
             "connected_region": "Dark Thorn",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_dark_thorn_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5214,9 +5384,12 @@
             "name": "Dark Thorn -> Beast's Castle 2",
             "connected_region": "Beast's Castle 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "bc_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5294,9 +5467,10 @@
             "name": "Beast's Castle 2 -> Xaldin",
             "connected_region": "Xaldin",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_xaldin_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5342,9 +5516,10 @@
             "name": "Xaldin -> Data Xaldin",
             "connected_region": "Data Xaldin",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_xaldin_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5476,9 +5651,10 @@
             "name": "Space Paranoids -> Hostile Program",
             "connected_region": "Hostile Program",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_hostile_program_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5684,9 +5860,12 @@
             "name": "Hostile Program -> Space Paranoids 2",
             "connected_region": "Space Paranoids 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "sp_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5780,9 +5959,10 @@
             "name": "Space Paranoids 2 -> Master Control Program",
             "connected_region": "Master Control Program",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_mcp_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -5892,9 +6072,10 @@
             "name": "Master Control Program -> Data Larxene",
             "connected_region": "Data Larxene",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_larxene_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -6026,9 +6207,10 @@
             "name": "Holloween Town -> Prison Keeper",
             "connected_region": "Prison Keeper",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_prison_keeper_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -6330,9 +6512,12 @@
             "name": "Oogie Boogie -> Holloween Town 2",
             "connected_region": "Holloween Town 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "ht_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -6410,9 +6595,10 @@
             "name": "Holloween Town 2 -> The Experiment",
             "connected_region": "The Experiment",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_experiment_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -6490,9 +6676,10 @@
             "name": "The Experiment -> Data Vexen",
             "connected_region": "Data Vexen",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_vexen_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -6640,9 +6827,12 @@
             "name": "Hollow Bastion -> Hollow Bastion 2",
             "connected_region": "Hollow Bastion 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "hb_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -6841,9 +7031,10 @@
             "name": "Hollow Bastion 2 -> Hollow Bastion Demyx",
             "connected_region": "Hollow Bastion Demyx",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_demyx_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -7065,9 +7256,10 @@
             "name": "Hollow Bastion Demyx -> Thousand Heartless",
             "connected_region": "Thousand Heartless",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_thousand_heartless_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -7225,27 +7417,32 @@
             "name": "Thousand Heartless -> Mushroom 13",
             "connected_region": "Mushroom 13",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Proof of Peace",
+                "count": 1
+              }
             }
           },
           {
             "name": "Thousand Heartless -> Data Demyx",
             "connected_region": "Data Demyx",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_demyx_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Thousand Heartless -> Sephiroth",
             "connected_region": "Sephiroth",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_sephiroth_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -7517,9 +7714,34 @@
             "name": "Cavern of Rememberance -> Cavern of Rememberance:Fight 1",
             "connected_region": "Cavern of Rememberance:Fight 1",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "get_cor_first_fight_movement_rules",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "get_cor_first_fight_rules",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "get_cor_skip_first_rules",
+                      "options": [],
+                      "args": [],
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -7645,9 +7867,10 @@
             "name": "Cavern of Rememberance:Fight 1 -> Cavern of Rememberance:Fight 2",
             "connected_region": "Cavern of Rememberance:Fight 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_cor_second_fight_movement_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -7789,9 +8012,10 @@
             "name": "Cavern of Rememberance:Fight 2 -> Transport to Rememberance",
             "connected_region": "Transport to Rememberance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_transport_movement_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -7934,9 +8158,10 @@
             "name": "Transport to Remembrance",
             "id": 1245397,
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_transport_fight_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Finishing Plus",
@@ -7950,9 +8175,10 @@
             "name": "Transport to Rememberance Event Location",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_transport_fight_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Transport to Rememberance Event",
@@ -7971,9 +8197,10 @@
             "name": "Pride Lands -> Scar",
             "connected_region": "Scar",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_scar_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -8435,9 +8662,12 @@
             "name": "Scar -> Pride Lands 2",
             "connected_region": "Pride Lands 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "pl_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -8515,9 +8745,10 @@
             "name": "Pride Lands 2 -> Groundshaker",
             "connected_region": "Groundshaker",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_groundshaker_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -8563,9 +8794,10 @@
             "name": "Groundshaker -> Data Saix",
             "connected_region": "Data Saix",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_saix_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -9145,9 +9377,10 @@
             "name": "Axel 2 -> Data Roxas",
             "connected_region": "Data Roxas",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_roxas_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -9247,9 +9480,12 @@
             "name": "Twilight Town -> Twilight Town 2",
             "connected_region": "Twilight Town 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "tt_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -9695,9 +9931,12 @@
             "name": "Twilight Town 2 -> Twilight Town 3",
             "connected_region": "Twilight Town 3",
             "access_rule": {
-              "rule": "True_",
+              "rule": "tt_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                3
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -9759,9 +9998,10 @@
             "name": "Twilight Town 3 -> Data Axel",
             "connected_region": "Data Axel",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_axel_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10165,9 +10405,24 @@
             "name": "The World That Never Was (Pre Roxas) -> Roxas",
             "connected_region": "Roxas",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "get_roxas_rules",
+                  "options": [],
+                  "args": [],
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "twtnw_unlocked",
+                  "options": [],
+                  "args": [
+                    1
+                  ],
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -10245,9 +10500,10 @@
             "name": "Roxas -> Xigbar",
             "connected_region": "Xigbar",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_xigbar_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10469,9 +10725,10 @@
             "name": "Xigbar -> Luxord",
             "connected_region": "Luxord",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_luxord_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10613,9 +10870,10 @@
             "name": "Luxord -> Saix",
             "connected_region": "Saix",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_saix_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10693,9 +10951,12 @@
             "name": "Saix -> The World That Never Was (Second Visit)",
             "connected_region": "The World That Never Was (Second Visit)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "twtnw_unlocked",
               "options": [],
-              "args": {}
+              "args": [
+                2
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10757,9 +11018,10 @@
             "name": "The World That Never Was (Second Visit) -> Xemnas",
             "connected_region": "Xemnas",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_xemnas_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10853,18 +11115,20 @@
             "name": "Xemnas -> Armored Xemnas",
             "connected_region": "Armored Xemnas",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_armored_xemnas_one_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Xemnas -> Data Xemnas",
             "connected_region": "Data Xemnas",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_data_xemnas_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10942,9 +11206,10 @@
             "name": "Armored Xemnas -> Armored Xemnas 2",
             "connected_region": "Armored Xemnas 2",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_armored_xemnas_two_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -10974,9 +11239,10 @@
             "name": "Armored Xemnas 2 -> Final Xemnas",
             "connected_region": "Final Xemnas",
             "access_rule": {
-              "rule": "True_",
+              "rule": "get_final_xemnas_rules",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -11007,9 +11273,12 @@
             "name": "Final Xemnas Event Location",
             "id": null,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lucky Emblem",
+                "count": 35
+              }
             },
             "item": {
               "name": "Victory",
@@ -11099,9 +11368,10 @@
             "name": "Atlantica Second Song -> Atlantica Third Song",
             "connected_region": "Atlantica Third Song",
             "access_rule": {
-              "rule": "True_",
+              "rule": "at_three_unlocked",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -11114,9 +11384,10 @@
             "name": "Atlantica Third Song -> Atlantica Fourth Song",
             "connected_region": "Atlantica Fourth Song",
             "access_rule": {
-              "rule": "True_",
+              "rule": "at_four_unlocked",
               "options": [],
-              "args": {}
+              "args": [],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -11698,9 +11969,12 @@
             "name": "FAKE Slot",
             "id": 1245809,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Valor Form",
+                "count": 1
+              }
             },
             "item": {
               "name": "Draw",
@@ -11714,9 +11988,12 @@
             "name": "Detection Saber Slot",
             "id": 1245810,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Master Form",
+                "count": 1
+              }
             },
             "item": {
               "name": "Air Combo Boost",
@@ -11730,9 +12007,12 @@
             "name": "Edge of Ultima Slot",
             "id": 1245811,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Final Form",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Hastera",
@@ -11762,9 +12042,12 @@
             "name": "Oathkeeper Slot",
             "id": 1245813,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Oathkeeper",
+                "count": 1
+              }
             },
             "item": {
               "name": "Experience Boost",
@@ -11778,9 +12061,12 @@
             "name": "Oblivion Slot",
             "id": 1245814,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Oblivion",
+                "count": 1
+              }
             },
             "item": {
               "name": "Drive Boost",
@@ -11794,9 +12080,12 @@
             "name": "Star Seeker Slot",
             "id": 1245815,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Star Seeker",
+                "count": 1
+              }
             },
             "item": {
               "name": "Damage Drive",
@@ -11810,9 +12099,12 @@
             "name": "Hidden Dragon Slot",
             "id": 1245816,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Hidden Dragon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Damage Control",
@@ -11826,9 +12118,12 @@
             "name": "Hero's Crest Slot",
             "id": 1245817,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Hero's Crest",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lucky Lucky",
@@ -11842,9 +12137,12 @@
             "name": "Monochrome Slot",
             "id": 1245818,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Monochrome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Damage Drive",
@@ -11858,9 +12156,12 @@
             "name": "Follow the Wind Slot",
             "id": 1245819,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Follow the Wind",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lucky Lucky",
@@ -11874,9 +12175,12 @@
             "name": "Circle of Life Slot",
             "id": 1245820,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Circle of Life",
+                "count": 1
+              }
             },
             "item": {
               "name": "Thunder Boost",
@@ -11890,9 +12194,12 @@
             "name": "Photon Debugger Slot",
             "id": 1245821,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Photon Debugger",
+                "count": 1
+              }
             },
             "item": {
               "name": "Jackpot",
@@ -11906,9 +12213,12 @@
             "name": "Gull Wing Slot",
             "id": 1245822,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Gull Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Thunder Boost",
@@ -11922,9 +12232,12 @@
             "name": "Rumbling Rose Slot",
             "id": 1245823,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Rumbling Rose",
+                "count": 1
+              }
             },
             "item": {
               "name": "Draw",
@@ -11938,9 +12251,12 @@
             "name": "Guardian Soul Slot",
             "id": 1245824,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Guardian Soul",
+                "count": 1
+              }
             },
             "item": {
               "name": "Air Combo Boost",
@@ -11954,9 +12270,12 @@
             "name": "Wishing Lamp Slot",
             "id": 1245825,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Wishing Lamp",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lucky Lucky",
@@ -11970,9 +12289,12 @@
             "name": "Decisive Pumpkin Slot",
             "id": 1245826,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Decisive Pumpkin",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scan",
@@ -11986,9 +12308,12 @@
             "name": "Sweet Memories Slot",
             "id": 1245827,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Sweet Memories",
+                "count": 1
+              }
             },
             "item": {
               "name": "Magic Lock-On",
@@ -12002,9 +12327,12 @@
             "name": "Mysterious Abyss Slot",
             "id": 1245828,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mysterious Abyss",
+                "count": 1
+              }
             },
             "item": {
               "name": "Damage Drive",
@@ -12018,9 +12346,12 @@
             "name": "Sleeping Lion Slot",
             "id": 1245829,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Sleeping Lion",
+                "count": 1
+              }
             },
             "item": {
               "name": "Combo Boost",
@@ -12034,9 +12365,12 @@
             "name": "Bond of Flame Slot",
             "id": 1245830,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Bond of Flame",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Hastera",
@@ -12050,9 +12384,12 @@
             "name": "Two Become One Slot",
             "id": 1245831,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Two Become One",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Rage",
@@ -12066,9 +12403,12 @@
             "name": "Fatal Crest Slot",
             "id": 1245832,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fatal Crest",
+                "count": 1
+              }
             },
             "item": {
               "name": "Magic Lock-On",
@@ -12082,9 +12422,12 @@
             "name": "Fenrir Slot",
             "id": 1245833,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Fenrir",
+                "count": 1
+              }
             },
             "item": {
               "name": "Draw",
@@ -12098,9 +12441,12 @@
             "name": "Ultima Weapon Slot",
             "id": 1245834,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Ultima Weapon",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Haste",
@@ -12114,9 +12460,12 @@
             "name": "Winner's Proof Slot",
             "id": 1245835,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Winner's Proof",
+                "count": 1
+              }
             },
             "item": {
               "name": "Air Combo Boost",
@@ -12130,9 +12479,12 @@
             "name": "Pureblood Slot",
             "id": 1245836,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Pureblood",
+                "count": 1
+              }
             },
             "item": {
               "name": "Fire Boost",
@@ -12146,9 +12498,12 @@
             "name": "Centurion+ Slot",
             "id": 1245865,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Centurion+",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald MP Hastera",
@@ -12226,9 +12581,12 @@
             "name": "Meteor Staff Slot",
             "id": 1245855,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Meteor Staff",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Draw",
@@ -12242,9 +12600,12 @@
             "name": "Nobody Lance Slot",
             "id": 1245856,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Nobody Lance",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Fire",
@@ -12258,9 +12619,12 @@
             "name": "Precious Mushroom Slot",
             "id": 1245857,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Precious Mushroom",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Thunder Boost",
@@ -12274,9 +12638,12 @@
             "name": "Precious Mushroom+ Slot",
             "id": 1245858,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Precious Mushroom+",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Lucky Lucky",
@@ -12290,9 +12657,12 @@
             "name": "Premium Mushroom Slot",
             "id": 1245859,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Premium Mushroom",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Fantasia",
@@ -12306,9 +12676,12 @@
             "name": "Rising Dragon Slot",
             "id": 1245860,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Rising Dragon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald MP Hastega",
@@ -12322,9 +12695,12 @@
             "name": "Save The Queen+ Slot",
             "id": 1245861,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Save The Queen+",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Thunder Boost",
@@ -12338,9 +12714,12 @@
             "name": "Shaman's Relic Slot",
             "id": 1245862,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Shaman's Relic",
+                "count": 1
+              }
             },
             "item": {
               "name": "Donald Jackpot",
@@ -12402,9 +12781,12 @@
             "name": "Akashic Record Slot",
             "id": 1245884,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Akashic Record",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Protect",
@@ -12466,9 +12848,12 @@
             "name": "Frozen Pride+ Slot",
             "id": 1245888,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Frozen Pride+",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Hyper Healing",
@@ -12482,9 +12867,12 @@
             "name": "Genji Shield Slot",
             "id": 1245889,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Genji Shield",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Protera",
@@ -12530,9 +12918,12 @@
             "name": "Majestic Mushroom Slot",
             "id": 1245892,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Majestic Mushroom",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Turbo",
@@ -12546,9 +12937,12 @@
             "name": "Majestic Mushroom+ Slot",
             "id": 1245893,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Majestic Mushroom+",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Item Boost",
@@ -12562,9 +12956,12 @@
             "name": "Nobody Guard Slot",
             "id": 1245894,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Nobody Guard",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Auto Limit",
@@ -12578,9 +12975,12 @@
             "name": "Ogre Shield Slot",
             "id": 1245895,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Ogre Shield",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Bash",
@@ -12594,9 +12994,12 @@
             "name": "Save The King+ Slot",
             "id": 1245896,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Save The King+",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Damage Control",
@@ -12610,9 +13013,12 @@
             "name": "Ultimate Mushroom Slot",
             "id": 1245897,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Ultimate Mushroom",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goofy Protect",
@@ -12631,9 +13037,12 @@
             "name": "Levels Region (1 Visit Locking Item) -> Levels Region (3 Visit Locking Items)",
             "connected_region": "Levels Region (3 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                3
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -12727,9 +13136,12 @@
             "name": "Levels Region (3 Visit Locking Items) -> Levels Region (6 Visit Locking Items)",
             "connected_region": "Levels Region (6 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                6
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -12823,9 +13235,12 @@
             "name": "Levels Region (6 Visit Locking Items) -> Levels Region (9 Visit Locking Items)",
             "connected_region": "Levels Region (9 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                9
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -12903,9 +13318,12 @@
             "name": "Levels Region (9 Visit Locking Items) -> Levels Region (12 Visit Locking Items)",
             "connected_region": "Levels Region (12 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                12
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -12999,9 +13417,12 @@
             "name": "Levels Region (12 Visit Locking Items) -> Levels Region (15 Visit Locking Items)",
             "connected_region": "Levels Region (15 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                15
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -13063,9 +13484,12 @@
             "name": "Levels Region (15 Visit Locking Items) -> Levels Region (18 Visit Locking Items)",
             "connected_region": "Levels Region (18 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                18
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -13095,9 +13519,12 @@
             "name": "Levels Region (18 Visit Locking Items) -> Levels Region (21 Visit Locking Items)",
             "connected_region": "Levels Region (21 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                21
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -13110,9 +13537,12 @@
             "name": "Levels Region (21 Visit Locking Items) -> Levels Region (24 Visit Locking Items)",
             "connected_region": "Levels Region (24 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                24
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -13125,9 +13555,12 @@
             "name": "Levels Region (24 Visit Locking Items) -> Levels Region (26 Visit Locking Items)",
             "connected_region": "Levels Region (26 Visit Locking Items)",
             "access_rule": {
-              "rule": "True_",
+              "rule": "level_locking_unlock",
               "options": [],
-              "args": {}
+              "args": [
+                26
+              ],
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -18259,7 +18692,12 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "kh2_worldgen"
+      "FightLogic": "normal",
+      "AutoFormLogic": "false",
+      "FinalFormLogic": "light_and_darkness",
+      "Promise_Charm": "false",
+      "CorSkipToggle": "false",
+      "world_directory": "kh2"
     }
   },
   "game_info": {
@@ -18536,7 +18974,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
                   }
                 ],
                 "function": {
@@ -18594,7 +19032,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ],
                 "function": {

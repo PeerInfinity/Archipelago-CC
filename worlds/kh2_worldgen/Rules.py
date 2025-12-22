@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, Has, Or
+from rule_builder import True_, False_, And, CanReachLocation, Has, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -37,7 +37,7 @@ def _kingdomhearts2worldgen_dc_unlocked(state: "CollectionState", player: int, A
 
 
 def _kingdomhearts2worldgen_final_form_region_access(state: "CollectionState", player: int) -> bool:
-    return (state.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('(TT3) Underground Concourse Mythril Gem', player).can_reach(state)) or (state.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('Roxas Event Location', player).can_reach(state)) or (state.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1', player).can_reach(state))
+    return (state.multiworld.get_location('(LoD2) Storm Rider Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('(TT3) Underground Concourse Mythril Gem', player).can_reach(state)) or (state.multiworld.get_location('(PR2) Grim Reaper 2 Bonus: Sora Slot 1', player).can_reach(state)) or (state.multiworld.get_location('Roxas Event Location', player).can_reach(state)) or (state.multiworld.get_location('(BC2) Xaldin Bonus: Sora Slot 1', player).can_reach(state))
 
 
 def _kingdomhearts2worldgen_get_ansem_riku_rules(state: "CollectionState", player: int) -> bool:
@@ -376,11 +376,11 @@ def _kingdomhearts2worldgen_kh2_can_reach(state: "CollectionState", player: int,
 
 
 def _kingdomhearts2worldgen_kh2_can_reach_any(state: "CollectionState", player: int, loc_set = None) -> bool:
-    return True
+    return False
 
 
 def _kingdomhearts2worldgen_kh2_dict_count(state: "CollectionState", player: int, item_name_to_count = None) -> bool:
-    return True
+    return False
 
 
 def _kingdomhearts2worldgen_kh2_dict_one_count(state: "CollectionState", player: int, item_name_to_count = None) -> int:
@@ -456,10 +456,9 @@ _HELPER_DEFINITIONS = {   'ag_unlocked': {   'body': {'count': {'name': 'Amount'
     'final_form_region_access': {   'conditions': [   {   'args': [],
                                                           'function': {   'attr': 'can_reach',
                                                                           'object': {   'args': [   {   'type': 'constant',
-                                                                                                        'value': '(PR2) '
-                                                                                                                 'Grim '
-                                                                                                                 'Reaper '
-                                                                                                                 '2 '
+                                                                                                        'value': '(LoD2) '
+                                                                                                                 'Storm '
+                                                                                                                 'Rider '
                                                                                                                  'Bonus: '
                                                                                                                  'Sora '
                                                                                                                  'Slot '
@@ -493,8 +492,10 @@ _HELPER_DEFINITIONS = {   'ag_unlocked': {   'body': {'count': {'name': 'Amount'
                                                       {   'args': [],
                                                           'function': {   'attr': 'can_reach',
                                                                           'object': {   'args': [   {   'type': 'constant',
-                                                                                                        'value': '(BC2) '
-                                                                                                                 'Xaldin '
+                                                                                                        'value': '(PR2) '
+                                                                                                                 'Grim '
+                                                                                                                 'Reaper '
+                                                                                                                 '2 '
                                                                                                                  'Bonus: '
                                                                                                                  'Sora '
                                                                                                                  'Slot '
@@ -526,9 +527,8 @@ _HELPER_DEFINITIONS = {   'ag_unlocked': {   'body': {'count': {'name': 'Amount'
                                                       {   'args': [],
                                                           'function': {   'attr': 'can_reach',
                                                                           'object': {   'args': [   {   'type': 'constant',
-                                                                                                        'value': '(LoD2) '
-                                                                                                                 'Storm '
-                                                                                                                 'Rider '
+                                                                                                        'value': '(BC2) '
+                                                                                                                 'Xaldin '
                                                                                                                  'Bonus: '
                                                                                                                  'Sora '
                                                                                                                  'Slot '
@@ -12416,317 +12416,317 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Space Paranoids", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_sp_unlocked, helper_name="sp_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Port Royal", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_pr_unlocked, helper_name="pr_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Twilight Town", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_tt_unlocked, helper_name="tt_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Olympus Coliseum", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_oc_unlocked, helper_name="oc_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Holloween Town", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_ht_unlocked, helper_name="ht_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Land of Dragons", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_lod_unlocked, helper_name="lod_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Beast's Castle", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_bc_unlocked, helper_name="bc_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Agrabah", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_ag_unlocked, helper_name="ag_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Pride Lands", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_pl_unlocked, helper_name="pl_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Hollow Bastion", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hb_unlocked, helper_name="hb_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Disney Castle", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_dc_unlocked, helper_name="dc_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Simulated Twilight Town", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_stt_unlocked, helper_name="stt_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Levels Region (1 Visit Locking Item)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Final Form", player),
-        Or(CanReachLocation({'type': 'constant', 'value': '(BC2) Xaldin Bonus: Sora Slot 1'}), CanReachLocation({'type': 'constant', 'value': '(LoD2) Storm Rider Bonus: Sora Slot 1'}), CanReachLocation({'type': 'constant', 'value': '(PR2) Grim Reaper 2 Bonus: Sora Slot 1'}), CanReachLocation({'type': 'constant', 'value': '(TT3) Underground Concourse Mythril Gem'}), CanReachLocation({'type': 'constant', 'value': 'Roxas Event Location'}))
+        Or(CanReachLocation('(BC2) Xaldin Bonus: Sora Slot 1'), CanReachLocation('(LoD2) Storm Rider Bonus: Sora Slot 1'), CanReachLocation('(PR2) Grim Reaper 2 Bonus: Sora Slot 1'), CanReachLocation('(TT3) Underground Concourse Mythril Gem'), CanReachLocation('Roxas Event Location'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Land of Dragons -> Shan Yu", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_shan_yu_rules, helper_name="get_shan_yu_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Shan Yu -> Land of Dragons 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_lod_unlocked, helper_name="lod_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Land of Dragons 2 -> Ansem Riku", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_ansem_riku_rules, helper_name="get_ansem_riku_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Ansem Riku -> Storm Rider", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_storm_rider_rules, helper_name="get_storm_rider_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Storm Rider -> Data Xigbar", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_xigbar_rules, helper_name="get_data_xigbar_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Agrabah -> Twin Lords", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_kingdomhearts2worldgen_get_blizzard_lord_rules, helper_name="get_blizzard_lord_rules"), HelperCall(helper_func=_kingdomhearts2worldgen_get_fire_lord_rules, helper_name="get_fire_lord_rules"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Twin Lords -> Agrabah 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_kingdomhearts2worldgen_ag_unlocked, helper_name="ag_unlocked", args=(2,)), HelperCall(helper_func=_kingdomhearts2worldgen_kh2_has_all, helper_name="kh2_has_all", args=(None,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Agrabah 2 -> Genie Jafar", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_genie_jafar_rules, helper_name="get_genie_jafar_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Genie Jafar -> Data Lexaeus", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_lexaeus_rules, helper_name="get_data_lexaeus_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Disney Castle -> Timeless River", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_dc_unlocked, helper_name="dc_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Pete -> Future Pete", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_future_pete_rules, helper_name="get_future_pete_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Future Pete -> Terra", player),
-        And(True_(), Has('Proof of Connection'))
+        And(HelperCall(helper_func=_kingdomhearts2worldgen_get_terra_rules, helper_name="get_terra_rules"), Has('Proof of Connection'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Future Pete -> Data Marluxia", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_marluxia_rules, helper_name="get_data_marluxia_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pooh's House -> Piglet's House", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hundred_acre_unlocked, helper_name="hundred_acre_unlocked", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Piglet's House -> Rabbit's House", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hundred_acre_unlocked, helper_name="hundred_acre_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Rabbit's House -> Roo's House", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hundred_acre_unlocked, helper_name="hundred_acre_unlocked", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Roo's House -> Spooky Cave", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hundred_acre_unlocked, helper_name="hundred_acre_unlocked", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Spooky Cave -> Starry Hill", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hundred_acre_unlocked, helper_name="hundred_acre_unlocked", args=(5,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Royal -> Barbosa", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_barbosa_rules, helper_name="get_barbosa_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbosa -> Port Royal 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_pr_unlocked, helper_name="pr_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Grim Reaper 1 -> Grim Reaper 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_grim_reaper2_rules, helper_name="get_grim_reaper2_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Grim Reaper 2 -> Data Luxord", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_luxord_rules, helper_name="get_data_luxord_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Olympus Coliseum -> Cerberus", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_cerberus_rules, helper_name="get_cerberus_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Cerberus -> Olympus Pete", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_olympus_pete_rules, helper_name="get_olympus_pete_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Olympus Pete -> Hydra", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_hydra_rules, helper_name="get_hydra_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hydra -> Pain and Panic Cup", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_pain_and_panic_cup_rules, helper_name="get_pain_and_panic_cup_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hydra -> Cerberus Cup", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_cerberus_cup_rules, helper_name="get_cerberus_cup_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hydra -> Olympus Coliseum 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_oc_unlocked, helper_name="oc_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Olympus Coliseum 2 -> Hades", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_hades_rules, helper_name="get_hades_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hades -> Titan Cup", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_titan_cup_rules, helper_name="get_titan_cup_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hades -> Goddess of Fate Cup", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_goddess_of_fate_cup_rules, helper_name="get_goddess_of_fate_cup_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hades -> Data Zexion", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_zexion_rules, helper_name="get_data_zexion_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Goddess of Fate Cup -> Olympus Coliseum Hade's Paradox", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_hades_cup_rules, helper_name="get_hades_cup_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Beast's Castle -> Thresholder", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_thresholder_rules, helper_name="get_thresholder_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Beast -> Dark Thorn", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_dark_thorn_rules, helper_name="get_dark_thorn_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Thorn -> Beast's Castle 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_bc_unlocked, helper_name="bc_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Beast's Castle 2 -> Xaldin", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_xaldin_rules, helper_name="get_xaldin_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Xaldin -> Data Xaldin", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_xaldin_rules, helper_name="get_data_xaldin_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Space Paranoids -> Hostile Program", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_hostile_program_rules, helper_name="get_hostile_program_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hostile Program -> Space Paranoids 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_sp_unlocked, helper_name="sp_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space Paranoids 2 -> Master Control Program", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_mcp_rules, helper_name="get_mcp_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Master Control Program -> Data Larxene", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_larxene_rules, helper_name="get_data_larxene_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Holloween Town -> Prison Keeper", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_prison_keeper_rules, helper_name="get_prison_keeper_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Oogie Boogie -> Holloween Town 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_ht_unlocked, helper_name="ht_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Holloween Town 2 -> The Experiment", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_experiment_rules, helper_name="get_experiment_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("The Experiment -> Data Vexen", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_vexen_rules, helper_name="get_data_vexen_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hollow Bastion -> Hollow Bastion 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_hb_unlocked, helper_name="hb_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hollow Bastion 2 -> Hollow Bastion Demyx", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_demyx_rules, helper_name="get_demyx_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hollow Bastion Demyx -> Thousand Heartless", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_thousand_heartless_rules, helper_name="get_thousand_heartless_rules")
     )
 
     world.set_rule(
@@ -12736,182 +12736,182 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Thousand Heartless -> Data Demyx", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_demyx_rules, helper_name="get_data_demyx_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Thousand Heartless -> Sephiroth", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_sephiroth_rules, helper_name="get_sephiroth_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Cavern of Rememberance -> Cavern of Rememberance:Fight 1", player),
-        And(True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_kingdomhearts2worldgen_get_cor_first_fight_movement_rules, helper_name="get_cor_first_fight_movement_rules"), Or(HelperCall(helper_func=_kingdomhearts2worldgen_get_cor_first_fight_rules, helper_name="get_cor_first_fight_rules"), HelperCall(helper_func=_kingdomhearts2worldgen_get_cor_skip_first_rules, helper_name="get_cor_skip_first_rules")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cavern of Rememberance:Fight 1 -> Cavern of Rememberance:Fight 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_cor_second_fight_movement_rules, helper_name="get_cor_second_fight_movement_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Cavern of Rememberance:Fight 2 -> Transport to Rememberance", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_transport_movement_rules, helper_name="get_transport_movement_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pride Lands -> Scar", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_scar_rules, helper_name="get_scar_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Scar -> Pride Lands 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_pl_unlocked, helper_name="pl_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pride Lands 2 -> Groundshaker", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_groundshaker_rules, helper_name="get_groundshaker_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Groundshaker -> Data Saix", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_saix_rules, helper_name="get_data_saix_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Axel 2 -> Data Roxas", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_roxas_rules, helper_name="get_data_roxas_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Twilight Town -> Twilight Town 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_tt_unlocked, helper_name="tt_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Twilight Town 2 -> Twilight Town 3", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_tt_unlocked, helper_name="tt_unlocked", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Twilight Town 3 -> Data Axel", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_axel_rules, helper_name="get_data_axel_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("The World That Never Was (Pre Roxas) -> Roxas", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_kingdomhearts2worldgen_get_roxas_rules, helper_name="get_roxas_rules"), HelperCall(helper_func=_kingdomhearts2worldgen_twtnw_unlocked, helper_name="twtnw_unlocked", args=(1,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Roxas -> Xigbar", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_xigbar_rules, helper_name="get_xigbar_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Xigbar -> Luxord", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_luxord_rules, helper_name="get_luxord_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Luxord -> Saix", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_saix_rules, helper_name="get_saix_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Saix -> The World That Never Was (Second Visit)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_twtnw_unlocked, helper_name="twtnw_unlocked", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("The World That Never Was (Second Visit) -> Xemnas", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_xemnas_rules, helper_name="get_xemnas_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Xemnas -> Armored Xemnas", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_armored_xemnas_one_rules, helper_name="get_armored_xemnas_one_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Xemnas -> Data Xemnas", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_data_xemnas_rules, helper_name="get_data_xemnas_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Armored Xemnas -> Armored Xemnas 2", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_armored_xemnas_two_rules, helper_name="get_armored_xemnas_two_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Armored Xemnas 2 -> Final Xemnas", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_final_xemnas_rules, helper_name="get_final_xemnas_rules")
     )
 
     world.set_rule(
         multiworld.get_entrance("Atlantica Second Song -> Atlantica Third Song", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_at_three_unlocked, helper_name="at_three_unlocked")
     )
 
     world.set_rule(
         multiworld.get_entrance("Atlantica Third Song -> Atlantica Fourth Song", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_at_four_unlocked, helper_name="at_four_unlocked")
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (1 Visit Locking Item) -> Levels Region (3 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (3 Visit Locking Items) -> Levels Region (6 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(6,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (6 Visit Locking Items) -> Levels Region (9 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(9,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (9 Visit Locking Items) -> Levels Region (12 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(12,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (12 Visit Locking Items) -> Levels Region (15 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(15,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (15 Visit Locking Items) -> Levels Region (18 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(18,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (18 Visit Locking Items) -> Levels Region (21 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(21,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (21 Visit Locking Items) -> Levels Region (24 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(24,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Levels Region (24 Visit Locking Items) -> Levels Region (26 Visit Locking Items)", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_level_locking_unlock, helper_name="level_locking_unlock", args=(26,))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Transport to Remembrance", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_transport_fight_rules, helper_name="get_transport_fight_rules")
     )
 
     world.set_rule(
         multiworld.get_location("Transport to Rememberance Event Location", player),
-        True_()
+        HelperCall(helper_func=_kingdomhearts2worldgen_get_transport_fight_rules, helper_name="get_transport_fight_rules")
     )
 
     world.set_rule(
