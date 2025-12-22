@@ -588,6 +588,10 @@ class RuleCodeGenerator:
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
+            # count=0 means no requirement (always true)
+            if count == 0:
+                self.required_imports.add('True_')
+                return 'True_()'
             self.required_imports.add('Has')
             if count > 1:
                 return f'Has({repr(item_name)}, {count})'
@@ -1556,6 +1560,9 @@ class RuleCodeGenerator:
                             arg_strs.append(repr(self.settings[setting]))
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'Constant':
+                        # Rule Builder format constant: {"rule": "Constant", "args": {"value": X}}
+                        arg_strs.append(repr(arg.get('args', {}).get('value')))
                     elif arg.get('type') == 'constant':
                         arg_strs.append(repr(arg.get('value')))
                     elif arg.get('type') == 'setting_value':
